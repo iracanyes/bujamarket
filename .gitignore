@@ -1,0 +1,13 @@
+/docker-compose.override.yaml
+/docker-compose.override.yml
+
+
+###> Custom ###
+# Variables d'environnement
+.env
+# Documentation du développement
+docs
+.idea
+# Volumes DB
+shared
+###< Custom ###
