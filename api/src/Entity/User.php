@@ -1,0 +1,381 @@
+<?php
+
+namespace App\Entity;
+
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
+ */
+class User
+{
+    /**
+     * @ORM\Id()
+     * @ORM\GeneratedValue()
+     * @ORM\Column(type="integer")
+     */
+    private $id;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $email;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $plainPassword;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $password;
+
+    /**
+     * @ORM\Column(type="string", length=100)
+     */
+    private $firstname;
+
+    /**
+     * @ORM\Column(type="string", length=100)
+     */
+    private $lastname;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $nbErrorConnection;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $banned;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $signinConfirmed;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $dateRegistration;
+
+    /**
+     * @ORM\Column(type="string", length=100)
+     */
+    private $language;
+
+    /**
+     * @ORM\Column(type="string", length=5)
+     */
+    private $currency;
+
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\Image", inversedBy="user", cascade={"persist", "remove"})
+     */
+    private $image;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Address", mappedBy="user")
+     */
+    private $addresses;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\BankAccount", mappedBy="user", orphanRemoval=true)
+     */
+    private $bankAccounts;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Forum", mappedBy="user", orphanRemoval=true)
+     */
+    private $forums;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Message", mappedBy="user", orphanRemoval=true)
+     */
+    private $messages;
+
+    public function __construct()
+    {
+        $this->addresses = new ArrayCollection();
+        $this->bankAccounts = new ArrayCollection();
+        $this->forums = new ArrayCollection();
+        $this->messages = new ArrayCollection();
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): self
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    public function getPlainPassword(): ?string
+    {
+        return $this->plainPassword;
+    }
+
+    public function setPlainPassword(?string $plainPassword): self
+    {
+        $this->plainPassword = $plainPassword;
+
+        return $this;
+    }
+
+    public function getPassword(): ?string
+    {
+        return $this->password;
+    }
+
+    public function setPassword(string $password): self
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    public function getFirstname(): ?string
+    {
+        return $this->firstname;
+    }
+
+    public function setFirstname(string $firstname): self
+    {
+        $this->firstname = $firstname;
+
+        return $this;
+    }
+
+    public function getLastname(): ?string
+    {
+        return $this->lastname;
+    }
+
+    public function setLastname(string $lastname): self
+    {
+        $this->lastname = $lastname;
+
+        return $this;
+    }
+
+    public function getNbErrorConnection(): ?int
+    {
+        return $this->nbErrorConnection;
+    }
+
+    public function setNbErrorConnection(int $nbErrorConnection): self
+    {
+        $this->nbErrorConnection = $nbErrorConnection;
+
+        return $this;
+    }
+
+    public function getBanned(): ?bool
+    {
+        return $this->banned;
+    }
+
+    public function setBanned(bool $banned): self
+    {
+        $this->banned = $banned;
+
+        return $this;
+    }
+
+    public function getSigninConfirmed(): ?bool
+    {
+        return $this->signinConfirmed;
+    }
+
+    public function setSigninConfirmed(bool $signinConfirmed): self
+    {
+        $this->signinConfirmed = $signinConfirmed;
+
+        return $this;
+    }
+
+    public function getDateRegistration(): ?\DateTimeInterface
+    {
+        return $this->dateRegistration;
+    }
+
+    public function setDateRegistration(\DateTimeInterface $dateRegistration): self
+    {
+        $this->dateRegistration = $dateRegistration;
+
+        return $this;
+    }
+
+    public function getLanguage(): ?string
+    {
+        return $this->language;
+    }
+
+    public function setLanguage(string $language): self
+    {
+        $this->language = $language;
+
+        return $this;
+    }
+
+    public function getCurrency(): ?string
+    {
+        return $this->currency;
+    }
+
+    public function setCurrency(string $currency): self
+    {
+        $this->currency = $currency;
+
+        return $this;
+    }
+
+    public function getImage(): ?Image
+    {
+        return $this->image;
+    }
+
+    public function setImage(?Image $image): self
+    {
+        $this->image = $image;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Address[]
+     */
+    public function getAddresses(): Collection
+    {
+        return $this->addresses;
+    }
+
+    public function addAddress(Address $address): self
+    {
+        if (!$this->addresses->contains($address)) {
+            $this->addresses[] = $address;
+            $address->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAddress(Address $address): self
+    {
+        if ($this->addresses->contains($address)) {
+            $this->addresses->removeElement($address);
+            // set the owning side to null (unless already changed)
+            if ($address->getUser() === $this) {
+                $address->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|BankAccount[]
+     */
+    public function getBankAccounts(): Collection
+    {
+        return $this->bankAccounts;
+    }
+
+    public function addBankAccount(BankAccount $bankAccount): self
+    {
+        if (!$this->bankAccounts->contains($bankAccount)) {
+            $this->bankAccounts[] = $bankAccount;
+            $bankAccount->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBankAccount(BankAccount $bankAccount): self
+    {
+        if ($this->bankAccounts->contains($bankAccount)) {
+            $this->bankAccounts->removeElement($bankAccount);
+            // set the owning side to null (unless already changed)
+            if ($bankAccount->getUser() === $this) {
+                $bankAccount->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Forum[]
+     */
+    public function getForums(): Collection
+    {
+        return $this->forums;
+    }
+
+    public function addForum(Forum $forum): self
+    {
+        if (!$this->forums->contains($forum)) {
+            $this->forums[] = $forum;
+            $forum->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeForum(Forum $forum): self
+    {
+        if ($this->forums->contains($forum)) {
+            $this->forums->removeElement($forum);
+            // set the owning side to null (unless already changed)
+            if ($forum->getUser() === $this) {
+                $forum->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Message[]
+     */
+    public function getMessages(): Collection
+    {
+        return $this->messages;
+    }
+
+    public function addMessage(Message $message): self
+    {
+        if (!$this->messages->contains($message)) {
+            $this->messages[] = $message;
+            $message->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMessage(Message $message): self
+    {
+        if ($this->messages->contains($message)) {
+            $this->messages->removeElement($message);
+            // set the owning side to null (unless already changed)
+            if ($message->getUser() === $this) {
+                $message->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+}

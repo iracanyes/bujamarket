@@ -11,3 +11,9 @@ docs
 # Volumes DB
 shared
 ###< Custom ###
+
+###> Security ###
+/api/config/packages/doctrine.yaml
+/bin
+
+###< Security ###
