@@ -10,10 +10,11 @@ docs
 .idea
 # Volumes DB
 shared
+
 ###< Custom ###
 
 ###> Security ###
 
 /bin
-
+yarn.lock
 ###< Security ###
