@@ -5,13 +5,19 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
+ * @ApiResource()
+ * @ORM\Table(name="bjmkt_delivery_global")
  * @ORM\Entity(repositoryClass="App\Repository\DeliveryGlobalRepository")
  */
 class DeliveryGlobal
 {
     /**
+     * @var integer $id ID of this delivery set
+     *
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
@@ -19,39 +25,62 @@ class DeliveryGlobal
     private $id;
 
     /**
+     * @var float $shippingCost Shipping cost of this delivery set
+     *
      * @ORM\Column(type="float")
+     * @Assert\NotBlank()
+     * @Assert\Range(
+     *     min=0,
+     *     minMessage="The minimum value is {{ limit }}.\nThe current value is {{ value }}."
+     * )
      */
     private $shippingCost;
 
     /**
+     * @var \DateTime $dateCreated Date when this delivery set was created
+     *
      * @ORM\Column(type="datetime")
+     * @Assert\DateTime()
      */
     private $dateCreated;
 
     /**
+     * @var boolean $allShipped All the element of this delivery set were shipped
+     *
      * @ORM\Column(type="boolean")
+     * @Assert\Type("boolean")
      */
     private $allShipped;
 
     /**
+     * @var boolean $allReceived All the element of this delivery set were received by the customer who made the order set
+     *
      * @ORM\Column(type="boolean")
+     * @Assert\Type("boolean")
      */
     private $allReceived;
 
     /**
+     * @var Collection $deliveryDetails Delivery detail of each element composing this delivery set
+     *
      * @ORM\OneToMany(targetEntity="App\Entity\DeliveryDetail", mappedBy="deliveryGlobal", orphanRemoval=true)
      */
     private $deliveryDetails;
 
     /**
+     * @var OrderGlobal $orderGlobal Order set shipped as this delivery set
      * @ORM\OneToOne(targetEntity="App\Entity\OrderGlobal", inversedBy="deliveryGlobal", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
+     * @Assert\NotNull()
      */
     private $orderGlobal;
 
     /**
+     * @var Shipper $shipper Shipper which is responsible to send the order set
+     *
      * @ORM\ManyToOne(targetEntity="App\Entity\Shipper", inversedBy="globalDeliveries")
      * @ORM\JoinColumn(nullable=false)
+     * @Assert\NotNull()
      */
     private $shipper;
 

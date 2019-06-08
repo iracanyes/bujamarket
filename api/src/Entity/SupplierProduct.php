@@ -6,6 +6,8 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use http\Cookie;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ApiResource()
@@ -14,6 +16,8 @@ use Doctrine\ORM\Mapping as ORM;
 class SupplierProduct
 {
     /**
+     * @var integer $id ID of this supplier product
+     *
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
@@ -21,58 +25,97 @@ class SupplierProduct
     private $id;
 
     /**
+     * @var float $initialPrice Initial price of this supplier product
+     *
      * @ORM\Column(type="float")
+     * @Assert\Range(
+     *     min=0.0,
+     *     minMessage="The minimum value is {{ limit }}.\nThe current value is {{ value }}."
+     * )
      */
     private $initialPrice;
 
     /**
+     * @var integer $quantity Quantity available of this supplier product.
+     *
      * @ORM\Column(type="integer")
+     * @Assert\Range(
+     *     min=0,
+     *     minMessage="The minimum value is {{ limit }}.\nThe current value is {{ value }}."
+     * )
      */
     private $quantity;
 
     /**
+     * @var float $additionalFee Additional fee for this supplier product
+     *
      * @ORM\Column(type="float")
+     * @Assert\Range(
+     *     min=0,
+     *     minMessage="The minimum value is {{ limit }}.\nThe current value is {{ value }}."
+     * )
      */
     private $additionalFee;
 
     /**
+     * @var string $additionalInformation Additional information for this supplier product
+     *
      * @ORM\Column(type="text", nullable=true)
      */
     private $additionalInformation;
 
     /**
+     * @var boolean $isAvailable Is this supplier product available
+     *
      * @ORM\Column(type="boolean")
+     * @Assert\Type("boolean")
      */
     private $isAvailable;
 
     /**
+     * @var boolean $isLimited Is this supplier product limited
+     *
      * @ORM\Column(type="boolean")
+     * @Assert\Type("boolean")
      */
     private $isLimited;
 
     /**
+     * @var Supplier $supplier Supplier who sell this supplier product
+     *
      * @ORM\ManyToOne(targetEntity="App\Entity\Supplier", inversedBy="supplierProducts")
      * @ORM\JoinColumn(nullable=false)
+     * @Assert\Type("App\Entity\Supplier")
+     * @Assert\NotNull()
      */
     private $supplier;
 
     /**
+     * @var Product $product Product made available by the supplier
      * @ORM\ManyToOne(targetEntity="App\Entity\Product", inversedBy="productSuppliers")
      * @ORM\JoinColumn(nullable=false)
+     * @Assert\Type("App\Entity\Product")
+     * @Assert\NotNull()
      */
     private $product;
 
     /**
+     * @var Collection $comments Comments made on this supplier product
+     *
      * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="supplierProduct", orphanRemoval=true)
      */
     private $comments;
 
     /**
+     * @var Collection $favorites Customers who loved this supplier product
+     *
      * @ORM\OneToMany(targetEntity="App\Entity\Favorite", mappedBy="supplierProduct", orphanRemoval=true)
      */
     private $favorites;
 
     /**
+     * @var Collection $orderDetails Order details made for this supplier product
+     *
      * @ORM\OneToMany(targetEntity="App\Entity\OrderDetail", mappedBy="supplierProduct", orphanRemoval=true)
      */
     private $orderDetails;

@@ -3,13 +3,19 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
+ * @ApiResource()
+ * @ORM\Table(name="bjmkt_order_returned")
  * @ORM\Entity(repositoryClass="App\Repository\OrderReturnedRepository")
  */
 class OrderReturned
 {
     /**
+     * @var integer $id ID of this order returned
+     *
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
@@ -17,33 +23,53 @@ class OrderReturned
     private $id;
 
     /**
+     * @var string $description Description of the order returned
+     *
      * @ORM\Column(type="text")
+     * @Assert\NotBlank()
      */
     private $description;
 
     /**
+     * @var string $reason Reason for returning the order
+     *
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank()
      */
     private $reason;
 
     /**
+     * @var boolean $isIntact Is the product concerned by this order returned intact
+     *
      * @ORM\Column(type="boolean")
+     * @Assert\Type("boolean")
      */
     private $isIntact;
 
     /**
+     * @var string $fileUrl URL to the file
+     *
      * @ORM\Column(type="string", length=255)
+     * @Assert\Url()
+     *
      */
     private $fileUrl;
 
     /**
+     * @var OrderDetail $orderDetail Order detail returned
+     *
      * @ORM\OneToOne(targetEntity="App\Entity\OrderDetail", inversedBy="orderReturned", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
+     * @Assert\Type("App\Entity\OrderDetail")
+     * @Assert\NotNull()
      */
     private $orderDetail;
 
     /**
+     * @var BillRefund $billRefund Refund bill associated to this order returned
+     *
      * @ORM\OneToOne(targetEntity="App\Entity\BillRefund", inversedBy="orderReturned", cascade={"persist", "remove"})
+     *
      */
     private $billRefund;
 

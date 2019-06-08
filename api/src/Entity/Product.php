@@ -6,14 +6,18 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ApiResource()
+ * @ORM\Table(name="bjmkt_product")
  * @ORM\Entity(repositoryClass="App\Repository\ProductRepository")
  */
 class Product
 {
     /**
+     * @var integer $id ID of this product
+     *
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
@@ -21,52 +25,98 @@ class Product
     private $id;
 
     /**
+     * @var string $title Title of the product
+     *
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank()
      */
     private $title;
 
     /**
+     * @var string $resume Resume of the product's description
+     *
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank()
      */
     private $resume;
 
     /**
+     * @var string $description Complete description of the product
+     *
      * @ORM\Column(type="text")
+     * @Assert\NotBlank()
      */
     private $description;
 
     /**
+     * @var string $countryOrigin Country where this product was made
+     *
+     * @ORM\Column(name="country_origin", type="string", length=3)
+     */
+    private $countryOrigin;
+
+    /**
+     * @var float $weight Weight of the product packed up
+     *
      * @ORM\Column(type="float")
+     * @Assert\NotNull()
+     * @Assert\Range(
+     *     min=0.0,
+     *     maxMessage="The minimum value is {{ limit }}.\The current value is {{ value }}"
+     * )
      */
     private $weight;
 
     /**
+     * @var float $length Length of this product packed up
+     *
      * @ORM\Column(type="float")
+     * @Assert\Range(
+     *     min=0.0,
+     *     maxMessage="The minimum value is {{ limit }}.\The current value is {{ value }}"
+     * )
      */
     private $length;
 
     /**
+     * @var float $width Width of this product packed up
+     *
      * @ORM\Column(type="float")
+     * @Assert\Range(
+     *     min=0.0,
+     *     maxMessage="The minimum value is {{ limit }}.\The current value is {{ value }}"
+     * )
      */
     private $width;
 
     /**
+     * @var float $height Height of this product packed up
+     *
      * @ORM\Column(type="float")
+     * @Assert\Range(
+     *     min=0.0,
+     *     maxMessage="The minimum value is {{ limit }}.\The current value is {{ value }}"
+     * )
      */
     private $height;
 
     /**
+     * @var Category $category Classification category of this product
      * @ORM\ManyToOne(targetEntity="App\Entity\Category", inversedBy="products")
      * @ORM\JoinColumn(nullable=false)
+     * @Assert\Type("App\Entity\Category")
      */
     private $category;
 
     /**
+     * @var Collection $productSuppliers Product's supplier
+     *
      * @ORM\OneToMany(targetEntity="App\Entity\SupplierProduct", mappedBy="product", orphanRemoval=true)
      */
     private $productSuppliers;
 
     /**
+     * @var Collection $images Images of the product
      * @ORM\OneToMany(targetEntity="App\Entity\Image", mappedBy="product")
      */
     private $images;
@@ -117,6 +167,24 @@ class Product
 
         return $this;
     }
+
+    /**
+     * @return string
+     */
+    public function getCountryOrigin(): string
+    {
+        return $this->countryOrigin;
+    }
+
+    /**
+     * @param string $countryOrigin
+     */
+    public function setCountryOrigin(string $countryOrigin): void
+    {
+        $this->countryOrigin = $countryOrigin;
+    }
+
+
 
     public function getWeight(): ?float
     {

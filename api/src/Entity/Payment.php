@@ -3,13 +3,19 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
+ * @ApiResource()
+ * @ORM\Table(name="bjmkt_payment")
  * @ORM\Entity(repositoryClass="App\Repository\PaymentRepository")
  */
 class Payment
 {
     /**
+     * @var integer $id ID of this payment
+     *
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
@@ -17,58 +23,98 @@ class Payment
     private $id;
 
     /**
+     * @var string $reference Reference of this payment
+     *
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank()
      */
     private $reference;
 
     /**
+     * @var \DateTime $dateCreated Date when this payment was made
+     *
      * @ORM\Column(type="datetime")
+     * @Assert\DateTime()
      */
     private $dateCreated;
 
     /**
+     * @var string $currency Currency used for this payment
+     *
      * @ORM\Column(type="string", length=5)
+     * @Assert\Currency()
      */
     private $currency;
 
     /**
+     * @var string $description Optional description of the reason of this payment
+     *
      * @ORM\Column(type="text")
      */
     private $description;
 
     /**
+     * @var string $status Status of this payment
+     *
      * @ORM\Column(type="string", length=50)
+     * @Assert\NotBlank()
      */
     private $status;
 
     /**
+     * @var float $amount Amount for this payment
+     *
      * @ORM\Column(type="float")
+     * @Assert\Range(
+     *     min=0.0,
+     *     minMessage="The minimum value is {{ limit }}.\nThe current value is {{ value }}"
+     * )
      */
     private $amount;
 
     /**
+     * @var float $amountRefund Amount refund for this payment
+     *
      * @ORM\Column(type="float")
+     * @Assert\Range(
+     *     min=0.0,
+     *     minMessage="The minimum value is {{ limit }}.\nThe current value is {{ value }}"
+     * )
      */
     private $amountRefund;
 
     /**
+     * @var string $balanceTransaction Balance transaction
+     *
      * @ORM\Column(type="string", length=255)
+     *
      */
     private $balanceTransaction;
 
     /**
+     * @var string $emailReceipt Email for the receipt
+     *
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank()
+     * @Assert\Email()
      */
     private $emailReceipt;
 
     /**
+     * @var string $source Source (Credit or Debit card). A hash describing that card
+     *
      * @ORM\Column(type="string", length=30)
+     * @Assert\NotBlank()
      */
     private $source;
 
     /**
+     * @var Bill $bill Bill registered for this payment
+     *
      * @ORM\OneToOne(targetEntity="App\Entity\Bill", inversedBy="payment", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
+     * @Assert\Type("App\Entity\Bill")
+     * @Assert\NotNull()
      */
     private $bill;
 

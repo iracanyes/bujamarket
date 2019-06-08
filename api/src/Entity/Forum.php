@@ -5,13 +5,19 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
+ * @ApiResource()
+ * @ORM\Table(name="bjmkt_forum")
  * @ORM\Entity(repositoryClass="App\Repository\ForumRepository")
  */
 class Forum
 {
     /**
+     * @var integer $id ID of this forum
+     *
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
@@ -19,42 +25,62 @@ class Forum
     private $id;
 
     /**
+     * @var string $title Title of this discussion in the forum
+     *
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank()
      */
     private $title;
 
     /**
+     * @var string $status Status of this forum
      * @ORM\Column(type="string", length=100)
      */
     private $status;
 
     /**
+     * @var string $type Type of subject ex: abuse, litigation, question
      * @ORM\Column(type="string", length=50)
+     * @Assert\NotBlank()
      */
     private $type;
 
     /**
+     * @var boolean $isClosed Is this forum exchange closed
+     *
      * @ORM\Column(type="boolean")
+     * @Assert\Type("boolean")
      */
-    private $closed;
+    private $isClosed;
 
     /**
+     * @var \DateTime $dateCreated Date when this forum subject was created
+     *
      * @ORM\Column(type="datetime")
+     * @Assert\DateTime()
      */
     private $dateCreated;
 
     /**
+     * @var User $user User who created this forum subject
+     *
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="forums")
      * @ORM\JoinColumn(nullable=false)
+     * @Assert\Type("App\Entity\User")
+     * @Assert\NotNull()
      */
     private $user;
 
     /**
+     * @var Admin $responder Admin who responded this forum's subject
+     *
      * @ORM\ManyToOne(targetEntity="App\Entity\Admin", inversedBy="forums")
+     * @Assert\Type("App\Entity\Admin")
      */
     private $responder;
 
     /**
+     * @var Collection $messages Messages written in this forum's subject
      * @ORM\OneToMany(targetEntity="App\Entity\Message", mappedBy="forum", orphanRemoval=true)
      */
     private $messages;
@@ -105,14 +131,14 @@ class Forum
         return $this;
     }
 
-    public function getClosed(): ?bool
+    public function getIsClosed(): ?bool
     {
-        return $this->closed;
+        return $this->isClosed;
     }
 
-    public function setClosed(bool $closed): self
+    public function setIsClosed(bool $isClosed): self
     {
-        $this->closed = $closed;
+        $this->isClosed = $isClosed;
 
         return $this;
     }

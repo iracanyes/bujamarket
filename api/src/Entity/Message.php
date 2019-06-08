@@ -3,13 +3,19 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
+ * @ApiResource()
+ * @ORM\Table(name="bjmkt_message")
  * @ORM\Entity(repositoryClass="App\Repository\MessageRepository")
  */
 class Message
 {
     /**
+     * @var integer $id ID of this message
+     *
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
@@ -17,34 +23,53 @@ class Message
     private $id;
 
     /**
+     * @var string $content Content of this message
+     *
      * @ORM\Column(type="text")
+     * @Assert\NotBlank()
      */
     private $content;
 
     /**
+     * @var \DateTime $dateCreated Date when this message was written
+     *
      * @ORM\Column(type="datetime")
+     * @Assert\DateTime()
      */
     private $dateCreated;
 
     /**
+     * @var string $attachmentUrl Attachment URL of this message
+     *
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Assert\Url()
      */
     private $attachmentUrl;
 
     /**
+     * @var string $attachmentFile Attachment file of this message
+     *
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Assert\Url()
      */
     private $attachmentFile;
 
     /**
+     * @var Forum $forum Forum in which this message is written
      * @ORM\ManyToOne(targetEntity="App\Entity\Forum", inversedBy="messages")
      * @ORM\JoinColumn(nullable=false)
+     * @Assert\Type("App\Entity\Forum")
+     * @Assert\NotNull()
      */
     private $forum;
 
     /**
+     * @var User $user User who wrote this message
+     *
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="messages")
      * @ORM\JoinColumn(nullable=false)
+     * @Assert\Type("App\Entity\User")
+     * @Assert\NotNull()
      */
     private $user;
 

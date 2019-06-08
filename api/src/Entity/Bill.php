@@ -3,9 +3,19 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
+ * @ApiResource()
+ * @ORM\Table(name="bjmkt_bill")
  * @ORM\Entity(repositoryClass="App\Repository\BillRepository")
+ *
+ * Héritage de cette classe : "Bill customer", "Bill supplier" et "Bill refund" hériteront des attributs de cette classe
+ *
+ * @ORM\InheritanceType("JOINED")
+ * @ORM\DiscriminatorColumn(name="billType", type="string", length=30)
+ * @ORM\DiscriminatorMap({"bill"="Bill", "customer"="BillCustomer", "supplier"="BillSupplier", "refund"="BillRefund"})
  */
 class Bill
 {
@@ -17,54 +27,89 @@ class Bill
     private $id;
 
     /**
+     * @var string $status Status of this bill
+     *
      * @ORM\Column(type="string", length=100)
+     * @Assert\Choice({"paid","pending","failed","withdrawn"})
      */
     private $status;
 
     /**
+     * @var \DateTime $dateCreated Creation's date of this bill
+     *
      * @ORM\Column(type="datetime")
+     * @Assert\DateTime()
      */
     private $dateCreated;
 
     /**
+     * @var \DateTime $datePayment Date of the payment of this bill
+     *
      * @ORM\Column(type="datetime", nullable=true)
+     * @Assert\DateTime()
      */
     private $datePayment;
 
     /**
-     * @ORM\Column(type="string", length=4)
+     * @var string $currencyUsed Currency used for this bill
+     *
+     * @ORM\Column(type="string", length=3)
+     * @Assert\Currency()
      */
     private $currencyUsed;
 
     /**
+     * @var float $vatRateUsed VAT rate used for this bill
+     *
      * @ORM\Column(type="float")
+     * @Assert\Type("float")
      */
     private $vatRateUsed;
 
     /**
+     * @var float $totalExclTax Total exclude tax
+     *
      * @ORM\Column(type="float")
+     * @Assert\Type("float")
      */
     private $totalExclTax;
 
     /**
+     * @var float $totalInclTax Total include tax
+     *
      * @ORM\Column(type="float")
+     * @Assert\Type("float")
      */
     private $totalInclTax;
 
     /**
+     * @var string $url URL to the pdf format of this bill
+     *
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank()
      */
     private $url;
 
     /**
+     * @var Payment $payment Payment associated to this bill
+     *
      * @ORM\OneToOne(targetEntity="App\Entity\Payment", mappedBy="bill", cascade={"persist", "remove"})
+     * @Assert\NotNull()
      */
     private $payment;
+
+    public function __construct()
+    {
+        $this->vatRateUsed = 0;
+        $this->totalInclTax = 0;
+        $this->totalExclTax = 0;
+    }
 
     public function getId(): ?int
     {
         return $this->id;
     }
+
 
     public function getStatus(): ?string
     {

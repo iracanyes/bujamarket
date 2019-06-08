@@ -3,8 +3,13 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use ApiPlatform\Core\Annotation\ApiResource;
+
 
 /**
+ * @ApiResource()
+ * @ORM\Table(name="bjmkt_address")
  * @ORM\Entity(repositoryClass="App\Repository\AddressRepository")
  */
 class Address
@@ -17,46 +22,60 @@ class Address
     private $id;
 
     /**
+     * @var string $locationName Name of this location (e.g. Home, Head office, Delivery address)
+     *
      * @ORM\Column(type="string", length=255)
+     * @Assert\Choice({"Résidence","Adresse de dépôt","Siége social"})
      */
     private $locationName;
 
     /**
+     * @var string $street Street name
      * @ORM\Column(type="string", length=255)
      */
     private $street;
 
     /**
+     * @var string $number Address's number
      * @ORM\Column(type="string", length=50)
      */
     private $number;
 
     /**
+     * @var string $state State, District
+     *
      * @ORM\Column(type="string", length=255)
      */
     private $state;
 
     /**
+     * @var string $town Address's Town
      * @ORM\Column(type="string", length=255)
      */
     private $town;
 
     /**
+     * @var string $zipCode Zip code
      * @ORM\Column(type="string", length=30)
      */
     private $zipCode;
 
     /**
+     * @var string $country Country
      * @ORM\Column(type="string", length=255)
+     * @Assert\Country()
      */
     private $country;
 
     /**
+     * @var User|Customer|Supplier $user User located at this address
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="addresses")
      */
     private $user;
 
     /**
+     * @var Shipper $shipper Shipper located at this address
+     *
      * @ORM\ManyToOne(targetEntity="App\Entity\Shipper", inversedBy="addresses")
      */
     private $shipper;
@@ -155,7 +174,11 @@ class Address
         return $this->user;
     }
 
-    public function setUser(?User $user): self
+    /**
+     * @param User|Customer|Supplier|? $user
+     * @return Address
+     */
+    public function setUser($user): self
     {
         $this->user = $user;
 

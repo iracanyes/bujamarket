@@ -5,13 +5,20 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-
+use Symfony\Component\Validator\Constraints as Assert;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
+ * @ApiResource()
+ * @ORM\Table(name="bjmkt_customer")
  * @ORM\Entity(repositoryClass="App\Repository\CustomerRepository")
+ * @ UniqueEntity("customerKey")
  */
-class Customer
+class Customer extends User
 {
     /**
+     * @var integer $id ID of this customer
+     *
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
@@ -19,57 +26,83 @@ class Customer
     private $id;
 
     /**
+     * @var string $customerKey Customer key on Stripe platform
+     *
      * @ORM\Column(type="string", length=100)
+     * @Assert\NotBlank()
      */
     private $customerKey;
 
     /**
+     * @var integer $nbAbuseIdentified Number of abuse identified
+     *
      * @ORM\Column(type="integer")
+     * @Assert\Type("integer")
      */
     private $nbAbuseIdentified;
 
     /**
+     * @var float $averageRating Average rating given to supplier's products
+     *
      * @ORM\Column(type="float")
+     * @Assert\Type("float")
      */
     private $averageRating;
 
     /**
+     * @var integer $nbOrderCompleted Number of order completed
+     *
      * @ORM\Column(type="integer")
+     * @Assert\Type("integer")
      */
     private $nbOrderCompleted;
 
     /**
+     * @var integer $nbOrderWithdrawn Number of order withdrawn
+     *
      * @ORM\Column(type="integer")
+     * @Assert\Type("integer")
      */
     private $nbOrderWithdrawn;
 
     /**
+     * @var Collection $orderGlobals Order sets made by this customer
+     *
      * @ORM\OneToMany(targetEntity="App\Entity\OrderGlobal", mappedBy="customer")
      */
     private $orderGlobals;
 
     /**
+     * @var Collection $customerBills Orders Bill of this customer
+     *
      * @ORM\OneToMany(targetEntity="App\Entity\BillCustomer", mappedBy="customer", orphanRemoval=true)
      */
     private $customerBills;
 
     /**
+     * @var Collection $refundBills Refund's bill of this customer
+     *
      * @ORM\OneToMany(targetEntity="App\Entity\BillRefund", mappedBy="customer", orphanRemoval=true)
      */
     private $refundBills;
 
     /**
+     * @var Collection $comments Comments made by this customer
+     *
      * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="customer", orphanRemoval=true)
      */
     private $comments;
 
     /**
+     * @var Collection $favorites Supplier's product loved by this customer
+     *
      * @ORM\OneToMany(targetEntity="App\Entity\Favorite", mappedBy="customer", orphanRemoval=true)
      */
     private $favorites;
 
     public function __construct()
     {
+        User::__construct();
         $this->orderGlobals = new ArrayCollection();
         $this->customerBills = new ArrayCollection();
         $this->refundBills = new ArrayCollection();

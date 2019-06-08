@@ -3,13 +3,18 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
+ * @ApiResource()
+ * @ORM\Table(name="bjmkt_order_detail")
  * @ORM\Entity(repositoryClass="App\Repository\OrderDetailRepository")
  */
 class OrderDetail
 {
     /**
+     * @var integer $id ID of this order detail
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
@@ -17,54 +22,95 @@ class OrderDetail
     private $id;
 
     /**
+     * @var string $status Status of this order detail
+     *
      * @ORM\Column(type="string", length=100)
+     * @Assert\NotBlank()
      */
     private $status;
 
     /**
+     * @var integer $quantity Quantity of product for this order detail
+     *
      * @ORM\Column(type="integer")
+     * @Assert\Range(
+     *     min=0,
+     *     minMessage="The minimum value is {{ limit }}.\nThe current value is {{ value }}."
+     * )
      */
     private $quantity;
 
     /**
+     * @var float $unitCost Cost by unit of the product concerned by this order detail
+     *
      * @ORM\Column(type="float")
+     * @Assert\Range(
+     *     min=0.0,
+     *     minMessage="The minimum value is {{ limit }}.\nThe current value is {{ value }}."
+     * )
      */
     private $unitCost;
 
     /**
+     * @var float $totalCost Total cost of this order detail
+     *
      * @ORM\Column(type="float")
+     * @Assert\NotNull()
+     * @Assert\Range(
+     *     min=0.0,
+     *     minMessage="The minimum value is {{ limit }}.\nThe current value is {{ value }}."
+     * )
      */
     private $totalCost;
 
     /**
+     * @var OrderReturned $orderReturned Order returned associated to this order detail
+     *
      * @ORM\OneToOne(targetEntity="App\Entity\OrderReturned", mappedBy="orderDetail", cascade={"persist", "remove"})
+     * @Assert\Type("App\Entity\OrderReturned")
      */
     private $orderReturned;
 
     /**
+     * @var Withdrawal $withdrawal Withdrawal associated to this order detail
+     *
      * @ORM\OneToOne(targetEntity="App\Entity\Withdrawal", mappedBy="orderDetail", cascade={"persist", "remove"})
+     * @Assert\Type("App\Entity\Withdrawal")
      */
     private $withdrawal;
 
     /**
+     * @var BillSupplier $supplierBill Supplier bill for this order detail
+     *
      * @ORM\OneToOne(targetEntity="App\Entity\BillSupplier", mappedBy="orderDetail", cascade={"persist", "remove"})
+     * @Assert\Type("App\Entity\BillSupplier")
      */
     private $supplierBill;
 
     /**
+     * @var DeliveryDetail $deliveryDetail Delivery detail for this order detail
+     *
      * @ORM\OneToOne(targetEntity="App\Entity\DeliveryDetail", mappedBy="orderDetail", cascade={"persist", "remove"})
+     * @Assert\Type("App\Entity\DeliveryDetail")
      */
     private $deliveryDetail;
 
     /**
+     * @var OrderGlobal $orderGlobal Order set which is a part of
      * @ORM\ManyToOne(targetEntity="App\Entity\OrderGlobal", inversedBy="orderDetails")
      * @ORM\JoinColumn(nullable=false)
+     * @Assert\Type("App\Entity\OrderGlobal")
+     * @Assert\NotNull()
      */
     private $orderGlobal;
 
     /**
+     * @var SupplierProduct $supplierProduct Supplier product concerned by this order detail
+     *
      * @ORM\ManyToOne(targetEntity="App\Entity\SupplierProduct", inversedBy="orderDetails")
      * @ORM\JoinColumn(nullable=false)
+     * @Assert\Type("App\Entity\SupplierProduct")
+     * @Assert\NotNull()
      */
     private $supplierProduct;
 

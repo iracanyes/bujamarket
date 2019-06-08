@@ -5,13 +5,18 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
+ * @ApiResource()
+ * @ORM\Table(name="bjmkt_order_global")
  * @ORM\Entity(repositoryClass="App\Repository\OrderGlobalRepository")
  */
 class OrderGlobal
 {
     /**
+     * @var integer $id ID of this order set
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
@@ -19,42 +24,68 @@ class OrderGlobal
     private $id;
 
     /**
+     * @var \DateTime $dateCreated Creation's date of the order set
      * @ORM\Column(type="datetime")
+     * @Assert\DateTime()
      */
     private $dateCreated;
 
     /**
+     * @var float $totalWeight Total weight of the order set
+     *
      * @ORM\Column(type="float")
+     * @Assert\Range(
+     *     min=0.0,
+     *     minMessage="The minimum value is {{ limit }}.\nThe current value is {{ value }}."
+     *
+     * )
      */
     private $totalWeight;
 
     /**
+     * @var integer $nbPackage Number of package for the order set
+     *
      * @ORM\Column(type="integer")
+     * @Assert\GreaterThanOrEqual(0)
      */
     private $nbPackage;
 
     /**
+     * @var float $totalCost Total cost of the order set
      * @ORM\Column(type="float")
+     * @Assert\GreaterThanOrEqual(0)
      */
     private $totalCost;
 
     /**
+     * @var \App\Entity\Customer $customer Customer who made the order set
+     *
      * @ORM\ManyToOne(targetEntity="App\Entity\Customer", inversedBy="orderGlobals")
      * @ORM\JoinColumn(nullable=false)
+     * @Assert\Type("App\Entity\Customer")
+     * @Assert\NotNull()
      */
     private $customer;
 
     /**
+     * @var \App\Entity\BillCustomer $billCustomer Customer's bill for the order set
+     *
      * @ORM\OneToOne(targetEntity="App\Entity\BillCustomer", mappedBy="orderGlobal", cascade={"persist", "remove"})
+     * @Assert\Type("App\Entity\BillCustomer")
      */
     private $billCustomer;
 
     /**
+     * @var DeliveryGlobal $deliveryGlobal Delivery set for the order set
+     *
      * @ORM\OneToOne(targetEntity="App\Entity\DeliveryGlobal", mappedBy="orderGlobal", cascade={"persist", "remove"})
+     * @Assert\Type("App\Entity\DeliveryGlobal")
      */
     private $deliveryGlobal;
 
     /**
+     * @var Collection $orderDetails Each details  for this order set
+     *
      * @ORM\OneToMany(targetEntity="App\Entity\OrderDetail", mappedBy="orderGlobal", orphanRemoval=true)
      */
     private $orderDetails;

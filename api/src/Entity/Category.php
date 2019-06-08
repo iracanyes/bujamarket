@@ -6,14 +6,18 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ApiResource()
+ * @ORM\Table(name="bjmkt_category")
  * @ORM\Entity(repositoryClass="App\Repository\CategoryRepository")
  */
 class Category
 {
     /**
+     * @var integer $id ID of this category
+     *
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
@@ -21,33 +25,64 @@ class Category
     private $id;
 
     /**
+     * @var string $name Name of this category
+     *
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank()
      */
     private $name;
 
     /**
+     * @var string $description Description of the category
+     *
      * @ORM\Column(type="text")
+     * @Assert\NotBlank()
      */
     private $description;
 
     /**
+     * @var \DateTime $dateCreated When the category was created
+     *
      * @ORM\Column(type="datetime")
+     * @Assert\DateTime()
      */
     private $dateCreated;
 
     /**
+     * @var boolean $isValid Is valided?
+     *
      * @ORM\Column(type="boolean")
+     * @Assert\Type("boolean")
      */
     private $isValid;
 
     /**
+     * @var float $platformFee Platform fee for the sale of this products' category
+     *
+     * @ORM\Column(type="float")
+     * @Assert\Range(
+     *     min=0.0 ,
+     *     max=0.95,
+     *     minMessage="The minimum value is {{ limit }}. Your value is {{ value }}",
+     *     maxMessage="The maximum value is {{ limit }}. Your value is {{ value }}"
+     * )
+     */
+    private $platformFee;
+
+
+
+    /**
+     * @var Collection $products Products of this category
+     *
      * @ORM\OneToMany(targetEntity="App\Entity\Product", mappedBy="category")
+     *
      */
     private $products;
 
     public function __construct()
     {
         $this->products = new ArrayCollection();
+        $this->platformFee = 0.0;
     }
 
     public function getId(): ?int
@@ -102,6 +137,27 @@ class Category
 
         return $this;
     }
+
+    /**
+     * @return float
+     */
+    public function getPlatformFee(): float
+    {
+        return $this->platformFee;
+    }
+
+    /**
+     * @param float $platformFee
+     * @return Category
+     */
+    public function setPlatformFee(float $platformFee): self
+    {
+        $this->platformFee = $platformFee;
+
+        return $this;
+    }
+
+
 
     /**
      * @return Collection|Product[]

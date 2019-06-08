@@ -6,14 +6,19 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 /**
  * @ApiResource()
+ * @ORM\Table(name="bjmkt_shipper")
  * @ORM\Entity(repositoryClass="App\Repository\ShipperRepository")
  */
 class Shipper
 {
     /**
+     * @var integer $id ID of this shipper
+     *
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
@@ -21,51 +26,77 @@ class Shipper
     private $id;
 
     /**
+     * @var string $name Commercial name of this shipper
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank()
      */
     private $name;
 
     /**
+     * @var string $socialReason Social Reason of this shipper
+     *
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank()
      */
     private $socialReason;
 
     /**
+     * @var string $service Service offered by this shipper
+     *
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank()
      */
     private $service;
 
     /**
+     * @var string $tradeRegisterNumber Trade register number of this shipper
+     *
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank()
      */
     private $tradeRegisterNumber;
 
     /**
+     * @var string $vatNumber VAT number of this shipper
+     *
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank()
      */
     private $vatNumber;
 
     /**
+     * @var string $description Complete description of the service offered
+     *
      * @ORM\Column(type="text")
+     * @Assert\NotBlank()
      */
     private $description;
 
     /**
+     * @var string $deliveryCommitment Delivery commitment for this service
+     *
      * @ORM\Column(type="text")
+     * @Assert\NotBlank()
      */
     private $deliveryCommitment;
 
     /**
+     * @var string $contactNumber Contact number for this service
+     *
      * @ORM\Column(type="string", length=50)
+     * @Assert\NotBlank()
      */
     private $contactNumber;
 
     /**
+     * @var Collection $addresses Addresses of this shipper
      * @ORM\OneToMany(targetEntity="App\Entity\Address", mappedBy="shipper")
      */
     private $addresses;
 
     /**
+     * @var Collection $globalDeliveries Global deliveries made by this shipper
+     *
      * @ORM\OneToMany(targetEntity="App\Entity\DeliveryGlobal", mappedBy="shipper")
      */
     private $globalDeliveries;

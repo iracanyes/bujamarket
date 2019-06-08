@@ -3,13 +3,19 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
+ * @ApiResource()
+ * @ORM\Table(name="bjmkt_image")
  * @ORM\Entity(repositoryClass="App\Repository\ImageRepository")
  */
 class Image
 {
     /**
+     * @var integer $id ID of this image
+     *
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
@@ -17,36 +23,58 @@ class Image
     private $id;
 
     /**
+     * @var integer $place Place of this image
+     *
      * @ORM\Column(type="integer")
+     * @Assert\Range(
+     *     min=1,
+     *     max=10,
+     *     minMessage="The minimum value is {{ limit }}.\nThe current value is {{ value }}.",
+     *     maxMessage="The maximum value is {{ limit }}.\nThe current value is {{ value }}."
+     * )
      */
     private $place;
 
     /**
+     * @var string $title Title of this image
+     *
      * @ORM\Column(type="string", length=255)
      */
     private $title;
 
     /**
+     * @var string $alt Alternative title of this image
+     *
      * @ORM\Column(type="string", length=255)
      */
     private $alt;
 
     /**
+     * @var string $url URL to the file of this image
+     *
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotNull()
+     * @Assert\Url()
      */
     private $url;
 
     /**
+     * @var integer $size Size of this image
+     *
      * @ORM\Column(type="integer")
+     * @Assert\NotNull()
      */
     private $size;
 
     /**
+     * @var User $user User represented by this image
+     *
      * @ORM\OneToOne(targetEntity="App\Entity\User", mappedBy="image", cascade={"persist", "remove"})
      */
     private $user;
 
     /**
+     * @var Product $product Product represented by this image
      * @ORM\ManyToOne(targetEntity="App\Entity\Product", inversedBy="images")
      */
     private $product;

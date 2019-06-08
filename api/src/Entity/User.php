@@ -5,13 +5,23 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\UserInterface;
 /**
+ * @ORM\Table(name="bjmkt_user")
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
+ *
+ * @ORM\InheritanceType("JOINED")
+ * @ORM\DiscriminatorColumn(name="userType", type="string")
+ * @ORM\DiscriminatorMap({"user"="User", "customer"="Customer", "supplier"="Supplier", "admin"="Admin"})
+ * @ UniqueEntity("email")
  */
-class User
+class User implements UserInterface
 {
     /**
+     * @var integer $id ID of this user
+     *
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
@@ -19,81 +29,119 @@ class User
     private $id;
 
     /**
+     * @var string $email Email of this user
+     *
      * @ORM\Column(type="string", length=255)
+     * @Assert\Email()
      */
     private $email;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @var string $plainPassword Plain password
+     *
      */
     private $plainPassword;
 
     /**
+     * @var string $password Crypted password
      * @ORM\Column(type="string", length=255)
      */
     private $password;
 
     /**
+     * @var string $firstname Firstname of the user
+     *
      * @ORM\Column(type="string", length=100)
+     * @Assert\NotBlank()
      */
     private $firstname;
 
     /**
+     * @var string $lastname Lastname of the user
+     *
      * @ORM\Column(type="string", length=100)
+     * @Assert\NotBlank()
      */
     private $lastname;
 
     /**
+     * @var integer $nbErrorConnection Number of errors on connection
      * @ORM\Column(type="integer")
+     * @Assert\Range(
+     *     min=0,
+     *     max=5,
+     *     minMessage="The minimum value is {{ limit }}.\nThe current value is {{ value }}."
+     * )
      */
     private $nbErrorConnection;
 
     /**
+     * @var boolean $banned Is the user banned
      * @ORM\Column(type="boolean")
+     * @Assert\Type("boolean")
      */
     private $banned;
 
     /**
+     * @var boolean $signinConfirmed Is the user sign-in confirmed
+     *
      * @ORM\Column(type="boolean")
+     * @Assert\Type("boolean")
      */
     private $signinConfirmed;
 
     /**
+     * @var \DateTime $dateRegistration Date of registration
+     *
      * @ORM\Column(type="datetime")
+     * @Assert\DateTime()
      */
     private $dateRegistration;
 
     /**
+     * @var string $language Language's preference
      * @ORM\Column(type="string", length=100)
+     * @Assert\Language()
      */
     private $language;
 
     /**
+     * @var string $currency Currency used by this user
+     *
      * @ORM\Column(type="string", length=5)
+     * @Assert\Currency()
      */
     private $currency;
 
     /**
+     * @var Image $image Image representing this user
+     *
      * @ORM\OneToOne(targetEntity="App\Entity\Image", inversedBy="user", cascade={"persist", "remove"})
+     * @Assert\Type("App\Entity\Image")
      */
     private $image;
 
     /**
+     * @var Collection $addresses Receiving addresses of this user
+     *
      * @ORM\OneToMany(targetEntity="App\Entity\Address", mappedBy="user")
      */
     private $addresses;
 
     /**
+     * @var Collection $bankAccounts Bank accounts of this user
      * @ORM\OneToMany(targetEntity="App\Entity\BankAccount", mappedBy="user", orphanRemoval=true)
      */
     private $bankAccounts;
 
     /**
+     * @var Collection $forums Forum's subjects created by this user
      * @ORM\OneToMany(targetEntity="App\Entity\Forum", mappedBy="user", orphanRemoval=true)
      */
     private $forums;
 
     /**
+     * @var Collection $messages Messages written by this user
      * @ORM\OneToMany(targetEntity="App\Entity\Message", mappedBy="user", orphanRemoval=true)
      */
     private $messages;
@@ -145,6 +193,26 @@ class User
         $this->password = $password;
 
         return $this;
+    }
+
+    public function getUsername()
+    {
+        return $this->firstname .' ' . $this->lastname;
+    }
+
+    public function eraseCredentials()
+    {
+        // TODO: Implement eraseCredentials() method.
+    }
+
+    public function getRoles()
+    {
+        // TODO: Implement getRoles() method.
+    }
+
+    public function getSalt()
+    {
+        // TODO: Implement getSalt() method.
     }
 
     public function getFirstname(): ?string
