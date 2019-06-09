@@ -4,15 +4,14 @@ namespace App\DataFixtures;
 
 use App\Entity\Image;
 use \Faker\Factory;
-use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 
-class ImageProductFixtures extends Fixture implements DependentFixtureInterface
+class ImageCustomerFixtures extends Fixture
 {
     private $faker;
 
-    public const IMAGE_PRODUCT_REFERENCE = 'imageProduct';
+    public const IMAGE_CUSTOMER_REFERENCE = 'imageCustomer';
 
     public function __construct()
     {
@@ -26,23 +25,15 @@ class ImageProductFixtures extends Fixture implements DependentFixtureInterface
         $image->setPlace($this->faker->numberBetween(1,10));
         $image->setTitle($this->faker->sentence(7, true));
         $image->setAlt($this->faker->sentence(7, true));
-        $image->setUrl($this->faker->url());
-        $image->setSize($this->faker->randomNumber(6, false));
-
-        $image->setProduct($this->getReference(ProductFixtures::PRODUCT_REFERENCE));
-
+        $image->setUrl($this->faker->url);
+        $image->setSize($this->faker->numberBetween(3000,8000));
 
         $manager->persist($image);
 
         $manager->flush();
 
-        $this->addReference(self::IMAGE_PRODUCT_REFERENCE, $image);
+        $this->addReference(self::IMAGE_CUSTOMER_REFERENCE, $image);
     }
 
-    public function getDependencies()
-    {
-        return array(
-            ProductFixtures::class,
-        );
-    }
+
 }

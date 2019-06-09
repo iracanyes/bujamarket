@@ -4,15 +4,14 @@ namespace App\DataFixtures;
 
 use App\Entity\Image;
 use \Faker\Factory;
-use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 
-class ImageFixtures extends Fixture implements DependentFixtureInterface
+class ImageAdminFixtures extends Fixture
 {
     private $faker;
 
-    public const IMAGE_REFERENCE = 'image';
+    public const IMAGE_ADMIN_REFERENCE = 'imageAdmin';
 
     public function __construct()
     {
@@ -26,14 +25,14 @@ class ImageFixtures extends Fixture implements DependentFixtureInterface
         $image->setPlace($this->faker->numberBetween(1,10));
         $image->setTitle($this->faker->sentence(7, true));
         $image->setAlt($this->faker->sentence(7, true));
-        $image->setUrl($this->faker->url());
-        $image->setSize($this->faker->randomNumber(6, false));
+        $image->setUrl($this->faker->url);
+        $image->setSize($this->faker->numberBetween(3000,8000));
 
         $manager->persist($image);
 
         $manager->flush();
 
-        $this->addReference(self::IMAGE_REFERENCE, $image);
+        $this->addReference(self::IMAGE_ADMIN_REFERENCE, $image);
     }
 
 
