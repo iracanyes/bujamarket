@@ -6,7 +6,7 @@
 # https://docs.docker.com/engine/reference/builder/#understand-how-arg-and-from-interact
 ARG PHP_VERSION=7.3
 ARG NGINX_VERSION=1.15
-ARG VARNISH_VERSION=6.0
+ARG VARNISH_VERSION=6.2
 
 
 # "php" stage
@@ -22,12 +22,14 @@ RUN apk add --no-cache \
 
 ARG APCU_VERSION=5.1.17
 RUN set -eux; \
+    # Mise à jour du gestionnaire de dépendances
+    apk update; \
 	apk add --no-cache --virtual .build-deps \
 		$PHPIZE_DEPS \
 		icu-dev \
 		libzip-dev \
 		# Changement de driver DB PostGre => MySQL
-		# postgresql-dev \
+		#postgresql-dev \
 		# MySQL
 		mysql-dev \
 		zlib-dev \
@@ -37,10 +39,10 @@ RUN set -eux; \
 	docker-php-ext-install -j$(nproc) \
 		intl \
 		# Changement de driver DB PostGre => MySQL
-		# Désactivation de l'extension PHP  PDO PostGre
+        # Désactivation de l'extension PHP  PDO PostGre
 		#pdo_pgsql \
-        # Mysql
-        mysqli pdo pdo_mysql \
+		# MySQL
+		mysqli pdo pdo_mysql \
 		zip \
 	; \
 	pecl install \
@@ -48,10 +50,11 @@ RUN set -eux; \
 	; \
 	pecl clear-cache; \
 	# Activation des extensions PHP MySQL
-	docker-php-ext-enable \
-	    mysqli \
-	    pdo_mysql \
-	; \
+    docker-php-ext-enable \
+        mysqli \
+        pdo_mysql \
+    ; \
+
 	docker-php-ext-enable \
 		apcu \
 		opcache \

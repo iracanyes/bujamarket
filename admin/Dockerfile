@@ -7,6 +7,8 @@ WORKDIR /usr/src/admin
 # Prevent the reinstallation of node modules at every changes in the source code
 COPY package.json yarn.lock ./
 
+# Mettre à jour le gestionnaire de dépendance
+RUN apk update
 RUN apk add --no-cache --virtual .gyp \
         python \
         make \

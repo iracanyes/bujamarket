@@ -1,6 +1,8 @@
 security:
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
+        #in_memory: { memory: ~ }
+
         # used to reload user from session & other features (e.g. switch_user)
         app_user_provider:
             entity:
@@ -33,4 +35,3 @@ security:
             # bcrypt or sodium recommandé
             # sodium est plus sûr, mais requiert PHP 7.2 ou l'extension Sodium
             algorithm: argon2i
-
