@@ -43,9 +43,9 @@ class BillRefundFixtures extends Fixture implements DependentFixtureInterface
 
         if($billRefund->getReason() == 'Withdrawal')
         {
-            $billRefund->setOrderDetail($this->getReference(OrderReturnedFixtures::ORDER_RETURNED_REFERENCE));
+            $billRefund->setOrderReturned($this->getReference(OrderReturnedFixtures::ORDER_RETURNED_REFERENCE));
         }else{
-            $billRefund->setWithdrawal($this->getReference(WithdrawalFixtures::class));
+            $billRefund->setWithdrawal($this->getReference(WithdrawalFixtures::WITHDRAWAL_REFERENCE));
         }
 
 

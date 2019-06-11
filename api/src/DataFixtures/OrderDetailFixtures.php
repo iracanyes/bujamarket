@@ -25,8 +25,8 @@ class OrderDetailFixtures extends Fixture implements DependentFixtureInterface
 
         $orderDetail->setStatus($this->faker->randomElement(['pending','in progress','shipped','finalized','blocked']));
         $orderDetail->setQuantity($this->faker->numberBetween(1,20));
-        $orderDetail->setUnitCost($orderDetail->getSupplierProduct()->getInitialPrice() * ( 1 + $orderDetail->getSupplierProduct()->getAdditionalFee() ));
-        $orderDetail->setTotalCost($orderDetail->getUnitCost() * $orderDetail->getQuantity());
+        $orderDetail->setUnitCost($this->faker->numberBetween(2, 5000));
+        $orderDetail->setTotalCost($this->faker->numberBetween(2, 20000));
 
         /* Relations */
         $orderDetail->setSupplierProduct($this->getReference(SupplierProductFixtures::SUPPLIER_PRODUCT_REFERENCE));

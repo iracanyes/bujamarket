@@ -30,7 +30,7 @@ class BankAccountSupplierFixtures extends Fixture implements DependentFixtureInt
         $bankAccount->setExpiryMonth($this->faker->numberBetween(1,12));
         $bankAccount->setExpiryYear(19,99);
         $bankAccount->setFingerprint($this->faker->unique()->swiftBicNumber);
-        $bankAccount->setFunding($this->faker->randomElement("debit","credit"));
+        $bankAccount->setFunding($this->faker->randomElement(["debit","credit"]));
         $bankAccount->setAccountBalance(0);
 
         /* Relations */

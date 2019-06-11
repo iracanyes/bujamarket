@@ -31,10 +31,10 @@ class AddressCustomerFixtures extends Fixture implements DependentFixtureInterfa
     {
         $address = new Address();
 
-        $address->setLocationName("Résidence");
+        $address->setLocationName("adresse de livraison");
         $address->setStreet($this->faker->streetName);
         $address->setNumber($this->faker->buildingNumber);
-        $address->setState($this->faker->state);
+        $address->setState($this->faker->city);
         $address->setTown($this->faker->city);
         $address->setZipCode($this->faker->postcode);
         $address->setCountry($this->faker->country);

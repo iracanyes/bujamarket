@@ -32,7 +32,7 @@ class AddressShipperFixtures extends Fixture implements DependentFixtureInterfac
         $address->setLocationName("Adresse de dépôt");
         $address->setStreet($this->faker->streetName);
         $address->setNumber($this->faker->buildingNumber);
-        $address->setState($this->faker->state);
+        $address->setState($this->faker->city);
         $address->setTown($this->faker->city);
         $address->setZipCode($this->faker->postcode);
         $address->setCountry($this->faker->country);
@@ -53,7 +53,7 @@ class AddressShipperFixtures extends Fixture implements DependentFixtureInterfac
     public function getDependencies()
     {
         return array(
-            ShipperFixtures::class
+            ShipperFixtures::class,
         );
     }
 }

@@ -23,15 +23,18 @@ class PaymentCustomerFixtures extends Fixture implements DependentFixtureInterfa
     {
         $payment = new Payment();
 
+        /* Outrepasser la limite de mémoire -1 = pas de limite  */
+        ini_set('memory_limit', '-1');
+
         $payment->setReference($this->faker->iban('BE'));
         $payment->setDateCreated($this->faker->dateTimeBetween('-2 years','now'));
         $payment->setCurrency($this->faker->randomElement(['BIF','EUR','USD']));
         $payment->setDescription($this->faker->realText(50));
         $payment->setStatus($this->faker->randomElement(['pending','confirmed','failed','refused','processing']));
-        $payment->setAmount($payment->getBill()->getTotalInclTax());
+        $payment->setAmount($this->faker->randomFloat(2,10,20000));
 
-        $payment->setBalanceTransaction($this->faker->md5());
-        $payment->setEmailReceipt($this->faker->safeEmail());
+        $payment->setBalanceTransaction($this->faker->md5);
+        $payment->setEmailReceipt($this->faker->safeEmail);
         $payment->setSource($this->faker->randomElement(['debit','credit']));
 
 

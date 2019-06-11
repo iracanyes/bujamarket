@@ -13,7 +13,7 @@ class MessageAdminForumCustomerFixtures extends Fixture implements DependentFixt
     private $faker;
 
 
-    public const MESSAGE_ADMIN_REFERENCE = 'messageAdmin';
+    public const MESSAGE_ADMIN_FORUM_CUSTOMER_REFERENCE = 'messageAdminForumCustomer';
 
     public function __construct()
     {
@@ -37,7 +37,7 @@ class MessageAdminForumCustomerFixtures extends Fixture implements DependentFixt
 
         /* Relation */
         $message->setUser($this->getReference(AdminFixtures::ADMIN_REFERENCE));
-        $message->setForum($this->getReference(ForumCustomerFixtures::FORUM_ADMIN_REFERENCE));
+        $message->setForum($this->getReference(ForumCustomerFixtures::FORUM_CUSTOMER_REFERENCE));
 
         $manager->persist($message);
 
@@ -45,7 +45,7 @@ class MessageAdminForumCustomerFixtures extends Fixture implements DependentFixt
 
 
 
-        $this->addReference(self::MESSAGE_ADMIN_REFERENCE, $message);
+        $this->addReference(self::MESSAGE_ADMIN_FORUM_CUSTOMER_REFERENCE, $message);
     }
 
     public function getDependencies()

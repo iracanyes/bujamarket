@@ -76,7 +76,7 @@ class CustomerFixtures extends Fixture implements DependentFixtureInterface
         $user->setRoles(["ROLE_CUSTOMER","ROLE_MEMBER","ROLE_ALLOWED_TO_SWICTH"]);
         /* Relations */
 
-        $user->setImage($this->getReference(ImageFixtures::IMAGE_REFERENCE));
+        $user->setImage($this->getReference(ImageCustomerFixtures::IMAGE_CUSTOMER_REFERENCE));
         //$user->addAddress(AddressUserFixtures::ADDRESSUSER);
 
     }
@@ -88,7 +88,7 @@ class CustomerFixtures extends Fixture implements DependentFixtureInterface
     public function getDependencies()
     {
         return array(
-            ImageFixtures::class
+            ImageCustomerFixtures::class
         );
     }
 }

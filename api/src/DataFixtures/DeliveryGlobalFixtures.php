@@ -35,7 +35,7 @@ class DeliveryGlobalFixtures extends Fixture implements DependentFixtureInterfac
 
         /* Relations */
         $deliveryGlobal->setShipper($this->getReference(ShipperFixtures::SHIPPER_REFERENCE));
-        $deliveryGlobal->setOrderGlobal($this->getReference(OrderGlobal::ORDER_GLOBAL_REFERENCE));
+        $deliveryGlobal->setOrderGlobal($this->getReference(OrderGlobalFixtures::ORDER_GLOBAL_REFERENCE));
 
         $manager->persist($deliveryGlobal);
 
@@ -48,7 +48,7 @@ class DeliveryGlobalFixtures extends Fixture implements DependentFixtureInterfac
     {
         return array(
             OrderGlobalFixtures::class,
-            Shipper::class,
+            ShipperFixtures::class,
         );
     }
 }

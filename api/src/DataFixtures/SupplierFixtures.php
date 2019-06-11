@@ -45,6 +45,7 @@ class SupplierFixtures extends Fixture implements DependentFixtureInterface
         $supplier->setUserType('supplier');
 
         /* Supplier data  */
+        $supplier->setSupplierKey($this->faker->sha1);
         $supplier->setSocialReason($this->faker->company." ".$this->faker->companySuffix);
         $supplier->setTradeRegisterNumber($this->faker->ean13);
         $supplier->setVatNumber($this->faker->ean8);
@@ -54,7 +55,7 @@ class SupplierFixtures extends Fixture implements DependentFixtureInterface
         $supplier->setWebsite($this->faker->domainName);
 
         /* Relations */
-        $supplier->setImage($this->getReference(ImageFixtures::IMAGE_REFERENCE));
+        $supplier->setImage($this->getReference(ImageSupplierFixtures::IMAGE_SUPPLIER_REFERENCE));
 
 
 
@@ -70,6 +71,7 @@ class SupplierFixtures extends Fixture implements DependentFixtureInterface
         $user->setEmail($this->faker->unique()->email);
 
         $password = $this->encoder->encodePassword($user, 'supplier');
+
         $user->setPassword($password);
         $user->setFirstname($this->faker->firstName);
         $user->setLastname($this->faker->lastName);
@@ -96,7 +98,7 @@ class SupplierFixtures extends Fixture implements DependentFixtureInterface
     public function getDependencies()
     {
         return array(
-            ImageFixtures::class,
+            ImageSupplierFixtures::class,
         );
     }
 }

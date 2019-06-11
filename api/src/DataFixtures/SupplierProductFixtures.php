@@ -20,7 +20,7 @@ class SupplierProductFixtures extends Fixture implements DependentFixtureInterfa
     }
 
 
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         $supplierProduct = new SupplierProduct();
 

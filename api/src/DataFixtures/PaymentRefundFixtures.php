@@ -28,7 +28,7 @@ class PaymentRefundFixtures extends Fixture implements DependentFixtureInterface
         $payment->setCurrency($this->faker->randomElement(['BIF','EUR','USD']));
         $payment->setDescription($this->faker->realText(50));
         $payment->setStatus($this->faker->randomElement(['pending','confirmed','failed','refused','processing']));
-        $payment->setAmountRefund($payment->getBill()->getTotalInclTax());
+        $payment->setAmountRefund($this->faker->randomFloat(2,10,20000));
 
 
         $payment->setBalanceTransaction($this->faker->md5());
@@ -38,6 +38,7 @@ class PaymentRefundFixtures extends Fixture implements DependentFixtureInterface
 
         /* Relations */
         $payment->setBill($this->getReference(BillRefundFixtures::BILL_REFUND_REFERENCE));
+
 
         $manager->persist($payment);
 

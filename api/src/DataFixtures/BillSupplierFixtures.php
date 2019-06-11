@@ -30,7 +30,7 @@ class BillSupplierFixtures extends Fixture implements DependentFixtureInterface
         /* Supplier information */
         $billSupplier->setDeliveryCost($this->faker->numberBetween(0, 20000));
         
-        $billSupplier->setTotalInclTax(($billSupplier->getTotalExclTax() * ( 1 + $billSupplier->getVatRateUsed())) + $billSupplier->getAdditionalCost());
+        $billSupplier->setTotalInclTax($this->faker->randomFloat(2, 10, 10000));
 
         /* Relations */
         $billSupplier->setSupplier($this->getReference(SupplierFixtures::SUPPLIER_REFERENCE));
@@ -47,8 +47,8 @@ class BillSupplierFixtures extends Fixture implements DependentFixtureInterface
     public function setBillInfo(Bill $bill): void
     {
         $bill->setStatus($this->faker->randomElement(["paid","pending","failed","withdrawn"]));
-        $bill->setDateCreated($this->faker->dateTimeAd('now','Europe/Paris'));
-        $bill->setDatePayment($this->faker->dateTimeBetween($bill->getDateCreated(),'now', 'Europe/Paris'));
+        $bill->setDateCreated($this->faker->dateTimeBetween('-2 years', 'now'));
+        $bill->setDatePayment($this->faker->dateTimeBetween('-2 years', 'now'));
         $bill->setCurrencyUsed($this->faker->randomElement(["USD","EUR","BIF"]));
         $bill->setVatRateUsed($this->faker->randomElement([0.18,0.21]));
         $bill->setTotalExclTax($this->faker->numberBetween(0, 50000));

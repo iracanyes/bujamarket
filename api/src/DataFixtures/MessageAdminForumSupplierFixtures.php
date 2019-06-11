@@ -13,7 +13,7 @@ class MessageAdminForumSupplierFixtures extends Fixture implements DependentFixt
     private $faker;
 
 
-    public const MESSAGE_ADMIN_FORUM_SUPPLIER_REFERENCE = 'messageAdmin';
+    public const MESSAGE_ADMIN_FORUM_SUPPLIER_REFERENCE = 'messageAdminForumSupplier';
 
     public function __construct()
     {
@@ -25,6 +25,7 @@ class MessageAdminForumSupplierFixtures extends Fixture implements DependentFixt
     {
         $message = new Message();
 
+        ini_set('memory_limit', '256M');
         $message->setContent($this->faker->realText(50));
         $message->setDateCreated($this->faker->dateTimeBetween('-2 years', 'now'));
         $message->setAttachmentFile($this->faker->url());

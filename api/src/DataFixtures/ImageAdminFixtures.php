@@ -7,11 +7,11 @@ use \Faker\Factory;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 
-class ImageFixtures extends Fixture
+class ImageAdminFixtures extends Fixture
 {
     private $faker;
 
-    public const IMAGE_REFERENCE = 'image';
+    public const IMAGE_ADMIN_REFERENCE = 'imageAdmin';
 
     public function __construct()
     {
@@ -32,7 +32,7 @@ class ImageFixtures extends Fixture
 
         $manager->flush();
 
-        $this->addReference(self::IMAGE_REFERENCE, $image);
+        $this->addReference(self::IMAGE_ADMIN_REFERENCE, $image);
     }
 
 

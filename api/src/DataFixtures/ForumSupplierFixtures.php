@@ -40,13 +40,13 @@ class ForumSupplierFixtures extends Fixture implements DependentFixtureInterface
 
         $manager->flush();
 
-        $this->addReference(self::FORUM_REFERENCE, $forum);
+        $this->addReference(self::FORUM_SUPPLIER_REFERENCE, $forum);
     }
 
     public function getDependencies()
     {
         return array(
-            SupplierFixture::class,
+            SupplierFixtures::class,
             AdminFixtures::class,
         );
     }

@@ -34,7 +34,7 @@ class AddressSupplierFixtures extends Fixture implements DependentFixtureInterfa
         $address->setLocationName("siége social");
         $address->setStreet($this->faker->streetName);
         $address->setNumber($this->faker->buildingNumber);
-        $address->setState($this->faker->state);
+        $address->setState($this->faker->city);
         $address->setTown($this->faker->city);
         $address->setZipCode($this->faker->postcode);
         $address->setCountry($this->faker->country);

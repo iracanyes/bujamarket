@@ -78,7 +78,7 @@ class AdminFixtures extends Fixture implements DependentFixtureInterface
 
         /* Relations */
 
-        $user->setImage($this->getReference(ImageFixtures::IMAGE_REFERENCE));
+        $user->setImage($this->getReference(ImageAdminFixtures::IMAGE_ADMIN_REFERENCE));
 
     }
 
@@ -89,7 +89,7 @@ class AdminFixtures extends Fixture implements DependentFixtureInterface
     public function getDependencies()
     {
         return array(
-            ImageFixtures::class,
+            ImageAdminFixtures::class,
         );
     }
 }

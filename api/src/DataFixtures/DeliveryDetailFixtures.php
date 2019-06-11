@@ -28,9 +28,9 @@ class DeliveryDetailFixtures extends Fixture implements DependentFixtureInterfac
         $deliveryDetail->setDescription($this->faker->text(50));
         $deliveryDetail->setDateCreated($this->faker->dateTimeBetween('-2 years','now'));
         $deliveryDetail->setAttachmentFile($this->faker->url());
-        $deliveryDetail->getIsShipped($this->faker->boolean(80));
+        $deliveryDetail->setIsShipped($this->faker->boolean(80));
 
-        if($deliveryDetail->getIsShipped() == true)
+        if($this->faker->boolean(80))
         {
             $deliveryDetail->setIsReceived($this->faker->boolean(60));
         }

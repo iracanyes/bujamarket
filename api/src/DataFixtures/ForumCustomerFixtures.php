@@ -40,13 +40,13 @@ class ForumCustomerFixtures extends Fixture implements DependentFixtureInterface
 
         $manager->flush();
 
-        $this->addReference(self::FORUM_REFERENCE, $forum);
+        $this->addReference(self::FORUM_CUSTOMER_REFERENCE, $forum);
     }
 
     public function getDependencies()
     {
         return array(
-            CustomerFixture::class,
+            CustomerFixtures::class,
             AdminFixtures::class,
         );
     }
