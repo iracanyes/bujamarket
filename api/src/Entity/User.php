@@ -2,13 +2,16 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\Security\Core\User\UserInterface;
+
 /**
+ * @ApiResource()
  * @ORM\Table(name="bjmkt_user")
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  *
@@ -30,8 +33,7 @@ class User implements UserInterface
 
     /**
      * @var string $email Email of this user
-     *
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=180, unique=true)
      * @Assert\Email()
      */
     private $email;
@@ -47,6 +49,13 @@ class User implements UserInterface
      * @ORM\Column(type="string", length=255)
      */
     private $password;
+
+    /**
+     * @var $roles Role of this user on this platform
+     *
+     * @ORM\Column(type="json")
+     */
+    private $roles = [];
 
     /**
      * @var string $firstname Firstname of the user
@@ -171,6 +180,35 @@ class User implements UserInterface
         return $this;
     }
 
+    /**
+     * A visual identifier that represents this user.
+     *
+     * @see UserInterface
+     */
+    public function getUsername(): string
+    {
+        return (string) $this->email;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        // Garantir que tous les utilisateurs ont le rôle "ROLE_MEMBER"
+        $roles[] = 'ROLE_MEMBER';
+
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
     public function getPlainPassword(): ?string
     {
         return $this->plainPassword;
@@ -183,9 +221,12 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getPassword(): ?string
+    /**
+     * @see UserInterface
+     */
+    public function getPassword(): string
     {
-        return $this->password;
+        return (string) $this->password;
     }
 
     public function setPassword(string $password): self
@@ -195,25 +236,42 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getUsername()
-    {
-        return $this->firstname .' ' . $this->lastname;
-    }
-
-    public function eraseCredentials()
-    {
-        // TODO: Implement eraseCredentials() method.
-    }
-
-    public function getRoles()
-    {
-        // TODO: Implement getRoles() method.
-    }
-
+    /**
+     * @see UserInterface
+     */
     public function getSalt()
     {
-        // TODO: Implement getSalt() method.
+        // not needed when using the "bcrypt" algorithm in security.yaml
     }
+
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials()
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUserType(): string
+    {
+        return $this->userType;
+    }
+
+    /**
+     * @param string $userType
+     * @return User
+     */
+    public function setUserType(string $userType): self
+    {
+        $this->userType = $userType;
+
+        return $this;
+    }
+
 
     public function getFirstname(): ?string
     {
@@ -446,4 +504,5 @@ class User implements UserInterface
 
         return $this;
     }
+
 }

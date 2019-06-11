@@ -74,7 +74,7 @@ class Forum
     /**
      * @var Admin $responder Admin who responded this forum's subject
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Admin", inversedBy="forums")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Admin", inversedBy="respondedForums")
      * @Assert\Type("App\Entity\Admin")
      */
     private $responder;

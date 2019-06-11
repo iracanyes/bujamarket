@@ -38,14 +38,14 @@ class Image
     /**
      * @var string $title Title of this image
      *
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $title;
 
     /**
      * @var string $alt Alternative title of this image
      *
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $alt;
 

@@ -55,6 +55,14 @@ class Message
     private $attachmentFile;
 
     /**
+     * @var string $attachmentImage Attachment image of this message
+     *
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Assert\Url()
+     */
+    private $attachmentImage;
+
+    /**
      * @var Forum $forum Forum in which this message is written
      * @ORM\ManyToOne(targetEntity="App\Entity\Forum", inversedBy="messages")
      * @ORM\JoinColumn(nullable=false)
@@ -125,6 +133,26 @@ class Message
 
         return $this;
     }
+
+    /**
+     * @return string
+     */
+    public function getAttachmentImage(): string
+    {
+        return $this->attachmentImage;
+    }
+
+    /**
+     * @param string $attachmentImage
+     */
+    public function setAttachmentImage(string $attachmentImage): self
+    {
+        $this->attachmentImage = $attachmentImage;
+
+        return $this;
+    }
+
+
 
     public function getForum(): ?Forum
     {

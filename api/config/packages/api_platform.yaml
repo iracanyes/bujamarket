@@ -4,15 +4,20 @@ parameters:
     # environment variables are not available yet.
     # You should not need to change this value.
     env(VARNISH_URL): ''
+    #env(APP_NAME): 'Buja Market'
+    #env(APP_VERSION): '0.1'
 
 api_platform:
     title: Buja Market
-    version: 0.1.0
+    version: 0.1
 
     # Mapping
     mapping:
         # The list of paths with files or directories where the bundle will look for additional resource files
-        paths: ['%kernel.project_dir%/src/Entity']
+        paths: ['%kernel.project_dir%/config/api_platform']           # yaml/xml directory configuration
+
+    resource_class_directories: ['%kernel.project_dir%/src/Entity']                # default configuration for annotations
+
 
     # Varnish integration, remove if unwanted
     http_cache:
@@ -39,15 +44,16 @@ api_platform:
         # To make all responses public by default.
         public: true
 
-        # The list of exceptions mapped to their HTTP status code.
-        #exception_to_status:
-            # With a status code.
-            #Symfony\Component\Serializer\Exception\ExceptionInterface: 400
+    # The list of exceptions mapped to their HTTP status code.
+    #exception_to_status:
+        # With a status code.
+    #    Symfony\Component\Serializer\Exception\ExceptionInterface: 400
 
-            # Or with a constant defined in the 'Symfony\Component\HttpFoundation\Response' class.
-            #ApiPlatform\Core\Exception\InvalidArgumentException: !php/const Symfony\Component\HttpFoundation\Response::HTTP_BAD_REQUEST
+        # Or with a constant defined in the 'Symfony\Component\HttpFoundation\Response' class.
+    #    ApiPlatform\Core\Exception\InvalidArgumentException: !php/const Symfony\Component\HttpFoundation\Response::HTTP_BAD_REQUEST
 
-                # ...
+        # ...
+
     # Mercure integration, remove if unwanted
     mercure:
         hub_url: '%env(MERCURE_SUBSCRIBE_URL)%'
@@ -56,11 +62,10 @@ api_platform:
     #allow_plain_identifiers: false
 
     # Enable or Disable Doctrine ORM support
-    doctrine:
-        enabled: true
+    #doctrine:
+        #enabled: true
 
-
-    #eager_loading:
+        #eager_loading:
         # Enable or disable Eager Loading
         #enabled: true
 
@@ -98,50 +103,50 @@ api_platform:
     #enable_docs: true
 
     # OAUTH
-    oauth:
+    #oauth:
         # To enable or disable oauth.
-        enabled: false
+        #enabled: false
 
         # The oauth client ID
-        clientId: ''
+        #clientId: ''
 
         # The oauth client secret
-        clientSecret: ''
+        #clientSecret: ''
 
         # The oauth type
-        type: 'oauth2'
+        #type: 'oauth2'
 
         # The oauth flow grant type
-        flow: 'application'
+        #flow: 'application'
 
         # The oauth token URL
-        tokenUrl: '/oauth/v2/token'
+        #tokenUrl: '/oauth/v2/token'
 
         # The oauth authentication URL
-        authorizationUrl: '/oauth/v2/auth'
+        #authorizationUrl: '/oauth/v2/auth'
 
         # The oauth scopes
-        scopes: []
+        #scopes: []
 
-    graphql:
-        enabled: false
-        graphiql:
-            enabled: true
+    #graphql:
+    #    enabled: false
+    #    graphiql:
+    #        enabled: true
 
-    elasticsearch:
+    #elasticsearch:
         # To enable or disable the ElasticSearch support
-        enabled: false
+    #    enabled: false
 
         # The hosts to the Elasticsearch nodes:
-        hosts: []
+    #    hosts: []
 
         # The mapping between resource class and indexes
-        mapping: []
+    #    mapping: []
 
     # Swagger
-    swagger:
+    #swagger:
         # The swagger api keys.
-        api_keys: []
+    #    api_keys: []
 
     # Collection
     #collection:
@@ -174,7 +179,7 @@ api_platform:
             #enabled_parameter_name: 'pagination'
 
             # The name of query parameter to set the number of items per page
-            #items_per_page_parameter_name: 'itemsPerPage'
+            # items_per_page_parameter_name: 'itemsPerPage'
 
             # To allow partial pagination for all resource collections.
             # This improve performances by skipping the 'COUNT' query
@@ -196,3 +201,11 @@ api_platform:
 
         #html:
         #    mime_types: ['text/html']
+
+    # The list of enabled error formats. The first one will be the default.
+    #error_formats:
+        #jsonproblem:
+        #    mime_types: ['application/problem+json']
+
+        #jsonld:
+        #    mime_types: ['application/ld+json']

@@ -53,18 +53,19 @@ services:
 
   #db:
     # In production, you may want to use a managed database service
-  #  image: postgres:10-alpine
-  #  environment:
-  #    - POSTGRES_DB=api
-  #    - POSTGRES_USER=api-platform
+    #image: postgres:10-alpine
+    #environment:
+    #  - POSTGRES_DB=api
+    #  - POSTGRES_USER=api-platform
       # You should definitely change the password in production
-  #    - POSTGRES_PASSWORD=!ChangeMe!
-  #  volumes:
-  #    - db-data:/var/lib/postgresql/data:rw
+    #  - POSTGRES_PASSWORD=!ChangeMe!
+    #volumes:
+    #  - db-data:/var/lib/postgresql/data:rw
       # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
       # - ./docker/db/data:/var/lib/postgresql/data:rw
-  #  ports:
-  #    - "5432:5432"
+    #ports:
+    #  - "5432:5432"
+
 
   # MySQL
   db:
@@ -88,7 +89,7 @@ services:
     # Port d'accés au container MySQL (3306) via le port interne d'accès à l'instance MySQL (3306)
     # Attention le port d'accés au container MySQL devra être modifié si une instance sur la machine locale utilise le même port 3306
     ports:
-      - 3306:3306
+      - "3306:3306"
 
   # Formely PHPMyAdmin
   adminer:
@@ -113,7 +114,7 @@ services:
     image: dunglas/mercure
     environment:
       # You should definitely change all these values in production
-      - JWT_KEY=!XM786§ra=7yb@BM8%qoZ85bp!
+      - JWT_KEY=!UnsecureChangeMe!
       - ALLOW_ANONYMOUS=1
       - CORS_ALLOWED_ORIGINS=*
       - PUBLISH_ALLOWED_ORIGINS=http://localhost:1337,https://localhost:1338

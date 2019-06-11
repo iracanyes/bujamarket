@@ -38,7 +38,7 @@ class SupplierProduct
     /**
      * @var integer $quantity Quantity available of this supplier product.
      *
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      * @Assert\Range(
      *     min=0,
      *     minMessage="The minimum value is {{ limit }}.\nThe current value is {{ value }}."
@@ -122,6 +122,7 @@ class SupplierProduct
 
     public function __construct()
     {
+        $this->initialPrice = 0;
         $this->comments = new ArrayCollection();
         $this->favorites = new ArrayCollection();
         $this->orderDetails = new ArrayCollection();

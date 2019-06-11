@@ -1,0 +1,123 @@
+resources:
+  App\Entity\Address:
+    shortName: 'Address'
+    description: 'Address of the users and shipper of this platform'
+    iri: 'https://schema.org/PostalAddress'
+
+  App\Entity\Admin:
+    shortName: 'Admin'
+    description: 'Administrator of this platform'
+
+  App\Entity\BankAccount:
+    shortName: 'Bank account'
+    description: 'Bank account of the users'
+
+  App\Entity\Bill:
+    shortName: 'Bill'
+    description: 'Invoice made for a payment on this platform'
+    iri: 'https://schema.org/Invoice'
+
+  App\Entity\BillCustomer:
+    shortName: 'Bill customer'
+    description: 'Bill made for an order set purchased by a customer'
+    iri: 'https://schema.org/Invoice'
+
+  App\Entity\BillRefund:
+    shortName: 'Bill refund'
+    description: 'Bill made for an order returned or a withdrawal by a customer'
+    iri: 'https://schema.org/Invoice'
+
+  App\Entity\BillSupplier:
+    shortName: 'Bill supplier'
+    description: 'Bill made for a supplier:"s purchased by a customer'
+    iri: 'https://schema.org/Invoice'
+
+  App\Entity\Category:
+    shortName: 'Category'
+    description: 'Category of product sold on this platgorm'
+
+  App\Entity\Comment:
+    shortName: 'Comment'
+    description: 'Comment made by customers on the suppliers:" product bought '
+    iri: 'https://schema.org/Comment'
+
+  App\Entity\Customer:
+    shortName: 'Customer'
+    description: 'Customer of this platform'
+    iri: 'https://schema.org/Person'
+
+  App\Entity\DeliveryDetail:
+    shortName: 'Delivery detail'
+    description: 'Delivery details for an element of an order set bought on this platform'
+
+  App\Entity\DeliveryGlobal:
+    shortName: 'Delivery global'
+    description: 'Delivery informations for an order set bought on this platform'
+
+  App\Entity\Favorite:
+    shortName: 'Favorite'
+    description: 'Product loved by a customer'
+
+  App\Entity\Forum:
+    shortName: 'Forum'
+    description: 'Conversation with the administrators'
+    iri: 'https://schema.org/Conversation'
+
+  App\Entity\Image:
+    shortName: 'Image'
+    description: 'Images illustrating products and person'
+    iri: 'https://schema;org/ImageObject'
+
+  App\Entity\Message:
+    shortName: 'Message'
+    description: "Message sent in the forum"
+    iri: 'https://schema.org/Message'
+
+  App\Entity\OrderDetail:
+    shortName: 'Order detail'
+    description: 'Order:"s details for a product'
+
+  App\Entity\OrderGlobal:
+    shortName: 'Order global'
+    description: 'Shopping cart'
+    iri: 'https://schema.org/OrderAction'
+
+  App\Entity\OrderReturned:
+    shortName: 'Order returned'
+    description: 'Order returned for a product bought on this platform'
+
+  App\Entity\Payment:
+    shortName: 'Payment'
+    description: 'Payment made on this platform'
+    iri: 'https://schema.org/PayAction'
+
+  App\Entity\Product:
+    shortName: 'Product'
+    description: 'Products sold on this platform'
+    iri: 'https://schema.org/Product'
+    attributes:
+      pagination_items_per_page: 25
+
+  App\Entity\Shipper:
+    shortName: 'Shipper'
+    description: 'Shipper who:"s responsible for delivering  the products bought'
+    iri: 'https://schema.org/DeliveryMethod'
+
+  App\Entity\Supplier:
+    shortName: 'Supplier'
+    description: 'Suppliers who sell products on this platform'
+    iri: 'https://schema.org/Supplier'
+
+  App\Entity\SupplierProduct:
+    shortName: 'Supplier:"s Product'
+    description: 'Products offer by the suppliers on this platform'
+    iri: 'https://schema.ord/Offer'
+
+  App\Entity\User:
+    shortName: 'User'
+    description: 'User:"s of this platform'
+    iri: 'https://schema.org/Person'
+
+  App\Entity\Withdrawal:
+    shortName: 'Withdrawal'
+    description: 'Withdrawal for an order made on this platform'

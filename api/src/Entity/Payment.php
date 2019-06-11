@@ -118,6 +118,12 @@ class Payment
      */
     private $bill;
 
+    public function __construct()
+    {
+        $this->amountRefund = 0;
+        $this->amount = 0;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
