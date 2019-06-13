@@ -9,7 +9,7 @@ resources:
     description: 'Administrator of this platform'
 
   App\Entity\BankAccount:
-    shortName: 'Bank account'
+    shortName: 'BankAccount'
     description: 'Bank account of the users'
 
   App\Entity\Bill:
@@ -18,17 +18,17 @@ resources:
     iri: 'https://schema.org/Invoice'
 
   App\Entity\BillCustomer:
-    shortName: 'Bill customer'
+    shortName: 'BillCustomer'
     description: 'Bill made for an order set purchased by a customer'
     iri: 'https://schema.org/Invoice'
 
   App\Entity\BillRefund:
-    shortName: 'Bill refund'
+    shortName: 'BillRefund'
     description: 'Bill made for an order returned or a withdrawal by a customer'
     iri: 'https://schema.org/Invoice'
 
   App\Entity\BillSupplier:
-    shortName: 'Bill supplier'
+    shortName: 'BillSupplier'
     description: 'Bill made for a supplier:"s purchased by a customer'
     iri: 'https://schema.org/Invoice'
 
@@ -47,11 +47,11 @@ resources:
     iri: 'https://schema.org/Person'
 
   App\Entity\DeliveryDetail:
-    shortName: 'Delivery detail'
+    shortName: 'DeliveryDetail'
     description: 'Delivery details for an element of an order set bought on this platform'
 
   App\Entity\DeliveryGlobal:
-    shortName: 'Delivery global'
+    shortName: 'DeliveryGlobal'
     description: 'Delivery informations for an order set bought on this platform'
 
   App\Entity\Favorite:
@@ -74,16 +74,16 @@ resources:
     iri: 'https://schema.org/Message'
 
   App\Entity\OrderDetail:
-    shortName: 'Order detail'
+    shortName: 'OrderDetail'
     description: 'Order:"s details for a product'
 
   App\Entity\OrderGlobal:
-    shortName: 'Order global'
+    shortName: 'OrderGlobal'
     description: 'Shopping cart'
     iri: 'https://schema.org/OrderAction'
 
   App\Entity\OrderReturned:
-    shortName: 'Order returned'
+    shortName: 'OrderReturned'
     description: 'Order returned for a product bought on this platform'
 
   App\Entity\Payment:
@@ -109,7 +109,7 @@ resources:
     iri: 'https://schema.org/Supplier'
 
   App\Entity\SupplierProduct:
-    shortName: 'Supplier:"s Product'
+    shortName: 'SupplierProduct'
     description: 'Products offer by the suppliers on this platform'
     iri: 'https://schema.ord/Offer'
 
@@ -117,6 +117,23 @@ resources:
     shortName: 'User'
     description: 'User:"s of this platform'
     iri: 'https://schema.org/Person'
+    collectionOperations:
+      get : ~
+      #post: ~
+    itemOperations:
+      get: ~
+      #post:
+        #method: 'POST'
+        #path: '/user/{id}/edit'
+        #requirements:
+        #  id: '\d+'
+        #defaults:
+        #  color: 'brown'
+        #host: ''
+        #schemes: ['https']
+        #options:
+        #  my_option: 'my_option_value'
+        #status: 200 # personnaliser le code de status HTTP
 
   App\Entity\Withdrawal:
     shortName: 'Withdrawal'

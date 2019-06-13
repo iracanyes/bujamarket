@@ -16,12 +16,16 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  *
  * @ORM\InheritanceType("JOINED")
- * @ORM\DiscriminatorColumn(name="userType", type="string")
+ * @ORM\DiscriminatorColumn(name="userType", type="string", length=15)
  * @ORM\DiscriminatorMap({"user"="User", "customer"="Customer", "supplier"="Supplier", "admin"="Admin"})
  * @ UniqueEntity("email")
  */
 class User implements UserInterface
 {
+    public const TYPE_CUSTOMER = 'customer';
+    public const TYPE_SUPPLIER = 'supplier';
+    public const TYPE_ADMIN = 'admin';
+
     /**
      * @var integer $id ID of this user
      *

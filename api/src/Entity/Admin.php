@@ -60,14 +60,14 @@ class Admin extends User
 
     public function __construct()
     {
-        User::__construct();
+        parent::__construct();
         $this->respondedForums = new ArrayCollection();
         $this->billRefunds = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getUserType(): string
     {
-        return $this->id;
+        return $this::TYPE_ADMIN;
     }
 
     public function getNbRefundValidated(): ?int

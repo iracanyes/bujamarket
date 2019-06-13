@@ -103,14 +103,14 @@ class Supplier extends User
 
     public function __construct()
     {
-        User::__construct();
+        parent::__construct();
         $this->supplierProducts = new ArrayCollection();
         $this->supplierBills = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getUserType(): string
     {
-        return $this->id;
+        return $this::TYPE_SUPPLIER;
     }
 
     public function getSocialReason(): ?string

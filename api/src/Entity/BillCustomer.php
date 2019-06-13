@@ -88,9 +88,9 @@ class BillCustomer extends  Bill
 
     }
 
-    public function getId(): ?int
+    public function getBillType(): string
     {
-        return $this->id;
+        return $this::TYPE_CUSTOMER_BILL;
     }
 
     public function getAdditionalCost(): ?float

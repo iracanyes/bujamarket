@@ -48,9 +48,14 @@ class BillSupplier extends Bill
      */
     private $supplier;
 
-    public function getId(): ?int
+    public function __construct()
     {
-        return $this->id;
+        parent::__construct();
+    }
+
+    public function getBillType(): string
+    {
+        return $this::TYPE_SUPPLIER_BILL;
     }
 
     public function getDeliveryCost(): ?float

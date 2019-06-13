@@ -19,6 +19,12 @@ use ApiPlatform\Core\Annotation\ApiResource;
  */
 class Bill
 {
+    public const TYPE_CUSTOMER_BILL = 'customer';
+
+    public const TYPE_SUPPLIER_BILL = 'supplier';
+
+    public const TYPE_REFUND_BILL = 'refund';
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -108,6 +114,18 @@ class Bill
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getBillType() :string
+    {
+        return $this->billType;
+    }
+
+    public function setBillType(string $billType): self
+    {
+        $this->billType = $billType;
+
+        return $this;
     }
 
 

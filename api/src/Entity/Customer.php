@@ -103,7 +103,7 @@ class Customer extends User
 
     public function __construct()
     {
-        User::__construct();
+        parent::__construct();
         $this->orderGlobals = new ArrayCollection();
         $this->customerBills = new ArrayCollection();
         $this->refundBills = new ArrayCollection();
@@ -111,9 +111,9 @@ class Customer extends User
         $this->favorites = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getUserType(): string
     {
-        return $this->id;
+        return $this::TYPE_CUSTOMER;
     }
 
     public function getCustomerKey(): ?string

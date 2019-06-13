@@ -105,9 +105,9 @@ class BillRefund extends Bill
         $this->additionalCost = 0;
     }
 
-    public function getId(): ?int
+    public function getBillType(): string
     {
-        return $this->id;
+        return $this::TYPE_REFUND_BILL;
     }
 
     public function getReason(): ?string
