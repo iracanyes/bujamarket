@@ -16,7 +16,7 @@ import 'font-awesome/css/font-awesome.css';
 import * as serviceWorker from './serviceWorker';
 
 
-/* Import your reducers and routes here */
+/* Importation des reducers et des routes de l'appli */
 
 /* Reducers */
 // import reducers
@@ -24,8 +24,12 @@ import address from './reducers/address/';
 import admin from './reducers/admin/';
 import bankaccount from './reducers/bankaccount/';
 import bill from './reducers/bill/';
+import billcustomer from './reducers/billcustomer/';
+import billrefund from './reducers/billrefund/';
+import billsupplier from './reducers/billsupplier/';
 import category from './reducers/category/';
 import comment from './reducers/comment/';
+import customer from './reducers/customer/';
 import deliverydetail from './reducers/deliverydetail/';
 import deliveryglobal from './reducers/deliveryglobal/';
 import favorite from './reducers/favorite/';
@@ -50,8 +54,12 @@ import addressRoutes from './routes/address';
 import adminRoutes from './routes/admin';
 import bankAccountRoutes from './routes/bankaccount';
 import billRoutes from './routes/bill';
+import billCustomerRoutes from './routes/billcustomer';
+import billRefundRoutes from './routes/billrefund';
+import billSupplierRoutes from './routes/billsupplier';
 import categoryRoutes from './routes/category';
 import commentRoutes from './routes/comment';
+import customerRoutes from './routes/customer';
 import deliveryDetailRoutes from './routes/deliverydetail';
 import deliveryGlobalRoutes from './routes/deliveryglobal';
 import favoriteRoutes from './routes/favorite';
@@ -78,8 +86,12 @@ const store = createStore(
     admin,
     bankaccount,
     bill,
+    billcustomer,
+    billrefund,
+    billsupplier,
     category,
     comment,
+    customer,
     deliverydetail,
     deliveryglobal,
     favorite,
@@ -105,14 +117,18 @@ ReactDOM.render(
     <ConnectedRouter history={history}>
       <BrowserRouter>
         <Switch>
-          <Route path="/" component={Welcome} strict={true} exact={true}/>
+          <Route path="/dev" component={Welcome} strict={true} exact={true}/>
           {/* Add your routes here */}
           { addressRoutes }
           { adminRoutes }
           { bankAccountRoutes }
           { billRoutes }
+          { billCustomerRoutes }
+          { billRefundRoutes }
+          { billSupplierRoutes }
           { categoryRoutes }
           { commentRoutes }
+          { customerRoutes }
           { deliveryDetailRoutes }
           { deliveryGlobalRoutes }
           { favoriteRoutes }
