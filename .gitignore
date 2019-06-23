@@ -16,5 +16,5 @@ shared
 ###> Security ###
 
 /bin
-yarn.lock
+
 ###< Security ###
