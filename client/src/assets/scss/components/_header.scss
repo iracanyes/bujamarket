@@ -1,0 +1,97 @@
+/**
+* Nom: Iracanyes
+* Description: Header Stylesheets
+* Date: 26/06/19
+*/
+
+/************** HEADER ****************/
+
+header{
+
+
+  nav#navbar-primary{
+    justify-content: space-evenly;
+    padding-top: 10px;
+    /*---- Brand ---------*/
+    a.navbar-brand{
+      font-size: 1.75em;
+      font-family: 'Carter One', cursive;
+    }
+
+    /*---- Search Form ----*/
+    form{
+      div.form-group{
+        border-radius: 1em 0 0 1em;
+        overflow: hidden;
+
+
+
+      }
+
+      input[type=search]{
+        border-radius: unset;
+      }
+
+      button{
+        border-top-left-radius: unset;
+        border-bottom-left-radius: unset;
+        border-top-right-radius: 1em;
+        border-bottom-right-radius: 1em;
+      }
+
+    }
+    /*---- Main menu -----*/
+    div.navbar-collapse{
+
+      ul.navbar-nav{
+        flex-direction: row;
+
+        li.nav-item{
+          margin: 5px 20px;
+
+          i{
+            font-size: 14px;
+            margin-right: 10px;
+          }
+
+          i.fa-mail-bulk::before{
+            content: "\f674";
+            color: white;
+          }
+
+          /*--- Main Menu : Fontawesome  + text  ---*/
+          a.nav-link{
+            svg.menu-top-l1{
+              display: block !important;
+              margin: 0 auto !important;
+            }
+          }
+
+          /*----- Submenu ------*/
+          div.dropdown-menu{
+            button.dropdown-item{
+              a.nav-link{
+                color: $primary-color;
+                /*-- SubMenu  - Fontawesome icons  --*/
+                svg{
+                  margin-right: 10px;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    /* Search Form */
+    form.form-inline{
+
+      button.btn-outline-primary{
+        color: white;
+        border-color: white;
+      }
+    }
+  }
+
+}
+/************** END HEADER ****************/

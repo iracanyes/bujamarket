@@ -1,0 +1,205 @@
+/**
+ * Nom:
+ * Description: Style Global
+ */
+
+
+
+/************************** Style général *************************************/
+body, html{
+  height:100%;
+}
+
+body{
+  font-family: "Kanit","Dosis", "Lato", Arial,sans-serif;
+  box-sizing: border-box;
+  //background-image: url("../img/background-cement-concrete.jpg");
+  /* Attention : URL relatif à la page index.scss qui importe ce fichier */
+  background-image: url("./../img/parallax-gris.jpg");
+  background-repeat: no-repeat;
+  background-size: 100% 2300px;
+}
+
+div.welcome{
+  height: 100%;
+  width: 100%;
+}
+
+/* Sticky menu */
+.sticky{
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 10000;
+}
+
+/*********** Owl Carousel *********/
+
+.section-owl-carousel {
+  position: relative;
+  .container-fluid {
+    padding: 60px;
+    position: relative;
+    max-width: 1230px;
+
+    div.owl-carousel{
+      //z-index: 10 !important;
+    }
+  }
+  .thumbnail {
+    margin: 0 15px;
+  }
+  .customNavigation {
+    transform: translateY(-50%);
+    top: calc(50% - 37px);
+    position: absolute;
+    width: 100%;
+    left: 0;
+  }
+  .customNavigation>span {
+    transform: translateY(-50%);
+    top: 50%;
+    position: absolute;
+  }
+  .pager-left {
+    left: calc(0% + 15px);
+  }
+  .pager-right {
+    right: calc(0% + 15px);
+  }
+  .next, .prev {
+    font-size: 28px;
+    color: #ccc;
+  }
+}
+
+
+
+
+/************** FOOTER *****************/
+footer{
+  padding: 0 30px;
+
+  div.col-sm-4{
+    padding: 0;
+  }
+
+  /** Footer section 1 **/
+  div.footer-section-1{
+    h4{
+      margin-left: 25px;
+    }
+
+    nav.navbar{
+      ul.navbar-nav{
+        div.btn-group{
+          button.btn{
+            width: 150px;
+            border-color: unset;
+          }
+        }
+      }
+    }
+  }
+
+  /** Footer section 2 **/
+  div.footer-section-2{
+    justify-content: end;
+  }
+
+  p.copyright{
+    //position: absolute;
+    //right: 30px;
+  }
+}
+
+
+/*************** MAIN ***********************/
+
+
+/*** MAIN - GLOBAL STYLE ****/
+
+main{
+  overflow: hidden;
+  margin-bottom: 60px;
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+
+  /************** ASIDE **********************/
+
+
+
+
+
+  /************** ROOT **********************/
+
+  div#root{
+    //flex: 0 0 50%;
+    max-width: 83.33%;
+    flex: 0 0 83.33%;
+    width: 100%;
+    float:left;
+    padding: 0 10px;
+
+  }
+
+  /* Avatar rounded */
+  img.xs-rounded-avatar{
+    width: 70px;
+    margin: 10px 15px;
+  }
+
+  img.sm-rounded-avatar{
+    width: 100px;
+    margin: 10px 15px;
+  }
+
+  section#main-content{
+    width: 100%;
+
+    /* Carousel - Categories */
+    section.category-cards{
+
+      div.container-fluid{
+
+        /* Titre */
+        h3{
+          text-align: center;
+        }
+
+      }
+    }
+
+
+    /* Home Parallax 3 - Inscription */
+    div.parallax3{
+      height: 600px !important;
+
+      div.col-lg-4{
+        margin: 5px;
+        padding: 0;
+        width: 31% !important;
+        max-width: 31%;
+      }
+    }
+
+
+
+    section.recent-grains, section.recent-articles{
+      padding: 25px 15px;
+
+      h3{
+        padding-bottom: 20px;
+        text-align: center;
+
+      }
+    }
+  }
+
+
+}
+
+/*** END MAIN - GLOBAL STYLE ****/

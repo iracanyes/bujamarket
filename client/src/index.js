@@ -11,10 +11,24 @@ import {
   connectRouter,
   routerMiddleware
 } from 'connected-react-router';
-import 'bootstrap/dist/css/bootstrap.css';
-import 'font-awesome/css/font-awesome.css';
+
+
+/* Service worker */
 import * as serviceWorker from './serviceWorker';
 
+/* Internationalisation : FormatJS/React-Intl */
+import { IntlProvider } from "react-intl";
+import acceptLanguage from 'accept-language';
+import "./config/internationalization.js";
+
+/* Stylesheets */
+import 'bootstrap/dist/css/bootstrap.css';
+
+import './assets/scss/index.scss';
+
+/* @fortawesome/react-fontawesome */
+
+import './layout/FontAwesome';
 
 /* Importation des reducers et des routes de l'appli */
 
@@ -50,6 +64,7 @@ import withdrawal from  './reducers/withdrawal/';
 /* Routes */
 //import routes
 import Welcome from './Welcome';
+import Homepage from './layout/Homepage';
 import addressRoutes from './routes/address';
 import adminRoutes from './routes/admin';
 import bankAccountRoutes from './routes/bankaccount';
@@ -112,45 +127,51 @@ const store = createStore(
   applyMiddleware(routerMiddleware(history), thunk)
 );
 
+
+
 ReactDOM.render(
   <Provider store={store}>
-    <ConnectedRouter history={history}>
-      <BrowserRouter>
-        <Switch>
-          <Route path="/dev" component={Welcome} strict={true} exact={true}/>
-          {/* Add your routes here */}
-          { addressRoutes }
-          { adminRoutes }
-          { bankAccountRoutes }
-          { billRoutes }
-          { billCustomerRoutes }
-          { billRefundRoutes }
-          { billSupplierRoutes }
-          { categoryRoutes }
-          { commentRoutes }
-          { customerRoutes }
-          { deliveryDetailRoutes }
-          { deliveryGlobalRoutes }
-          { favoriteRoutes }
-          { forumRoutes }
-          { imageRoutes }
-          { messageRoutes }
-          { orderDetailRoutes }
-          { orderGlobalRoutes }
-          { orderreturnedRoutes }
-          { paymentRoutes }
-          { productRoutes }
-          { shipperRoutes }
-          { supplierRoutes }
-          { supplierProductRoutes }
-          { userRoutes }
-          { withdrawalRoutes }
+    <IntlProvider locale={"fr"}>
+        <ConnectedRouter history={history}>
+          <BrowserRouter>
+            <Switch>
+              <Route path="/dev" component={Welcome} strict={true} exact={true}/>
+              <Route path="/" component={Homepage} strict={true} exact={true} />
+              {/* Add your routes here */}
+              { addressRoutes }
+              { adminRoutes }
+              { bankAccountRoutes }
+              { billRoutes }
+              { billCustomerRoutes }
+              { billRefundRoutes }
+              { billSupplierRoutes }
+              { categoryRoutes }
+              { commentRoutes }
+              { customerRoutes }
+              { deliveryDetailRoutes }
+              { deliveryGlobalRoutes }
+              { favoriteRoutes }
+              { forumRoutes }
+              { imageRoutes }
+              { messageRoutes }
+              { orderDetailRoutes }
+              { orderGlobalRoutes }
+              { orderreturnedRoutes }
+              { paymentRoutes }
+              { productRoutes }
+              { shipperRoutes }
+              { supplierRoutes }
+              { supplierProductRoutes }
+              { userRoutes }
+              { withdrawalRoutes }
 
-          <Route render={() => <h1>Not Found</h1>} />
-        </Switch>
-      </BrowserRouter>
-    </ConnectedRouter>
-  </Provider>,
+              <Route render={() => <h1>Not Found</h1>} />
+            </Switch>
+          </BrowserRouter>
+        </ConnectedRouter>
+    </IntlProvider>
+  </Provider>
+  ,
   document.getElementById('root')
 );
 

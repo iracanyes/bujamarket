@@ -1,0 +1,93 @@
+/**
+ * Name: Iracanyes
+ * Description: Sidebar Left
+ */
+
+aside#aside-left{
+  -ms-flex: 0 0 16.666667%;
+  flex: 0 0 16.666667%;
+  max-width: 16.666667%;
+  float: left !important;
+  -ms-flex-direction: column !important;
+  flex-direction: column !important;
+  position: relative;
+  width: 100%;
+  min-height: 1px;
+  background-color: transparent;
+
+
+  /* MENU LEFT */
+  div.menu{
+    background-color: white;
+    border-right: 2px solid $secondary-color;
+    ul.nav{
+      overflow-y: auto;
+
+      li.nav-item{
+
+        .show{
+          display: contents !important;
+        }
+
+
+
+        a.nav-link{
+          i{
+            margin-right: 10px;
+          }
+        }
+
+        div.dropdown-menu{
+
+          ul{
+            padding-left: 0px;
+          }
+          span{
+            margin-right: 10px;
+          }
+
+
+          a{
+            color: $primary-color;
+            display: block;
+            width: 100%;
+            padding: 0.25rem 1.5rem;
+            clear: both;
+            font-weight: 400;
+            text-align: inherit;
+            white-space: nowrap;
+            background-color: transparent;
+            border: 0;
+          }
+
+          a.dropdown-toggle{
+            margin: 0.25rem 1.5rem;
+          }
+
+          div.dropdown-menu{
+            .dropdown-item{
+              color: $primary-color !important;
+              display: block;
+              width: 100%;
+              padding: 0.25rem 1.5rem !important;
+              clear: both;
+              font-weight: 400;
+              text-align: inherit;
+              white-space: nowrap;
+              background-color: transparent;
+              border: 0;
+              margin: 0.25rem 2rem;
+            }
+
+            .dropdown-item:hover{
+              color: $primary-color !important;
+            }
+          }
+        }
+
+      }
+
+
+    }
+  }
+}

@@ -1,0 +1,266 @@
+@charset "UTF-8";
+/**
+ * Nom: Iracanyes
+ * Description: Page principal du style
+ *
+ */
+/**
+ * Nom:
+ * Description: Style Global
+ */
+/**
+ * Name: Iracanyes
+ * Description: Sidebar Left
+ */
+aside#aside-left {
+  -ms-flex: 0 0 16.666667%;
+  flex: 0 0 16.666667%;
+  max-width: 16.666667%;
+  float: left !important;
+  -ms-flex-direction: column !important;
+  flex-direction: column !important;
+  position: relative;
+  width: 100%;
+  min-height: 1px;
+  padding-right: 15px;
+  padding-left: 15px;
+  background-color: transparent;
+  /* MENU LEFT */
+}
+aside#aside-left div.menu {
+  background-color: white;
+  border-right: 2px solid #ffc700;
+}
+aside#aside-left div.menu ul.nav {
+  overflow-y: auto;
+}
+aside#aside-left div.menu ul.nav li.nav-item .show {
+  display: contents !important;
+}
+aside#aside-left div.menu ul.nav li.nav-item a.nav-link i {
+  margin-right: 10px;
+}
+aside#aside-left div.menu ul.nav li.nav-item div.dropdown-menu ul {
+  padding-left: 0px;
+}
+aside#aside-left div.menu ul.nav li.nav-item div.dropdown-menu span {
+  margin-right: 10px;
+}
+aside#aside-left div.menu ul.nav li.nav-item div.dropdown-menu a {
+  color: #007BFF;
+  display: block;
+  width: 100%;
+  padding: 0.25rem 1.5rem;
+  clear: both;
+  font-weight: 400;
+  text-align: inherit;
+  white-space: nowrap;
+  background-color: transparent;
+  border: 0;
+}
+aside#aside-left div.menu ul.nav li.nav-item div.dropdown-menu a.dropdown-toggle {
+  margin: 0.25rem 1.5rem;
+}
+aside#aside-left div.menu ul.nav li.nav-item div.dropdown-menu div.dropdown-menu .dropdown-item {
+  color: #007BFF !important;
+  display: block;
+  width: 100%;
+  padding: 0.25rem 1.5rem !important;
+  clear: both;
+  font-weight: 400;
+  text-align: inherit;
+  white-space: nowrap;
+  background-color: transparent;
+  border: 0;
+  margin: 0.25rem 2rem;
+}
+aside#aside-left div.menu ul.nav li.nav-item div.dropdown-menu div.dropdown-menu .dropdown-item:hover {
+  color: #007BFF !important;
+}
+
+/************************** Style général *************************************/
+body, html {
+  height: 100%;
+}
+
+body {
+  font-family: "Kanit", "Dosis", "Lato", Arial, sans-serif;
+  box-sizing: border-box;
+  /* Attention : URL relatif à la page index.scss qui importe ce fichier */
+  background-image: url("./../img/parallax-gris.jpg");
+  background-repeat: no-repeat;
+  background-size: 100% 2300px;
+}
+
+div.welcome {
+  height: 100%;
+  width: 100%;
+}
+
+/* Sticky menu */
+.sticky {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 10000;
+}
+
+/*********** Owl Carousel *********/
+.section-owl-carousel {
+  position: relative;
+}
+.section-owl-carousel .container-fluid {
+  padding: 60px;
+  position: relative;
+  max-width: 1230px;
+}
+.section-owl-carousel .thumbnail {
+  margin: 0 15px;
+}
+.section-owl-carousel .customNavigation {
+  transform: translateY(-50%);
+  top: calc(50% - 37px);
+  position: absolute;
+  width: 100%;
+  left: 0;
+}
+.section-owl-carousel .customNavigation > span {
+  transform: translateY(-50%);
+  top: 50%;
+  position: absolute;
+}
+.section-owl-carousel .pager-left {
+  left: calc(0% + 15px);
+}
+.section-owl-carousel .pager-right {
+  right: calc(0% + 15px);
+}
+.section-owl-carousel .next, .section-owl-carousel .prev {
+  font-size: 28px;
+  color: #ccc;
+}
+
+/************** HEADER ****************/
+header nav#navbar-primary {
+  justify-content: space-evenly;
+  padding-top: 10px;
+  /* Search Form */
+}
+header nav#navbar-primary a.navbar-brand {
+  font-size: 1.75em;
+}
+header nav#navbar-primary div.navbar-collapse ul.navbar-nav {
+  flex-direction: row;
+}
+header nav#navbar-primary div.navbar-collapse ul.navbar-nav li.nav-item {
+  margin: 5px 20px;
+}
+header nav#navbar-primary div.navbar-collapse ul.navbar-nav li.nav-item i {
+  font-size: 14px;
+  margin-right: 10px;
+}
+header nav#navbar-primary div.navbar-collapse ul.navbar-nav li.nav-item i.fa-mail-bulk::before {
+  content: "";
+  color: white;
+}
+header nav#navbar-primary div.navbar-collapse ul.navbar-nav li.nav-item div.dropdown-menu button.dropdown-item a.nav-link {
+  color: #ffc700;
+}
+header nav#navbar-primary div.navbar-collapse ul.navbar-nav li.nav-item div.dropdown-menu button.dropdown-item a.nav-link svg.menu-top-l1 {
+  display: block !important;
+  margin: 0 auto !important;
+}
+header nav#navbar-primary form.form-inline button.btn-outline-primary {
+  color: white;
+  border-color: white;
+}
+
+/************** END HEADER ****************/
+/************** FOOTER *****************/
+footer {
+  padding: 0 30px;
+  /** Footer section 1 **/
+  /** Footer section 2 **/
+}
+footer div.col-sm-4 {
+  padding: 0;
+}
+footer div.footer-section-1 h4 {
+  margin-left: 25px;
+}
+footer div.footer-section-1 nav.navbar ul.navbar-nav div.btn-group button.btn {
+  width: 150px;
+  border-color: unset;
+}
+footer div.footer-section-2 {
+  justify-content: end;
+}
+/*************** MAIN ***********************/
+/*** MAIN - GLOBAL STYLE ****/
+main {
+  overflow: hidden;
+  margin-bottom: 60px;
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+  /************** ASIDE **********************/
+  /************** ROOT **********************/
+  /* Avatar rounded */
+}
+main div#root {
+  max-width: 83.33%;
+  flex: 0 0 83.33%;
+  width: 100%;
+  float: left;
+  padding: 0 10px;
+}
+main img.xs-rounded-avatar {
+  width: 70px;
+  margin: 10px 15px;
+}
+main img.sm-rounded-avatar {
+  width: 100px;
+  margin: 10px 15px;
+}
+main section#main-content {
+  width: 100%;
+  /* Carousel - Categories */
+  /* Home Parallax 3 - Inscription */
+}
+main section#main-content section.category-cards div.container-fluid {
+  /* Titre */
+}
+main section#main-content section.category-cards div.container-fluid h3 {
+  text-align: center;
+}
+main section#main-content div.parallax3 {
+  height: 600px !important;
+}
+main section#main-content div.parallax3 div.col-lg-4 {
+  margin: 5px;
+  padding: 0;
+  width: 31% !important;
+  max-width: 31%;
+}
+main section#main-content section.recent-grains, main section#main-content section.recent-articles {
+  padding: 25px 15px;
+}
+main section#main-content section.recent-grains h3, main section#main-content section.recent-articles h3 {
+  padding-bottom: 20px;
+  text-align: center;
+}
+
+/*** END MAIN - GLOBAL STYLE ****/
+/* Composants */
+/* Pages */
+#homepage {
+  background-color: #007BFF;
+}
+
+#root {
+  background-color: #ffc700;
+}
+
+/*# sourceMappingURL=index.css.map */

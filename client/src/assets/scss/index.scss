@@ -1,0 +1,22 @@
+/**
+ * Nom: Iracanyes
+ * Description: Page principal du style
+ *
+ */
+
+//@import '~bootstrap/dist/css/bootstrap.css';
+//@import "~bootstrap/scss/variables";
+@import "variables";
+@import "page/global";
+
+
+/* Composants */
+@import "components/header";
+@import "components/sidebar-left";
+
+/* Pages */
+@import "page/homepage";
+
+#root{
+  background-color: $fourth-color;
+}
