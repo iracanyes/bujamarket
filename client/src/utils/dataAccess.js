@@ -27,7 +27,7 @@ export function fetch(id, options = {}) {
 
       let errors = { _error: error };
       json.violations.map(
-        violation => (errors[violation.propertyPath] = violation.message)
+        violation => (errors[violation.xpropertyPath] = violation.message)
       );
 
       throw new SubmissionError(errors);

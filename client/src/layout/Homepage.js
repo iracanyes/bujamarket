@@ -12,6 +12,8 @@ import React, {Component, Fragment} from 'react';
 /* Appel des autres composants de la page home */
 import './SidebarLeftMenu';
 import './MainMenu';
+import { NavLink } from "reactstrap";
+import { NavLink as RRDNavLink } from "react-router-dom";
 
 export default class Homepage extends Component
 {
@@ -80,8 +82,9 @@ export default class Homepage extends Component
                           <label className="sr-only" htmlFor="inputPassword6">Mot de passe</label>
                           <div className="input-group">
                             <div className="input-group-prepend">
-                              <div className="input-group-text"><i
-                                className="fas fa-unlock-alt"></i></div>
+                              <div className="input-group-text">
+                                <i className="fas fa-unlock-alt"></i>
+                              </div>
                             </div>
                             <input type="password" id="inputPassword6" className="form-control"
                                    aria-describedby="passwordHelpBlock"
@@ -100,7 +103,7 @@ export default class Homepage extends Component
                             <input className="form-check-input" type="checkbox"
                                    id="autoSizingCheck1"/>
                             <label className="form-check-label" htmlFor="autoSizingCheck1">
-                              Lu et approuvé les <a href="#">conditions générales
+                              Lu et approuvé les <a href="/terms">conditions générales
                               d'utilisation de l'application</a>
                             </label>
                           </div>
@@ -179,7 +182,9 @@ export default class Homepage extends Component
               <h5 className="card-title">Special title treatment</h5>
               <p className="card-text">With supporting text below as a natural lead-in to additional
                 content.</p>
-              <a href="#" className="btn btn-primary">Go somewhere</a>
+              <NavLink tag={RRDNavLink} to={"/homepage"}  className={"btn btn-primary"}>
+                Go Somewhere
+              </NavLink>
             </div>
           </div>
         </div>

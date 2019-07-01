@@ -4,11 +4,20 @@
  * Description: Main Menu : Search bar
  */
 import React, { Component, Fragment } from 'react';
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
 import { Button, Form, FormGroup, Input } from "reactstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { search as searchProduct, reset as resetProduct }from "../../actions/product/search";
 
-export default class SearchForm extends Component
+class SearchForm extends Component
 {
+  static propTypes = {
+    eventSource: PropTypes.instanceOf(EventSource),
+    searchProduct: PropTypes.func.isRequired,
+    resetProduct: PropTypes.func.isRequired
+  };
+
   constructor(props)
   {
     super(props);
@@ -37,7 +46,18 @@ export default class SearchForm extends Component
 
   handleSubmit()
   {
+    if(this.state.searchType === "products")
+    {
+      this.props.search(
+        "products",
+        {
+          "title":this.state.search, "resume":this.state.search
+        })
+      ;
+    }
 
+    if(this.state.searchType === "suppliers")
+      this.props.search("suppliers", {"socialReason": this.state.search});
   }
 
   render()
@@ -45,8 +65,14 @@ export default class SearchForm extends Component
     return <Fragment>
       <Form inline className="col-lg-5">
         <FormGroup>
-          <Input type="select" name="searchType" id="searchType" className="custom-select" value={this.state.searchType} onChange={this.handleSearchTypeChange}>
-            <option value="product" selected>
+          <Input type="select"
+                 name="searchType"
+                 id="searchType"
+                 className="custom-select"
+                 value={this.state.searchType}
+                 onChange={this.handleSearchTypeChange}
+          >
+            <option value="product">
               Produit
             </option>
             <option value="supplier">
@@ -63,3 +89,10 @@ export default class SearchForm extends Component
   }
 
 }
+
+const mapDispatchToProps = dispatch => ({
+  searchProduct: (page, options) => dispatch(searchProduct(page, options)),
+  resetProduct: eventSource => dispatch(resetProduct(eventSource))
+});
+
+export default connect(mapDispatchToProps)(SearchForm);

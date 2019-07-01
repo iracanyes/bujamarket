@@ -1,8 +1,12 @@
 {
-  "app.main_menu.profil.text": "Profil",
-  "app.main_menu.profil.sub_menu.sign_in.title": "Connexion",
-  "app.main_menu.favorites.text": "Favoris",
-  "app.main_menu.shopping_card.text": "Panier de commande",
-  "app.main_menu.chat.text": "Chat",
-  "app.main_menu.about_us.text": "A propos de nous"
+  "app.main_menu.profile.link": "Profil",
+  "app.main_menu.profile.sub_menu.sign_in.link": "Connexion",
+  "app.main_menu.profile.sub_menu.register.link": "Inscription",
+  "app.main_menu.profile.sub_menu.profile.link": "Profil",
+  "app.main_menu.profile.sub_menu.configuration.link": "Configuration",
+  "app.main_menu.profile.sub_menu.logout.link": "Déconnexion",
+  "app.main_menu.favorites.link": "Favoris",
+  "app.main_menu.shopping_card.link": "Panier de commande",
+  "app.main_menu.chat.link": "Chat",
+  "app.main_menu.about_us.link": "A propos de nous"
 }

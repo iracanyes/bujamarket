@@ -155,7 +155,3 @@ export default class SidebarLeftMenu extends Component
     }
 }
 
-ReactDOM.render(
-    <SidebarLeftMenu/>,
-    document.getElementById('aside-left')
-);

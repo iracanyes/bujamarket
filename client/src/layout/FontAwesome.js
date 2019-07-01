@@ -4,7 +4,7 @@
  * Description: Font Awesome library of icons used by the App
  */
 
-import ReactDOM from 'react-dom';
+
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faGoogle } from '@fortawesome/free-brands-svg-icons';
 import {
@@ -21,9 +21,7 @@ import {
   faSignOutAlt
 } from "@fortawesome/free-solid-svg-icons";
 
-import {
-  faUser as farUser
-} from '@fortawesome/free-regular-svg-icons';
+
 
 library.add([
   faComments,
