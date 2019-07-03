@@ -4,36 +4,16 @@
  * Description:
  */
 import React, {Component, Fragment} from "react";
-import {ConnectedRouter, push} from 'connected-react-router';
-import {connect, Provider} from 'react-redux';
 import {
-  Collapse,
   Navbar,
-  NavbarToggler,
   NavbarBrand,
-  Nav,
-  NavItem,
-  NavLink,
-  UncontrolledDropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem
 } from 'reactstrap';
-
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { FormattedMessage } from "react-intl";
 import SearchForm from '../components/page/SearchForm';
 import MainMenu from "./MainMenu";
 
 
 export default class Header extends Component
 {
-  constructor(props)
-  {
-    super(props);
-
-  }
-
 
   render()
   {

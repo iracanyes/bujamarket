@@ -4,14 +4,11 @@
  * Description:
  */
 import React, {Component, Fragment} from "react";
-import { push } from 'connected-react-router';
 import { connect } from 'react-redux';
 import { withRouter, NavLink as RRDNavLink } from "react-router-dom";
 import {
   Collapse,
-  Navbar,
   NavbarToggler,
-  NavbarBrand,
   Nav,
   NavItem,
   NavLink,
@@ -22,7 +19,6 @@ import {
 } from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FormattedMessage } from "react-intl";
-import SearchForm from '../components/page/SearchForm';
 
 
 
@@ -167,12 +163,5 @@ class MainMenu extends Component
   }
 }
 
-const mapStateToProps = state => ({
-  search: state.router.location.search
 
-});
-
-
-
-
-export default withRouter(connect( mapStateToProps )(MainMenu));
+export default withRouter(connect()(MainMenu));

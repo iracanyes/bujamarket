@@ -22,7 +22,6 @@
     "popper.js": "^1.14.7",
     "prettier": "^1.14.3",
     "prop-types": "^15.6.2",
-    "query-string": "^6.8.1",
     "react": "^16.6.0",
     "react-dom": "^16.6.0",
     "react-intl": "^2.9.0",

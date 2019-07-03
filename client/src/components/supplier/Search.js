@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { search, reset } from '../../actions/product/search';
+import { search, reset } from '../../actions/supplier/search';
 
 class Search extends Component {
   static propTypes = {
@@ -11,44 +11,39 @@ class Search extends Component {
     loading: PropTypes.bool.isRequired,
     error: PropTypes.string,
     eventSource: PropTypes.instanceOf(EventSource),
+    deletedItem: PropTypes.object,
     search: PropTypes.func.isRequired,
     reset: PropTypes.func.isRequired
   };
 
   componentDidMount() {
-
-    const MIME_TYPE =  "application/ld+json";
     let headers = new Headers({
-      "Content-Type": MIME_TYPE,
-      "Accept": MIME_TYPE
-    }) ;
-
+      "Content-Type": "application/ld+json",
+      "Accept": "application/ld+json"
+    });
 
     let options = {
       method: "GET",
-      headers: headers,
+      headers: headers
     };
 
-    let urlParams = new URLSearchParams(window.location.search);
+    let route = decodeURIComponent(window.location.search);
 
-    console.log(urlParams.get("title"));
-
-    urlParams.get("title") &&
-      this.props.search(
-        "products?title=" + urlParams.get("title"),
-        options
-      );
+    this.props.search(
+      "suppliers" + route,
+      options
+    );
   }
 
   componentWillReceiveProps(nextProps) {
+    let options = {method: "GET"};
 
-    /*
     if(this.props.page !== nextProps.page)
       nextProps.search(
-        "products" + decodeURIComponent(window.location.search) + "page=" + nextProps.page,
-        { method: "GET", })
+        "suppliers" + decodeURIComponent(window.location.search) + "page=" + nextProps.page,
+        options
 
-     */
+      )
   }
 
   componentWillUnmount() {
@@ -58,7 +53,7 @@ class Search extends Component {
   render() {
     return (
       <div>
-        <h1>Recherche - Produits</h1>
+        <h1>Recherche : Fournisseur</h1>
 
         {this.props.loading && (
           <div className="alert alert-info">Loading...</div>
@@ -82,17 +77,36 @@ class Search extends Component {
           <thead>
             <tr>
               <th>id</th>
-              <th>title</th>
-              <th>resume</th>
-              <th>description</th>
-              <th>countryOrigin</th>
-              <th>weight</th>
-              <th>length</th>
-              <th>width</th>
-              <th>height</th>
-              <th>category</th>
-              <th>productSuppliers</th>
-              <th>images</th>
+              <th>userType</th>
+              <th>socialReason</th>
+              <th>tradeRegisterNumber</th>
+              <th>vatNumber</th>
+              <th>contactFullname</th>
+              <th>contactPhoneNumber</th>
+              <th>contactEmail</th>
+              <th>website</th>
+              <th>supplierProducts</th>
+              <th>supplierBills</th>
+              <th>supplierKey</th>
+              <th>email</th>
+              <th>username</th>
+              <th>roles</th>
+              <th>plainPassword</th>
+              <th>password</th>
+              <th>salt</th>
+              <th>firstname</th>
+              <th>lastname</th>
+              <th>nbErrorConnection</th>
+              <th>banned</th>
+              <th>signinConfirmed</th>
+              <th>dateRegistration</th>
+              <th>language</th>
+              <th>currency</th>
+              <th>image</th>
+              <th>addresses</th>
+              <th>bankAccounts</th>
+              <th>forums</th>
+              <th>messages</th>
               <th colSpan={2} />
             </tr>
           </thead>
@@ -105,17 +119,36 @@ class Search extends Component {
                       {item['@id']}
                     </Link>
                   </th>
-                  <td>{item['title']}</td>
-                  <td>{item['resume']}</td>
-                  <td>{item['description']}</td>
-                  <td>{item['countryOrigin']}</td>
-                  <td>{item['weight']}</td>
-                  <td>{item['length']}</td>
-                  <td>{item['width']}</td>
-                  <td>{item['height']}</td>
-                  <td>{this.renderLinks('categories', item['category'])}</td>
-                  <td>{this.renderLinks('supplier_products', item['productSuppliers'])}</td>
-                  <td>{this.renderLinks('images', item['images'])}</td>
+                  <td>{item['userType']}</td>
+                  <td>{item['socialReason']}</td>
+                  <td>{item['tradeRegisterNumber']}</td>
+                  <td>{item['vatNumber']}</td>
+                  <td>{item['contactFullname']}</td>
+                  <td>{item['contactPhoneNumber']}</td>
+                  <td>{item['contactEmail']}</td>
+                  <td>{item['website']}</td>
+                  <td>{this.renderLinks('supplier_products', item['supplierProducts'])}</td>
+                  <td>{this.renderLinks('bills', item['supplierBills'])}</td>
+                  <td>{item['supplierKey']}</td>
+                  <td>{item['email']}</td>
+                  <td>{item['username']}</td>
+                  <td>{item['roles']}</td>
+                  <td>{item['plainPassword']}</td>
+                  <td>{item['password']}</td>
+                  <td>{item['salt']}</td>
+                  <td>{item['firstname']}</td>
+                  <td>{item['lastname']}</td>
+                  <td>{item['nbErrorConnection']}</td>
+                  <td>{item['banned']}</td>
+                  <td>{item['signinConfirmed']}</td>
+                  <td>{item['dateRegistration']}</td>
+                  <td>{item['language']}</td>
+                  <td>{item['currency']}</td>
+                  <td>{this.renderLinks('images', item['image'])}</td>
+                  <td>{this.renderLinks('addresses', item['addresses'])}</td>
+                  <td>{this.renderLinks('bank_accounts', item['bankAccounts'])}</td>
+                  <td>{this.renderLinks('forums', item['forums'])}</td>
+                  <td>{this.renderLinks('messages', item['messages'])}</td>
                   <td>
                     <Link to={`show/${encodeURIComponent(item['@id'])}`}>
                       <span className="fa fa-search" aria-hidden="true" />
@@ -201,7 +234,7 @@ const mapStateToProps = state => {
     error,
     eventSource,
     deletedItem
-  } = state.product.search;
+  } = state.supplier.search;
   return { retrieved, loading, error, eventSource, deletedItem };
 };
 
