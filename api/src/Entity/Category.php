@@ -3,13 +3,17 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
+ * @ApiResource(attributes={
+        "normalization_context"={"groups"={"product:output"}}
+ * })
  * @ORM\Table(name="bjmkt_category")
  * @ORM\Entity(repositoryClass="App\Repository\CategoryRepository")
  */
@@ -21,6 +25,8 @@ class Category
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"product:output"})
+     *
      */
     private $id;
 
@@ -29,6 +35,7 @@ class Category
      *
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank()
+     * @Groups({"product:output"})
      */
     private $name;
 
@@ -37,6 +44,7 @@ class Category
      *
      * @ORM\Column(type="text")
      * @Assert\NotBlank()
+     * @Groups({"product:output"})
      */
     private $description;
 
@@ -45,6 +53,7 @@ class Category
      *
      * @ORM\Column(type="datetime")
      * @Assert\DateTime()
+     * @Groups({"product:output"})
      */
     private $dateCreated;
 
@@ -66,6 +75,7 @@ class Category
      *     minMessage="The minimum value is {{ limit }}. Your value is {{ value }}",
      *     maxMessage="The maximum value is {{ limit }}. Your value is {{ value }}"
      * )
+     * @Groups({"product:output"})
      */
     private $platformFee;
 

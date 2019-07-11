@@ -28,9 +28,14 @@ export function search(page = "products", options) {
 
     fetch( page, options )
       .then( response =>
-        response.json().then( retrieved => ({retrieved, hubURL: extractHubURL(response)}))
-      )
+        response.json().then( retrieved => {
+
+          return ({retrieved, hubURL: extractHubURL(response)});
+        }
+      ))
       .then(({retrieved, hubURL}) => {
+
+
         retrieved = normalize(retrieved);
 
         dispatch(loading(false));

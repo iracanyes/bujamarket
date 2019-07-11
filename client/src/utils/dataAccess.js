@@ -51,12 +51,17 @@ export function normalize(data) {
     return data;
   }
 
-  // Flatten nested documents
+
+  /* Flatten nested documents
+  * Permet de retourner que l'adresse des subresources !
   return mapValues(data, value =>
     Array.isArray(value)
       ? value.map(v => get(v, '@id', v))
       : get(value, '@id', value)
   );
+
+   */
+  return data;
 }
 
 export function extractHubURL(response) {

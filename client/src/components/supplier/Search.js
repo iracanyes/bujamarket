@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { search, reset } from '../../actions/supplier/search';
+import { Card, CardImg, CardText, CardTitle, Col, Row } from "reactstrap";
 
 class Search extends Component {
   static propTypes = {
@@ -16,6 +17,13 @@ class Search extends Component {
     reset: PropTypes.func.isRequired
   };
 
+  constructor(props)
+  {
+    super(props);
+
+    this.showResults = this.showResults.bind(this);
+  }
+
   componentDidMount() {
     let headers = new Headers({
       "Content-Type": "application/ld+json",
@@ -27,10 +35,13 @@ class Search extends Component {
       headers: headers
     };
 
-    let route = decodeURIComponent(window.location.search);
+    //let route = decodeURIComponent(window.location.search);
+    let urlParams = new URLSearchParams(window.location.search);
+
+
 
     this.props.search(
-      "suppliers" + route,
+      "suppliers?socialReason=" + urlParams.get("socialReason"),
       options
     );
   }
@@ -48,6 +59,74 @@ class Search extends Component {
 
   componentWillUnmount() {
     this.props.reset(this.props.eventSource);
+  }
+
+  showResults()
+  {
+    let items = [];
+
+    const suppliers = this.props.retrieved['hydra:member'] && this.props.retrieved['hydra:member'];
+
+
+
+    console.log("Résultats produits", suppliers);
+
+    let rows = [];
+
+    for(let i = 0; i < Math.ceil(suppliers.length / 10 ); i++)
+    {
+
+      for(let j = 0; j < 3 ; j++)
+      {
+        let resultsPer4 = [];
+
+        for(let k = 0; k < 4; k++)
+        {
+          console.log("Résultats produits " + (i * 10 + j * 3 + k), suppliers[i * 10 + j * 3 + k]);
+
+          if(suppliers[i * 10 + j * 3 + k])
+          {
+
+            resultsPer4.push(
+              <Col key={"products" + (i * 10 + j * 3 + k)} sm="3">
+                <Card body>
+                  {/*
+                  <CardImg top width="100%" src={products[i * 10 + j].images[0].url} alt={products[i * 10 + j].images[0].alt} />
+                  */}
+                  <CardImg top width="100%" src="https://picsum.photos/2000/3000" alt={suppliers[i * 10  + j * 3 + k].image.alt} />
+                  <CardTitle>{suppliers[i * 10 + j * 3 + k]["socialReason"]}</CardTitle>
+                  <CardText>{suppliers[i * 10 + j * 3 + k]["contactPhoneNumber"]}</CardText>
+                  <Link to={`products/show/${encodeURIComponent(suppliers[i * 10 + j * 3 + k]['id'])}`}>
+                    Voir le détail
+                  </Link>
+                </Card>
+              </Col>
+            );
+          }
+
+        }
+
+        rows.push(
+          <Row key={"rows" + j }>
+            {resultsPer4}
+          </Row>
+        );
+
+      }
+
+
+
+
+    }
+
+    let index = 0;
+    items.push(
+      <div id="search-results" key={index++}>
+        {rows}
+      </div>
+    );
+
+    return items;
   }
 
   render() {
@@ -73,7 +152,11 @@ class Search extends Component {
           </Link>
         </p>
 
-        <table className="table table-responsive table-striped table-hover">
+        {this.props.retrieved &&
+          this.showResults()
+        }
+
+        {/*        <table className="table table-responsive table-striped table-hover">
           <thead>
             <tr>
               <th>id</th>
@@ -165,7 +248,7 @@ class Search extends Component {
               ))}
           </tbody>
         </table>
-
+        */}
         {this.pagination()}
       </div>
     );

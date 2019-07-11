@@ -19,7 +19,7 @@ class List extends Component {
     console.log(this.props.match.params.page &&
       decodeURIComponent(this.props.match.params.page));
 
-    console.log("Query-String : location.search => " + document.location.search);
+    //console.log("Query-String : location.search => " + document.location.search);
 
     this.props.list(
       this.props.match.params.page &&

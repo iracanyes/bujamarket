@@ -9,9 +9,12 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
+ * @ApiResource(attributes={
+        "normalization_context"={"groups"={"supplier:output"}}
+ * })
  * @ApiFilter(SearchFilter::class, properties={"socialReason":"partial"})
  * @ORM\Table(name="bjmkt_supplier")
  * @ORM\Entity(repositoryClass="App\Repository\SupplierRepository")
@@ -24,6 +27,7 @@ class Supplier extends User
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"supplier:output"})
      */
     private $id;
 
@@ -32,6 +36,7 @@ class Supplier extends User
      *
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank()
+     * @Groups({"supplier:output"})
      */
     private $socialReason;
 
@@ -40,6 +45,7 @@ class Supplier extends User
      *
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank()
+     * @Groups({"supplier:output"})
      */
     private $tradeRegisterNumber;
 
@@ -48,6 +54,7 @@ class Supplier extends User
      *
      * @ORM\Column(type="string", length=30)
      * @Assert\NotBlank()
+     * @Groups({"supplier:output"})
      */
     private $vatNumber;
 
@@ -56,6 +63,7 @@ class Supplier extends User
      *
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank()
+     * @Groups({"supplier:output"})
      */
     private $contactFullname;
 
@@ -63,6 +71,7 @@ class Supplier extends User
      * @var string $contactPhoneNumber Phone number of this supplier
      * @ORM\Column(type="string", length=50)
      * @Assert\NotBlank()
+     * @Groups({"supplier:output"})
      */
     private $contactPhoneNumber;
 
@@ -71,6 +80,7 @@ class Supplier extends User
      *
      * @ORM\Column(type="string", length=255)
      * @Assert\Email()
+     * @Groups({"supplier:output"})
      */
     private $contactEmail;
 
@@ -79,6 +89,7 @@ class Supplier extends User
      *
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\Url()
+     * @Groups({"supplier:output"})
      */
     private $website;
 

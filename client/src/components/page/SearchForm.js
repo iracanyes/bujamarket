@@ -11,6 +11,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { search as searchProduct, reset as resetProduct }from "../../actions/product/search";
 import { search as searchSupplier, reset as resetSupplier } from "../../actions/supplier/search";
 import { withRouter } from "react-router-dom";
+import { injectIntl } from "react-intl";
 
 class SearchForm extends Component
 {
@@ -54,16 +55,6 @@ class SearchForm extends Component
   {
     e.preventDefault();
 
-    const MIME_TYPE =  "application/ld+json";
-    let headers = new Headers({
-      "Content-Type": MIME_TYPE,
-      "Accept": MIME_TYPE
-    }) ;
-
-
-
-
-
 
     switch(this.state.searchType)
     {
@@ -73,11 +64,17 @@ class SearchForm extends Component
           this.props.history.push("suppliers?socialReason=" + decodeURIComponent(this.state.searchValue));
 
         break;
+      case "products":
+        this.state.searchValue &&
+          this.props.history.push("products?title=" + decodeURIComponent(this.state.searchValue));
+        break;
       default:
         this.state.searchValue &&
           this.props.history.push("products?title=" + decodeURIComponent(this.state.searchValue));
 
     }
+
+    window.location.reload();
 
 
 
@@ -85,6 +82,8 @@ class SearchForm extends Component
 
   render()
   {
+    const { intl } = this.props;
+
     return <Fragment>
       <Form inline className="col-lg-5" onSubmit={this.handleSubmit}>
         <FormGroup>
@@ -96,15 +95,34 @@ class SearchForm extends Component
                  onChange={this.handleSearchTypeChange}
           >
             <option value="products">
-              Produits
+              { intl.formatMessage({
+                id:"app.header.search_form.search_type.products",
+                defaultMessage: "Produits",
+                description: "Header search form : search type product"
+              }) }
             </option>
             <option value="suppliers">
-              Fournisseurs
+              {intl.formatMessage({
+                id: "app.header.search_form.search_type.suppliers",
+                defaultMessage: "Fournisseurs",
+                description: "Header search form : search type suppliers"
+              })}
             </option>
           </Input>
         </FormGroup>
-        <Input className="form-control col-lg-8" type='search' aria-label='Search' placeholder="Recherche" value={this.state.searchValue} onChange={this.handleSearchValueChange}/>
-        <Button outline color="primary" className={"my-2 my-sm-0"}>
+        <Input className="form-control col-lg-8"
+               type='search'
+               aria-label='Search'
+               placeholder={intl.formatMessage({
+                 id:"app.search_form.search_input.text",
+                 defaultMessage: "Recherche",
+                 description: "Header search form search input placeholder"
+               })}
+               value={this.state.searchValue}
+               onChange={this.handleSearchValueChange}
+               onClick={this.reset}
+        />
+        <Button type="submit" outline color="primary" className={"my-2 my-sm-0"}>
           <FontAwesomeIcon icon="search" />
         </Button>
       </Form>
@@ -120,4 +138,4 @@ const mapDispatchToProps = dispatch => ({
   resetSupplier: eventSource => dispatch(resetSupplier(eventSource))
 });
 
-export default withRouter(connect(null, mapDispatchToProps )(SearchForm));
+export default withRouter(injectIntl(connect(null, mapDispatchToProps )(SearchForm)));

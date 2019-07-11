@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ApiResource()
@@ -66,6 +67,7 @@ class User implements UserInterface
      *
      * @ORM\Column(type="string", length=100)
      * @Assert\NotBlank()
+     * @Groups({"supplier:output"})
      */
     private $firstname;
 
@@ -74,6 +76,7 @@ class User implements UserInterface
      *
      * @ORM\Column(type="string", length=100)
      * @Assert\NotBlank()
+     * @Groups({"supplier:output"})
      */
     private $lastname;
 
@@ -131,6 +134,7 @@ class User implements UserInterface
      *
      * @ORM\OneToOne(targetEntity="App\Entity\Image", inversedBy="user", cascade={"persist", "remove"})
      * @Assert\Type("App\Entity\Image")
+     * @Groups({"supplier:output"})
      */
     private $image;
 
@@ -138,6 +142,7 @@ class User implements UserInterface
      * @var Collection $addresses Receiving addresses of this user
      *
      * @ORM\OneToMany(targetEntity="App\Entity\Address", mappedBy="user")
+     * @Groups({"supplier:output"})
      */
     private $addresses;
 

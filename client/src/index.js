@@ -159,7 +159,7 @@ ReactDOM.render(
                   <aside id="aside-left">
 
                   </aside>
-                  <div className="col col-lg-12">
+                  <section id="main-content" className="col col-lg-12">
                     <Route path="/dev" component={Welcome} strict={true} exact={true}/>
                     <Route path="/" component={Homepage} strict={true} exact={true} />
                     {/* Add your routes here */}
@@ -189,7 +189,7 @@ ReactDOM.render(
                     { supplierProductRoutes }
                     { userRoutes }
                     { withdrawalRoutes }
-                  </div>
+                  </section>
                 </main>
               </Fragment>
 

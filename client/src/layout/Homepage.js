@@ -6,7 +6,7 @@
 import React, {Component, Fragment} from 'react';
 //import '../assets/scss/page/_homepage.scss';
 
-//import CarouselCategories from '../components/category/CarouselCategories';
+import CarouselCategories from '../components/category/CarouselCategories';
 //import CarouselRecentArticles from '../components/article/CarouselRecent';
 //import CarouselRecentGrains from '../components/grain/CarouselRecent';
 /* Appel des autres composants de la page home */
@@ -23,8 +23,8 @@ export default class Homepage extends Component
         {/* Carousel - Categories  */}
         <section className="category-cards bg-transparent pt60 pb60">
           <div className="container-fluid">
-            <h3>Catégories</h3>
-            {/* <CarouselCategories/> */}
+            <h3>Catégories de produits</h3>
+            <CarouselCategories/>
           </div>
           {/* .container */}
         </section>

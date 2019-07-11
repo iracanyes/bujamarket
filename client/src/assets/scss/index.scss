@@ -6,16 +6,19 @@
 
 //@import '~bootstrap/dist/css/bootstrap.css';
 //@import "~bootstrap/scss/variables";
+
 @import "variables";
-@import "page/global";
+
 
 
 /* Composants */
-@import "components/header";
-@import "components/sidebar-left";
+@import "components/layout/header";
+@import "components/layout/sidebar-left";
 
 /* Pages */
-@import "page/homepage";
+@import "components/page/global";
+@import "components/page/homepage";
+@import "components/page/search";
 
 #root{
   background-color: $fourth-color;

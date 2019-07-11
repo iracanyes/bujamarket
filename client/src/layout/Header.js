@@ -1,7 +1,7 @@
 /**
  * Author: iracanyes
  * Date: 23/06/19
- * Description:
+ * Description: Header
  */
 import React, {Component, Fragment} from "react";
 import {
@@ -10,6 +10,7 @@ import {
 } from 'reactstrap';
 import SearchForm from '../components/page/SearchForm';
 import MainMenu from "./MainMenu";
+
 
 
 export default class Header extends Component

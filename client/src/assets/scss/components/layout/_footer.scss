@@ -1,0 +1,36 @@
+/************** FOOTER *****************/
+footer{
+  padding: 0 30px;
+
+  div.col-sm-4{
+    padding: 0;
+  }
+
+  /** Footer section 1 **/
+  div.footer-section-1{
+    h4{
+      margin-left: 25px;
+    }
+
+    nav.navbar{
+      ul.navbar-nav{
+        div.btn-group{
+          button.btn{
+            width: 150px;
+            border-color: unset;
+          }
+        }
+      }
+    }
+  }
+
+  /** Footer section 2 **/
+  div.footer-section-2{
+    justify-content: end;
+  }
+
+  p.copyright{
+    //position: absolute;
+    //right: 30px;
+  }
+}

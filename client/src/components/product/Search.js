@@ -1,8 +1,17 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { search, reset } from '../../actions/product/search';
+import {
+  Card,
+  CardImg,
+  Button,
+  CardTitle,
+  CardText,
+  Row,
+  Col
+} from 'reactstrap';
 
 class Search extends Component {
   static propTypes = {
@@ -14,6 +23,23 @@ class Search extends Component {
     search: PropTypes.func.isRequired,
     reset: PropTypes.func.isRequired
   };
+
+  constructor(props)
+  {
+    super(props);
+
+    this.state = {
+      activeIndex : 0 ,
+      searchValue : new URLSearchParams(window.location.search).get("title")
+    };
+
+    this.next = this.next.bind(this);
+    this.previous = this.previous.bind(this);
+    this.goToIndex = this.goToIndex.bind(this);
+    this.onExiting = this.onExiting.bind(this);
+    this.onExited = this.onExited.bind(this);
+    this.createCarouselItems = this.createCarouselItems.bind(this);
+  }
 
   componentDidMount() {
 
@@ -32,32 +58,123 @@ class Search extends Component {
     let urlParams = new URLSearchParams(window.location.search);
 
     console.log(urlParams.get("title"));
+    this.setState({searchValue : urlParams.get("title")});
 
     urlParams.get("title") &&
       this.props.search(
         "products?title=" + urlParams.get("title"),
         options
       );
+
   }
+
 
   componentWillReceiveProps(nextProps) {
 
-    /*
-    if(this.props.page !== nextProps.page)
-      nextProps.search(
-        "products" + decodeURIComponent(window.location.search) + "page=" + nextProps.page,
-        { method: "GET", })
-
-     */
   }
 
   componentWillUnmount() {
     this.props.reset(this.props.eventSource);
   }
 
+  onExiting()
+  {
+    this.animating = true;
+  }
+
+  onExited()
+  {
+    this.animating = false;
+  }
+
+  next()
+  {
+    if(this.animating) return;
+    console.log(this.props.retrieved['hydra:member'][0].length);
+    const nextIndex = this.state.activeIndex === (Math.ceil(this.props.retrieved['hydra:member'][0].length / 6) - 1) ? 0 : this.state.activeIndex + 1;
+    this.setState({activeIndex: nextIndex});
+
+  }
+
+  previous()
+  {
+    if(this.animating) return;
+
+    const nextIndex = this.state.activeIndex === 0 ? (Math.ceil(this.props.retrieved['hydra:member'][1].length / 6) - 1) : this.state.activeIndex -1;
+    this.setState({activeIndex: nextIndex});
+  }
+
+  goToIndex(nexIndex)
+  {
+    if(this.animating) return;
+    this.setState({ activeIndex: nexIndex });
+  }
+
+  createCarouselItems()
+  {
+    let items = [];
+
+    const products = this.props.retrieved['hydra:member'] && this.props.retrieved['hydra:member'];
+
+
+
+    console.log("Résultats produits", products);
+
+    let rows = [];
+
+    for(let i = 0; i < Math.ceil(products.length / 10 ); i++)
+    {
+
+      let resultsPer4 = [];
+
+      for(let j = 0; j < 4; j++)
+      {
+        console.log("Résultats produits " + j, products[i * 10 + j]);
+
+        if(products[i * 10 + j])
+        {
+
+          resultsPer4.push(
+            <Col key={"products" + (i * 10 + j)} sm="3">
+              <Card body>
+                {/*
+                <CardImg top width="100%" src={products[i * 10 + j].images[0].url} alt={products[i * 10 + j].images[0].alt} />
+                */}
+                <CardImg top width="100%" src="https://picsum.photos/2000/3000" alt={products[i * 10 + j].images[0].alt} />
+                <CardTitle>{products[i * 10 + j]["title"]}</CardTitle>
+                <CardText>{products[i * 10 + j]["resume"]}</CardText>
+                <Link to={`show/${encodeURIComponent(products[i * 10 + j]['@id'])}`}>
+                  Voir le détail
+                </Link>
+              </Card>
+            </Col>
+          );
+        }
+
+      }
+
+      rows.push(
+        <Row key={"rows" + (i * 10)}>
+          {resultsPer4}
+        </Row>
+      );
+    }
+
+    let index = 0;
+    items.push(
+      <div id="search-results" key={index++}>
+        {rows}
+      </div>
+    );
+
+    return items;
+
+
+  }
+
   render() {
     return (
-      <div>
+      <Fragment>
         <h1>Recherche - Produits</h1>
 
         {this.props.loading && (
@@ -72,12 +189,12 @@ class Search extends Component {
           <div className="alert alert-danger">{this.props.error}</div>
         )}
 
-        <p>
-          <Link to="create" className="btn btn-primary">
-            Create
-          </Link>
-        </p>
 
+        {this.props.retrieved &&
+          this.createCarouselItems()
+        }
+
+        {/*
         <table className="table table-responsive table-striped table-hover">
           <thead>
             <tr>
@@ -132,9 +249,9 @@ class Search extends Component {
               ))}
           </tbody>
         </table>
-
+        */}
         {this.pagination()}
-      </div>
+      </Fragment>
     );
   }
 

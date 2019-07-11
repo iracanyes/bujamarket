@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 
 /**
@@ -26,18 +27,21 @@ class Address
      *
      * @ORM\Column(type="string", length=255)
      * @Assert\Choice({"Résidence","Adresse de dépôt","Siége social"})
+     * @Groups({"supplier:output"})
      */
     private $locationName;
 
     /**
      * @var string $street Street name
      * @ORM\Column(type="string", length=255)
+     * @Groups({"supplier:output"})
      */
     private $street;
 
     /**
      * @var string $number Address's number
      * @ORM\Column(type="string", length=50)
+     * @Groups({"supplier:output"})
      */
     private $number;
 
@@ -45,18 +49,21 @@ class Address
      * @var string $state State, District
      *
      * @ORM\Column(type="string", length=255)
+     * @Groups({"supplier:output"})
      */
     private $state;
 
     /**
      * @var string $town Address's Town
      * @ORM\Column(type="string", length=255)
+     * @Groups({"supplier:output"})
      */
     private $town;
 
     /**
      * @var string $zipCode Zip code
      * @ORM\Column(type="string", length=50)
+     * @Groups({"supplier:output"})
      */
     private $zipCode;
 
@@ -64,6 +71,7 @@ class Address
      * @var string $country Country
      * @ORM\Column(type="string", length=255)
      * @Assert\Country()
+     * @Groups({"supplier:output"})
      */
     private $country;
 

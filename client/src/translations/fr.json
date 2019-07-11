@@ -1,12 +1,15 @@
 {
-  "app.main_menu.profile.link": "Profil",
-  "app.main_menu.profile.sub_menu.sign_in.link": "Connexion",
-  "app.main_menu.profile.sub_menu.register.link": "Inscription",
-  "app.main_menu.profile.sub_menu.profile.link": "Profil",
-  "app.main_menu.profile.sub_menu.configuration.link": "Configuration",
-  "app.main_menu.profile.sub_menu.logout.link": "Déconnexion",
-  "app.main_menu.favorites.link": "Favoris",
-  "app.main_menu.shopping_card.link": "Panier de commande",
-  "app.main_menu.chat.link": "Chat",
-  "app.main_menu.about_us.link": "A propos de nous"
+  "app.header.search_form.search_type.products": "Produits",
+  "app.header.search_form.search_type.suppliers": "Fournisseurs",
+  "app.search_form.search_input.text": "Recherche",
+  "app.header.main_menu.profile.link": "Profil",
+  "app.header.main_menu.profile.sub_menu.sign_in.link": "Connexion",
+  "app.header.main_menu.profile.sub_menu.register.link": "Inscription",
+  "app.header.main_menu.profile.sub_menu.profile.link": "Profil",
+  "app.header.main_menu.profile.sub_menu.configuration.link": "Configuration",
+  "app.header.main_menu.profile.sub_menu.logout.link": "Déconnexion",
+  "app.header.main_menu.favorites.link": "Favoris",
+  "app.header.main_menu.shopping_card.link": "Panier de commande",
+  "app.header.main_menu.chat.link": "Chat",
+  "app.header.main_menu.about_us.link": "A propos de nous"
 }

@@ -74,46 +74,6 @@ div.welcome{
 }
 
 
-
-
-/************** FOOTER *****************/
-footer{
-  padding: 0 30px;
-
-  div.col-sm-4{
-    padding: 0;
-  }
-
-  /** Footer section 1 **/
-  div.footer-section-1{
-    h4{
-      margin-left: 25px;
-    }
-
-    nav.navbar{
-      ul.navbar-nav{
-        div.btn-group{
-          button.btn{
-            width: 150px;
-            border-color: unset;
-          }
-        }
-      }
-    }
-  }
-
-  /** Footer section 2 **/
-  div.footer-section-2{
-    justify-content: end;
-  }
-
-  p.copyright{
-    //position: absolute;
-    //right: 30px;
-  }
-}
-
-
 /*************** MAIN ***********************/
 
 
@@ -134,31 +94,15 @@ main{
 
 
 
-  /************** ROOT **********************/
-
-  div#root{
-    //flex: 0 0 50%;
-    max-width: 83.33%;
-    flex: 0 0 83.33%;
-    width: 100%;
-    float:left;
-    padding: 0 10px;
-
-  }
-
-  /* Avatar rounded */
-  img.xs-rounded-avatar{
-    width: 70px;
-    margin: 10px 15px;
-  }
-
-  img.sm-rounded-avatar{
-    width: 100px;
-    margin: 10px 15px;
-  }
-
+  /************** MAIN CONTENT **********************/
   section#main-content{
     width: 100%;
+
+    h1{
+      width: 50%;
+      margin: 20px auto;
+      text-align: center;
+    }
 
     /* Carousel - Categories */
     section.category-cards{
@@ -173,6 +117,12 @@ main{
       }
     }
 
+
+    /* List navigation */
+    nav{
+      width: 400px;
+      margin: 20px auto;
+    }
 
     /* Home Parallax 3 - Inscription */
     div.parallax3{
@@ -196,6 +146,17 @@ main{
         text-align: center;
 
       }
+    }
+
+    /* Avatar rounded */
+    img.xs-rounded-avatar{
+      width: 70px;
+      margin: 10px 15px;
+    }
+
+    img.sm-rounded-avatar{
+      width: 100px;
+      margin: 10px 15px;
     }
   }
 

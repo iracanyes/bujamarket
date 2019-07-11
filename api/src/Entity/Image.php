@@ -5,9 +5,12 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
+ * @ApiResource(attributes={
+        "normalization_context"={"groups"={"product:output"}}
+ * })
  * @ORM\Table(name="bjmkt_image")
  * @ORM\Entity(repositoryClass="App\Repository\ImageRepository")
  */
@@ -19,6 +22,7 @@ class Image
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"product:output","supplier:output"})
      */
     private $id;
 
@@ -32,6 +36,7 @@ class Image
      *     minMessage="The minimum value is {{ limit }}.\nThe current value is {{ value }}.",
      *     maxMessage="The maximum value is {{ limit }}.\nThe current value is {{ value }}."
      * )
+     * @Groups({"product:output","supplier:output"})
      */
     private $place;
 
@@ -39,6 +44,7 @@ class Image
      * @var string $title Title of this image
      *
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"product:output","supplier:output"})
      */
     private $title;
 
@@ -46,6 +52,7 @@ class Image
      * @var string $alt Alternative title of this image
      *
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"product:output","supplier:output"})
      */
     private $alt;
 
@@ -55,6 +62,7 @@ class Image
      * @ORM\Column(type="string", length=255)
      * @Assert\NotNull()
      * @Assert\Url()
+     * @Groups({"product:output","supplier:output"})
      */
     private $url;
 
@@ -63,6 +71,7 @@ class Image
      *
      * @ORM\Column(type="integer")
      * @Assert\NotNull()
+     * @Groups({"product:output","supplier:output"})
      */
     private $size;
 
@@ -70,6 +79,7 @@ class Image
      * @var User $user User represented by this image
      *
      * @ORM\OneToOne(targetEntity="App\Entity\User", mappedBy="image", cascade={"persist", "remove"})
+     * @Groups({"user:output"})
      */
     private $user;
 

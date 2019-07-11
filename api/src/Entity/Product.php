@@ -3,15 +3,21 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
+ * @ApiResource(attributes={
+ *     "normalization_context"={"groups"={"product:output"}},
+ *     "denormalization_context"={"groups"={"product:input"}}
+
+ * })
  * @ApiFilter(SearchFilter::class, properties={"title":"partial", "resume":"partial"})
  * @ORM\Table(name="bjmkt_product")
  * @ORM\Entity(repositoryClass="App\Repository\ProductRepository")
@@ -24,6 +30,7 @@ class Product
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"product:output"})
      */
     private $id;
 
@@ -32,6 +39,7 @@ class Product
      *
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank()
+     * @Groups({"product:output"})
      */
     private $title;
 
@@ -40,6 +48,7 @@ class Product
      *
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank()
+     * @Groups({"product:output"})
      */
     private $resume;
 
@@ -48,6 +57,7 @@ class Product
      *
      * @ORM\Column(type="text")
      * @Assert\NotBlank()
+     * @Groups({"product:output"})
      */
     private $description;
 
@@ -55,6 +65,7 @@ class Product
      * @var string $countryOrigin Country where this product was made
      *
      * @ORM\Column(name="country_origin", type="string", length=3)
+     * @Groups({"product:output"})
      */
     private $countryOrigin;
 
@@ -67,6 +78,7 @@ class Product
      *     min=0.0,
      *     maxMessage="The minimum value is {{ limit }}.\The current value is {{ value }}"
      * )
+     * @Groups({"product:output"})
      */
     private $weight;
 
@@ -78,6 +90,7 @@ class Product
      *     min=0.0,
      *     maxMessage="The minimum value is {{ limit }}.\The current value is {{ value }}"
      * )
+     * @Groups({"product:output"})
      */
     private $length;
 
@@ -89,6 +102,7 @@ class Product
      *     min=0.0,
      *     maxMessage="The minimum value is {{ limit }}.\The current value is {{ value }}"
      * )
+     * @Groups({"product:output"})
      */
     private $width;
 
@@ -100,6 +114,7 @@ class Product
      *     min=0.0,
      *     maxMessage="The minimum value is {{ limit }}.\The current value is {{ value }}"
      * )
+     * @Groups({"product:output"})
      */
     private $height;
 
@@ -108,6 +123,7 @@ class Product
      * @ORM\ManyToOne(targetEntity="App\Entity\Category", inversedBy="products")
      * @ORM\JoinColumn(nullable=false)
      * @Assert\Type("App\Entity\Category")
+     * @Groups({"product:output"})
      */
     private $category;
 
@@ -121,6 +137,8 @@ class Product
     /**
      * @var Collection $images Images of the product
      * @ORM\OneToMany(targetEntity="App\Entity\Image", mappedBy="product")
+     * @ApiSubresource()
+     * @Groups({"product:output"})
      */
     private $images;
 
