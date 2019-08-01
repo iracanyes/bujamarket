@@ -1,7 +1,11 @@
 /* Product & Supplier search component */
 div#search-results{
   img.card-img-top{
-    height: 200px;
+    height: 12rem;
+  }
+
+  div.card-title{
+    margin: 0.70rem auto;
   }
 }
 

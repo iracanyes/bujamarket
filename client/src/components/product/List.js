@@ -44,8 +44,6 @@ class List extends Component {
       <div>
         <h1>Product List</h1>
 
-
-
         {this.props.loading && (
           <div className="alert alert-info">Loading...</div>
         )}

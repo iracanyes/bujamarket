@@ -69,20 +69,20 @@ class Search extends Component {
 
 
 
-    console.log("Résultats produits", suppliers);
+    console.log("Résultats suppliers", suppliers);
 
     let rows = [];
 
-    for(let i = 0; i < Math.ceil(suppliers.length / 10 ); i++)
+    for(let i = 0; i < Math.ceil(suppliers.length / 12 ); i++)
     {
 
-      for(let j = 0; j < 3 ; j++)
+      for(let j = 0; j < 12 ; j++)
       {
         let resultsPer4 = [];
 
         for(let k = 0; k < 4; k++)
         {
-          console.log("Résultats produits " + (i * 10 + j * 3 + k), suppliers[i * 10 + j * 3 + k]);
+          console.log("Résultats produits " + (i * 12 + j * 3 + k), suppliers[i * 10 + j * 3 + k]);
 
           if(suppliers[i * 10 + j * 3 + k])
           {
@@ -94,8 +94,15 @@ class Search extends Component {
                   <CardImg top width="100%" src={products[i * 10 + j].images[0].url} alt={products[i * 10 + j].images[0].alt} />
                   */}
                   <CardImg top width="100%" src="https://picsum.photos/2000/3000" alt={suppliers[i * 10  + j * 3 + k].image.alt} />
-                  <CardTitle>{suppliers[i * 10 + j * 3 + k]["socialReason"]}</CardTitle>
-                  <CardText>{suppliers[i * 10 + j * 3 + k]["contactPhoneNumber"]}</CardText>
+                  <CardTitle>
+                    {suppliers[i * 10 + j * 3 + k]["socialReason"]}
+                  </CardTitle>
+                  <CardText>
+                    {suppliers[i * 10 + j * 3 + k]["contactPhoneNumber"]}
+                  </CardText>
+                  <CardText>
+                    {suppliers[i * 10 + j * 3 + k]["contactEmail"]}
+                  </CardText>
                   <Link to={`products/show/${encodeURIComponent(suppliers[i * 10 + j * 3 + k]['id'])}`}>
                     Voir le détail
                   </Link>

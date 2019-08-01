@@ -53,6 +53,7 @@ class SearchForm extends Component
 
   handleSubmit(e)
   {
+    // Empêche le bouton click de soumettre le formulaire
     e.preventDefault();
 
 
