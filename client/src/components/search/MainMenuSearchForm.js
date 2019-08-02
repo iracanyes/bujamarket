@@ -118,7 +118,15 @@ class MainMenuSearchForm extends Component
 
     if(this.state.searchType === "products")
     {
-      const results = this.props.retrievedProducts["hydra:member"].filter(item => item.title === this.state.searchValue);
+      console.log("SearchType : ", this.state.searchType);
+      console.log("SearchValue (state): ", this.state.searchValue);
+      console.log("SearchValue (event): ", e.target.value);
+
+      console.log("Produits - Resultat avant filtrage", this.props.retrievedProducts["hydra:member"] );
+
+      const results = this.props.retrievedProducts["hydra:member"].filter(item => item.title.toLowerCase().indexOf(e.target.value.toLowerCase()) > -1 );
+
+      console.log("Produits - Resultat après filtrage", results );
 
       this.props.onSearch({
         searchType: this.state.searchType,
@@ -127,7 +135,15 @@ class MainMenuSearchForm extends Component
       });
     }else
     {
-      const results = this.props.retrievedSuppliers["hydra:member"].filter(item => item.socialReason === this.state.searchValue);
+      console.log("SearchType : ", this.state.searchType);
+      console.log("SearchValue (state): ", this.state.searchValue);
+      console.log("SearchValue (event): ", e.target.value);
+
+      console.log("Produits - Resultat avant filtrage", this.props.retrievedProducts["hydra:member"] );
+
+      const results = this.props.retrievedSuppliers["hydra:member"].filter(item => item["socialReason"].toLowerCase().indexOf(e.target.value.toLowerCase()) > -1);
+
+      console.log("Produits - Resultat après filtrage", results );
 
       this.props.onSearch({
         searchType: this.state.searchType,
