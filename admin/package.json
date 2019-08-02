@@ -1,7 +1,7 @@
 {
   "name": "admin",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
   "dependencies": {
     "@api-platform/admin": "^0.6.1",
     "@babel/runtime": "7.0.0-beta.55",
@@ -20,5 +20,10 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "description": "Admin interface for the App",
+  "main": "index.js",
+  "repository": "https://github.com/iracanyes/bujamarket/admin",
+  "author": "Iracanyes",
+  "license": "MIT"
 }
