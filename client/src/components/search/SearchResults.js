@@ -205,7 +205,11 @@ class SearchResults extends  Component{
     const { results } = this.props;
 
     return (<Fragment>
-      <h1>Resultats de recherche : </h1>
+      <div>
+        <h1>Resultats de recherche : </h1>
+
+      </div>
+
       {this.props.loading && (
         <div className="alert alert-info">Loading...</div>
       )}
