@@ -11,14 +11,18 @@ header{
   nav#navbar-primary{
     justify-content: space-evenly;
     padding-top: 10px;
+    padding-bottom: 0;
     /*---- Brand ---------*/
     a.navbar-brand{
-      font-size: 1.75em;
+      font-size: 2em;
       font-family: 'Carter One', cursive;
     }
 
-    /*---- Search Form ----*/
+    /*---- Search Form Component ----*/
     div.main-menu-search-form{
+        overflow: hidden;
+
+        /* Search form */
         form{
             div.form-group{
                 border-radius: 1em 0 0 1em;
@@ -44,20 +48,25 @@ header{
         }
 
         /* Advanced search button */
-        button.btn-advanced-search-toggle-button{
-            margin-left: 15px;
-            background-color: transparent;
-            color: white;
-            border-right: none;
-            border-top: none;
-            border-left: none;
-            margin-top: 2px;
-            border-bottom : 1px solid white;
+        div#advanced-search-toggle-button{
+            padding-left: 15px;
+
+            button.btn-advanced-search-toggle-button{
+                background-color: transparent;
+                color: white;
+                border-right: none;
+                border-top: none;
+                border-left: none;
+                border-bottom : 1px solid white;
+            }
+
+            button.btn-advanced-search-toggle-button:hover{
+                border-bottom: 2px solid white;
+            }
         }
 
-        button.btn-advanced-search-toggle-button:hover{
-            border-bottom: 2px solid white;
-        }
+
+
     }
 
     /*---- Main menu -----*/

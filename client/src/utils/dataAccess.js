@@ -1,8 +1,8 @@
 import { ENTRYPOINT } from '../config/entrypoint';
 import { SubmissionError } from 'redux-form';
-import get from 'lodash/get';
+//import get from 'lodash/get';
 import has from 'lodash/has';
-import mapValues from 'lodash/mapValues';
+//import mapValues from 'lodash/mapValues';
 
 const MIME_TYPE = 'application/ld+json';
 

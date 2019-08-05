@@ -6,7 +6,6 @@ import { search, reset } from '../../actions/product/search';
 import {
   Card,
   CardImg,
-  Button,
   CardTitle,
   CardText,
   Row,

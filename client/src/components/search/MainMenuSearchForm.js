@@ -30,6 +30,7 @@ class MainMenuSearchForm extends Component
     resetSupplier: PropTypes.func,
     onSearch: PropTypes.func
   };
+
   /* Variable marquant le montage/démontage de l'application
   * Permet d'éviter les memory leaks en transmettant les données alors que le composant est démonté
   * */
@@ -49,19 +50,19 @@ class MainMenuSearchForm extends Component
     this.handleSearchTypeChange = this.handleSearchTypeChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleToggleAdvancedSearchButton = this.handleToggleAdvancedSearchButton.bind(this);
+    this.showSearchResults = this.showSearchResults.bind(this);
   }
 
   componentDidMount() {
     this._isMounted = true;
     this.state.searchType && this.props.listProduct( );
 
-    /* Interval d'exécution d'une fonction d'attente des valeurs (1sec) */
-    let intervalForRetrieved = null;
+
 
 
     /* Fonction à exécuter par intervalle de temps (1sec) pour vérifier que les valeurs ont été reçus par le composant avant leur transmission au composant d'ordre supérieur */
     /* ATTENTION: le nom de variable contenant l'intervalle doit être "intervalForRetrieved" */
-    let waitForRetrieved = () =>
+    let waitForRetrieved = (interval) =>
     {
 
       const items = this.props.retrievedProducts;
@@ -69,7 +70,7 @@ class MainMenuSearchForm extends Component
       /* Si les valeurs sont acquis par le composant, on les transmet au composant d'ordre supérieur via la fonction (onSearch) reçu comme propriété du composant */
       console.log("Main Menu Search Form - Items", items);
 
-      if( typeof items !== "undefined"  && items !== null)
+      if( typeof items !== "undefined"  && items !== null && this._isMounted)
       {
         let results = {
           searchType: "products",
@@ -77,13 +78,13 @@ class MainMenuSearchForm extends Component
           searchResults: items["hydra:member"]
         };
         this.props.onSearch(results);
-        clearInterval(intervalForRetrieved);
+        clearInterval(interval);
 
       }
     };
 
     /* Interval d'exécution d'une fonction d'attente des valeurs (1sec) */
-    intervalForRetrieved = setInterval(waitForRetrieved, 1000);
+    let intervalForRetrieved = setInterval(() => {waitForRetrieved(intervalForRetrieved)}, 2000);
 
     /*
     setTimeout(() => {
@@ -109,6 +110,9 @@ class MainMenuSearchForm extends Component
   {
     /*  */
     this.setState({"searchType": e.target.value});
+
+    /* Affichage du composant de résultat */
+    this.showSearchResults();
 
     console.log(e.target.name + " => " +  e.target.value);
     console.log("state.searchType : " + this.state.searchType);
@@ -154,6 +158,9 @@ class MainMenuSearchForm extends Component
     /* Traitement de l'input */
 
     this.setState({searchValue: e.target.value});
+
+    /* Affichage du composant de résultat */
+    this.showSearchResults();
 
     if(this.state.searchType === "products")
     {
@@ -213,6 +220,16 @@ class MainMenuSearchForm extends Component
       element.style.display = "none";
     }
 
+  }
+
+  showSearchResults()
+  {
+    let element = document.getElementById("search-results-component");
+
+    if(element.style.display === "none" || element.style.display === "")
+    {
+      element.style.display = "block";
+    }
   }
 
   render()
