@@ -1,7 +1,7 @@
 /**
- * Author: dashouney
+ * Author: Iracanye S.
  * Date: 31/07/2019
- * Description:
+ * Description: Composant d'affichage des résultats de recherche
  */
 import React, { Component, Fragment } from "react";
 import { Card, CardImg, CardText, CardTitle, Col, Row } from "reactstrap";
@@ -45,7 +45,7 @@ class SearchResults extends  Component{
         {
 
           resultsPer4.push(
-            <Col key={"products" + (i * 10 + j)} sm="3">
+            <Col key={"products" + (i * 10 + j)} xs={"12"} sm="6" md="4" lg="3">
               <Card body>
                 {/*
                 <CardImg top width="100%" src={products[i * 10 + j].images[0].url} alt={products[i * 10 + j].images[0].alt} />
@@ -53,7 +53,10 @@ class SearchResults extends  Component{
                 <CardImg top width="100%" src="https://picsum.photos/2000/3000" alt={products[i * 10 + j].images[0].alt} />
                 <CardTitle>{products[i * 10 + j]["title"]}</CardTitle>
                 <CardText>{products[i * 10 + j]["resume"]}</CardText>
-                <Link to={`show/${encodeURIComponent(products[i * 10 + j]['@id'])}`}>
+                <Link
+                  to={`show/${encodeURIComponent(products[i * 10 + j]['@id'])}`}
+                  className={"btn btn-outline-primary"}
+                >
                   Voir le détail
                 </Link>
               </Card>
@@ -72,7 +75,7 @@ class SearchResults extends  Component{
 
     let index = 0;
     items.push(
-      <div id="search-results" key={index++}>
+      <div id="search-results-items" key={index++}>
         {rows}
       </div>
     );
@@ -106,7 +109,7 @@ class SearchResults extends  Component{
         {
 
           resultsPer4.push(
-            <Col key={"products" + (i * 10 + j)} sm="3">
+            <Col key={"products" + (i * 10 + j)} xs={"12"} sm="6" md="4" lg="3">
               <Card body>
                 {/*
                 <CardImg top width="100%" src={products[i * 10 + j].images[0].url} alt={products[i * 10 + j].images[0].alt} />
@@ -133,7 +136,7 @@ class SearchResults extends  Component{
 
     let index = 0;
     items.push(
-      <div id="search-results" key={index++}>
+      <div id="search-results-items" key={index++}>
         {rows}
       </div>
     );
@@ -205,9 +208,8 @@ class SearchResults extends  Component{
     const { results } = this.props;
 
     return (<Fragment>
-      <div>
-        <h1>Resultats de recherche : </h1>
-
+      <div id="search-results-header">
+        <h4>Recherche avancée</h4>
       </div>
 
       {this.props.loading && (
@@ -222,16 +224,20 @@ class SearchResults extends  Component{
         <div className="alert alert-danger">{this.props.error}</div>
       )}
 
+      <div id="search-results">
+        {
+          /* Affichage des résultats de produits */
+          results.searchType === "products" ? this.showResultsProducts() : ""
+        }
+        {
+          /* Affichage des résultats de fournisseurs */
+          results.searchType === "suppliers"
+            ? this.showResultsSuppliers() : ""
+        }
 
-      {
-        results.searchType === "products" ? this.showResultsProducts() : ""
-      }
-      {
-        results.searchType === "suppliers"
-          ? this.showResultsSuppliers() : ""
-      }
+        {this.pagination()}
+      </div>
 
-      {this.pagination()}
     </Fragment>);
   }
 }

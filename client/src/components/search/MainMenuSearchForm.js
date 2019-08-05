@@ -9,7 +9,7 @@ import { connect } from "react-redux";
 import { Button, Form, FormGroup, Input } from "reactstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import PropTypes from "prop-types";
-import { injectIntl } from "react-intl";
+import { FormattedMessage, injectIntl } from "react-intl";
 import { list as listProduct, reset as resetProduct } from "../../actions/product/list";
 import { list as listSupplier, reset as resetSupplier } from "../../actions/supplier/list";
 
@@ -30,6 +30,10 @@ class MainMenuSearchForm extends Component
     resetSupplier: PropTypes.func,
     onSearch: PropTypes.func
   };
+  /* Variable marquant le montage/démontage de l'application
+  * Permet d'éviter les memory leaks en transmettant les données alors que le composant est démonté
+  * */
+  _isMounted = false;
 
   constructor(props)
   {
@@ -40,17 +44,48 @@ class MainMenuSearchForm extends Component
       searchResults: []
     };
 
+
     this.handleSearchValueChange = this.handleSearchValueChange.bind(this);
     this.handleSearchTypeChange = this.handleSearchTypeChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleToggleAdvancedSearchButton = this.handleToggleAdvancedSearchButton.bind(this);
   }
 
   componentDidMount() {
-
+    this._isMounted = true;
     this.state.searchType && this.props.listProduct( );
 
+    /* Interval d'exécution d'une fonction d'attente des valeurs (1sec) */
+    let intervalForRetrieved = null;
 
-    /* Retarder l'envoie de la réponse de 3sec! */
+
+    /* Fonction à exécuter par intervalle de temps (1sec) pour vérifier que les valeurs ont été reçus par le composant avant leur transmission au composant d'ordre supérieur */
+    /* ATTENTION: le nom de variable contenant l'intervalle doit être "intervalForRetrieved" */
+    let waitForRetrieved = () =>
+    {
+
+      const items = this.props.retrievedProducts;
+
+      /* Si les valeurs sont acquis par le composant, on les transmet au composant d'ordre supérieur via la fonction (onSearch) reçu comme propriété du composant */
+      console.log("Main Menu Search Form - Items", items);
+
+      if( typeof items !== "undefined"  && items !== null)
+      {
+        let results = {
+          searchType: "products",
+          searchValue: "",
+          searchResults: items["hydra:member"]
+        };
+        this.props.onSearch(results);
+        clearInterval(intervalForRetrieved);
+
+      }
+    };
+
+    /* Interval d'exécution d'une fonction d'attente des valeurs (1sec) */
+    intervalForRetrieved = setInterval(waitForRetrieved, 1000);
+
+    /*
     setTimeout(() => {
       let results = {
         searchType: "products",
@@ -59,27 +94,30 @@ class MainMenuSearchForm extends Component
       };
       this.props.onSearch(results);
     }, 3000);
-
-    /*
-    if(this.props.retrievedProducts !== null)
-    {
-      setTimeout(() => {
-        this.props.onSearch(this.props.retrievedProducts["hydra:member"]);
-      }, 3000);
-    }
     */
+  }
 
+  componentWillUnmount() {
+    /* Marque le composant comme démonté */
+    this._isMounted = false;
 
+    /* On supprime l'interval d'exécution s'il y en a  */
+    clearInterval();
   }
 
   handleSearchTypeChange(e)
   {
-    this.setState({searchType: e.target.value});
+    /*  */
+    this.setState({"searchType": e.target.value});
 
     console.log(e.target.name + " => " +  e.target.value);
-    console.log("state : " + this.state.searchType);
+    console.log("state.searchType : " + this.state.searchType);
 
-    if(e.target.value === "suppliers")
+    let searchTypeValue = e.target.value;
+
+
+
+    if(searchTypeValue === "suppliers")
     {
       this.props.listSupplier();
 
@@ -91,7 +129,6 @@ class MainMenuSearchForm extends Component
         });
       }, 3000);
 
-      console.log("Suppliers", this.props.retrievedSuppliers);
     }else
     {
       this.props.listProduct();
@@ -103,6 +140,8 @@ class MainMenuSearchForm extends Component
           searchResults: this.props.retrievedProducts["hydra:member"]
         });
       }, 3000);
+
+
     }
 
 
@@ -162,13 +201,27 @@ class MainMenuSearchForm extends Component
 
   }
 
+  handleToggleAdvancedSearchButton()
+  {
+    let element = document.getElementById("search-results-component");
+
+    if(element.style.display === "none" || element.style.display === "")
+    {
+      element.style.display = "block";
+    }else
+    {
+      element.style.display = "none";
+    }
+
+  }
+
   render()
   {
     const { intl } = this.props;
 
     return (
       <Fragment>
-        <Form inline className="col-lg-5" onSubmit={this.handleSubmit}>
+        <Form inline className="col-lg-12" onSubmit={this.handleSubmit}>
           <FormGroup>
             <Input type="select"
                    name="searchType"
@@ -205,10 +258,18 @@ class MainMenuSearchForm extends Component
                  onChange={this.handleSearchValueChange}
                  onClick={this.reset}
           />
-          <Button type="submit" outline color="primary" className={"my-2 my-sm-0"}>
+          <Button type="submit" outline color="light" className={"my-2 my-sm-0"}>
             <FontAwesomeIcon icon="search" />
           </Button>
         </Form>
+        <div id={"advanced-search-toggle-button"}>
+          <button onClick={this.handleToggleAdvancedSearchButton} className="btn-advanced-search-toggle-button">
+            <FormattedMessage  id={"app.header.search.form.advanced.button"}
+                               defaultMessage="Recherche avancée"
+                               description="Header - Main menu search form advanced button"
+            />
+          </button>
+        </div>
       </Fragment>
     );
   }

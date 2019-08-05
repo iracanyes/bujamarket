@@ -1,11 +1,44 @@
 /* Product & Supplier search component */
-div#search-results{
-  img.card-img-top{
-    height: 12rem;
-  }
+div#search-results-component{
+    display: none;
 
-  div.card-title{
-    margin: 0.70rem auto;
-  }
+    /* Header du composant d'affichage des résultats de recherche produits/fournisseurs */
+    div#search-results-header{
+        margin: 10px auto;
+        text-align: center;
+
+        h4{
+            display: inline-block;
+            border-bottom: 2px solid #007BFF;
+        }
+
+    }
+    /* Body du composant d'affichage des résultats de recherche produits/fournisseurs */
+    div#search-results{
+
+
+        div#search-results-items{
+            div.card
+            {
+                margin: 0.5rem 0.2rem;
+
+                img.card-img-top{
+                    height: 12rem;
+                }
+
+                div.card-title{
+                    margin: 0.70rem auto;
+                    font-weight: bold;
+                }
+
+                & > a{
+
+                }
+
+            }
+        }
+
+    }
+
 }
 

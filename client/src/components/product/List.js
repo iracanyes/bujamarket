@@ -21,10 +21,14 @@ class List extends Component {
 
     //console.log("Query-String : location.search => " + document.location.search);
 
-    this.props.list(
-      this.props.match.params.page &&
+    if(typeof this.props.retrieved === "undefined")
+    {
+      this.props.list(
+        this.props.match.params.page &&
         decodeURIComponent(this.props.match.params.page)
-    );
+      );
+    }
+
   }
 
   componentWillReceiveProps(nextProps) {

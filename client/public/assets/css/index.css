@@ -4,10 +4,97 @@
  * Description: Page principal du style
  *
  */
+/* Composants */
 /**
- * Nom:
- * Description: Style Global
- */
+* Nom: Iracanyes
+* Description: Header Stylesheets
+* Date: 26/06/19
+*/
+/************** HEADER ****************/
+header nav#navbar-primary {
+  justify-content: space-evenly;
+  padding-top: 10px;
+  /*---- Brand ---------*/
+  /*---- Search Form ----*/
+  /*---- Main menu -----*/
+}
+header nav#navbar-primary a.navbar-brand {
+  font-size: 1.75em;
+  font-family: "Carter One", cursive;
+}
+header nav#navbar-primary div.main-menu-search-form {
+  /* Advanced search button */
+}
+header nav#navbar-primary div.main-menu-search-form form {
+  /* bouton de soumission du formulaire */
+}
+header nav#navbar-primary div.main-menu-search-form form div.form-group {
+  border-radius: 1em 0 0 1em;
+  overflow: hidden;
+}
+header nav#navbar-primary div.main-menu-search-form form input[type=search] {
+  border-radius: unset;
+}
+header nav#navbar-primary div.main-menu-search-form form button.btn-outline-light {
+  color: white;
+  border-color: white;
+  border-top-left-radius: unset;
+  border-bottom-left-radius: unset;
+  border-top-right-radius: 1em;
+  border-bottom-right-radius: 1em;
+}
+header nav#navbar-primary div.main-menu-search-form button.btn-advanced-search-toggle-button {
+  margin-left: 15px;
+  background-color: transparent;
+  color: white;
+  border-right: none;
+  border-top: none;
+  border-left: none;
+  margin-top: 2px;
+  border-bottom: 1px solid white;
+}
+header nav#navbar-primary div.main-menu-search-form button.btn-advanced-search-toggle-button:hover {
+  border-bottom: 2px solid white;
+}
+header nav#navbar-primary div.navbar-collapse ul.navbar-nav {
+  flex-direction: row;
+}
+header nav#navbar-primary div.navbar-collapse ul.navbar-nav li.nav-item {
+  margin: 0.2em 0.5em;
+  width: 20%;
+  /*--- Main Menu : Fontawesome  + text  ---*/
+  /*----- Submenu ------*/
+}
+header nav#navbar-primary div.navbar-collapse ul.navbar-nav li.nav-item i {
+  font-size: 14px;
+  margin-right: 10px;
+}
+header nav#navbar-primary div.navbar-collapse ul.navbar-nav li.nav-item i.fa-mail-bulk::before {
+  content: "";
+  color: white;
+}
+header nav#navbar-primary div.navbar-collapse ul.navbar-nav li.nav-item a.nav-link {
+  text-align: center;
+  line-height: 1;
+}
+header nav#navbar-primary div.navbar-collapse ul.navbar-nav li.nav-item a.nav-link svg.menu-top-l1 {
+  display: block !important;
+  margin: 0 auto !important;
+}
+header nav#navbar-primary div.navbar-collapse ul.navbar-nav li.nav-item a.nav-link svg.menu-top-l1 + span {
+  display: block;
+  margin-top: 0.5em;
+  line-height: 0.9;
+}
+header nav#navbar-primary div.navbar-collapse ul.navbar-nav li.nav-item div.dropdown-menu button.dropdown-item a.nav-link {
+  color: #007BFF;
+  /*-- SubMenu  - Fontawesome icons  --*/
+}
+header nav#navbar-primary div.navbar-collapse ul.navbar-nav li.nav-item div.dropdown-menu button.dropdown-item a.nav-link svg {
+  margin-right: 10px;
+}
+
+/************** END HEADER ****************/
 /**
  * Name: Iracanyes
  * Description: Sidebar Left
@@ -22,8 +109,6 @@ aside#aside-left {
   position: relative;
   width: 100%;
   min-height: 1px;
-  padding-right: 15px;
-  padding-left: 15px;
   background-color: transparent;
   /* MENU LEFT */
 }
@@ -78,6 +163,11 @@ aside#aside-left div.menu ul.nav li.nav-item div.dropdown-menu div.dropdown-menu
   color: #007BFF !important;
 }
 
+/* Pages */
+/**
+ * Nom:
+ * Description: Style Global
+ */
 /************************** Style général *************************************/
 body, html {
   height: 100%;
@@ -140,61 +230,6 @@ div.welcome {
   color: #ccc;
 }
 
-/************** HEADER ****************/
-header nav#navbar-primary {
-  justify-content: space-evenly;
-  padding-top: 10px;
-  /* Search Form */
-}
-header nav#navbar-primary a.navbar-brand {
-  font-size: 1.75em;
-}
-header nav#navbar-primary div.navbar-collapse ul.navbar-nav {
-  flex-direction: row;
-}
-header nav#navbar-primary div.navbar-collapse ul.navbar-nav li.nav-item {
-  margin: 5px 20px;
-}
-header nav#navbar-primary div.navbar-collapse ul.navbar-nav li.nav-item i {
-  font-size: 14px;
-  margin-right: 10px;
-}
-header nav#navbar-primary div.navbar-collapse ul.navbar-nav li.nav-item i.fa-mail-bulk::before {
-  content: "";
-  color: white;
-}
-header nav#navbar-primary div.navbar-collapse ul.navbar-nav li.nav-item div.dropdown-menu button.dropdown-item a.nav-link {
-  color: #ffc700;
-}
-header nav#navbar-primary div.navbar-collapse ul.navbar-nav li.nav-item div.dropdown-menu button.dropdown-item a.nav-link svg.menu-top-l1 {
-  display: block !important;
-  margin: 0 auto !important;
-}
-header nav#navbar-primary form.form-inline button.btn-outline-primary {
-  color: white;
-  border-color: white;
-}
-
-/************** END HEADER ****************/
-/************** FOOTER *****************/
-footer {
-  padding: 0 30px;
-  /** Footer section 1 **/
-  /** Footer section 2 **/
-}
-footer div.col-sm-4 {
-  padding: 0;
-}
-footer div.footer-section-1 h4 {
-  margin-left: 25px;
-}
-footer div.footer-section-1 nav.navbar ul.navbar-nav div.btn-group button.btn {
-  width: 150px;
-  border-color: unset;
-}
-footer div.footer-section-2 {
-  justify-content: end;
-}
 /*************** MAIN ***********************/
 /*** MAIN - GLOBAL STYLE ****/
 main {
@@ -206,34 +241,29 @@ main {
   margin-right: auto;
   margin-left: auto;
   /************** ASIDE **********************/
-  /************** ROOT **********************/
-  /* Avatar rounded */
-}
-main div#root {
-  max-width: 83.33%;
-  flex: 0 0 83.33%;
-  width: 100%;
-  float: left;
-  padding: 0 10px;
-}
-main img.xs-rounded-avatar {
-  width: 70px;
-  margin: 10px 15px;
-}
-main img.sm-rounded-avatar {
-  width: 100px;
-  margin: 10px 15px;
+  /************** MAIN CONTENT **********************/
 }
 main section#main-content {
   width: 100%;
   /* Carousel - Categories */
+  /* List navigation */
   /* Home Parallax 3 - Inscription */
+  /* Avatar rounded */
+}
+main section#main-content h1 {
+  width: 50%;
+  margin: 20px auto;
+  text-align: center;
 }
 main section#main-content section.category-cards div.container-fluid {
   /* Titre */
 }
 main section#main-content section.category-cards div.container-fluid h3 {
   text-align: center;
+}
+main section#main-content nav {
+  width: 400px;
+  margin: 20px auto;
 }
 main section#main-content div.parallax3 {
   height: 600px !important;
@@ -251,16 +281,46 @@ main section#main-content section.recent-grains h3, main section#main-content se
   padding-bottom: 20px;
   text-align: center;
 }
+main section#main-content img.xs-rounded-avatar {
+  width: 70px;
+  margin: 10px 15px;
+}
+main section#main-content img.sm-rounded-avatar {
+  width: 100px;
+  margin: 10px 15px;
+}
 
 /*** END MAIN - GLOBAL STYLE ****/
-/* Composants */
-/* Pages */
 #homepage {
   background-color: #007BFF;
 }
 
+/* Product & Supplier search component */
+div#search-results-component {
+  display: none;
+  /* Header du composant d'affichage des résultats de recherche produits/fournisseurs */
+  /* Body du composant d'affichage des résultats de recherche produits/fournisseurs */
+}
+div#search-results-component div#search-results-header {
+  margin: 10px auto;
+  text-align: center;
+}
+div#search-results-component div#search-results-header h4 {
+  display: inline-block;
+  border-bottom: 2px solid #007BFF;
+}
+div#search-results-component div#search-results div#search-results-items div.card {
+  margin: 0.5rem 0.2rem;
+}
+div#search-results-component div#search-results div#search-results-items div.card img.card-img-top {
+  height: 12rem;
+}
+div#search-results-component div#search-results div#search-results-items div.card div.card-title {
+  margin: 0.7rem auto;
+  font-weight: bold;
+}
 #root {
-  background-color: #ffc700;
+  background-color: #fff;
 }
 
 /*# sourceMappingURL=index.css.map */

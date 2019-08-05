@@ -8,7 +8,6 @@
 
 header{
 
-
   nav#navbar-primary{
     justify-content: space-evenly;
     padding-top: 10px;
@@ -19,27 +18,48 @@ header{
     }
 
     /*---- Search Form ----*/
-    form{
-      div.form-group{
-        border-radius: 1em 0 0 1em;
-        overflow: hidden;
+    div.main-menu-search-form{
+        form{
+            div.form-group{
+                border-radius: 1em 0 0 1em;
+                overflow: hidden;
 
 
 
-      }
+            }
 
-      input[type=search]{
-        border-radius: unset;
-      }
+            input[type=search]{
+                border-radius: unset;
+            }
+            /* bouton de soumission du formulaire */
+            button.btn-outline-light{
+                color: white;
+                border-color: white;
+                border-top-left-radius: unset;
+                border-bottom-left-radius: unset;
+                border-top-right-radius: 1em;
+                border-bottom-right-radius: 1em;
+            }
 
-      button{
-        border-top-left-radius: unset;
-        border-bottom-left-radius: unset;
-        border-top-right-radius: 1em;
-        border-bottom-right-radius: 1em;
-      }
+        }
 
+        /* Advanced search button */
+        button.btn-advanced-search-toggle-button{
+            margin-left: 15px;
+            background-color: transparent;
+            color: white;
+            border-right: none;
+            border-top: none;
+            border-left: none;
+            margin-top: 2px;
+            border-bottom : 1px solid white;
+        }
+
+        button.btn-advanced-search-toggle-button:hover{
+            border-bottom: 2px solid white;
+        }
     }
+
     /*---- Main menu -----*/
     div.navbar-collapse{
 
@@ -93,14 +113,7 @@ header{
       }
     }
 
-    /* Search Form */
-    form.form-inline{
 
-      button.btn-outline-primary{
-        color: white;
-        border-color: white;
-      }
-    }
   }
 
 }

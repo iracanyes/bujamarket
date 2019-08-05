@@ -165,6 +165,8 @@ export class App extends Component
   search(results)
   {
     this.setState({results: results});
+
+    console.log("App HOC - results", results);
   }
 
   render()
@@ -183,8 +185,9 @@ export class App extends Component
                       {/* Navbar brand*/}
                       <NavbarBrand href="/" className="col-lg-2">Buja Market</NavbarBrand>
 
-
-                      <MainMenuSearchForm onSearch={this.search}/>
+                      <div className="main-menu-search-form col-lg-5">
+                        <MainMenuSearchForm onSearch={this.search}/>
+                      </div>
 
 
                       <MainMenu/>
@@ -196,7 +199,7 @@ export class App extends Component
 
                     </aside>
                     <section id="main-content" className="col col-lg-12">
-                      <div className="searchResults">
+                      <div id="search-results-component">
                         {results && (<SearchResults results={ results }/>)}
 
                       </div>

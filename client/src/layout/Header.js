@@ -23,8 +23,9 @@ export default class Header extends Component
         {/* Navbar brand*/}
         <NavbarBrand href="/" className="col-lg-2">Buja Market</NavbarBrand>
 
-
-        <SearchForm/>
+        <div className="main-menu-search-form">
+          <SearchForm/>
+        </div>
 
 
         <MainMenu/>

@@ -1,3 +1,8 @@
+/**
+ * Author: Iracanye S.
+ * Date: 31/07/2019
+ * Description: Redux Action : Category - list
+ */
 import {
   fetch,
   normalize,
