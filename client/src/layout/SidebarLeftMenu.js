@@ -4,13 +4,9 @@
  * Description: Sidebar Menu
  */
 import React, { Component, Fragment } from 'react';
-import ReactDOM from 'react-dom';
-import { push } from 'connected-react-router';
 import {
     Nav,
-    NavItem,
     NavLink,
-    Collapse,
     UncontrolledDropdown,
     DropdownMenu,
     DropdownToggle,

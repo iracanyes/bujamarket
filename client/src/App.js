@@ -4,7 +4,6 @@
  * Description:
  */
 import React , { Component, Fragment } from 'react';
-import ReactDOM from 'react-dom';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
@@ -92,7 +91,6 @@ import withdrawalRoutes from './routes/withdrawal';
 /* Layout */
 import Welcome from './Welcome';
 import Homepage from './layout/Homepage';
-import Header from './layout/Header';
 import MainMenuSearchForm from "./components/search/MainMenuSearchForm";
 import MainMenu from "./layout/MainMenu";
 import SearchResults from "./components/search/SearchResults";
@@ -184,6 +182,7 @@ export class App extends Component
                     <Navbar color={"bg-primary"} dark expand={"lg"}   id="navbar-primary" className="navbar navbar-expand-lg navbar-dark bg-primary">
                       {/* Navbar brand*/}
                       <NavbarBrand href="/" className="col-lg-2">Buja Market</NavbarBrand>
+
 
                       <div className="main-menu-search-form col-lg-5">
                         <MainMenuSearchForm onSearch={this.search}/>

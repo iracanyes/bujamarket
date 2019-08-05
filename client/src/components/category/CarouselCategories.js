@@ -8,12 +8,10 @@ import { success } from '../../actions/category/delete';
 import 'bootstrap/dist/css/bootstrap.css';
 /* Carousel */
 import {
-  Card,
   Carousel,
   CarouselItem,
   CarouselControl,
   CarouselIndicators,
-  CarouselCaption,
 } from 'reactstrap';
 
 class CarouselCategories extends Component {
@@ -93,7 +91,7 @@ class CarouselCategories extends Component {
 
       const categories = this.props.retrieved['hydra:member'] && this.props.retrieved['hydra:member'][0];
       const images = this.props.retrieved['hydra:member'] && this.props.retrieved['hydra:member'][1];
-      const {activeIndex} = this.state;
+      //const {activeIndex} = this.state;
 
       /* Carousel Element */
       for(let i = 0; i< Math.ceil(images.length / 6); i++ ){
@@ -104,18 +102,6 @@ class CarouselCategories extends Component {
           for(let j = 0; j < 2 ; j++){
 
               let categ= [];
-
-              /* Category & Image */
-              let styleImage = {
-                  width: 120,
-                  margin: "0 auto",
-                  display: "block",
-                  borderRadius: "25% 20% 0% 25%"
-              };
-
-              let styleTitle={
-                  textAlign: 'center'
-              };
 
               for(let k= 0; k < 3; k++) {
                   console.log("ID image : " + (i * 6 + j * 2 + k));

@@ -21,6 +21,8 @@ class SearchResults extends  Component{
     this.setState({results: this.props.results})
   }
 
+
+
   showResultsProducts()
   {
     let items = [];

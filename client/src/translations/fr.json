@@ -11,5 +11,6 @@
   "app.header.main_menu.favorites.link": "Favoris",
   "app.header.main_menu.shopping_card.link": "Panier de commande",
   "app.header.main_menu.chat.link": "Chat",
-  "app.header.main_menu.about_us.link": "A propos de nous"
+  "app.header.main_menu.about_us.link": "A propos de nous",
+  "app.header.search.form.advanced.button": "Recherche avancée"
 }
