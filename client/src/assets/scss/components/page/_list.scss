@@ -6,6 +6,7 @@ div.list-card-by-4{
         div.card{
             padding: 0 0 1.25rem 0;
             margin-bottom: 1rem;
+            border: none;
 
             div.card-img-custom{
                 position: relative;
@@ -16,7 +17,7 @@ div.list-card-by-4{
                     display: block;
                     width: 100%;
                     height: auto;
-                    max-height: 250px;
+                    max-height: 200px;
                     transition: .5s ease;
                     backface-visibility: hidden;
                 }
@@ -40,19 +41,22 @@ div.list-card-by-4{
                 }
 
                 .text {
-                    background-color: #4CAF50;
-                    color: white;
+                    //background-color: #4CAF50;
+                    //color: white;
                     font-size: 16px;
                     padding: 16px 32px;
                 }
             }
 
             div.card-title, p.card-text{
-                padding: 1.25rem;
+                padding: 1rem 0.80rem 0 0.80rem;
+                font-size: 0.80rem;
             }
 
             div.card-title{
                 font-weight: bold;
+                font-size: 0.80rem;
+                margin-bottom: 0;
             }
 
             a.btn{
@@ -62,5 +66,27 @@ div.list-card-by-4{
         }
 
 
+    }
+}
+
+table.table-list-image{
+    tbody{
+        th{
+            width: 4rem;
+        }
+
+        tr{
+            td.table-td-image-circle{
+                div.card-title{
+                    text-align: center;
+                }
+
+                img.card-img{
+                    max-width: 150px;
+                    max-height: 150px;
+                    border-radius: 50%;
+                }
+            }
+        }
     }
 }

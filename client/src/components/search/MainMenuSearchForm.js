@@ -102,6 +102,12 @@ class MainMenuSearchForm extends Component
     /* Marque le composant comme démonté */
     this._isMounted = false;
 
+    /*
+    if(this.state.searchType === "products")
+      this.props.resetProduct();
+    else
+      this.props.resetSupplier();
+    */
     /* On supprime l'interval d'exécution s'il y en a  */
     clearInterval();
   }

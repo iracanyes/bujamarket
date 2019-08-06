@@ -103,7 +103,9 @@ import messages_en from "./translations/en";
 import messages_rn from "./translations/rn";
 
 
-
+/* Liste JSON des messages de l'application par langue
+*  rn => pour la langue : Kirundi
+*  */
 const messages = {
   "en": messages_en,
   "fr": messages_fr,
@@ -160,6 +162,7 @@ export class App extends Component
     this.search = this.search.bind(this);
   }
 
+  /* Permet de transmettre les résultats de recherche du composant MainMenuSearchForm vers le composant d'affichage des résultats SearchResults. Utilisation de la technique HOC - High Order Component */
   search(results)
   {
     this.setState({results: results});

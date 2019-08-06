@@ -3,6 +3,15 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { list, reset } from '../../actions/supplier/list';
+import {
+  Table,
+  Row,
+  Col,
+  CardImg,
+  CardTitle,
+
+} from "reactstrap";
+import { FormattedMessage } from "react-intl";
 
 class List extends Component {
   static propTypes = {
@@ -37,7 +46,7 @@ class List extends Component {
   render() {
     return (
       <div>
-        <h1>Supplier List</h1>
+        <h1>Nos fournisseurs</h1>
 
         {this.props.loading && (
           <div className="alert alert-info">Loading...</div>
@@ -57,6 +66,109 @@ class List extends Component {
           </Link>
         </p>
 
+        <Table dark hover className={"table-list-image"}>
+          <thead>
+          <tr>
+            <th>#</th>
+            <th>Raison social</th>
+            <th>Informations détaillées</th>
+          </tr>
+          </thead>
+          <tbody>
+          {this.props.retrieved && this.props.retrieved["hydra:member"].map(item => (
+            <tr>
+              <th scope="row">{item["id"]}</th>
+              <td className={"table-td-image-circle col-lg-2"}>
+                <Link to={`../suppliers/show/${encodeURIComponent(item["id"])}`}>
+                  <CardTitle className={"bold mx-auto"}>
+                    {item["socialReason"]}
+                  </CardTitle>
+
+                  <CardImg
+                    circle
+                    src="https://picsum.photos/2000/3000"
+                    alt={item.image.alt}
+                    className={"d-block mx-auto"}
+                  />
+                </Link>
+
+
+              </td>
+              <td>
+                <Row>
+                  <Col>
+                    <p className="bold">
+                      <span>
+                          <FormattedMessage  id={"app.products.list.item.website"}
+                                             defaultMessage="Site web"
+                                             description="Product item - site web"
+
+                          /> : <a href={"www." + item["website"]}>www.{item["website"]}</a>
+                        </span>
+
+                    </p>
+                    <p className="bold">
+                      <span>
+                          <FormattedMessage  id={"app.products.item.contact.fullname"}
+                                             defaultMessage="Nom complet"
+                                             description="Product item - Nom complet de la personne de contact"
+                                             className="main-menu-top-level-text"
+                          /> : {item["contactFullname"]}
+                        </span>
+
+                    </p>
+                    <p className="bold">
+                      <span>
+                          <FormattedMessage  id={"app.products.item.contact.phone.number"}
+                                             defaultMessage="Numéro de téléphone"
+                                             description="Product item - numéro de téléphone"
+                                             className="main-menu-top-level-text"
+                          /> : {item["contactPhoneNumber"]}
+                        </span>
+
+                    </p>
+                    <p className="bold">
+                      <span>
+                          <FormattedMessage  id={"app.products.item.contact.email"}
+                                             defaultMessage="E-mail"
+                                             description="Product list - numéro de registre de commerce"
+                                             className="main-menu-top-level-text"
+                          /> : {item["contactEmail"]}
+                        </span>
+
+                    </p>
+                  </Col>
+                  <Col>
+                    <p className="bold">
+                      <span>
+                          <FormattedMessage  id={"app.products.list.trade.register.number"}
+                                             defaultMessage="Numéro de registre de commerce"
+                                             description="Product list - numéro de registre de commerce"
+                                             className="main-menu-top-level-text"
+                          /> : {item["tradeRegisterNumber"]}
+                        </span>
+
+                    </p>
+                    <p className="bold">
+                      <span>
+                          <FormattedMessage  id={"app.products.list.value.added.tax"}
+                                             defaultMessage="Numéro de TVA"
+                                             description="Product list - numéro de TVA"
+                                             className="main-menu-top-level-text"
+                          /> : {item["vatNumber"]}
+                        </span>
+
+                    </p>
+
+                  </Col>
+                </Row>
+              </td>
+            </tr>)
+          )}
+
+          </tbody>
+        </Table>
+        {/*
         <table className="table table-responsive table-striped table-hover">
           <thead>
             <tr>
@@ -111,8 +223,8 @@ class List extends Component {
                   <td>{item['contactPhoneNumber']}</td>
                   <td>{item['contactEmail']}</td>
                   <td>{item['website']}</td>
-                  <td>{this.renderLinks('supplier_products', item['supplierProducts'])}</td>
-                  <td>{this.renderLinks('bills', item['supplierBills'])}</td>
+                  <td>{item['supplierProducts'] && this.renderLinks('supplier_products', item['supplierProducts'])}</td>
+                  <td>{item['supplierBills'] && this.renderLinks('bills', item['supplierBills'])}</td>
                   <td>{item['supplierKey']}</td>
                   <td>{item['email']}</td>
                   <td>{item['username']}</td>
@@ -128,11 +240,11 @@ class List extends Component {
                   <td>{item['dateRegistration']}</td>
                   <td>{item['language']}</td>
                   <td>{item['currency']}</td>
-                  <td>{this.renderLinks('images', item['image'])}</td>
-                  <td>{this.renderLinks('addresses', item['addresses'])}</td>
-                  <td>{this.renderLinks('bank_accounts', item['bankAccounts'])}</td>
-                  <td>{this.renderLinks('forums', item['forums'])}</td>
-                  <td>{this.renderLinks('messages', item['messages'])}</td>
+                  <td>{item["image"] && this.renderLinks('images', item['image'])}</td>
+                  <td>{item['addresses'] && this.renderLinks('addresses', item['addresses'])}</td>
+                  <td>{item['bankAccounts'] && this.renderLinks('bank_accounts', item['bankAccounts'])}</td>
+                  <td>{item['forums'] && this.renderLinks('forums', item['forums'])}</td>
+                  <td>{item['messages'] && this.renderLinks('messages', item['messages'])}</td>
                   <td>
                     <Link to={`show/${encodeURIComponent(item['@id'])}`}>
                       <span className="fa fa-search" aria-hidden="true" />
@@ -149,6 +261,7 @@ class List extends Component {
               ))}
           </tbody>
         </table>
+        */}
 
         {this.pagination()}
       </div>
@@ -206,7 +319,7 @@ class List extends Component {
     }
 
     return (
-      <Link to={`../${type}/show/${encodeURIComponent(items)}`}>{items}</Link>
+      <Link to={`../${type}/show/${encodeURIComponent(items["id"])}`}>{items["id"]}</Link>
     );
   };
 }
