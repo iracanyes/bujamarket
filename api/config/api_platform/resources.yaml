@@ -102,6 +102,10 @@ resources:
     shortName: 'Shipper'
     description: 'Shipper who:"s responsible for delivering  the products bought'
     iri: 'https://schema.org/DeliveryMethod'
+    
+  App\Entity\ShoppingCard:
+      shortName: 'ShoppingCard'
+      description: "Shopping card for saving the products chosed by the user before the order process"
 
   App\Entity\Supplier:
     shortName: 'Supplier'

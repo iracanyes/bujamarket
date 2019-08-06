@@ -32,13 +32,22 @@ class Supplier extends User
     private $id;
 
     /**
-     * @var integer $socialReason Social reason of this supplier
+     * @var string $socialReason Social reason of this supplier
      *
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank()
      * @Groups({"supplier:output"})
      */
     private $socialReason;
+
+    /**
+     * @var string $brandName Commercial name/Trade name used by this supplier
+     *
+     * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank()
+     * @Groups({"supplier:output"})
+     */
+    private $brandName;
 
     /**
      * @var string $tradeRegisterNumber Trade register number
@@ -138,6 +147,24 @@ class Supplier extends User
 
         return $this;
     }
+
+    /**
+     * @return string
+     */
+    public function getBrandName(): int
+    {
+        return $this->brandName;
+    }
+
+    /**
+     * @param string $brandName
+     */
+    public function setBrandName(string $brandName): void
+    {
+        $this->brandName = $brandName;
+    }
+
+
 
     public function getTradeRegisterNumber(): ?string
     {

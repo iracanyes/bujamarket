@@ -11,7 +11,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ApiResource()
+ * @ORM\Table(name="bjmkt_supplier_product")
  * @ORM\Entity(repositoryClass="App\Repository\SupplierProductRepository")
+ * @ORM\HasLifecycleCallbacks()
  */
 class SupplierProduct
 {
@@ -120,12 +122,18 @@ class SupplierProduct
      */
     private $orderDetails;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\ShoppingCard", mappedBy="suppliersProducts")
+     */
+    private $shoppingCards;
+
     public function __construct()
     {
         $this->initialPrice = 0;
         $this->comments = new ArrayCollection();
         $this->favorites = new ArrayCollection();
         $this->orderDetails = new ArrayCollection();
+        $this->shoppingCards = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -320,5 +328,41 @@ class SupplierProduct
         }
 
         return $this;
+    }
+
+    /**
+     * @return Collection|ShoppingCard[]
+     */
+    public function getShoppingCards(): Collection
+    {
+        return $this->shoppingCards;
+    }
+
+    public function addShoppingCard(ShoppingCard $shoppingCard): self
+    {
+        if (!$this->shoppingCards->contains($shoppingCard)) {
+            $this->shoppingCards[] = $shoppingCard;
+            $shoppingCard->addSuppliersProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeShoppingCard(ShoppingCard $shoppingCard): self
+    {
+        if ($this->shoppingCards->contains($shoppingCard)) {
+            $this->shoppingCards->removeElement($shoppingCard);
+            $shoppingCard->removeSuppliersProduct($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function updateMinimumPrice(): void
+    {
+        $this->getProduct()->setMinimumPrice($this->getInitialPrice());
     }
 }
