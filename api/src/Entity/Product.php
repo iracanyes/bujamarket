@@ -119,6 +119,15 @@ class Product
     private $height;
 
     /**
+     * @var float $minimumPrice Minimum price proposed on this platform
+     *
+     * @ORM\Column(type="float")
+     * @Assert\Type("float")
+     * @Groups({"product:output"})
+     */
+    private $minimumPrice;
+
+    /**
      * @var Category $category Classification category of this product
      * @ORM\ManyToOne(targetEntity="App\Entity\Category", inversedBy="products")
      * @ORM\JoinColumn(nullable=false)
@@ -146,6 +155,7 @@ class Product
     {
         $this->productSuppliers = new ArrayCollection();
         $this->images = new ArrayCollection();
+        $this->minimumPrice = 0;
     }
 
     public function getId(): ?int
@@ -254,6 +264,39 @@ class Product
 
         return $this;
     }
+
+    /**
+     * @return float
+     */
+    public function getMinimumPrice(): float
+    {
+        return $this->minimumPrice;
+    }
+
+    /**
+     * @param float $minimumPrice
+     * @return void
+     */
+    public function setMinimumPrice(float $minimumPrice): void
+    {
+
+
+        $product_suppliers = $this->getProductSuppliers();
+        $taille = $product_suppliers->count();
+
+        if($taille > 1 && $minimumPrice !== 0)
+        {
+            for($i = 0; $i < $taille; $i++)
+            {
+                $minimumPrice = $product_suppliers[$i]->getInitialPrice() < $minimumPrice ? $product_suppliers[$i]->getInitialPrice() : $minimumPrice;
+            }
+        }
+
+        $this->minimumPrice = $minimumPrice;
+
+    }
+
+
 
     public function getCategory(): ?Category
     {
