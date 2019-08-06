@@ -38,11 +38,13 @@ class List extends Component {
   componentDidMount() {
     this._isMounted = true;
 
+    /*
     console.log(this.props.match.params.page &&
       decodeURIComponent(this.props.match.params.page));
 
     console.log("Products component did mount - retrieved",this.props.retrieved);
     console.log("Products - retrieved typeof", typeof this.props.retrieved);
+    */
 
     if(this.props.retrieved === null)
     {
@@ -121,7 +123,9 @@ class List extends Component {
       }
 
       rows.push(
-        <Row key={"rows" + (i * 10)}>
+        <Row
+          key={"rows" + (i * 10)}
+        >
           {resultsPer4}
         </Row>
       );
@@ -141,9 +145,9 @@ class List extends Component {
 
   render() {
     return (
-      <div>
+      <div className={"col-lg-9 mx-auto"}>
         <h1>
-
+          Nos produits
         </h1>
 
         {this.props.loading && (
@@ -158,63 +162,8 @@ class List extends Component {
           <div className="alert alert-danger">{this.props.error}</div>
         )}
 
-        {/*
-        <table className="table table-responsive table-striped table-hover">
-          <thead>
-            <tr>
-              <th>id</th>
-              <th>title</th>
-              <th>resume</th>
-              <th>description</th>
-              <th>countryOrigin</th>
-              <th>weight</th>
-              <th>length</th>
-              <th>width</th>
-              <th>height</th>
-              <th>category</th>
-              <th>productSuppliers</th>
-              <th>images</th>
-              <th colSpan={2} />
-            </tr>
-          </thead>
-          <tbody>
-            {this.props.retrieved &&
-              this.props.retrieved['hydra:member'].map(item => (
-                <tr key={item['@id']}>
-                  <th scope="row">
-                    <Link to={`show/${encodeURIComponent(item['@id'])}`}>
-                      {item['@id']}
-                    </Link>
-                  </th>
-                  <td>{item['title']}</td>
-                  <td>{item['resume']}</td>
-                  <td>{item['description']}</td>
-                  <td>{item['countryOrigin']}</td>
-                  <td>{item['weight']}</td>
-                  <td>{item['length']}</td>
-                  <td>{item['width']}</td>
-                  <td>{item['height']}</td>
-                  <td>{this.renderLinks('categories', item['category'])}</td>
-                  <td>{this.renderLinks('supplier_products', item['productSuppliers'])}</td>
-                  <td>{this.renderLinks('images', item['images'])}</td>
-                  <td>
-                    <Link to={`show/${encodeURIComponent(item['@id'])}`}>
-                      <span className="fa fa-search" aria-hidden="true" />
-                      <span className="sr-only">Show</span>
-                    </Link>
-                  </td>
-                  <td>
-                    <Link to={`edit/${encodeURIComponent(item['@id'])}`}>
-                      <span className="fa fa-pencil" aria-hidden="true" />
-                      <span className="sr-only">Edit</span>
-                    </Link>
-                  </td>
-                </tr>
-              ))}
-          </tbody>
-        </table>
-        */}
-        <div className="list-card-by-4">
+
+        <div className="list-card-by-4 ">
           {this.props.retrieved && this.showProducts() }
           {this.pagination()}
         </div>
