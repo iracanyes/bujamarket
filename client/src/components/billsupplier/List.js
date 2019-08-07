@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { list, reset } from '../../actions/billsupplier/list';
+import { FormattedMessage } from "react-intl";
+import { CardTitle, Col, Row, Table } from "reactstrap";
 
 class List extends Component {
   static propTypes = {
@@ -37,7 +39,13 @@ class List extends Component {
   render() {
     return (
       <div>
-        <h1>Bill List</h1>
+        <h1>
+          <FormattedMessage  id={"app.bill.suppliers.list.page.title"}
+                             defaultMessage="Factures - fournisseurs"
+                             description="Bill supplier list page - title"
+
+          />
+        </h1>
 
         {this.props.loading && (
           <div className="alert alert-info">Loading...</div>
@@ -52,11 +60,147 @@ class List extends Component {
         )}
 
         <p>
-          <Link to="create" className="btn btn-primary">
-            Create
+          <Link to="create" className="btn btn-outline-primary">
+            <FormattedMessage  id={"app.bill.list.page.advanced.search.button"}
+                               defaultMessage="Recherche avancée"
+                               description="Bill supplier list page - advanced search button"
+
+            />
           </Link>
         </p>
 
+        <Table dark hover className={"table-list-image"}>
+          <thead>
+          <tr>
+            <th>#</th>
+            <th class={"text-center"}>
+              <FormattedMessage  id={"app.bill.item.reference"}
+                                 defaultMessage="Référence"
+                                 description="Bill supplier item - reference"
+
+              />
+            </th>
+            <th>
+              <FormattedMessage  id={"app.bill.table.detailed.info"}
+                                 defaultMessage="Informations détaillées"
+                                 description="Bill supplier table - detailed informations"
+
+              />
+            </th>
+          </tr>
+          </thead>
+          <tbody>
+          {this.props.retrieved && this.props.retrieved["hydra:member"].map(item => (
+            <tr>
+              <th scope="row">{item["id"]}</th>
+              <td className={"table-td-image-circle col-lg-2"}>
+                <Link to={`../suppliers/show/${encodeURIComponent(item["id"])}`}>
+                  <CardTitle className={"bold mx-auto"}>
+                    {item["reference"]}
+                  </CardTitle>
+                </Link>
+              </td>
+              <td>
+                <Row>
+                  <Col>
+                    <p className="bold">
+                      <span>
+                          <FormattedMessage  id={"app.bill.item.status"}
+                                             defaultMessage="Status"
+                                             description="Bill supplier item - status"
+
+                          />
+                        &nbsp;:&nbsp;
+                        </span>
+                      {item["status"]}
+                    </p>
+                    <p className="bold">
+                      <span>
+                          <FormattedMessage  id={"app.bill.item.date.created"}
+                                             defaultMessage="Date de création"
+                                             description="Bill suppliers item - date created"
+
+                          />
+                        &nbsp;:&nbsp;
+                      </span>
+                      {new Date(item["dateCreated"]).toLocaleString('fr-FR')}
+                    </p>
+                    <p className="bold">
+                      <span>
+                          <FormattedMessage  id={"app.bill.item.date.payment"}
+                                             defaultMessage="Date du paiement"
+                                             description="Bill suppliers item - date payment"
+                          />
+                        &nbsp;:&nbsp;
+                        </span>
+                      {new Date(item["datePayment"]).toLocaleString('fr-FR')}
+                    </p>
+                    <p className="bold">
+                      <span>
+                          <FormattedMessage  id={"app.bill.item.currency.used"}
+                                             defaultMessage="Devise utilisée"
+                                             description="Bill supplier item - currency used"
+                                             className="main-menu-top-level-text"
+                          />
+                        &nbsp;:&nbsp;
+                        </span>
+                      {item["currencyUsed"]}
+
+                    </p>
+                    <p className="bold">
+                      <span>
+                        <FormattedMessage  id={"app.bill.item.vat.rate.used"}
+                                           defaultMessage="Taux de TVA"
+                                           description="Bill supplier item - VAT rate used"
+                        />
+                        &nbsp;:&nbsp;
+                        </span>
+                      {item["vatRateUsed"]} %
+                    </p>
+                  </Col>
+                  <Col>
+                    <p className="bold">
+                      <span>
+                          <FormattedMessage  id={"app.bill.suppliers.item.delivery.cost"}
+                                             defaultMessage="Coût de transport"
+                                             description="Bill supplier item - delivery cost"
+                          />
+                        &nbsp;:&nbsp;
+                      </span>
+                      {item["deliveryCost"]} &euro;
+                    </p>
+
+                    <p className="bold">
+                      <span>
+                          <FormattedMessage  id={"app.bill.suppliers.item.total.excl.tax"}
+                                             defaultMessage="Total HTVA"
+                                             description="Bill supplier item - total exclude tax"
+                          />
+                        &nbsp;:&nbsp;
+                      </span>
+                      {item["totalExclTax"]} &euro;
+                    </p>
+                    <p className="bold">
+                      <span>
+                          <FormattedMessage  id={"app.bill.suppliers.item.total.incl.tax"}
+                                             defaultMessage="Total TVAC"
+                                             description="Bill supplier item - total include tax"
+                          />
+                        &nbsp;:&nbsp;
+                      </span>
+                      {item["totalInclTax"]} &euro;
+                    </p>
+
+                  </Col>
+                </Row>
+              </td>
+            </tr>)
+          )}
+
+          </tbody>
+        </Table>
+
+        {/*
         <table className="table table-responsive table-striped table-hover">
           <thead>
             <tr>
@@ -70,9 +214,12 @@ class List extends Component {
               <th>totalInclTax</th>
               <th>url</th>
               <th>payment</th>
-              <th>deliveryCost</th>
-              <th>orderDetail</th>
-              <th>supplier</th>
+              <th>totalShippingCost</th>
+              <th>additionalCost</th>
+              <th>additionalFee</th>
+              <th>additionalInformation</th>
+              <th>customer</th>
+              <th>orderGlobal</th>
               <th colSpan={2} />
             </tr>
           </thead>
@@ -94,13 +241,12 @@ class List extends Component {
                   <td>{item['totalInclTax']}</td>
                   <td>{item['url']}</td>
                   <td>{this.renderLinks('payments', item['payment'])}</td>
-                  <td>{item['reason']}</td>
-                  <td>{item['description']}</td>
+                  <td>{item['totalShippingCost']}</td>
                   <td>{item['additionalCost']}</td>
                   <td>{item['additionalFee']}</td>
                   <td>{item['additionalInformation']}</td>
-                  <td>{this.renderLinks('order_details', item['orderDetail'])}</td>
-                  <td>{this.renderLinks('suppliers', item['supplier'])}</td>
+                  <td>{this.renderLinks('customers', item['customer'])}</td>
+                  <td>{this.renderLinks('order_globals', item['orderGlobal'])}</td>
                   <td>
                     <Link to={`show/${encodeURIComponent(item['@id'])}`}>
                       <span className="fa fa-search" aria-hidden="true" />
@@ -117,6 +263,7 @@ class List extends Component {
               ))}
           </tbody>
         </table>
+        */}
 
         {this.pagination()}
       </div>

@@ -53,6 +53,7 @@ class BillCustomerFixtures extends Fixture implements DependentFixtureInterface
         $bill->setDatePayment($this->faker->dateTimeBetween('-2 years','now'));
         $bill->setCurrencyUsed($this->faker->randomElement(["USD","EUR","BIF"]));
         $bill->setVatRateUsed($this->faker->randomElement([0.18,0.21]));
+        $bill->setReference($this->faker->unique()->creditCardNumber());
         //$bill->setTotalExclTax($this->faker->numberBetween(0, 50000));
         //$bill->setTotalInclTax(($bill->getTotalExclTax() * ($bill->getAdditionalFee() + $bill->getVatRateUsed() )) + $bill->getTotalShippingCost() + $bill->getAdditionalCost());
         $bill->setUrl($this->faker->url);

@@ -34,7 +34,7 @@ class BillRefundFixtures extends Fixture implements DependentFixtureInterface
         $billRefund->setAdditionalFee($this->faker->randomFloat(0, 1));
         $billRefund->setAdditionalCost($this->faker->numberBetween(0, 10000));
         $billRefund->setAdditionalInformation($this->faker->text(50));
-        
+
         $billRefund->setTotalInclTax((($billRefund->getTotalExclTax() - $billRefund->getAdditionalCost() ) * ( 1 + $billRefund->getVatRateUsed() + $billRefund->getAdditionalFee())));
 
         /* Relations */
@@ -63,6 +63,7 @@ class BillRefundFixtures extends Fixture implements DependentFixtureInterface
         $bill->setCurrencyUsed($this->faker->randomElement(["USD","EUR","BIF"]));
         $bill->setVatRateUsed($this->faker->randomElement([0.18,0.21]));
         $bill->setTotalExclTax($this->faker->numberBetween(0, 50000));
+        $bill->setReference($this->faker->unique()->creditCardNumber());
         //$bill->setTotalInclTax(($bill->getTotalExclTax() * ($bill->getAdditionalFee() + $bill->getVatRateUsed() )) + $bill->getTotalShippingCost() + $bill->getAdditionalCost());
         $bill->setUrl($this->faker->url());
 

@@ -41,6 +41,14 @@ class Bill
     private $status;
 
     /**
+     * @var string $reference Reference (unique) of this bill
+     *
+     * @ORM\Column(type="string", length=30, unique=true)
+     * @Assert\NotBlank()
+     */
+    private $reference;
+
+    /**
      * @var \DateTime $dateCreated Creation's date of this bill
      *
      * @ORM\Column(type="datetime")
@@ -139,6 +147,22 @@ class Bill
         $this->status = $status;
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getReference(): string
+    {
+        return $this->reference;
+    }
+
+    /**
+     * @param string $reference
+     */
+    public function setReference(string $reference): void
+    {
+        $this->reference = $reference;
     }
 
     public function getDateCreated(): ?\DateTimeInterface

@@ -9,7 +9,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ApiResource(attributes={
-        "normalization_context"={"groups"={"product:output"}}
+        "normalization_context"={"groups"={"product:output","customer:output","supplier:output","admin:output"}}
  * })
  * @ORM\Table(name="bjmkt_image")
  * @ORM\Entity(repositoryClass="App\Repository\ImageRepository")

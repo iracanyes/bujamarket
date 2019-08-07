@@ -151,7 +151,7 @@ class Supplier extends User
     /**
      * @return string
      */
-    public function getBrandName(): int
+    public function getBrandName(): string
     {
         return $this->brandName;
     }

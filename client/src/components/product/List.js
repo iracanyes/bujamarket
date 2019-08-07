@@ -163,7 +163,7 @@ class List extends Component {
         )}
 
 
-        <div className="list-card-by-4 ">
+        <div className="list-card-by- ">
           {this.props.retrieved && this.showProducts() }
           {this.pagination()}
         </div>

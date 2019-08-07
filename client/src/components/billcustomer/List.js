@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { list, reset } from '../../actions/billcustomer/list';
+import { CardImg, CardTitle, Col, Row, Table } from "reactstrap";
+import { FormattedMessage } from "react-intl";
 
 class List extends Component {
   static propTypes = {
@@ -37,7 +39,13 @@ class List extends Component {
   render() {
     return (
       <div>
-        <h1>Bill customer List</h1>
+        <h1>
+          <FormattedMessage  id={"app.bill.customers.list.page.title"}
+                             defaultMessage="Facture clients"
+                             description="Bill customer list page - title"
+
+          />
+        </h1>
 
         {this.props.loading && (
           <div className="alert alert-info">Loading...</div>
@@ -52,11 +60,166 @@ class List extends Component {
         )}
 
         <p>
-          <Link to="create" className="btn btn-primary">
-            Create
+          <Link to="create" className="btn btn-outline-primary">
+            <FormattedMessage  id={"app.customers.list.page.advanced.search.button"}
+                               defaultMessage="Recherche avancée"
+                               description="Customer list page - advanced search button"
+
+            />
           </Link>
         </p>
 
+        <Table dark hover className={"table-list-image"}>
+          <thead>
+          <tr>
+            <th>#</th>
+            <th>
+              <FormattedMessage  id={"app.bill.customers.item.reference"}
+                                 defaultMessage="Référence"
+                                 description="Bill customer item - reference"
+
+              />
+            </th>
+            <th>
+              <FormattedMessage  id={"app.bill.customers.table.detailed.info"}
+                                 defaultMessage="Informations détaillées"
+                                 description="Bill customer table - detailed informations"
+
+              />
+            </th>
+          </tr>
+          </thead>
+          <tbody>
+          {this.props.retrieved && this.props.retrieved["hydra:member"].map(item => (
+            <tr>
+              <th scope="row">{item["id"]}</th>
+              <td className={"table-td-image-circle col-lg-2"}>
+                <Link to={`../suppliers/show/${encodeURIComponent(item["id"])}`}>
+                  <CardTitle className={"bold mx-auto"}>
+                    {item["reference"]}
+                  </CardTitle>
+                </Link>
+              </td>
+              <td>
+                <Row>
+                  <Col>
+                    <p className="bold">
+                      <span>
+                          <FormattedMessage  id={"app.bill.customers.item.status"}
+                                             defaultMessage="Status"
+                                             description="Bill customer item - status"
+
+                          />
+                          &nbsp;:&nbsp;
+                        </span>
+                      {item["status"]}
+                    </p>
+                    <p className="bold">
+                      <span>
+                          <FormattedMessage  id={"app.bill.customers.item.date.created"}
+                                             defaultMessage="Date de création"
+                                             description="Bill customers item - date created"
+
+                          />
+                        &nbsp;:&nbsp;
+                      </span>
+                      {new Date(item["dateCreated"]).toLocaleString('fr-FR')}
+                    </p>
+                    <p className="bold">
+                      <span>
+                          <FormattedMessage  id={"app.bill.customers.item.date.payment"}
+                                             defaultMessage="Date du paiement"
+                                             description="Bill customers item - date payment"
+                          />
+                        &nbsp;:&nbsp;
+                        </span>
+                      {new Date(item["datePayment"]).toLocaleString('fr-FR')}
+                    </p>
+                    <p className="bold">
+                      <span>
+                          <FormattedMessage  id={"app.bill.customers.item.currency.used"}
+                                             defaultMessage="Devise utilisée"
+                                             description="Bill customer item - currency used"
+                                             className="main-menu-top-level-text"
+                          />
+                        &nbsp;:&nbsp;
+                        </span>
+                      {item["currencyUsed"]}
+
+                    </p>
+                    <p className="bold">
+                      <span>
+                        <FormattedMessage  id={"app.bill.customers.item.vat.rate.used"}
+                                             defaultMessage="Taux de TVA"
+                                             description="Bill customer item - VAT rate used"
+                        />
+                        &nbsp;:&nbsp;
+                        </span>
+                      {item["vatRateUsed"]} %
+                    </p>
+                  </Col>
+                  <Col>
+                    <p className="bold">
+                      <span>
+                          <FormattedMessage  id={"app.bill.customers.item.additional.cost"}
+                                             defaultMessage="Coût additionnel"
+                                             description="Bill customer item - additional cost"
+                          />
+                        &nbsp;:&nbsp;
+                      </span>
+                      {item["additionalCost"]} &euro;
+                    </p>
+                    <p className="bold">
+                      <span>
+                          <FormattedMessage  id={"app.bill.customers.item.additional.fee"}
+                                             defaultMessage="Frais additionnel"
+                                             description="Bill customer item - additional fee"
+                          />
+                        &nbsp;:&nbsp;
+                      </span>
+                      {item["additionalFee"]} %
+                    </p>
+                    <p className="bold">
+                      <span>
+                          <FormattedMessage  id={"app.bill.customers.item.total.shipping.cost"}
+                                             defaultMessage="Coût total de livraison"
+                                             description="Bill customer item - total shipping cost"
+                          />
+                        &nbsp;:&nbsp;
+                      </span>
+                      {item["totalShippingCost"]} &euro;
+                    </p>
+                    <p className="bold">
+                      <span>
+                          <FormattedMessage  id={"app.bill.customers.item.total.excl.tax"}
+                                             defaultMessage="Total HTVA"
+                                             description="Bill customer item - total exclude tax"
+                          />
+                        &nbsp;:&nbsp;
+                      </span>
+                      {item["totalExclTax"]} &euro;
+                    </p>
+                    <p className="bold">
+                      <span>
+                          <FormattedMessage  id={"app.bill.customers.item.total.incl.tax"}
+                                             defaultMessage="Total TVAC"
+                                             description="Bill customer item - total include tax"
+                          />
+                        &nbsp;:&nbsp;
+                      </span>
+                      {item["totalInclTax"]} &euro;
+                    </p>
+
+                  </Col>
+                </Row>
+              </td>
+            </tr>)
+          )}
+
+          </tbody>
+        </Table>
+
+        {/*
         <table className="table table-responsive table-striped table-hover">
           <thead>
             <tr>
@@ -119,6 +282,7 @@ class List extends Component {
               ))}
           </tbody>
         </table>
+        */}
 
         {this.pagination()}
       </div>
