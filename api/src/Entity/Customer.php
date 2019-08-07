@@ -5,12 +5,17 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
- * @ApiResource()
+ * @ApiResource(attributes={
+ *     "normalization_context"={"groups"={"customer:output","admin:output"}},
+ *     "denormalization_context"={"groups"={"customer:input"}}
+
+ * })
  * @ORM\Table(name="bjmkt_customer")
  * @ORM\Entity(repositoryClass="App\Repository\CustomerRepository")
  * @ UniqueEntity("customerKey")
@@ -23,6 +28,7 @@ class Customer extends User
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"customer:output","admin:output"})
      */
     private $id;
 
@@ -31,6 +37,7 @@ class Customer extends User
      *
      * @ORM\Column(type="string", length=100)
      * @Assert\NotBlank()
+     * @Groups({"customer:output","admin:output"})
      */
     private $customerKey;
 
@@ -39,6 +46,7 @@ class Customer extends User
      *
      * @ORM\Column(type="integer")
      * @Assert\Type("integer")
+     * @Groups({"customer:output","admin:output"})
      */
     private $nbAbuseIdentified;
 
@@ -47,6 +55,7 @@ class Customer extends User
      *
      * @ORM\Column(type="float")
      * @Assert\Type("float")
+     * @Groups({"customer:output","admin:output"})
      */
     private $averageRating;
 
@@ -55,6 +64,7 @@ class Customer extends User
      *
      * @ORM\Column(type="integer")
      * @Assert\Type("integer")
+     * @Groups({"customer:output","admin:output"})
      */
     private $nbOrderCompleted;
 
@@ -63,6 +73,7 @@ class Customer extends User
      *
      * @ORM\Column(type="integer")
      * @Assert\Type("integer")
+     * @Groups({"customer:output","admin:output"})
      */
     private $nbOrderWithdrawn;
 
@@ -70,6 +81,7 @@ class Customer extends User
      * @var Collection $orderGlobals Order sets made by this customer
      *
      * @ORM\OneToMany(targetEntity="App\Entity\OrderGlobal", mappedBy="customer")
+     * @Groups({"customer:output","admin:output"})
      */
     private $orderGlobals;
 
@@ -77,6 +89,7 @@ class Customer extends User
      * @var Collection $customerBills Orders Bill of this customer
      *
      * @ORM\OneToMany(targetEntity="App\Entity\BillCustomer", mappedBy="customer", orphanRemoval=true)
+     * @Groups({"customer:output","admin:output"})
      */
     private $customerBills;
 
@@ -84,6 +97,7 @@ class Customer extends User
      * @var Collection $refundBills Refund's bill of this customer
      *
      * @ORM\OneToMany(targetEntity="App\Entity\BillRefund", mappedBy="customer", orphanRemoval=true)
+     * @Groups({"customer:output","admin:output"})
      */
     private $refundBills;
 
@@ -91,6 +105,7 @@ class Customer extends User
      * @var Collection $comments Comments made by this customer
      *
      * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="customer", orphanRemoval=true)
+     * @Groups({"customer:output","admin:output"})
      */
     private $comments;
 
@@ -98,11 +113,13 @@ class Customer extends User
      * @var Collection $favorites Supplier's product loved by this customer
      *
      * @ORM\OneToMany(targetEntity="App\Entity\Favorite", mappedBy="customer", orphanRemoval=true)
+     * @Groups({"customer:output","admin:output"})
      */
     private $favorites;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\ShoppingCard", mappedBy="customer", orphanRemoval=true)
+     * @Groups({"customer:output","admin:output"})
      */
     private $shoppingCards;
 

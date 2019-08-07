@@ -29,7 +29,7 @@ class BillSupplierFixtures extends Fixture implements DependentFixtureInterface
 
         /* Supplier information */
         $billSupplier->setDeliveryCost($this->faker->numberBetween(0, 20000));
-        
+
         $billSupplier->setTotalInclTax($this->faker->randomFloat(2, 10, 10000));
 
         /* Relations */
@@ -52,6 +52,7 @@ class BillSupplierFixtures extends Fixture implements DependentFixtureInterface
         $bill->setCurrencyUsed($this->faker->randomElement(["USD","EUR","BIF"]));
         $bill->setVatRateUsed($this->faker->randomElement([0.18,0.21]));
         $bill->setTotalExclTax($this->faker->numberBetween(0, 50000));
+        $bill->setReference($this->faker->unique()->creditCardNumber());
         //$bill->setTotalInclTax(($bill->getTotalExclTax() * ($bill->getAdditionalFee() + $bill->getVatRateUsed() )) + $bill->getTotalShippingCost() + $bill->getAdditionalCost());
         $bill->setUrl($this->faker->url());
 

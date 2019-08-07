@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { list, reset } from '../../actions/customer/list';
+import { Card, CardText, CardTitle, CarouselItem, Col, Row } from "reactstrap";
+import { FormattedMessage } from "react-intl";
 
 class List extends Component {
   static propTypes = {
@@ -34,10 +36,141 @@ class List extends Component {
     this.props.reset(this.props.eventSource);
   }
 
+  showCustomers()
+  {
+    let items = [];
+
+    const customers = this.props.retrieved && this.props.retrieved["hydra:member"];
+
+
+    console.log("Résultats produits", customers);
+
+    let rows = [];
+
+    for(let i = 0; i < Math.ceil(customers.length / 12 ); i++)
+    {
+
+      let resultsPer4 = [];
+
+      for(let j = 0; j < 12; j++)
+      {
+        console.log("Résultats produits " + j, customers[i * 12 + j]);
+
+        if(customers[i * 12 + j])
+        {
+
+          resultsPer4.push(
+            <Col key={"customers" + (i * 10 + j)} xs={"12"} sm="6" md="4" lg="3">
+              <Card body className={" text-white bg-dark"}>
+                <div className="card-img-custom">
+                  <img src="https://picsum.photos/2000/3000" alt={customers[i * 10 + j]["image"]["alt"]} className="image img-fluid" style={{ width:"100%"}} />
+                  <div className="middle">
+                    <div className="btn btn-outline-info text">
+                      <FormattedMessage  id={"app.page.customer.list.button.customize"}
+                                         defaultMessage="Personnaliser"
+                                         description="Customers list - button customize"
+                      />
+                    </div>
+                  </div>
+                </div>
+                {/*
+                <CardImg top className={"img-thumbnail"} width="100%" src="https://picsum.photos/2000/3000" alt={customers[i * 10 + j].images[0].alt} />
+                */}
+                <CardTitle>{customers[i * 10 + j]["username"]}</CardTitle>
+                <CardText>
+                  <p>
+                    <span className="font-weight-bold">
+                      <FormattedMessage  id={"app.page.customer.item.fullname"}
+                                         defaultMessage="Nom complet"
+                                         description="Customers item - Fullname"
+                      />
+                      &nbsp;:&nbsp;
+                    </span>
+                    {customers[i * 10 + j]["firstname"]} &nbsp; {customers[i * 10 + j]["lastname"]}
+                  </p>
+                  <p>
+                    <span className="font-weight-bold">
+                      <FormattedMessage  id={"app.page.customer.item.average.rating.made"}
+                                         defaultMessage="Moyenne des votes"
+                                         description="Customers item - Average rating made"
+                      />
+                      &nbsp;:&nbsp;
+                    </span>
+                    {customers[i * 10 + j]["averageRating"]}
+                  </p>
+                  <p>
+                    <spa className="font-weight-bold">
+                      <FormattedMessage  id={"app.page.customer.item.language"}
+                                         defaultMessage="Langue préférée"
+                                         description="Customers item - Language"
+                      />
+                      &nbsp;:&nbsp;
+                    </spa>
+
+                    {customers[i * 10 + j]["language"]}
+                  </p>
+                  <p>
+                    <span className="font-weight-bold">
+                      <FormattedMessage  id={"app.page.customer.item.currency"}
+                                         defaultMessage="Devise utilisé"
+                                         description="Customers item - Currency used"
+                      />
+                      &nbsp;:&nbsp;
+                       :&nbsp;
+                    </span>
+                    {customers[i * 10 + j]["currency"]}
+                  </p>
+                </CardText>
+                <Link
+                  to={`show/${encodeURIComponent(customers[i * 10 + j]['@id'])}`}
+                  className={"btn btn-outline-primary"}
+                >
+                  <FormattedMessage  id={"app.page.customer.list.button.see.detail"}
+                                     defaultMessage="Voir le détail"
+                                     description="Customers item - button 'see detail'"
+                  />
+
+                </Link>
+              </Card>
+            </Col>
+          );
+        }
+
+      }
+
+      rows.push(
+        <Row
+          key={"rows" + (i * 10)}
+        >
+          {resultsPer4}
+        </Row>
+      );
+    }
+
+    let index = 0;
+    items.push(
+      <div id="list-customers" key={index++}>
+        {rows}
+      </div>
+    );
+
+    return items;
+
+
+  }
+
   render() {
+    const items = this.props.retrieved && this.showCustomers();
+
     return (
       <div>
-        <h1>Customer List</h1>
+        <h1>
+          <FormattedMessage  id={"app.customers.list.page.title"}
+                             defaultMessage="Nos clients"
+                             description="Customer list page - title"
+
+          />
+        </h1>
 
         {this.props.loading && (
           <div className="alert alert-info">Loading...</div>
@@ -52,167 +185,26 @@ class List extends Component {
         )}
 
         <p>
-          <Link to="create" className="btn btn-primary">
-            Create
+          <Link
+            to="create"
+            className="btn btn-outline-primary"
+          >
+            <FormattedMessage  id={"app.customers.list.page.advanced.search.button"}
+                               defaultMessage="Recherche avancée"
+                               description="Customer list page - advanced search button"
+
+            />
+
           </Link>
         </p>
-
-        <table className="table table-responsive table-striped table-hover">
-          <thead>
-            <tr>
-              <th>id</th>
-              <th>userType</th>
-              <th>customerKey</th>
-              <th>nbAbuseIdentified</th>
-              <th>averageRating</th>
-              <th>nbOrderCompleted</th>
-              <th>nbOrderWithdrawn</th>
-              <th>orderGlobals</th>
-              <th>customerBills</th>
-              <th>refundBills</th>
-              <th>commments</th>
-              <th>favorites</th>
-              <th>id</th>
-              <th>email</th>
-              <th>username</th>
-              <th>roles</th>
-              <th>plainPassword</th>
-              <th>password</th>
-              <th>firstname</th>
-              <th>lastname</th>
-              <th>nbErrorConnection</th>
-              <th>banned</th>
-              <th>signinConfirmed</th>
-              <th>dateRegistration</th>
-              <th>language</th>
-              <th>currency</th>
-              <th>image</th>
-              <th>addresses</th>
-              <th>bankAccounts</th>
-              <th>forums</th>
-              <th>messages</th>
-              <th colSpan={2} />
-            </tr>
-          </thead>
-          <tbody>
+        <div className="liste-card-by-4 list-img-middle-rounded">
+          {items}
+          {this.pagination()}
+        </div>
 
 
-            {this.props.retrieved &&
-              this.props.retrieved['hydra:member'].map(item => (
-                <tr key={item['@id']}>
-                  <th scope="row">
-                    <Link to={`show/${encodeURIComponent(item['@id'])}`}>
-                      {item['@id']}
-                    </Link>
-                  </th>
-                  <td>
-                    {item['userType']}
-                  </td>
-                  <td>
-                    {item['customerKey']}
-                  </td>
-                  <td>
-                    {item['nbAbuseIdentified']}
-                  </td>
-                  <td>
-                    {item['averageRating']}
-                  </td>
-                  <td>
-                    {item['nbOrderCompleted']}
-                  </td>
-                  <td>
-                    {item['nbOrderWithdrawn']}
-                  </td>
-                  <td>
-                    {this.renderLinks('order_globals', item['orderGlobals'])}
-                  </td>
-                  <td>
-                    {this.renderLinks('customer_bills', item['customerBills'])}
-                  </td>
-                  <td>
-                    {this.renderLinks('refund_bills', item['refundBills'])}
-                  </td>
-                  <td>
-                    {this.renderLinks('commments', item['commments'])}
-                  </td>
-                  <td>
-                    {this.renderLinks('favorites', item['favorites'])}
-                  </td>
-                  <td>
-                    {item['id']}
-                  </td>
-                  <td>
-                    {item['email']}
-                  </td>
-                  <td>
-                    {item['username']}
-                  </td>
-                  <td>
-                    {item['roles']}
-                  </td>
-                  <td>
-                    {item['plainPassword']}
-                  </td>
-                  <td>
-                    {item['password']}
-                  </td>
-                  <td>
-                    {item['firstname']}
-                  </td>
-                  <td>
-                    {item['lastname']}
-                  </td>
-                  <td>
-                    {item['nbErrorConnection']}
-                  </td>
-                  <td>
-                    {item['banned']}
-                  </td>
-                  <td>
-                    {item['signinConfirmed']}
-                  </td>
-                  <td>
-                    {item['dateRegistration']}
-                  </td>
-                  <td>
-                    {item['language']}
-                  </td>
-                  <td>
-                    {item['currency']}
-                  </td>
-                  <td>
-                    {this.renderLinks('images', item['image'])}
-                  </td>
-                  <td>
-                    {this.renderLinks('addresses', item['addresses'])}
-                  </td>
-                  <td>
-                    {this.renderLinks('bank_accounts', item['bankAccounts'])}
-                  </td>
-                  <td>
-                    {this.renderLinks('forums', item['forums'])}
-                  </td>
-                  <td>
-                    {this.renderLinks('messages', item['messages'])}
-                  </td>
-                  <td>
-                    <Link to={`show/${encodeURIComponent(item['@id'])}`}>
-                      <span className="fa fa-search" aria-hidden="true"/>
-                      <span className="sr-only">Show</span>
-                    </Link>
-                  </td>
-                  <td>
-                    <Link to={`edit/${encodeURIComponent(item['@id'])}`}>
-                      <span className="fa fa-pencil" aria-hidden="true"/>
-                      <span className="sr-only">Edit</span>
-                    </Link>
-                  </td>
-                </tr>
-              ))}
-          </tbody>
-        </table>
 
-        {this.pagination()}
+
       </div>
     );
   }

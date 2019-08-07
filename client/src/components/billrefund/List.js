@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { list, reset } from '../../actions/billrefund/list';
+import { FormattedMessage } from "react-intl";
+import { CardTitle, Col, Row, Table } from "reactstrap";
 
 class List extends Component {
   static propTypes = {
@@ -37,7 +39,13 @@ class List extends Component {
   render() {
     return (
       <div>
-        <h1>Bill refunds List</h1>
+        <h1>
+          <FormattedMessage  id={"app.bill.refunds.list.page.title"}
+                             defaultMessage="Factures - remboursement"
+                             description="Bill refund list page - title"
+
+          />
+        </h1>
 
         {this.props.loading && (
           <div className="alert alert-info">Loading...</div>
@@ -52,11 +60,189 @@ class List extends Component {
         )}
 
         <p>
-          <Link to="create" className="btn btn-primary">
-            Create
+          <Link to="create" className="btn btn-outline-primary">
+            <FormattedMessage  id={"app.refunds.list.page.advanced.search.button"}
+                               defaultMessage="Recherche avancée"
+                               description="Bill refunds list page - advanced search button"
+
+            />
           </Link>
         </p>
 
+        <Table dark hover className={"table-list-image"}>
+          <thead>
+          <tr>
+            <th>#</th>
+            <th>
+              <FormattedMessage  id={"app.bill.refunds.item.reference"}
+                                 defaultMessage="Référence"
+                                 description="Bill refunds item - reference"
+
+              />
+            </th>
+            <th>
+              <FormattedMessage  id={"app.bill.refunds.table.detailed.info"}
+                                 defaultMessage="Informations détaillées"
+                                 description="Bill refunds table - detailed informations"
+
+              />
+            </th>
+          </tr>
+          </thead>
+          <tbody>
+          {this.props.retrieved && this.props.retrieved["hydra:member"].map(item => (
+            <tr>
+              <th scope="row">{item["id"]}</th>
+              <td className={"table-td-image-circle col-lg-2"}>
+                <Link to={`../suppliers/show/${encodeURIComponent(item["id"])}`}>
+                  <CardTitle className={"bold mx-auto"}>
+                    {item["reference"]}
+                  </CardTitle>
+                </Link>
+              </td>
+              <td>
+                <Row>
+                  <Col>
+                    <p className="bold">
+                      <span>
+                          <FormattedMessage  id={"app.bill.refunds.item.reason"}
+                                             defaultMessage="Raison"
+                                             description="Bill refunds item - reason"
+                          />
+                        &nbsp;:&nbsp;
+                      </span>
+                      {item["reason"]}
+                    </p>
+                    <p className="bold">
+                      <span>
+                          <FormattedMessage  id={"app.bill.refunds.item.status"}
+                                             defaultMessage="Status"
+                                             description="Bill refunds item - status"
+
+                          />
+                        &nbsp;:&nbsp;
+                        </span>
+                      {item["status"]}
+                    </p>
+                    <p className="bold">
+                      <span>
+                          <FormattedMessage  id={"app.bill.refunds.item.date.created"}
+                                             defaultMessage="Date de création"
+                                             description="Bill refunds item - date created"
+
+                          />
+                        &nbsp;:&nbsp;
+                      </span>
+                      {new Date(item["dateCreated"]).toLocaleString('fr-FR')}
+                    </p>
+                    <p className="bold">
+                      <span>
+                          <FormattedMessage  id={"app.bill.refunds.item.date.payment"}
+                                             defaultMessage="Date du paiement"
+                                             description="Bill refunds item - date payment"
+                          />
+                        &nbsp;:&nbsp;
+                        </span>
+                      {new Date(item["datePayment"]).toLocaleString('fr-FR')}
+                    </p>
+                    <p className="bold">
+                      <span>
+                          <FormattedMessage  id={"app.bill.refunds.item.currency.used"}
+                                             defaultMessage="Devise utilisée"
+                                             description="Bill refunds item - currency used"
+                                             className="main-menu-top-level-text"
+                          />
+                        &nbsp;:&nbsp;
+                        </span>
+                      {item["currencyUsed"]}
+
+                    </p>
+                    <p className="bold">
+                      <span>
+                        <FormattedMessage  id={"app.bill.refunds.item.vat.rate.used"}
+                                           defaultMessage="Taux de TVA"
+                                           description="Bill refunds item - VAT rate used"
+                        />
+                        &nbsp;:&nbsp;
+                        </span>
+                      {item["vatRateUsed"]} %
+                    </p>
+                  </Col>
+                  <Col>
+                    <p className="bold">
+                      <span>
+                          <FormattedMessage  id={"app.bill.refunds.item.additional.cost"}
+                                             defaultMessage="Coût additionnel"
+                                             description="Bill refunds item - additional cost"
+                          />
+                        &nbsp;:&nbsp;
+                      </span>
+                      {item["additionalCost"]} &euro;
+                    </p>
+                    <p className="bold">
+                      <span>
+                          <FormattedMessage  id={"app.bill.refunds.item.additional.fee"}
+                                             defaultMessage="Frais additionnel"
+                                             description="Bill refunds item - additional fee"
+                          />
+                        &nbsp;:&nbsp;
+                      </span>
+                      {item["additionalFee"]} %
+                    </p>
+
+                    <p className="bold">
+                      <span>
+                          <FormattedMessage  id={"app.bill.refunds.item.total.excl.tax"}
+                                             defaultMessage="Total HTVA"
+                                             description="Bill refunds item - total exclude tax"
+                          />
+                        &nbsp;:&nbsp;
+                      </span>
+                      {item["totalExclTax"]} &euro;
+                    </p>
+                    <p className="bold">
+                      <span>
+                          <FormattedMessage  id={"app.bill.refunds.item.total.incl.tax"}
+                                             defaultMessage="Total TVAC"
+                                             description="Bill refunds item - total include tax"
+                          />
+                        &nbsp;:&nbsp;
+                      </span>
+                      {item["totalInclTax"]} &euro;
+                    </p>
+                    <p className="bold">
+                      <span>
+                          <FormattedMessage  id={"app.bill.refunds.item.additional.info"}
+                                             defaultMessage="Informations additionnelles"
+                                             description="Bill refunds item - additional information"
+                          />
+                          &nbsp;:
+                      </span>
+                      <br/>
+                      {item["additionalInformation"]}
+                    </p>
+                    <p className="bold">
+                      <span>
+                          <FormattedMessage  id={"app.bill.refunds.item.description"}
+                                             defaultMessage="Description"
+                                             description="Bill refunds item - description"
+                          />
+                          &nbsp;:
+                      </span>
+                      <br/>
+                      {item["description"]}
+                    </p>
+
+                  </Col>
+                </Row>
+              </td>
+            </tr>)
+          )}
+
+          </tbody>
+        </Table>
+
+        {/*
         <table className="table table-responsive table-striped table-hover">
           <thead>
             <tr>
@@ -70,15 +256,12 @@ class List extends Component {
               <th>totalInclTax</th>
               <th>url</th>
               <th>payment</th>
-              <th>reason</th>
-              <th>description</th>
+              <th>totalShippingCost</th>
               <th>additionalCost</th>
               <th>additionalFee</th>
               <th>additionalInformation</th>
-              <th>orderReturned</th>
-              <th>withdrawal</th>
               <th>customer</th>
-              <th>validator</th>
+              <th>orderGlobal</th>
               <th colSpan={2} />
             </tr>
           </thead>
@@ -100,15 +283,12 @@ class List extends Component {
                   <td>{item['totalInclTax']}</td>
                   <td>{item['url']}</td>
                   <td>{this.renderLinks('payments', item['payment'])}</td>
-                  <td>{item['reason']}</td>
-                  <td>{item['description']}</td>
+                  <td>{item['totalShippingCost']}</td>
                   <td>{item['additionalCost']}</td>
                   <td>{item['additionalFee']}</td>
                   <td>{item['additionalInformation']}</td>
-                  <td>{this.renderLinks('order_returned', item['orderReturned'])}</td>
-                  <td>{this.renderLinks('withdrawals', item['withdrawal'])}</td>
-                  <td>{this.renderLinks('users', item['customer'])}</td>
-                  <td>{this.renderLinks('admins', item['validator'])}</td>
+                  <td>{this.renderLinks('customers', item['customer'])}</td>
+                  <td>{this.renderLinks('order_globals', item['orderGlobal'])}</td>
                   <td>
                     <Link to={`show/${encodeURIComponent(item['@id'])}`}>
                       <span className="fa fa-search" aria-hidden="true" />
@@ -125,6 +305,7 @@ class List extends Component {
               ))}
           </tbody>
         </table>
+        */}
 
         {this.pagination()}
       </div>

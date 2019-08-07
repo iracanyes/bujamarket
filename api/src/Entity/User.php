@@ -67,7 +67,8 @@ class User implements UserInterface
      *
      * @ORM\Column(type="string", length=100)
      * @Assert\NotBlank()
-     * @Groups({"supplier:output"})
+     * @Groups({"admin:output","customer:output","supplier:output"})
+     *
      */
     private $firstname;
 
@@ -76,7 +77,7 @@ class User implements UserInterface
      *
      * @ORM\Column(type="string", length=100)
      * @Assert\NotBlank()
-     * @Groups({"supplier:output"})
+     * @Groups({"admin:output","customer:output","supplier:output"})
      */
     private $lastname;
 
@@ -111,6 +112,7 @@ class User implements UserInterface
      *
      * @ORM\Column(type="datetime")
      * @Assert\DateTime()
+     * @Groups({"admin:output","customer:output","supplier:output"})
      */
     private $dateRegistration;
 
@@ -118,6 +120,7 @@ class User implements UserInterface
      * @var string $language Language's preference
      * @ORM\Column(type="string", length=100)
      * @Assert\Language()
+     * @Groups({"admin:output","customer:output","supplier:output"})
      */
     private $language;
 
@@ -126,6 +129,7 @@ class User implements UserInterface
      *
      * @ORM\Column(type="string", length=5)
      * @Assert\Currency()
+     * @Groups({"admin:output","customer:output","supplier:output"})
      */
     private $currency;
 
@@ -134,7 +138,7 @@ class User implements UserInterface
      *
      * @ORM\OneToOne(targetEntity="App\Entity\Image", inversedBy="user", cascade={"persist", "remove"})
      * @Assert\Type("App\Entity\Image")
-     * @Groups({"supplier:output"})
+     * @Groups({"admin:output","customer:output","supplier:output"})
      */
     private $image;
 
