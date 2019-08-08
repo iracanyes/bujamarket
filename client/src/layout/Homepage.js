@@ -23,23 +23,20 @@ export default class Homepage extends Component
         {/* Carousel - Categories  */}
         <section className="category-cards bg-transparent pt60 pb60">
           <div className="container-fluid">
-            <h3>Catégories de produits</h3>
             <CarouselCategories/>
           </div>
-          {/* .container */}
+
         </section>
+        {/* End Carousel - Categories */}
 
         {/* Parallax image 1 */}
         <div className="parallax parallax-main parallax1 parallax-plus-box">
 
           <div className="card">
-            <h5 className="card-header">Rejoignez-nous</h5>
+
             <div className="card-body">
-              <h5 className="card-title">Envie de participer à la documentation</h5>
-              <p className="card-text">
-                Cette plateforme de documentation est géré directement par les membres. Envie de
-                participer...
-              </p>
+              <h5 className="card-title">Connectez-vous </h5>
+
               <p>
                 <a className="btn btn-primary" data-toggle="collapse" href="#multiCollapseSignUp2"
                    role="button" aria-expanded="false" aria-controls="multiCollapseSignUp2">Devenir
@@ -165,33 +162,7 @@ export default class Homepage extends Component
           </div>
         </div>
 
-        {/* Articles récents  */}
 
-        { /*<CarouselRecentArticles/> */ }
-
-        {/* Grains récents  */}
-
-        { /* <CarouselRecentGrains/> */ }
-
-        {/* Parallax image 2 */}
-        <div className="parallax parallax-main parallax2 parallax-plus-box">
-
-          <div className="card">
-            <h5 className="card-header">Featured</h5>
-            <div className="card-body">
-              <h5 className="card-title">Special title treatment</h5>
-              <p className="card-text">With supporting text below as a natural lead-in to additional
-                content.</p>
-              <NavLink tag={RRDNavLink} to={"/homepage"}  className={"btn btn-primary"}>
-                Go Somewhere
-              </NavLink>
-            </div>
-          </div>
-        </div>
-
-        {/* Grains récents  */}
-
-        { /* <CarouselRecentGrains/> */ }
 
 
 

@@ -30,7 +30,7 @@ class SearchResults extends  Component{
     const products = this.props.results && this.props.results.searchResults;
 
 
-    console.log("Résultats produits", products);
+    //console.log("Résultats produits", products);
 
     let rows = [];
 
@@ -41,22 +41,22 @@ class SearchResults extends  Component{
 
       for(let j = 0; j < 12; j++)
       {
-        console.log("Résultats produits " + j, products[i * 12 + j]);
+        //console.log("Résultats produits " + j, products[i * 12 + j]);
 
         if(products[i * 12 + j])
         {
 
           resultsPer4.push(
-            <Col key={"products" + (i * 10 + j)} xs={"12"} sm="6" md="4" lg="3">
+            <Col key={"products" + (i * 12 + j)} xs={"12"} sm="6" md="4" lg="3">
               <Card body>
                 {/*
                 <CardImg top width="100%" src={products[i * 10 + j].images[0].url} alt={products[i * 10 + j].images[0].alt} />
                 */}
-                <CardImg top width="100%" src="https://picsum.photos/2000/3000" alt={products[i * 10 + j].images[0].alt} />
-                <CardTitle>{products[i * 10 + j]["title"]}</CardTitle>
-                <CardText>{products[i * 10 + j]["resume"]}</CardText>
+                <CardImg top width="100%" src="https://picsum.photos/2000/3000" alt={products[i * 12 + j].images[0].alt} />
+                <CardTitle>{products[i * 12 + j]["title"]}</CardTitle>
+                <CardText>{products[i * 12 + j]["resume"]}</CardText>
                 <Link
-                  to={`show/${encodeURIComponent(products[i * 10 + j]['@id'])}`}
+                  to={`show/${encodeURIComponent(products[i * 12 + j]['@id'])}`}
                   className={"btn btn-outline-primary"}
                 >
                   Voir le détail
@@ -69,7 +69,7 @@ class SearchResults extends  Component{
       }
 
       rows.push(
-        <Row key={"rows" + (i * 10)}>
+        <Row key={"rows" + (i)}>
           {resultsPer4}
         </Row>
       );

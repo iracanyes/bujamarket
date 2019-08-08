@@ -9,7 +9,7 @@ use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use \Faker\Factory;
 
 
-class CategoryFixtures extends Fixture
+class CategoryFixtures extends Fixture implements DependentFixtureInterface
 {
     /**
      * @var \Faker\Factory
@@ -31,7 +31,10 @@ class CategoryFixtures extends Fixture
         $category->setDescription($this->faker->text(100));
         $category->setDateCreated($this->faker->dateTimeBetween('-3 years', 'now'));
         $category->setIsValid($this->faker->randomElement([0,1]));
-        $category->setPlatformFee($this->faker->randomFloat(0,0.4));
+        $category->setPlatformFee($this->faker->randomFloat(2,0.05,0.45));
+
+        // Relation
+        $category->setImage($this->getReference(ImageFixtures::IMAGE_REFERENCE));
 
 
         $manager->persist($category);
@@ -40,5 +43,11 @@ class CategoryFixtures extends Fixture
         $this->addReference(self::CATEGORY_REFERENCE, $category);
     }
 
+    public function getDependencies()
+    {
+        return array(
+            ImageFixtures::class
+        );
+    }
 
 }

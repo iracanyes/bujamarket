@@ -9,6 +9,7 @@
 header{
 
   nav#navbar-primary{
+    background-image: linear-gradient(to right, red, yellow, yellow, green);
     justify-content: space-evenly;
     padding-top: 10px;
     padding-bottom: 0;
@@ -37,12 +38,19 @@ header{
             }
             /* bouton de soumission du formulaire */
             button.btn-outline-light{
-                color: white;
+                //color: white;
+                // Avec le background linear-gradient
+                color: darkblue;
+                border-color: darkblue;
                 border-color: white;
                 border-top-left-radius: unset;
                 border-bottom-left-radius: unset;
                 border-top-right-radius: 1em;
                 border-bottom-right-radius: 1em;
+            }
+
+            button.btn-outline-light:hover{
+                border-color: lightgray;
             }
 
         }
@@ -53,7 +61,10 @@ header{
 
             button.btn-advanced-search-toggle-button{
                 background-color: transparent;
-                color: white;
+                //color: white;
+                // Avec le background linear-gradient
+                color: darkblue;
+                border-color: darkblue;
                 border-right: none;
                 border-top: none;
                 border-left: none;
@@ -93,6 +104,9 @@ header{
           a.nav-link{
             text-align: center;
             line-height: 1.0;
+
+            /* Avec le background linear gradient */
+            color: darkblue;
 
             svg.menu-top-l1{
               display: block !important;
