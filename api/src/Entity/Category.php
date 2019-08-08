@@ -12,7 +12,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ApiResource(attributes={
-        "normalization_context"={"groups"={"product:output"}}
+        "normalization_context"={"groups"={"category:output","product:output"}}
  * })
  * @ORM\Table(name="bjmkt_category")
  * @ORM\Entity(repositoryClass="App\Repository\CategoryRepository")
@@ -25,7 +25,7 @@ class Category
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"product:output"})
+     * @Groups({"category:output","product:output"})
      *
      */
     private $id;
@@ -35,7 +35,7 @@ class Category
      *
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank()
-     * @Groups({"product:output"})
+     * @Groups({"category:output","product:output"})
      */
     private $name;
 
@@ -44,7 +44,7 @@ class Category
      *
      * @ORM\Column(type="text")
      * @Assert\NotBlank()
-     * @Groups({"product:output"})
+     * @Groups({"category:output","product:output"})
      */
     private $description;
 
@@ -53,7 +53,7 @@ class Category
      *
      * @ORM\Column(type="datetime")
      * @Assert\DateTime()
-     * @Groups({"product:output"})
+     * @Groups({"category:output","product:output"})
      */
     private $dateCreated;
 
@@ -75,7 +75,7 @@ class Category
      *     minMessage="The minimum value is {{ limit }}. Your value is {{ value }}",
      *     maxMessage="The maximum value is {{ limit }}. Your value is {{ value }}"
      * )
-     * @Groups({"product:output"})
+     * @Groups({"category:output","product:output"})
      */
     private $platformFee;
 
@@ -85,9 +85,17 @@ class Category
      * @var Collection $products Products of this category
      *
      * @ORM\OneToMany(targetEntity="App\Entity\Product", mappedBy="category")
-     *
      */
     private $products;
+
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\Image", inversedBy="category", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=false)
+     * @Groups({"category:output"})
+     */
+    private $image;
+
+
 
     public function __construct()
     {
@@ -196,6 +204,18 @@ class Category
                 $product->setCategory(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getImage(): ?Image
+    {
+        return $this->image;
+    }
+
+    public function setImage(Image $image): self
+    {
+        $this->image = $image;
 
         return $this;
     }

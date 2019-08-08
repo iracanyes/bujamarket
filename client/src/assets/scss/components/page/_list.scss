@@ -41,6 +41,7 @@ div.card-img-custom{
     }
 }
 
+/* Liste avec card ayant une image ronde placé au dessus */
 div.list-img-middle-rounded{
     div.card{
         position: relative;
@@ -97,7 +98,7 @@ div.list-card-by-4{
 
     }
 }
-
+/* Table contenant une image dans sa 2ème colonne */
 table.table-list-image{
     tbody{
         th{
@@ -134,6 +135,52 @@ table.table-list-image{
             }
         }
     }
+}
+
+/* Page - Liste categories
+ *
+ */
+div.list-categories{
+
+
+    div.card{
+        margin: 1rem 0;
+        padding: 0 ;
+
+        /*  Titre se trouvant en bas à gauche de l'imaage */
+        div.image-bottom-left-title{
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            background: linear-gradient(bottom, black, transparent);
+            width: 100%;
+            margin: 0 !important;
+            padding: 1.75rem 0.625rem;
+        }
+
+        div.card-title, p.card-text{
+            padding: 1rem;
+        }
+
+
+    }
+
+    div.carousel-inner{
+        height: 45rem;
+    }
+
+    ol.carousel-indicators{
+        position: unset;
+        left: unset;
+        right: unset;
+        bottom: unset;
+
+        li{
+            background-image: linear-gradient(to right, red, yellow, green) !important;
+            height: 0.50rem;
+        }
+    }
+
 }
 
 

@@ -4,15 +4,22 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { list, reset } from '../../actions/category/list';
 import { success } from '../../actions/category/delete';
-
+import { injectIntl } from "react-intl";
 import 'bootstrap/dist/css/bootstrap.css';
 /* Carousel */
 import {
+  Col,
+  Row,
+  Card,
+  CardTitle,
+  CardText,
+  CardImg,
   Carousel,
   CarouselItem,
   CarouselControl,
   CarouselIndicators,
-} from 'reactstrap';
+} from "reactstrap";
+import { FormattedMessage } from "react-intl";
 
 class CarouselCategories extends Component {
   static propTypes = {
@@ -33,24 +40,21 @@ class CarouselCategories extends Component {
     this.goToIndex = this.goToIndex.bind(this);
     this.onExiting = this.onExiting.bind(this);
     this.onExited = this.onExited.bind(this);
-    this.createCarouselItems = this.createCarouselItems.bind(this);
+    this.showCategories = this.showCategories.bind(this);
 
   }
 
-  /*
-  componentWillMount() {
-    this.props.list();
-  }
-  */
 
   componentDidMount() {
     this.props.list();
   }
 
-
+  /*
   componentWillUnmount() {
     this.props.reset();
   }
+  */
+
 
   onExiting()
   {
@@ -65,8 +69,8 @@ class CarouselCategories extends Component {
   next()
   {
     if(this.animating) return;
-    console.log(this.props.retrieved['hydra:member'][0].length);
-    const nextIndex = this.state.activeIndex === (Math.ceil(this.props.retrieved['hydra:member'][0].length / 6) - 1) ? 0 : this.state.activeIndex + 1;
+
+    const nextIndex = this.state.activeIndex === (Math.ceil(this.props.retrieved['hydra:member'].length / 12) - 1) ? 0 : this.state.activeIndex + 1;
     this.setState({activeIndex: nextIndex});
 
   }
@@ -75,7 +79,7 @@ class CarouselCategories extends Component {
   {
     if(this.animating) return;
 
-    const nextIndex = this.state.activeIndex === 0 ? (Math.ceil(this.props.retrieved['hydra:member'][1].length / 6) - 1) : this.state.activeIndex -1;
+    const nextIndex = this.state.activeIndex === 0 ? (Math.ceil(this.props.retrieved['hydra:member'].length / 12) - 1) : this.state.activeIndex -1;
     this.setState({activeIndex: nextIndex});
   }
 
@@ -85,68 +89,137 @@ class CarouselCategories extends Component {
     this.setState({ activeIndex: nexIndex });
   }
 
-  createCarouselItems()
+
+  showCategories()
   {
-      let items = [];
+    let items = [];
 
-      const categories = this.props.retrieved['hydra:member'] && this.props.retrieved['hydra:member'][0];
-      const images = this.props.retrieved['hydra:member'] && this.props.retrieved['hydra:member'][1];
-      //const {activeIndex} = this.state;
+    const { intl } = this.props;
 
-      /* Carousel Element */
-      for(let i = 0; i< Math.ceil(images.length / 6); i++ ){
+    const categories = this.props.retrieved && this.props.retrieved["hydra:member"];
 
-          let rows = [];
 
-          /* Row in Carousel Element */
-          for(let j = 0; j < 2 ; j++){
+    // console.log("Résultats catégories", categories);
 
-              let categ= [];
+    let rows = [];
 
-              for(let k= 0; k < 3; k++) {
-                  console.log("ID image : " + (i * 6 + j * 2 + k));
+    for(let i = 0; i < Math.ceil(categories.length / 12 ); i++)
+    {
 
-                  if (images[(i * 6 + j * 2 + k)] && categories[(i * 6 + j * 2 + k)]){
+      let resultsPer12 = [];
 
-                      categ.push(
-                          <div key={'categ' + k} className="col-sm-4 m-10">
-                              <img src={images[(i * 6 + j * 2 + k)].url} alt={images[(i * 6 + j * 2 + k)].alt} />
-                              <h4>{categories[(i * 6 + j * 2 + k)].name}</h4>
-                          </div>
-                      );
-                  }else{
-                      categ.push(
-                          <div key={'categ' + k} className="col-sm-4 m-10">
-                              <img src={'https://lorempixel.com/1200/900/?14437'} alt={'No Categories'} />
-                              <h4>...</h4>
-                          </div>
-                      )
-                  }
-              }
+      for(let j = 0; j < 12; j++)
+      {
+        if(process.env.DEBUG === 1 )
+        {
+          console.log("Résultats catégorie" + j, categories[i * 12 + j]);
+        }
 
-              rows.push(
-                  <div className={"row"} key={'rows'+j}>
-                      {categ}
+        /* Ajout d'une card permettant d'accéder à la page de produits par catégorie (filtrage) */
+
+        if(j === 0 && i === 0)
+        {
+          resultsPer12.push(
+            <Col key={"categories" + (i * 12 + j)} xs={"12"} sm="6" md="4" lg="3">
+              <Card body className={" text-white bg-dark"}>
+                <div className="card-img-custom">
+                  <img src="https://picsum.photos/2000/3000" alt={categories[i * 12 + j]["image"]["alt"]} className="image img-fluid" style={{ width:"100%"}} />
+                  <div className="middle">
+                    <div className="btn btn-outline-info text">
+                      <FormattedMessage  id={"app.page.customer.list.button.see_more"}
+                                         defaultMessage="Voir plus"
+                                         description="Customers list - button see more"
+                      />
+                    </div>
+
                   </div>
-              );
-          }
+                  <CardTitle className={"image-bottom-left-title"}>
+
+                    <span className="font-weight-bold">
+                      {intl.formatMessage({
+                        id: "app.page.category.all_category.title",
+                        description: "category item - all category ",
+                        defaultMessage: "Toutes les catégories"
+                      })}
+                    </span>
 
 
-          items.push(
-              <CarouselItem
-                  onExiting={this.onExiting}
-                  onExited={this.onExited}
-                  key={ 'carouselItem'+i }
-                  className={"owl-rows"}
-              >
-                  {rows}
-              </CarouselItem>
+                  </CardTitle>
+                </div>
+
+              </Card>
+            </Col>
           );
+        }
+
+        if(j > 0 && categories[i * 12 + j])
+        {
+
+          resultsPer12.push(
+            <Col key={"categories" + (i * 12 + j)} xs={"12"} sm="6" md="4" lg="3">
+              <Card body className={" text-white bg-dark"}>
+                <div className="card-img-custom">
+                  <img src="https://picsum.photos/2000/3000" alt={categories[i * 12 + j]["image"]["alt"]} className="image img-fluid" style={{ width:"100%"}} />
+                  <div className="middle">
+                    <div className="btn btn-outline-info text">
+                      <FormattedMessage  id={"app.page.customer.list.button.see_more"}
+                                         defaultMessage="Voir plus"
+                                         description="Customers list - button see more"
+                      />
+                    </div>
+
+                  </div>
+                  <CardTitle className={"image-bottom-left-title"}>
+
+                    <span className="font-weight-bold">
+
+                      {/* Permet d'injecter la traduction d'une valeur reçu par une entité
+                        intl.formatMessage({
+                          id: "app.category.item"+categories[i * 12 + j]["id"]+".name",
+                          description: "category item - name for item "+categories[i * 12 + j]["id"],
+                          defaultMessage: categories[i * 12 + j]["name"]
+                        })
+                      */}
+                      {categories[i * 12 + j]["name"]}
+                    </span>
+
+
+                  </CardTitle>
+                </div>
+
+              </Card>
+            </Col>
+          );
+        }
+
       }
 
-      console.log("ITEMS ");
-      console.log(items);
-      return items;
+      rows.push(
+        <CarouselItem
+          onExiting={this.onExiting}
+          onExited={this.onExited}
+          key={i}
+        >
+          <Row
+            key={"rows" + (i)}
+          >
+            {resultsPer12}
+          </Row>
+        </CarouselItem>
+      );
+    }
+    /*
+    let index = 0;
+    items.push(
+      <div id="list-categories" key={index++}>
+        {rows}
+      </div>
+    );
+
+
+    return items;
+    */
+    return rows;
 
   }
 
@@ -154,14 +227,14 @@ class CarouselCategories extends Component {
   render() {
     const { activeIndex } = this.state;
 
-    const items = this.props.retrieved  !== null ? this.createCarouselItems() : {};
+    const items = this.props.retrieved  !== null ? this.showCategories() : {};
 
     const styleCarouselInner = {
         margin: "0 40px"
     };
 
     return <Fragment>
-        <div>
+        <div className={"list-categories col-lg-9 mx-auto"}>
 
 
           {this.props.loading && <div className="alert alert-info">Loading...</div>}
@@ -228,4 +301,4 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(CarouselCategories);
+export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(CarouselCategories));

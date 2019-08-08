@@ -43,7 +43,7 @@ class List extends Component {
     const customers = this.props.retrieved && this.props.retrieved["hydra:member"];
 
 
-    console.log("Résultats produits", customers);
+    console.log("Résultats clients", customers);
 
     let rows = [];
 

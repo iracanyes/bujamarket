@@ -9,7 +9,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ApiResource(attributes={
-        "normalization_context"={"groups"={"product:output","customer:output","supplier:output","admin:output"}}
+        "normalization_context"={"groups"={"category:output","product:output","customer:output","supplier:output","admin:output"}}
  * })
  * @ORM\Table(name="bjmkt_image")
  * @ORM\Entity(repositoryClass="App\Repository\ImageRepository")
@@ -88,6 +88,11 @@ class Image
      * @ORM\ManyToOne(targetEntity="App\Entity\Product", inversedBy="images")
      */
     private $product;
+
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\Category", mappedBy="image", cascade={"persist", "remove"})
+     */
+    private $category;
 
     public function getId(): ?int
     {
@@ -180,6 +185,23 @@ class Image
     public function setProduct(?Product $product): self
     {
         $this->product = $product;
+
+        return $this;
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(Category $category): self
+    {
+        $this->category = $category;
+
+        // set the owning side of the relation if necessary
+        if ($this !== $category->getImage()) {
+            $category->setImage($this);
+        }
 
         return $this;
     }
