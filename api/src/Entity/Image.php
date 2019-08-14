@@ -44,7 +44,7 @@ class Image
      * @var string $title Title of this image
      *
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"product:output","supplier:output"})
+     * @Groups({"category:output","product:output","supplier:output"})
      */
     private $title;
 
@@ -52,7 +52,7 @@ class Image
      * @var string $alt Alternative title of this image
      *
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"product:output","supplier:output"})
+     * @Groups({"category:output","product:output","supplier:output"})
      */
     private $alt;
 
@@ -62,7 +62,7 @@ class Image
      * @ORM\Column(type="string", length=255)
      * @Assert\NotNull()
      * @Assert\Url()
-     * @Groups({"product:output","supplier:output"})
+     * @Groups({"category:output", "product:output","supplier:output"})
      */
     private $url;
 
@@ -71,7 +71,7 @@ class Image
      *
      * @ORM\Column(type="integer")
      * @Assert\NotNull()
-     * @Groups({"product:output","supplier:output"})
+     * @Groups({"category:output","product:output","supplier:output"})
      */
     private $size;
 

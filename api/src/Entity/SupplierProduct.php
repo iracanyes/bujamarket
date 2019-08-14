@@ -10,7 +10,10 @@ use http\Cookie;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ApiResource()
+ * @ApiResource(attribute={
+ *     "normalization_context"={"groups"={"supplier_product:output"}},
+ *     "denormalization_context"={"groups"={"supplier_product:input"}}
+ * })
  * @ORM\Table(name="bjmkt_supplier_product")
  * @ORM\Entity(repositoryClass="App\Repository\SupplierProductRepository")
  * @ORM\HasLifecycleCallbacks()

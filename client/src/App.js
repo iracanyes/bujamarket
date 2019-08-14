@@ -94,6 +94,7 @@ import Homepage from './layout/Homepage';
 import MainMenuSearchForm from "./components/search/MainMenuSearchForm";
 import MainMenu from "./layout/MainMenu";
 import SearchResults from "./components/search/SearchResults";
+import Error404Cat from "./layout/Error404Cat";
 
 /* Internationalisation : FormatJS/React-Intl */
 import { IntlProvider } from "react-intl";
@@ -179,73 +180,85 @@ export class App extends Component
         <IntlProvider locale={language} messages={messages[language]}>
           <ConnectedRouter history={history}>
             <BrowserRouter>
-              <Switch>
-                <Fragment>
-                  <header>
-                    <Navbar color={"bg-primary"} dark expand={"lg"}   id="navbar-primary" className="navbar navbar-expand-lg navbar-dark bg-primary">
-                      {/* Navbar brand*/}
-                      <NavbarBrand href="/" className="col-lg-2">Buja Market</NavbarBrand>
+              <header>
+                <Navbar color={"bg-primary"} dark expand={"lg"}   id="navbar-primary" className="navbar navbar-expand-lg navbar-dark bg-primary">
+                  {/* Navbar brand*/}
+                  <NavbarBrand href="/" className="col-lg-2">Buja Market</NavbarBrand>
 
 
-                      <div className="main-menu-search-form col-lg-5">
-                        <MainMenuSearchForm onSearch={this.search}/>
-                      </div>
+                  <div className="main-menu-search-form col-lg-5">
+                    <MainMenuSearchForm onSearch={this.search}/>
+                  </div>
 
 
-                      <MainMenu/>
+                  <MainMenu/>
 
-                    </Navbar>
-                  </header>
-                  <main>
-                    <aside id="aside-left">
-
-                    </aside>
-                    <section id="main-content" className="col col-lg-12">
-                      <div id="search-results-component">
-                        {results && (<SearchResults results={ results }/>)}
-
-                      </div>
-                      <div>
-                        <Route path="/dev" component={Welcome} strict={true} exact={true}/>
-                        <Route path="/" component={Homepage} strict={true} exact={true} />
-                        {/* Add your routes here */}
-                        { addressRoutes }
-                        { adminRoutes }
-                        { bankAccountRoutes }
-                        { billRoutes }
-                        { billCustomerRoutes }
-                        { billRefundRoutes }
-                        { billSupplierRoutes }
-                        { categoryRoutes }
-                        { commentRoutes }
-                        { customerRoutes }
-                        { deliveryDetailRoutes }
-                        { deliveryGlobalRoutes }
-                        { favoriteRoutes }
-                        { forumRoutes }
-                        { imageRoutes }
-                        { messageRoutes }
-                        { orderDetailRoutes }
-                        { orderGlobalRoutes }
-                        { orderreturnedRoutes }
-                        { paymentRoutes }
-                        { productRoutes }
-                        { shipperRoutes }
-                        { supplierRoutes }
-                        { supplierProductRoutes }
-                        { userRoutes }
-                        { withdrawalRoutes }
-                      </div>
-
-                    </section>
-                  </main>
-                </Fragment>
+                </Navbar>
+              </header>
 
 
 
+              <main>
+                <aside id="aside-left">
 
-                <Route render={() => <h1>Not Found</h1>} />
-              </Switch>
+                </aside>
+                <section id="main-content" className="col col-lg-12">
+                  <div id="search-results-component">
+                    {results && (<SearchResults results={ results }/>)}
+
+                  </div>
+                  <div>
+                    <Switch>
+                      <Route path="/dev" component={Welcome} strict={true} exact={true}/>
+                      <Route path="/" component={Homepage} strict={true} exact={true} />
+                      {/* Add your routes here */}
+                      { addressRoutes }
+                      { adminRoutes }
+                      { bankAccountRoutes }
+                      { billRoutes }
+                      { billCustomerRoutes }
+                      { billRefundRoutes }
+                      { billSupplierRoutes }
+                      { categoryRoutes }
+                      { commentRoutes }
+                      { customerRoutes }
+                      { deliveryDetailRoutes }
+                      { deliveryGlobalRoutes }
+                      { favoriteRoutes }
+                      { forumRoutes }
+                      { imageRoutes }
+                      { messageRoutes }
+                      { orderDetailRoutes }
+                      { orderGlobalRoutes }
+                      { orderreturnedRoutes }
+                      { paymentRoutes }
+                      { productRoutes }
+                      { shipperRoutes }
+                      { supplierRoutes }
+                      { supplierProductRoutes }
+                      { userRoutes }
+                      { withdrawalRoutes }
+                      <Route render={() => (
+                        <Fragment>
+                          <Error404Cat/>
+                        </Fragment>
+
+                      )} />
+                    </Switch>
+
+
+                  </div>
+
+                </section>
+              </main>
+
+
+
+
+
+
+
+
             </BrowserRouter>
           </ConnectedRouter>
         </IntlProvider>

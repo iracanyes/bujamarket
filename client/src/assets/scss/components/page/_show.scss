@@ -1,0 +1,55 @@
+/**
+ * Description: Style des pages show
+ *
+ */
+
+/* Page : show category */
+div.category-detail{
+    div.category-control-buttons{
+        a, button{
+            display: inline-block;
+            margin: 0 1rem;
+            width: 7.25rem;
+            font-size: 0.8rem;
+        }
+    }
+}
+
+div.category-detail-products{
+    background-color: $forth-color;
+
+    div.carousel-inner{
+        margin: 1.25rem auto;
+        font-size: 14px;
+
+        div.card{
+            padding: unset;
+            /*  Titre se trouvant en bas à gauche de l'imaage */
+            div.image-bottom-left-title{
+                position: absolute;
+                left: 0;
+                bottom: 0;
+                background: linear-gradient(to top, black, transparent);
+                width: 100%;
+                margin: 0 !important;
+                padding: 1.75rem 0.625rem;
+            }
+        }
+    }
+
+    ol.carousel-indicators{
+        position: unset;
+        left: unset;
+        bottom: unset;
+        right: unset;
+    }
+
+    @media screen and (min-width: 992px) {
+        div.carousel-inner{
+            flex: 0 0 75%;
+            max-width: 75%;
+        }
+    }
+
+
+}

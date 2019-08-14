@@ -1,5 +1,50 @@
 @import "../../variables";
+
+
+
 #homepage{
   background-color: $primary-color;
 
+}
+.parallax {
+    /* The image used */
+    background-image: url("./../../assets/img/parallax1.jpg");
+
+    /* Full height */
+    height: 500px;
+
+    /* Create the parallax scrolling effect */
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+
+    /* Card contenue dans un parallax */
+    div.card{
+        height: 300px;
+        width: 90%;
+        margin: 0 auto;
+
+        h5.card-title, h5.card-title + p{
+            text-align: center;
+        }
+
+        h5.card-title + p > button.btn{
+            margin-left: 1.125rem;
+        }
+
+
+    }
+
+    /* bouton toggler  */
+    button.toggler-all{
+        margin-left: 1rem;
+    }
+}
+
+/* Turn off parallax scrolling for all tablets and phones. Increase/decrease the pixels if needed */
+@media only screen and (max-device-width: 1366px) {
+    .parallax {
+        background-attachment: scroll;
+    }
 }

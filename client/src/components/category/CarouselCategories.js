@@ -12,8 +12,6 @@ import {
   Row,
   Card,
   CardTitle,
-  CardText,
-  CardImg,
   Carousel,
   CarouselItem,
   CarouselControl,
@@ -92,7 +90,6 @@ class CarouselCategories extends Component {
 
   showCategories()
   {
-    let items = [];
 
     const { intl } = this.props;
 
@@ -115,37 +112,40 @@ class CarouselCategories extends Component {
           console.log("Résultats catégorie" + j, categories[i * 12 + j]);
         }
 
-        /* Ajout d'une card permettant d'accéder à la page de produits par catégorie (filtrage) */
+
 
         if(j === 0 && i === 0)
         {
           resultsPer12.push(
             <Col key={"categories" + (i * 12 + j)} xs={"12"} sm="6" md="4" lg="3">
               <Card body className={" text-white bg-dark"}>
-                <div className="card-img-custom">
-                  <img src="https://picsum.photos/2000/3000" alt={categories[i * 12 + j]["image"]["alt"]} className="image img-fluid" style={{ width:"100%"}} />
-                  <div className="middle">
-                    <div className="btn btn-outline-info text">
-                      <FormattedMessage  id={"app.page.customer.list.button.see_more"}
-                                         defaultMessage="Voir plus"
-                                         description="Customers list - button see more"
-                      />
+                <Link to={"/products/"}>
+                  <div className="card-img-custom">
+                    <img src="https://picsum.photos/2000/3000" alt={categories[i * 12 + j]["image"]["alt"]} className="image img-fluid" style={{ width:"100%"}} />
+                    <div className="middle">
+                      <div className="btn btn-outline-info text">
+                        <FormattedMessage  id={"app.page.customer.list.button.see_more"}
+                                           defaultMessage="Voir plus"
+                                           description="Customers list - button see more"
+                        />
+                      </div>
+
                     </div>
+                    <CardTitle className={"image-bottom-left-title"}>
 
+                      <span className="font-weight-bold">
+                        {intl.formatMessage({
+                          id: "app.page.category.all_category.title",
+                          description: "category item - all category ",
+                          defaultMessage: "Toutes les catégories"
+                        })}
+                      </span>
+
+
+                    </CardTitle>
                   </div>
-                  <CardTitle className={"image-bottom-left-title"}>
+                </Link>
 
-                    <span className="font-weight-bold">
-                      {intl.formatMessage({
-                        id: "app.page.category.all_category.title",
-                        description: "category item - all category ",
-                        defaultMessage: "Toutes les catégories"
-                      })}
-                    </span>
-
-
-                  </CardTitle>
-                </div>
 
               </Card>
             </Col>
@@ -158,34 +158,42 @@ class CarouselCategories extends Component {
           resultsPer12.push(
             <Col key={"categories" + (i * 12 + j)} xs={"12"} sm="6" md="4" lg="3">
               <Card body className={" text-white bg-dark"}>
-                <div className="card-img-custom">
-                  <img src="https://picsum.photos/2000/3000" alt={categories[i * 12 + j]["image"]["alt"]} className="image img-fluid" style={{ width:"100%"}} />
-                  <div className="middle">
-                    <div className="btn btn-outline-info text">
-                      <FormattedMessage  id={"app.page.customer.list.button.see_more"}
-                                         defaultMessage="Voir plus"
-                                         description="Customers list - button see more"
-                      />
+                <Link
+
+                  to={`categories/show/${encodeURIComponent(categories[i * 12 + j]['id'])}`}
+                >
+                  <div className="card-img-custom">
+                    <img src="https://picsum.photos/2000/3000" alt={categories[i * 12 + j]["image"]["alt"]} className="image img-fluid" style={{ width:"100%"}} />
+                    <div className="middle">
+                      <div className="btn btn-outline-info text">
+                        <FormattedMessage  id={"app.page.customer.list.button.see_more"}
+                                           defaultMessage="Voir plus"
+                                           description="Customers list - button see more"
+                        />
+                      </div>
+
                     </div>
+                    <CardTitle className={"image-bottom-left-title"}>
 
+                      <span className="font-weight-bold">
+
+                        {/* Permet d'injecter la traduction d'une valeur reçu par une entité
+                          intl.formatMessage({
+                            id: "app.category.item"+categories[i * 12 + j]["id"]+".name",
+                            description: "category item - name for item "+categories[i * 12 + j]["id"],
+                            defaultMessage: categories[i * 12 + j]["name"]
+                          })
+                        */}
+                        {categories[i * 12 + j]["name"]}
+                      </span>
+
+
+                    </CardTitle>
                   </div>
-                  <CardTitle className={"image-bottom-left-title"}>
-
-                    <span className="font-weight-bold">
-
-                      {/* Permet d'injecter la traduction d'une valeur reçu par une entité
-                        intl.formatMessage({
-                          id: "app.category.item"+categories[i * 12 + j]["id"]+".name",
-                          description: "category item - name for item "+categories[i * 12 + j]["id"],
-                          defaultMessage: categories[i * 12 + j]["name"]
-                        })
-                      */}
-                      {categories[i * 12 + j]["name"]}
-                    </span>
+                </Link>
 
 
-                  </CardTitle>
-                </div>
+
 
               </Card>
             </Col>
@@ -208,17 +216,7 @@ class CarouselCategories extends Component {
         </CarouselItem>
       );
     }
-    /*
-    let index = 0;
-    items.push(
-      <div id="list-categories" key={index++}>
-        {rows}
-      </div>
-    );
 
-
-    return items;
-    */
     return rows;
 
   }
@@ -234,16 +232,14 @@ class CarouselCategories extends Component {
     };
 
     return <Fragment>
-        <div className={"list-categories col-lg-9 mx-auto"}>
+        <div className={"list-categories"}>
 
 
           {this.props.loading && <div className="alert alert-info">Loading...</div>}
           {this.props.deletedItem && <div className="alert alert-success">{this.props.deletedItem['@id']} deleted.</div>}
           {this.props.error && <div className="alert alert-danger">{this.props.error}</div>}
 
-          {/*
-          <p><Link to="create" className="btn btn-primary">Create</Link></p>
-          */}
+
 
             {this.props.retrieved &&
               <Carousel
@@ -251,6 +247,7 @@ class CarouselCategories extends Component {
                   next={this.next}
                   previous={this.previous}
                   style={styleCarouselInner}
+                  className={" col-lg-12"}
               >
 
 

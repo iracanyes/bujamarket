@@ -4,6 +4,17 @@ import { Link, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { retrieve, reset } from '../../actions/category/show';
 import { del } from '../../actions/category/delete';
+import CarouselCategoryProducts from "./CarouselCategoryProducts";
+import {
+  Col,
+  Row,
+  Card,
+  CardBody,
+  CardFooter,
+  CardText,
+  Spinner
+} from "reactstrap";
+import { FormattedMessage } from "react-intl";
 
 class Show extends Component {
   static propTypes = {
@@ -38,13 +49,20 @@ class Show extends Component {
     const item = this.props.retrieved;
 
     return (
-      <div>
-        <h1>Show {item && item['@id']}</h1>
+      <div id={"category-show"}>
+        <h1>
+          <FormattedMessage  id={"app.page.category.title"}
+                             defaultMessage="Catégorie"
+                             description=" Page category - title"
+          />
+           &nbsp;:&nbsp;
+          {item && item['name']}
+        </h1>
 
         {this.props.loading && (
-          <div className="alert alert-info" role="status">
-            Loading...
-          </div>
+
+          <Spinner color="primary" role={"status"} style={{ width: '3rem', height: '3rem',position: 'absolute', left: '50%', top: '50%' }} type={"grow"} />
+
         )}
         {this.props.error && (
           <div className="alert alert-danger" role="alert">
@@ -59,53 +77,60 @@ class Show extends Component {
           </div>
         )}
 
-        {item && (
-          <table className="table table-responsive table-striped table-hover">
-            <thead>
-              <tr>
-                <th>Field</th>
-                <th>Value</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <th scope="row">name</th>
-                <td>{item['name']}</td>
-              </tr>
-              <tr>
-                <th scope="row">description</th>
-                <td>{item['description']}</td>
-              </tr>
-              <tr>
-                <th scope="row">dateCreated</th>
-                <td>{item['dateCreated']}</td>
-              </tr>
-              <tr>
-                <th scope="row">isValid</th>
-                <td>{item['isValid']}</td>
-              </tr>
-              <tr>
-                <th scope="row">platformFee</th>
-                <td>{item['platformFee']}</td>
-              </tr>
-              <tr>
-                <th scope="row">products</th>
-                <td>{this.renderLinks('products', item['products'])}</td>
-              </tr>
-            </tbody>
-          </table>
-        )}
-        <Link to=".." className="btn btn-primary">
-          Back to list
-        </Link>
-        {item && (
-          <Link to={`/categories/edit/${encodeURIComponent(item['@id'])}`}>
-            <button className="btn btn-warning">Edit</button>
-          </Link>
-        )}
-        <button onClick={this.del} className="btn btn-danger">
-          Delete
-        </button>
+        <div className="category-detail">
+          {item && (
+            <Row>
+              <Col lg={"6"}>
+                <img className={"img-fluid"}  src="https://picsum.photos/1200/600" alt={item["name"]}/>
+              </Col>
+              <Col lg={"6"}>
+                <Card>
+                  <CardBody>
+                    <CardText>
+                        {item['description']}
+                    </CardText>
+                  </CardBody>
+                  <CardFooter>
+                    Platform fee &nbsp;:&nbsp;
+                    {item['platformFee']} %
+                  </CardFooter>
+                </Card>
+              </Col>
+            </Row>
+
+          )}
+          <div className="col-lg-4 mx-auto my-5 category-control-buttons">
+            <Link to={`/categories/`} className="btn btn-primary">
+              <FormattedMessage  id={"app.button.return_to_List"}
+                                 defaultMessage="Retour à la liste"
+                                 description=" Button - Return to list"
+              />
+
+            </Link>
+            {item && (
+              <Link to={`/categories/update/${encodeURIComponent(item['id'])}`}
+                    className="btn btn-warning"
+              >
+                <FormattedMessage  id={"app.button.edit"}
+                                   defaultMessage="Éditer"
+                                   description=" Button - Edit"
+                />
+              </Link>
+            )}
+            <button onClick={this.del} className="btn btn-danger">
+              <FormattedMessage  id={"app.button.deklete"}
+                                 defaultMessage="Supprimer"
+                                 description=" Button - Delete"
+              />
+            </button>
+          </div>
+
+        </div>
+        <div className="category-detail-products">
+          { item && <CarouselCategoryProducts products={item["products"]}/>}
+        </div>
+
+
       </div>
     );
   }
@@ -118,8 +143,8 @@ class Show extends Component {
     }
 
     return (
-      <Link to={`../../${type}/show/${encodeURIComponent(items)}`}>
-        {items}
+      <Link to={`../../${type}/show/${encodeURIComponent(items["id"])}`}>
+        {items["@id"]}
       </Link>
     );
   };

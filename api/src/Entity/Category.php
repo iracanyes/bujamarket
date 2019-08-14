@@ -9,10 +9,11 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
 
 /**
  * @ApiResource(attributes={
-        "normalization_context"={"groups"={"category:output","product:output"}}
+        "normalization_context"={"groups"={"category:output"}}
  * })
  * @ORM\Table(name="bjmkt_category")
  * @ORM\Entity(repositoryClass="App\Repository\CategoryRepository")
@@ -76,6 +77,8 @@ class Category
      *     maxMessage="The maximum value is {{ limit }}. Your value is {{ value }}"
      * )
      * @Groups({"category:output","product:output"})
+     *
+     *
      */
     private $platformFee;
 
@@ -85,6 +88,8 @@ class Category
      * @var Collection $products Products of this category
      *
      * @ORM\OneToMany(targetEntity="App\Entity\Product", mappedBy="category")
+     * @Groups({"category:output"})
+     * @MaxDepth(1)
      */
     private $products;
 

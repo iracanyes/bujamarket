@@ -11,6 +11,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
 
 /**
  * @ApiResource(attributes={
@@ -30,7 +31,7 @@ class Product
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"product:output"})
+     * @Groups({"product:output","category:output"})
      */
     private $id;
 
@@ -39,7 +40,7 @@ class Product
      *
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank()
-     * @Groups({"product:output"})
+     * @Groups({"product:output","category:output"})
      */
     private $title;
 
@@ -48,7 +49,7 @@ class Product
      *
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank()
-     * @Groups({"product:output"})
+     * @Groups({"product:output","category:output"})
      */
     private $resume;
 
@@ -65,7 +66,7 @@ class Product
      * @var string $countryOrigin Country where this product was made
      *
      * @ORM\Column(name="country_origin", type="string", length=3)
-     * @Groups({"product:output"})
+     * @Groups({"product:output","category:output"})
      */
     private $countryOrigin;
 
@@ -123,7 +124,7 @@ class Product
      *
      * @ORM\Column(type="float")
      * @Assert\Type("float")
-     * @Groups({"product:output"})
+     * @Groups({"product:output","category:output"})
      */
     private $minimumPrice;
 
@@ -133,6 +134,7 @@ class Product
      * @ORM\JoinColumn(nullable=false)
      * @Assert\Type("App\Entity\Category")
      * @Groups({"product:output"})
+     * @MaxDepth(1)
      */
     private $category;
 
@@ -147,7 +149,7 @@ class Product
      * @var Collection $images Images of the product
      * @ORM\OneToMany(targetEntity="App\Entity\Image", mappedBy="product")
      * @ApiSubresource()
-     * @Groups({"product:output"})
+     * @Groups({"product:output","category:output"})
      */
     private $images;
 

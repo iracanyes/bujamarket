@@ -7,13 +7,10 @@ import {
   Col,
   Row,
   Card,
-  CardGroup,
-  CardImg,
-  CardBody,
   CardTitle,
   CardText,
-  CardFooter
 } from "reactstrap";
+import { FormattedMessage } from "react-intl";
 
 class List extends Component {
   static propTypes = {
@@ -99,21 +96,34 @@ class List extends Component {
                 <div className="card-img-custom">
                   <img src="https://picsum.photos/2000/3000" alt={products[i * 10 + j]["images"][0]["alt"]} className="image img-fluid" style={{ width:"100%"}} />
                     <div className="middle">
-                      <div className="btn btn-outline-info text">
-                        Commander
-                      </div>
+
+                      <Link
+                        to={`show/${encodeURIComponent(products[i * 10 + j]['@id'])}`}
+                        className="btn btn-outline-info"
+                      >
+                          <FormattedMessage  id={"app.page.customer.list.button.see_more"}
+                                             defaultMessage="Voir le détail"
+                                             description="Customers list - button see more"
+                          />
+                      </Link>
                     </div>
                 </div>
-                {/*
-                <CardImg top className={"img-thumbnail"} width="100%" src="https://picsum.photos/2000/3000" alt={products[i * 10 + j].images[0].alt} />
-                */}
                 <CardTitle>{products[i * 10 + j]["title"]}</CardTitle>
-                <CardText>{products[i * 10 + j]["resume"]}</CardText>
+                <CardText>
+                  <FormattedMessage  id={"app.product.item.price_from"}
+                                     defaultMessage="À partir de"
+                                     description="Products item - price from"
+                  /> &nbsp;: &nbsp;
+                  {products[i * 10 + j]["minimumPrice"].toFixed(2)} &euro;
+                </CardText>
                 <Link
                   to={`show/${encodeURIComponent(products[i * 10 + j]['@id'])}`}
                   className={"btn btn-outline-primary"}
                 >
-                  Voir le détail
+                  <FormattedMessage  id={"app.page.customer.list.button.add_shopping_card"}
+                                     defaultMessage="Ajouter au panier"
+                                     description="Customers list - button add shopping card"
+                  />
                 </Link>
               </Card>
             </Col>
@@ -163,7 +173,7 @@ class List extends Component {
         )}
 
 
-        <div className="list-card-by- ">
+        <div className="list-card-by-4 ">
           {this.props.retrieved && this.showProducts() }
           {this.pagination()}
         </div>
