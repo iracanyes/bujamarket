@@ -6,6 +6,7 @@
 import React, { Component, Fragment } from "react";
 import { Card, CardImg, CardText, CardTitle, Col, Row } from "reactstrap";
 import { Link } from "react-router-dom";
+import { FormattedMessage } from "react-intl";
 
 class SearchResults extends  Component{
   constructor(props)
@@ -49,12 +50,16 @@ class SearchResults extends  Component{
           resultsPer4.push(
             <Col key={"products" + (i * 12 + j)} xs={"12"} sm="6" md="4" lg="3">
               <Card body>
-                {/*
-                <CardImg top width="100%" src={products[i * 10 + j].images[0].url} alt={products[i * 10 + j].images[0].alt} />
-                */}
+
                 <CardImg top width="100%" src="https://picsum.photos/2000/3000" alt={products[i * 12 + j].images[0].alt} />
                 <CardTitle>{products[i * 12 + j]["title"]}</CardTitle>
-                <CardText>{products[i * 12 + j]["resume"]}</CardText>
+                <CardText>
+                  <FormattedMessage  id={"app.product.item.price_from"}
+                                     defaultMessage="À partir de"
+                                     description="Products item - price from"
+                  /> &nbsp;: &nbsp;
+                  {products[i * 10 + j]["minimumPrice"].toFixed(2)} &euro;
+                </CardText>
                 <Link
                   to={`show/${encodeURIComponent(products[i * 12 + j]['@id'])}`}
                   className={"btn btn-outline-primary"}
@@ -77,7 +82,7 @@ class SearchResults extends  Component{
 
     let index = 0;
     items.push(
-      <div id="search-results-items" key={index++}>
+      <div id="search-results-items" className={"list-card-by-4"} key={index++}>
         {rows}
       </div>
     );

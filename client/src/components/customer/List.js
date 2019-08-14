@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { list, reset } from '../../actions/customer/list';
-import { Card, CardText, CardTitle, CarouselItem, Col, Row } from "reactstrap";
+import { Card, CardText, CardTitle, Col, Row } from "reactstrap";
 import { FormattedMessage } from "react-intl";
 
 class List extends Component {

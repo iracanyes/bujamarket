@@ -71,6 +71,7 @@ div.list-img-middle-rounded{
     }
 }
 
+/* Liste avec 4 cards par ligne */
 div.list-card-by-4{
     div.row{
         div.card{
@@ -90,14 +91,16 @@ div.list-card-by-4{
             }
 
             a.btn{
-                width: 50%;
+                font-size: 0.80rem;
                 margin: 0 auto;
+                padding: 0.8rem 1rem;
             }
         }
 
 
     }
 }
+
 /* Table contenant une image dans sa 2ème colonne */
 table.table-list-image{
     tbody{
@@ -152,10 +155,15 @@ div.list-categories{
             position: absolute;
             left: 0;
             bottom: 0;
-            background: linear-gradient(bottom, black, transparent);
+            background: linear-gradient(to top, black, transparent);
             width: 100%;
             margin: 0 !important;
             padding: 1.75rem 0.625rem;
+        }
+
+        div.btn{
+            font-size: 0.80rem;
+
         }
 
         div.card-title, p.card-text{
@@ -167,6 +175,9 @@ div.list-categories{
 
     div.carousel-inner{
         height: 45rem;
+        flex: 0 0 75%;
+        max-width: 75%;
+        margin: 0 auto !important;
     }
 
     ol.carousel-indicators{
