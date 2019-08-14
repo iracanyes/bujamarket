@@ -10,7 +10,7 @@ use http\Cookie;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ApiResource(attribute={
+ * @ApiResource(attributes={
  *     "normalization_context"={"groups"={"supplier_product:output"}},
  *     "denormalization_context"={"groups"={"supplier_product:input"}}
  * })
