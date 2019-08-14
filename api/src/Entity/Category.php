@@ -88,6 +88,7 @@ class Category
      * @var Collection $products Products of this category
      *
      * @ORM\OneToMany(targetEntity="App\Entity\Product", mappedBy="category")
+     * @ApiSubresource()
      * @Groups({"category:output"})
      * @MaxDepth(1)
      */
