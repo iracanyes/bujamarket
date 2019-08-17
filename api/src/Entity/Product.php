@@ -15,7 +15,7 @@ use Symfony\Component\Serializer\Annotation\MaxDepth;
 
 /**
  * @ApiResource(attributes={
- *     "normalization_context"={"groups"={"product:output"}},
+ *     "normalization_context"={"groups"={"favorite:output","product:output"}},
  *     "denormalization_context"={"groups"={"product:input"}}
 
  * })
@@ -31,7 +31,7 @@ class Product
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"product:output","category:output"})
+     * @Groups({"product:output","category:output","favorite:output"})
      */
     private $id;
 
@@ -40,7 +40,7 @@ class Product
      *
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank()
-     * @Groups({"product:output","category:output"})
+     * @Groups({"product:output","category:output","supplier_product:output","favorite:output"})
      */
     private $title;
 
@@ -49,7 +49,7 @@ class Product
      *
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank()
-     * @Groups({"product:output","category:output"})
+     * @Groups({"product:output","category:output","supplier_product:output","favorite:output"})
      */
     private $resume;
 
@@ -58,7 +58,7 @@ class Product
      *
      * @ORM\Column(type="text")
      * @Assert\NotBlank()
-     * @Groups({"product:output"})
+     * @Groups({"product:output","supplier_product:output"})
      */
     private $description;
 
@@ -66,7 +66,7 @@ class Product
      * @var string $countryOrigin Country where this product was made
      *
      * @ORM\Column(name="country_origin", type="string", length=3)
-     * @Groups({"product:output","category:output"})
+     * @Groups({"product:output","category:output","supplier_product:output","favorite:output"})
      */
     private $countryOrigin;
 
@@ -124,7 +124,7 @@ class Product
      *
      * @ORM\Column(type="float")
      * @Assert\Type("float")
-     * @Groups({"product:output","category:output"})
+     * @Groups({"product:output","category:output","supplier_product:output","favorite:output"})
      */
     private $minimumPrice;
 
@@ -149,7 +149,7 @@ class Product
      * @var Collection $images Images of the product
      * @ORM\OneToMany(targetEntity="App\Entity\Image", mappedBy="product")
      * @ApiSubresource()
-     * @Groups({"product:output","category:output"})
+     * @Groups({"product:output","category:output","supplier_product:output","favorite:output"})
      */
     private $images;
 

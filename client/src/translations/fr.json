@@ -16,7 +16,16 @@
   "app.page.category.all_category.title": "Toutes les catégories",
   "app.page.category.all_category.description": "Description",
   "app.page.customer.list.button.customize": "Personnaliser",
+  "app.page.customer.list.button.see_more": "Voir le détail",
   "app.product.item.price_from": "À partir de",
-  "app.page.customer.list.button.see_more": "Voir le détail"
+  "app.page.user.login.title": "Connexion",
+  "app.page.user.register.title": "Inscription",
+  "app.user.item.email": "Email",
+  "app.user.item.email.required": "Email requis",
+  "app.user.item.password": "Mot de passe",
+  "app.user.item.password.required": "Mot de passe requis",
+  "app.user.item.user_type": "Type d'utilisateur",
+  "app.user.item.user_type.client": "Client",
+  "app.user.item.user_type.supplier": "Fournisseur"
 
 }

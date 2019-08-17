@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
@@ -114,12 +115,14 @@ class Customer extends User
      *
      * @ORM\OneToMany(targetEntity="App\Entity\Favorite", mappedBy="customer", orphanRemoval=true)
      * @Groups({"customer:output","admin:output"})
+     * @ApiSubresource(maxDepth=2)
      */
     private $favorites;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\ShoppingCard", mappedBy="customer", orphanRemoval=true)
      * @Groups({"customer:output","admin:output"})
+     * @ApiSubresource(maxDepth=2)
      */
     private $shoppingCards;
 

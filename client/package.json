@@ -47,5 +47,10 @@
   ],
   "peerDependencies": {
     "braces": "^2.3.1"
+  },
+  "devDependencies": {
+    "electron": "^6.0.2",
+    "react-devtools": "^3.6.3",
+    "scheduler": "^0.10.0"
   }
 }

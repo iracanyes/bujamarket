@@ -9,7 +9,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ApiResource(attributes={
-        "normalization_context"={"groups"={"category:output","product:output","customer:output","supplier:output","admin:output"}}
+        "normalization_context"={"groups"={"category:output","product:output","customer:output","supplier:output","admin:output","favorite:output"}}
  * })
  * @ORM\Table(name="bjmkt_image")
  * @ORM\Entity(repositoryClass="App\Repository\ImageRepository")
@@ -36,7 +36,7 @@ class Image
      *     minMessage="The minimum value is {{ limit }}.\nThe current value is {{ value }}.",
      *     maxMessage="The maximum value is {{ limit }}.\nThe current value is {{ value }}."
      * )
-     * @Groups({"product:output","supplier:output"})
+     * @Groups({"product:output","supplier:output","favorite:output"})
      */
     private $place;
 
@@ -44,7 +44,7 @@ class Image
      * @var string $title Title of this image
      *
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"category:output","product:output","supplier:output"})
+     * @Groups({"category:output","product:output","supplier:output","favorite:output"})
      */
     private $title;
 
@@ -52,7 +52,7 @@ class Image
      * @var string $alt Alternative title of this image
      *
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"category:output","product:output","supplier:output"})
+     * @Groups({"category:output","product:output","supplier:output","favorite:output"})
      */
     private $alt;
 
@@ -62,7 +62,7 @@ class Image
      * @ORM\Column(type="string", length=255)
      * @Assert\NotNull()
      * @Assert\Url()
-     * @Groups({"category:output", "product:output","supplier:output"})
+     * @Groups({"category:output", "product:output","supplier:output","favorite:output"})
      */
     private $url;
 
@@ -79,7 +79,6 @@ class Image
      * @var User $user User represented by this image
      *
      * @ORM\OneToOne(targetEntity="App\Entity\User", mappedBy="image", cascade={"persist", "remove"})
-     * @Groups({"user:output"})
      */
     private $user;
 

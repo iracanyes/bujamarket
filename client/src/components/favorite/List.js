@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { list, reset } from '../../actions/favorite/list';
 
+
 class List extends Component {
   static propTypes = {
     retrieved: PropTypes.object,
@@ -17,8 +18,8 @@ class List extends Component {
 
   componentDidMount() {
     this.props.list(
-      this.props.match.params.page &&
-        decodeURIComponent(this.props.match.params.page)
+      this.props.match.params.id &&
+        `/customers/${decodeURIComponent(this.props.match.params.id)}/favorites`
     );
   }
 

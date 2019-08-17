@@ -1,6 +1,7 @@
-import Create from './Create';
+import Login from './LoginForm';
+import Register from './RegisterForm'
 import List from './List';
 import Update from './Update';
 import Show from './Show';
 
-export { Create, List, Update, Show };
+export { Register, Login, List, Update, Show };
