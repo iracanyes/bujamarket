@@ -3,13 +3,18 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ApiResource()
+ * @ApiResource(attributes={
+ *     "normalization_context"={"shopping_card:output"},
+ *     "denormalization_context"={{"shopping_card:input"}}
+ * })
  * @ORM\Table(name="bjmkt_shopping_card")
  * @ORM\Entity(repositoryClass="App\Repository\ShoppingCardRepository")
  * @ORM\HasLifecycleCallbacks()
@@ -25,6 +30,7 @@ class ShoppingCard
     /**
      * @ORM\Column(type="datetime")
      * @Assert\DateTime()
+     * @Groups({"shopping_card:output"})
      */
     private $dateCreated;
 
@@ -37,6 +43,9 @@ class ShoppingCard
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\SupplierProduct", inversedBy="shoppingCards")
+     * @ApiSubresource()
+     * @Groups({"shopping_card:output"})
+     *
      */
     private $suppliersProducts;
 

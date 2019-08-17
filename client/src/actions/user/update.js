@@ -5,7 +5,8 @@ import {
   normalize,
   mercureSubscribe as subscribe
 } from '../../utils/dataAccess';
-import { success as createSuccess } from './create';
+import authHeader from "../../utils/authHeader";
+import { success as registerSuccess } from './register';
 import { loading, error } from './delete';
 
 export function retrieveError(retrieveError) {
@@ -60,12 +61,12 @@ export function updateSuccess(updated) {
 export function update(item, values) {
   return dispatch => {
     dispatch(updateError(null));
-    dispatch(createSuccess(null));
+    dispatch(registerSuccess(null));
     dispatch(updateLoading(true));
 
     return fetch(item['@id'], {
       method: 'PUT',
-      headers: new Headers({ 'Content-Type': 'application/ld+json' }),
+      headers: new Headers({ ...authHeader(), 'Content-Type': 'application/ld+json' }),
       body: JSON.stringify(values)
     })
       .then(response =>
@@ -101,7 +102,7 @@ export function reset(eventSource) {
     dispatch({ type: 'USER_UPDATE_RESET' });
     dispatch(error(null));
     dispatch(loading(false));
-    dispatch(createSuccess(null));
+    dispatch(registerSuccess(null));
   };
 }
 

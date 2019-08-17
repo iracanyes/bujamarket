@@ -5,9 +5,14 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
+ * @ApiResource(attributes={
+ *      "normalization_context"={"groups"={"favorite:output"}},
+ *      "denormalization_context"={"groups"={"favorite:input"}}
+ * })
  * @ORM\Table(name="bjmkt_favorite")
  * @ORM\Entity(repositoryClass="App\Repository\FavoriteRepository")
  */
@@ -19,6 +24,7 @@ class Favorite
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"favorite:output"})
      */
     private $id;
 
@@ -29,6 +35,8 @@ class Favorite
      * @ORM\JoinColumn(nullable=false)
      * @Assert\NotNull()
      * @Assert\Type("App\Entity\SupplierProduct")
+     * @Groups({"favorite:output"})
+     *
      */
     private $supplierProduct;
 

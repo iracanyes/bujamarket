@@ -5,7 +5,9 @@
  *
  */
 import React, {Component, Fragment} from "react";
+import { Link } from "react-router-dom";
 import RegisterForm from "../components/user/RegisterForm";
+import LoginForm from "../components/user/LoginForm";
 import {
   Row,
   Col,
@@ -25,36 +27,14 @@ class UserAuth extends Component
         </h4>
         <div className="">
           <div className="mx-auto text-center">
-            <Button color="primary" id="signin-form" className={"toggler-all"} style={{ marginBottom: '1rem' }}>
+            <Link to={'/register'}
+                  color="primary" id="signin-form" className={"btn btn-outline-primary m-3"} style={{ marginBottom: '1rem' }}>
               Devenez membre
-            </Button>
-            <Button color="primary" id="login-form" className={"toggler-all"} style={{ marginBottom: '1rem' }}>
+            </Link>
+            <Link to={'/login'} color="primary" id="login-form" className={"btn btn-outline-primary m-3"} style={{ marginBottom: '1rem' }}>
               Connexion
-            </Button>
+            </Link>
           </div>
-
-          <Row>
-            <Col>
-              <UncontrolledCollapse toggler="#signin-form">
-
-                <RegisterForm/>
-
-              </UncontrolledCollapse>
-            </Col>
-            <Col>
-              <UncontrolledCollapse toggler="#login-form">
-
-                <Card>
-                  <CardBody>
-                    2. Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt magni, voluptas debitis
-                    similique porro a molestias consequuntur earum odio officiis natus, amet hic, iste sed
-                    dignissimos esse fuga! Minus, alias.
-                  </CardBody>
-                </Card>
-
-              </UncontrolledCollapse>
-            </Col>
-          </Row>
 
         </div>
       </div>

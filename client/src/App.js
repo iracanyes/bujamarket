@@ -9,7 +9,7 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import { reducer as form } from 'redux-form';
 import { Route, Switch, BrowserRouter } from 'react-router-dom';
-import createBrowserHistory from 'history/createBrowserHistory';
+import history from './utils/history';
 import {
   ConnectedRouter,
   connectRouter,
@@ -97,26 +97,15 @@ import SearchResults from "./components/search/SearchResults";
 import Error404Cat from "./layout/Error404Cat";
 
 /* Internationalisation : FormatJS/React-Intl */
-import { IntlProvider } from "react-intl";
-import "./config/internationalization.js";
-import messages_fr from "./translations/fr";
-import messages_en from "./translations/en";
-import messages_rn from "./translations/rn";
+import { IntlProvider} from "react-intl";
+import { addLocaleData, messages, language } from "./config/internationalization.js";
+
+addLocaleData();
 
 
-/* Liste JSON des messages de l'application par langue
-*  rn => pour la langue : Kirundi
-*  */
-const messages = {
-  "en": messages_en,
-  "fr": messages_fr,
-  "rn": messages_rn
-};
-
-const language = navigator.language.split(/[-...]/)[0];
 
 
-const history = createBrowserHistory();
+
 const store = createStore(
   combineReducers({
     router: connectRouter(history),

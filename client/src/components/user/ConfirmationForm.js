@@ -4,8 +4,6 @@ import { Field, reduxForm } from 'redux-form';
 import PropTypes from 'prop-types';
 import { Col, Row } from "reactstrap";
 import { FormattedMessage, injectIntl } from "react-intl";
-import { register } from "../../actions/user/register";
-import { connect } from "react-redux";
 
 class RegisterForm extends Component {
   static propTypes = {
@@ -107,7 +105,7 @@ class RegisterForm extends Component {
     const { user, submitted } = this.state;
 
     return (
-      <div className={"user-authentication-form my-3"}>
+      <div classname={"user-authentication-form"}>
         <h1>
           <FormattedMessage  id={"app.page.user.register.title"}
                              defaultMessage="Inscription"
@@ -162,51 +160,106 @@ class RegisterForm extends Component {
           <Row>
             <Col>
               <label
-                htmlFor={'user_type'}
+                htmlFor={'user_language'}
                 className="form-control-label"
               >
-                <FormattedMessage  id={"app.user.item.user_type"}
-                                   defaultMessage="Type d'utilisateur"
-                                   description="User item - user type"
+                <FormattedMessage  id={"app.user.item.language"}
+                                   defaultMessage="Langue"
+                                   description="User item - language"
 
                 />
               </label>
               &nbsp;:&nbsp;
               <Field
                 component={"select"}
-                name="userType"
+                name="language"
                 type="select"
                 placeholder=""
               >
-                <option value="client">
+                <option value="FR">
                   { intl.formatMessage({
-                    id: "app.user.item.user_type.client",
-                    description: "User item - user type client",
-                    defaultMessage: "Client"
+                    id: "app.user.item.language.french",
+                    description: "User item - language french",
+                    defaultMessage: "Français"
                   })}
                 </option>
-                <option value="supplier">
+                <option value="EN">
                   { intl.formatMessage({
-                    id: "app.user.item.user_type.supplier",
-                    description: "User item - user type supplier",
-                    defaultMessage: "Fournisseur"
+                    id: "app.user.item.language.french",
+                    description: "User item - language french",
+                    defaultMessage: "Anglais"
+                  })}
+
+                </option>
+                <option value="RN">
+                  { intl.formatMessage({
+                    id: "app.user.item.language.french",
+                    description: "User item - language french",
+                    defaultMessage: "Français"
+                  })}
+                  Kirundi
+                </option>
+              </Field>
+            </Col>
+            <Col>
+              <label
+                htmlFor={'user_currency'}
+                className="form-control-label"
+              >
+                <FormattedMessage  id={"app.user.item.currency"}
+                                   defaultMessage="Devise"
+                                   description="User item - currency"
+
+                />
+              </label>
+              &nbsp;:&nbsp;
+              <Field
+                component={"select"}
+                name="currency"
+                type="select"
+                placeholder=""
+
+              >
+                <option value="BIF">
+                  { intl.formatMessage({
+                    id: "app.user.item.currency.bif",
+                    description: "User item - currency BIF",
+                    defaultMessage: "Francs burundais (BIF)"
+                  })}
+
+                </option>
+                <option value="EUR">
+                  { intl.formatMessage({
+                    id: "app.user.item.currency.euro",
+                    description: "User item - currency EUR",
+                    defaultMessage: "Euro (EUR)"
+                  })}
+
+                </option>
+                <option value="USD">
+                  { intl.formatMessage({
+                    id: "app.user.item.currency.dollar",
+                    description: "User item - currency Dollar",
+                    defaultMessage: "Dollar (USD)"
                   })}
 
                 </option>
               </Field>
             </Col>
-
-          </Row>
-          <Row>
-            <button type="submit" className="btn btn-success my-3 mx-2">
-              Submit
-            </button>
-            <Link to={"/login"} className={"btn btn-outline-danger my-3 mx-2"}>
-              Cancel
-            </Link>
           </Row>
 
+          <Field
+            component={this.renderField}
+            name="image"
+            type="file"
+            ref={this.fileInput}
+            value={null}
+            accept="image/*"
+          />
 
+          <button type="submit" className="btn btn-success">
+            Submit
+          </button>
         </form>
       </div>
 
@@ -214,21 +267,8 @@ class RegisterForm extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  const { registering } = state.user.registration;
-
-  return { registering };
-};
-
-const mapDispatchToProps = dispatch => ({
-  register: user => dispatch(register(user))
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(
-  reduxForm({
-    form: 'user',
-    enableReinitialize: true,
-    keepDirtyOnReinitialize: true
-  })(injectIntl(RegisterForm))
-);
-
+export default reduxForm({
+  form: 'user',
+  enableReinitialize: true,
+  keepDirtyOnReinitialize: true
+})(injectIntl(RegisterForm));
