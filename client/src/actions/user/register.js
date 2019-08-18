@@ -30,7 +30,11 @@ export function register(values) {
     dispatch(loading(true));
     dispatch(request(values));
 
-    return fetch('register', { method: 'POST', body: JSON.stringify(values) })
+    const headers = new Headers({
+      'Content-Type': 'application/json',
+    });
+
+    return fetch('register', { method: 'POST', headers: headers, body: JSON.stringify(values) })
       .then(response => {
         dispatch(loading(false));
 

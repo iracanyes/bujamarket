@@ -33,6 +33,8 @@ class LoginForm extends React.Component {
   {
     const { name, value } = e.target;
 
+    console.log("handleChange ", {[name]: value });
+
     this.setState({ [name] : value });
   }
 
@@ -46,6 +48,9 @@ class LoginForm extends React.Component {
 
     /* On récupère les infos du formulaire contenu dans l'état du composant */
     const { email,  password } = this.state;
+
+    console.log("handleSubmit", { email, password });
+    console.log("handleSubmit - state", this.state );
 
     if( email && password )
     {
@@ -110,22 +115,24 @@ class LoginForm extends React.Component {
             name="email"
             type="email"
             labelText={intl.formatMessage({
-              id: "app.user.item.your_email",
+              id: "app.user.item.email",
               defaultMessage: "E-mail",
-              description: "User item - your email"
+              description: "User item - email"
             })}
             placeholder="tim_dubois@gmail.com"
+            onChange={this.handleChange}
           />
           <Field
             component={this.renderField}
             name="password"
             type="password"
             labelText={intl.formatMessage({
-              id: "app.user.item.your_password",
+              id: "app.user.item.password",
               defaultMessage: "Mot de passe",
-              description: "User item - your password"
+              description: "User item - password"
             })}
             placeholder="*************"
+            onChange={this.handleChange}
           />
 
           <div className="form-group">
