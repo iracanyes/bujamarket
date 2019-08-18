@@ -1,6 +1,7 @@
 import { SubmissionError } from 'redux-form';
 import { fetch } from '../../utils/dataAccess';
 import history from '../../utils/history';
+import { push } from 'connected-react-router';
 
 export function error(error) {
   return { type: 'USER_LOGIN_ERROR', error };
@@ -30,11 +31,13 @@ export function login(email, password) {
     dispatch(request({ email }));
     dispatch(loading(true));
 
+    const headers = new Headers({
+      'Content-Type': 'application/json',
+    });
+
     const requestOptions = {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/ld+json'
-      },
+      headers: headers,
       body: JSON.stringify({email, password})
     };
 
@@ -42,11 +45,15 @@ export function login(email, password) {
       .then(response => {
         dispatch(loading(false));
 
+
+
         return response.json();
       })
       .then(retrieved => {
         /* Utilisation du localStorage pour stocker les infos non-sécurisé de l'utilisateur authentifié */
         localStorage.setItem("user", JSON.stringify(retrieved));
+
+        console.log("fetch - retrieved",  retrieved);
 
         /* Utilisation du React context pour transmettre les infos non-sécurisé */
 
@@ -54,7 +61,11 @@ export function login(email, password) {
       })
       .then(retrieved => {
         dispatch(success(retrieved));
-        history.push('/');
+        /* Change URL but don't reload page */
+        dispatch(push('/profile')); /* with push from connected-react-router */
+        //history.push('/profile');  /* with history from utils/history */
+
+        //window.location.reload(true);
 
       })
       .catch(e => {
@@ -76,6 +87,8 @@ export function login(email, password) {
       });
   };
 }
+
+
 
 export function reset() {
   return dispatch => {
