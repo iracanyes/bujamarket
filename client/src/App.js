@@ -8,7 +8,7 @@ import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import { reducer as form } from 'redux-form';
-import { Route, Switch, BrowserRouter } from 'react-router-dom';
+import { Switch, Route, BrowserRouter } from 'react-router-dom';
 import history from './utils/history';
 import {
   ConnectedRouter,
@@ -140,6 +140,7 @@ const store = createStore(
   applyMiddleware(routerMiddleware(history), thunk)
 );
 
+
 export class App extends Component
 {
   constructor(props)
@@ -160,6 +161,8 @@ export class App extends Component
     console.log("App HOC - results", results);
   }
 
+
+
   render()
   {
     const { results } = this.state;
@@ -169,85 +172,77 @@ export class App extends Component
         <IntlProvider locale={language} messages={messages[language]}>
           <ConnectedRouter history={history}>
             <BrowserRouter>
-              <header>
-                <Navbar color={"bg-primary"} dark expand={"lg"}   id="navbar-primary" className="navbar navbar-expand-lg navbar-dark bg-primary">
-                  {/* Navbar brand*/}
-                  <NavbarBrand href="/" className="col-lg-2">Buja Market</NavbarBrand>
+              <div>
+                <header>
+                  <Navbar color={"bg-primary"} dark expand={"lg"}   id="navbar-primary" className="navbar navbar-expand-lg navbar-dark bg-primary">
+                    {/* Navbar brand*/}
+                    <NavbarBrand href="/" className="col-lg-2">Buja Market</NavbarBrand>
 
 
-                  <div className="main-menu-search-form col-lg-5">
-                    <MainMenuSearchForm onSearch={this.search}/>
-                  </div>
+                    <div className="main-menu-search-form col-lg-5">
+                      <MainMenuSearchForm onSearch={this.search}/>
+                    </div>
 
 
-                  <MainMenu/>
+                    <MainMenu/>
 
-                </Navbar>
-              </header>
+                  </Navbar>
+                </header>
 
+                <main>
+                  <aside id="aside-left">
 
+                  </aside>
+                  <section id="main-content" className="col col-lg-12">
+                    <div id="search-results-component">
+                      {results && (<SearchResults results={ results }/>)}
 
-              <main>
-                <aside id="aside-left">
+                    </div>
+                    <div>
+                      <Switch>
+                        <Route path="/dev" component={Welcome} strict={true} exact={true}/>
+                        <Route path="/" component={Homepage} strict={true} exact={true} />
+                        {/* Add your routes here */}
+                        { addressRoutes }
+                        { adminRoutes }
+                        { bankAccountRoutes }
+                        { billRoutes }
+                        { billCustomerRoutes }
+                        { billRefundRoutes }
+                        { billSupplierRoutes }
+                        { categoryRoutes }
+                        { commentRoutes }
+                        { customerRoutes }
+                        { deliveryDetailRoutes }
+                        { deliveryGlobalRoutes }
+                        { favoriteRoutes }
+                        { forumRoutes }
+                        { imageRoutes }
+                        { messageRoutes }
+                        { orderDetailRoutes }
+                        { orderGlobalRoutes }
+                        { orderreturnedRoutes }
+                        { paymentRoutes }
+                        { productRoutes }
+                        { shipperRoutes }
+                        { supplierRoutes }
+                        { supplierProductRoutes }
+                        { userRoutes }
+                        { withdrawalRoutes }
+                        <Route render={() => (
+                          <Fragment>
+                            <Error404Cat/>
+                          </Fragment>
 
-                </aside>
-                <section id="main-content" className="col col-lg-12">
-                  <div id="search-results-component">
-                    {results && (<SearchResults results={ results }/>)}
-
-                  </div>
-                  <div>
-                    <Switch>
-                      <Route path="/dev" component={Welcome} strict={true} exact={true}/>
-                      <Route path="/" component={Homepage} strict={true} exact={true} />
-                      {/* Add your routes here */}
-                      { addressRoutes }
-                      { adminRoutes }
-                      { bankAccountRoutes }
-                      { billRoutes }
-                      { billCustomerRoutes }
-                      { billRefundRoutes }
-                      { billSupplierRoutes }
-                      { categoryRoutes }
-                      { commentRoutes }
-                      { customerRoutes }
-                      { deliveryDetailRoutes }
-                      { deliveryGlobalRoutes }
-                      { favoriteRoutes }
-                      { forumRoutes }
-                      { imageRoutes }
-                      { messageRoutes }
-                      { orderDetailRoutes }
-                      { orderGlobalRoutes }
-                      { orderreturnedRoutes }
-                      { paymentRoutes }
-                      { productRoutes }
-                      { shipperRoutes }
-                      { supplierRoutes }
-                      { supplierProductRoutes }
-                      { userRoutes }
-                      { withdrawalRoutes }
-                      <Route render={() => (
-                        <Fragment>
-                          <Error404Cat/>
-                        </Fragment>
-
-                      )} />
-                    </Switch>
+                        )} />
+                      </Switch>
 
 
-                  </div>
+                    </div>
 
-                </section>
-              </main>
-
-
-
-
-
-
-
-
+                  </section>
+                </main>
+              </div>
             </BrowserRouter>
           </ConnectedRouter>
         </IntlProvider>

@@ -54,7 +54,7 @@ class LoginForm extends React.Component {
 
     if( email && password )
     {
-      this.props.login(email, password);
+      this.props.login(email, password, this.props.history);
     }
 
   }
@@ -79,7 +79,7 @@ class LoginForm extends React.Component {
           className="form-control-label"
         >
           {data.labelText}
-          {/*data.input.name.charAt(0).toUpperCase() + data.input.name.slice(1) */}
+
         </label>
         <input
           {...data.input}
@@ -96,7 +96,7 @@ class LoginForm extends React.Component {
 
   render() {
     const { loggingIn, intl } = this.props;
-    const { username, password, submitted } = this.state;
+    const { email, submitted } = this.state;
     return (
       <div id={'form-login'} className="col-md-6 mx-auto col-md-offset-3">
         <h1>
@@ -120,6 +120,7 @@ class LoginForm extends React.Component {
               description: "User item - email"
             })}
             placeholder="tim_dubois@gmail.com"
+            value={email}
             onChange={this.handleChange}
           />
           <Field
@@ -166,7 +167,7 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => ({
-  login : (email, password) => dispatch(login(email,password)),
+  login : (email, password, history) => dispatch(login(email,password, history)),
   logout: () => dispatch( logout())
 });
 
