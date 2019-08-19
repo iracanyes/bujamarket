@@ -1,6 +1,6 @@
 import { SubmissionError } from 'redux-form';
 import { fetch } from '../../utils/dataAccess';
-import history from '../../utils/history';
+//import history from '../../utils/history';
 import { push } from 'connected-react-router';
 
 export function error(error) {
@@ -26,7 +26,11 @@ export function logout() {
   return { type: 'USER_LOGOUT'};
 }
 
-export function login(email, password) {
+/*
+* En passant l'objet this.props.history du composant
+* vers son action creator permet de transmettre le changement d'URL au connected-react-router
+**/
+export function login(email, password, history) {
   return dispatch => {
     dispatch(request({ email }));
     dispatch(loading(true));
@@ -45,31 +49,39 @@ export function login(email, password) {
       .then(response => {
         dispatch(loading(false));
 
-
-
+        /* Utilisation si un objet est retourné
         return response.json();
+
+         */
+        console.log("fetch response headers", response.headers);
+        return response;
       })
       .then(retrieved => {
         /* Utilisation du localStorage pour stocker les infos non-sécurisé de l'utilisateur authentifié */
-        localStorage.setItem("user", JSON.stringify(retrieved));
+        //localStorage.setItem("user", JSON.stringify(retrieved));
 
         console.log("fetch - retrieved",  retrieved);
 
         /* Utilisation du React context pour transmettre les infos non-sécurisé */
 
         return retrieved;
+
       })
       .then(retrieved => {
         dispatch(success(retrieved));
-        /* Change URL but don't reload page */
-        dispatch(push('/profile')); /* with push from connected-react-router */
-        //history.push('/profile');  /* with history from utils/history */
+        /* history push change l'URL sans raffraichissement de la page */
+        //dispatch(push('/profile')); /* with push from connected-react-router */
+
+        /* En passant l'objet this.props.history du composant vers son action creator permet de transmettre le changement d'URL au connected-react-router  */
+        history.push('/profile');  /* with history from utils/history */
 
         //window.location.reload(true);
 
       })
       .catch(e => {
         dispatch(loading(false));
+
+        console.log("login action login catch error " , e );
 
         /* Déconnexion et forcer le rechargement de la page si erreur 401 */
         if(e.code === 401)
@@ -83,11 +95,11 @@ export function login(email, password) {
           throw e;
         }
 
-        dispatch(error(e.message));
+        dispatch(error(e));
+        //dispatch(error(e.message));
       });
   };
 }
-
 
 
 export function reset() {
