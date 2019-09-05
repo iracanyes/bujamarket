@@ -1,0 +1,41 @@
+App\Entity\UserTemp:
+    shortName: 'UserTemp'
+    description: "Subscriber to this platform"
+    iri: 'https://schema.org/Person'
+    collectionOperations:
+        get:
+            method: 'GET'
+            path: '/subscribers.{_format}'
+            requirements: 
+                _formats: 'json\jsonld\html'
+            defaults:
+                _format: 'json'
+            schemes: ['https']
+            access_control: "has_role('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_FULLY', get)"
+        # La méthode POST doit être enregistré dans les actions sur les opérations    
+        post:
+            method: 'POST'
+            path: '/register'
+            defaults:
+                _api_receive: false
+            schemes: ['https']
+            #controller: App\Controller\User\CreateMember::class
+            controller: App\Controller\User\CreateMemberAction
+    itemOperations:
+        get:
+            method: 'GET'
+            path: '/user_temp/{id}.{_format}'
+            requirements:
+                id: '\d+'
+                _format: 'json\jsonld\html'
+            defaults:
+                _format: 'json'
+            schemes: ['https']
+            access_control: "has_role('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_FULLY', get)"
+        delete:
+            method: 'DELETE'
+            path: '/user_temp/{id}'
+            requirements:
+                id: '\d+'
+            security: 'has_role("ROLE_ADMIN")'
+            schemes: ['https']

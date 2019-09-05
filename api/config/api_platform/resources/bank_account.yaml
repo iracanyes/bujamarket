@@ -1,0 +1,53 @@
+App\Entity\BankAccount:
+    shortName: 'BankAccount'
+    description: 'Bank account of the users'
+    collectionOperations:
+        get:
+            method: 'GET'
+            path: '/bank_accounts.{_format}'
+            requirements:
+                _format: 'json\jsonld\html'
+            defaults:
+                _format: 'json'
+            # host: 'localhost'
+            schemes: ['https']
+            access_control: "has_role('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_FULLY', get)"
+            #options:
+            #    my_option: 'my_option_value'
+            status: 200 # customize the HTTP status code to send
+        post:
+            method: 'POST'
+            path: '/bank_account/create'
+            access_control: "is_granted('IS_AUTHENTICATED_FULLY', post)"
+            schemes: ['https']
+            controller: App\Controller\BankAccount\CreateBankAccount::class
+    itemOperations:
+        get:
+            method: 'GET'
+            path: '/bank_account/{id}.{_format}'
+            requirements:
+                id: '\d+'
+                _format: 'json\jsonld\html'
+            defaults:
+                _format: 'json'
+            # host: 'localhost'
+            schemes: ['https']
+            access_control: "is_granted('IS_AUTHENTICATED_FULLY', get)"
+            #options:
+            #    my_option: 'my_option_value'
+            status: 200 # customize the HTTP status code to send
+        
+        put:
+            method: 'PUT'
+            path: '/bank_account/{id}'
+            requirements:
+                id: '\d+'
+            access_control: "is_granted('IS_AUTHENTICATED_FULLY', put)"
+            schemes: ['https']
+        delete:
+            method: 'DELETE'
+            path: '/bank_account/{id}'
+            requirements:
+                id: '\d+'
+            security: "is_granted('IS_AUTHENTICATED_FULLY', delete)"
+            schemes: ['https']

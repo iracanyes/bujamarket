@@ -1,0 +1,47 @@
+App\Entity\Message:
+    shortName: 'Message'
+    description: "Message sent in the forum"
+    iri: 'https://schema.org/Message'
+    collectionOperations:
+        get:
+            method: 'GET'
+            path: '/messages.{_format}'
+            requirements:
+                _format: 'json\jsonld\html'
+            defaults:
+                _format: 'json'
+            # host: 'localhost'
+            schemes: ['https']
+            access_control: "has_role('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_REMEMBERED', get)"
+            #options:
+            #    my_option: 'my_option_value'
+            status: 200 # customize the HTTP status code to send
+        post:
+            method: 'POST'
+            path: '/message/create'
+            access_control: "has_role('ROLE_MEMBER') and is_granted('IS_AUTHENTICATED_REMEMBERED', post)"
+            schemes: ['https']
+            controller: App\Controller\Message\CreateMessage::class
+    itemOperations:
+        get:
+            method: 'GET'
+            path: '/message/{id}.{_format}'
+            requirements:
+                id: '\d+'
+                _format: 'json\jsonld\html'
+            defaults:
+                _format: 'json'
+            # host: 'localhost'
+            schemes: ['https']
+            access_control: "has_role('ROLE_MEMBER') and is_granted('IS_AUTHENTICATED_REMEMBERED', get)"
+            #options:
+            #    my_option: 'my_option_value'
+            status: 200 # customize the HTTP status code to send
+        
+        delete:
+            method: 'DELETE'
+            path: '/message/{id}'
+            requirements:
+                id: '\d+'
+            security: 'has_role("ROLE_MEMBER")'
+            schemes: ['https']

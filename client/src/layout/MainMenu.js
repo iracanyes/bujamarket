@@ -61,7 +61,7 @@ class MainMenu extends Component
             </DropdownToggle>
             <DropdownMenu right>
               <DropdownItem>
-                <NavLink tag={RRDNavLink} to={"/signin"}>
+                <NavLink tag={RRDNavLink} to={"/login"}>
                   <FontAwesomeIcon icon="user-check" />
                   <FormattedMessage  id={"app.header.main_menu.profile.sub_menu.sign_in.link"}
                                      defaultMessage="Connexion"
@@ -83,7 +83,7 @@ class MainMenu extends Component
               </DropdownItem>
               <DropdownItem divider />
               <DropdownItem>
-                <NavLink tag={RRDNavLink} to={"/register"}>
+                <NavLink tag={RRDNavLink} to={"/profile"}>
                   <FontAwesomeIcon icon="user-edit" />
                   <FormattedMessage  id={"app.header.main_menu.profile.sub_menu.profile.link"}
                                      defaultMessage="Profil"

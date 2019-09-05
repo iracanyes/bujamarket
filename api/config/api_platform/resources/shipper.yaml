@@ -1,0 +1,53 @@
+App\Entity\Shipper:
+    shortName: 'Shipper'
+    description: 'Shipper who:"s responsible for delivering  the products bought'
+    iri: 'https://schema.org/DeliveryMethod'
+    collectionOperations:
+        get:
+            method: 'GET'
+            path: '/shippers.{_format}'
+            requirements:
+                _format: 'json\jsonld\html'
+            defaults:
+                _format: 'json'
+            # host: 'localhost'
+            schemes: ['https']
+            access_control: "has_role('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_REMEMBERED', get)"
+            #options:
+            #    my_option: 'my_option_value'
+            status: 200 # customize the HTTP status code to send
+        post:
+            method: 'POST'
+            path: '/shipper/create'
+            access_control: "has_role('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_FULLY', post)"
+            schemes: ['https']
+            controller: App\Controller\Shipper\CreateShipper::class
+    itemOperations:
+        get:
+            method: 'GET'
+            path: '/shipper/{id}.{_format}'
+            requirements:
+                id: '\d+'
+                _format: 'json\jsonld\html'
+            defaults:
+                _format: 'json'
+            # host: 'localhost'
+            schemes: ['https']
+            access_control: "has_role('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_REMEMBERED', get)"
+            #options:
+            #    my_option: 'my_option_value'
+            status: 200 # customize the HTTP status code to send        
+        put:
+            method: 'PUT'
+            path: '/shipper/{id}'
+            requirements:
+                id: '\d+'
+            access_control: 'has_role("ROLE_ADMIN") and is_granted("IS_AUTHENTICATED_REMEMBERED", put)'
+            schemes: ['https']
+        delete:
+            method: 'DELETE'
+            path: '/shipper/{id}'
+            requirements:
+                id: '\d+'
+            security: 'has_role("ROLE_ADMIN") and is_granted("IS_AUTHENTICATED_FULLY", delete)'
+            schemes: ['https']

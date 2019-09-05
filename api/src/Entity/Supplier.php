@@ -13,7 +13,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ApiResource(attributes={
-        "normalization_context"={"groups"={"supplier:output"}}
+       "normalization_context"={"groups"={"supplier:output"}},
+ *     "denormalization_context"={"groups"={"supplier:input"}}
  * })
  * @ApiFilter(SearchFilter::class, properties={"socialReason":"partial"})
  * @ORM\Table(name="bjmkt_supplier")

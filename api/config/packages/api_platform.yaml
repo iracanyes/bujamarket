@@ -12,7 +12,7 @@ api_platform:
     title: Buja Market
 
     # The description of the API.
-    description: 'Platforme de commerce en ligne. Meilleur place de marché en ligne pour les produits provenant des grands lacs. '
+    description: 'Platforme de commerce en ligne. Place de marché en ligne pour les produits provenant des grands lacs. '
 
     # The version of the API.
     version: 0.1
@@ -188,10 +188,10 @@ api_platform:
             client_items_per_page: false
 
             # The default number of items per page
-            items_per_page: 30
+            items_per_page: 20
 
             # The maximum number of items per page
-            maximum_items_per_page: 30
+            maximum_items_per_page: 20
 
             # The default name of the parameter handling the page number
             page_parameter_name: 'page'

@@ -13,9 +13,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ApiResource(attributes={
- *     "normalization_context"={"groups"={"customer:output","admin:output"}},
+ *     "normalization_context"={"groups"={"customer:output"}},
  *     "denormalization_context"={"groups"={"customer:input"}}
-
  * })
  * @ORM\Table(name="bjmkt_customer")
  * @ORM\Entity(repositoryClass="App\Repository\CustomerRepository")
@@ -29,7 +28,7 @@ class Customer extends User
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"customer:output","admin:output"})
+     * @Groups({"customer:output"})
      */
     private $id;
 
@@ -38,7 +37,7 @@ class Customer extends User
      *
      * @ORM\Column(type="string", length=100)
      * @Assert\NotBlank()
-     * @Groups({"customer:output","admin:output"})
+     * @Groups({"customer:output"})
      */
     private $customerKey;
 
@@ -47,7 +46,7 @@ class Customer extends User
      *
      * @ORM\Column(type="integer")
      * @Assert\Type("integer")
-     * @Groups({"customer:output","admin:output"})
+     * @Groups({"customer:output"})
      */
     private $nbAbuseIdentified;
 
@@ -56,7 +55,7 @@ class Customer extends User
      *
      * @ORM\Column(type="float")
      * @Assert\Type("float")
-     * @Groups({"customer:output","admin:output"})
+     * @Groups({"customer:output"})
      */
     private $averageRating;
 
@@ -65,7 +64,7 @@ class Customer extends User
      *
      * @ORM\Column(type="integer")
      * @Assert\Type("integer")
-     * @Groups({"customer:output","admin:output"})
+     * @Groups({"customer:output"})
      */
     private $nbOrderCompleted;
 
@@ -74,7 +73,7 @@ class Customer extends User
      *
      * @ORM\Column(type="integer")
      * @Assert\Type("integer")
-     * @Groups({"customer:output","admin:output"})
+     * @Groups({"customer:output"})
      */
     private $nbOrderWithdrawn;
 
@@ -82,7 +81,7 @@ class Customer extends User
      * @var Collection $orderGlobals Order sets made by this customer
      *
      * @ORM\OneToMany(targetEntity="App\Entity\OrderGlobal", mappedBy="customer")
-     * @Groups({"customer:output","admin:output"})
+     * @Groups({"customer:output"})
      */
     private $orderGlobals;
 
@@ -90,7 +89,7 @@ class Customer extends User
      * @var Collection $customerBills Orders Bill of this customer
      *
      * @ORM\OneToMany(targetEntity="App\Entity\BillCustomer", mappedBy="customer", orphanRemoval=true)
-     * @Groups({"customer:output","admin:output"})
+     * @Groups({"customer:output"})
      */
     private $customerBills;
 
@@ -98,7 +97,7 @@ class Customer extends User
      * @var Collection $refundBills Refund's bill of this customer
      *
      * @ORM\OneToMany(targetEntity="App\Entity\BillRefund", mappedBy="customer", orphanRemoval=true)
-     * @Groups({"customer:output","admin:output"})
+     * @Groups({"customer:output"})
      */
     private $refundBills;
 
@@ -106,7 +105,7 @@ class Customer extends User
      * @var Collection $comments Comments made by this customer
      *
      * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="customer", orphanRemoval=true)
-     * @Groups({"customer:output","admin:output"})
+     * @Groups({"customer:output"})
      */
     private $comments;
 
@@ -114,14 +113,14 @@ class Customer extends User
      * @var Collection $favorites Supplier's product loved by this customer
      *
      * @ORM\OneToMany(targetEntity="App\Entity\Favorite", mappedBy="customer", orphanRemoval=true)
-     * @Groups({"customer:output","admin:output"})
-     * @ApiSubresource(maxDepth=2)
+     * @Groups({"customer:output"})
+     * @ApiSubresource( maxDepth=2)
      */
     private $favorites;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\ShoppingCard", mappedBy="customer", orphanRemoval=true)
-     * @Groups({"customer:output","admin:output"})
+     * @Groups({"customer:output"})
      * @ApiSubresource(maxDepth=2)
      */
     private $shoppingCards;

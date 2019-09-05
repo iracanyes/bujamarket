@@ -1,0 +1,56 @@
+App\Entity\User:
+    shortName: 'User'
+    description: 'User:"s of this platform'
+    iri: 'https://schema.org/Person'
+    collectionOperations:
+        get:
+            method: 'GET'
+            path: '/users.{_format}'
+            requirements:
+                _format: 'json\jsonld\html'
+            defaults:
+                _format: 'json'
+            # host: 'localhost'
+            schemes: ['https']
+            access_control: "has_role('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_FULLY', get)"
+            #options:
+            #    my_option: 'my_option_value'
+            status: 200 # customize the HTTP status code to send
+        post:
+            method: 'POST'
+            path: '/confirmation'
+            defaults:
+                _api_receive: false
+            schemes: ['https']
+            #controller: App\Controller\User\CreateMember::class
+            controller: App\Controller\User\RegisterMemberAction
+    itemOperations:
+        get:
+            method: 'GET'
+            path: '/user/{id}.{_format}'
+            requirements:
+                id: '\d+'
+                _format: 'json\jsonld\html'
+            defaults:
+                _format: 'json'
+            # host: 'localhost'
+            schemes: ['https']
+            access_control: "has_role('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_FULLY', get)"
+            #options:
+            #    my_option: 'my_option_value'
+            status: 200 # customize the HTTP status code to send
+        
+        put:
+            method: 'PUT'
+            path: '/user/{id}'
+            requirements:
+                id: '\d+'
+            access_control: 'has_role("ROLE_ADMIN")'
+            schemes: ['https']
+        delete:
+            method: 'DELETE'
+            path: '/user/{id}'
+            requirements:
+                id: '\d+'
+            security: 'has_role("ROLE_ADMIN")'
+            schemes: ['https']
