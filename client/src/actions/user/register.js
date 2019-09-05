@@ -44,6 +44,8 @@ export function register(values) {
       .catch(e => {
         dispatch(loading(false));
 
+
+
         /* Déconnexion et forcer le rechargement de la page si erreur 401 */
         if(e.code === 401)
         {
@@ -53,11 +55,14 @@ export function register(values) {
 
 
         if (e instanceof SubmissionError) {
-          dispatch(error(e.errors._error));
+          dispatch(error(e));
           throw e;
         }
 
-        dispatch(error(e.message));
+        console.log(Error(e));
+
+        dispatch(error(e));
+        throw e;
       });
   };
 }

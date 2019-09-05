@@ -13,12 +13,19 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
+            pattern: ^/
             anonymous: true
+            
             # Session-based authentication (HTTPOnly Cookie)
             json_login: 
                 check_path: app_login
                 username_path: email
                 password_path: password
+                provider: app_user_provider
+            
+            logout:
+                path: app_logout
+                target: /
                 
             # activate different ways to authenticate
 
@@ -31,8 +38,15 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/admin/users, roles: ROLE_SUPER_ADMIN, requires_channel: https }
+        - { path: ^/admins, roles: ROLE_SUPER_ADMIN, requires_channel: https }
+        - { path: ^/admin, roles: ROLE_ADMIN, requires_channel: https }
+        - { path: ^/suppliers, roles: ROLE_ADMIN, requires_channel: https }
+        - { path: ^/supplier, roles: ROLE_SUPPLIER, requires_channel: https }
+        - { path: ^/customers, roles: ROLE_ADMIN, requires_channel: https }
+        - { path: ^/customer, roles: ROLE_CUSTOMER, requires_channel: https }
+        - { path: ^/profile, roles: ROLE_MEMBER, requires_channel: https }
+        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }
 
     encoders:
         # Utilisation de la classe User
@@ -40,3 +54,11 @@ security:
             # bcrypt or sodium recommandé
             # sodium est plus sûr, mais requiert PHP 7.2 ou l'extension Sodium
             algorithm: argon2i
+        App\Entity\UserTemp:
+            algorithm: argon2i
+
+    role_hierarchy:
+        ROLE_CUSTOMER: [ROLE_MEMBER, ROLE_ALLOWED_TO_SWITCH]
+        ROLE_SUPPLIER: [ROLE_MEMBER, ROLE_ALLOWED_TO_SWITCH]
+        ROLE_ADMIN:     [ ROLE_SUPPPLIER, ROLE_CUSTOMER, ROLE_MEMBER, ROLE_ALLOWED_TO_SWITCH ]
+        ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]

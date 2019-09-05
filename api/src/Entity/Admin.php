@@ -9,7 +9,11 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ApiResource()
+ * @ApiResource(attributes={
+ *     "normalization_context"={"groups"={"admin:output"}},
+ *     "denormalization_context"={"groups"={"admin:input"}}
+
+ * })
  * @ORM\Table(name="bjmkt_admin")
  * @ORM\Entity(repositoryClass="App\Repository\AdminRepository")
  */

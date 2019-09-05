@@ -1,0 +1,52 @@
+App\Entity\OrderDetail:
+    shortName: 'OrderDetail'
+    description: 'Order:"s details for a product'
+    collectionOperations:
+        get:
+            method: 'GET'
+            path: '/order_details.{_format}'
+            requirements:
+                _format: 'json\jsonld\html'
+            defaults:
+                _format: 'json'
+            # host: 'localhost'
+            schemes: ['https']
+            access_control: "has_role('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_REMEMBERED', get)"
+            #options:
+            #    my_option: 'my_option_value'
+            status: 200 # customize the HTTP status code to send
+        post:
+            method: 'POST'
+            path: '/order_detail/create'
+            access_control: "has_role('ROLE_MEMBER') and is_granted('IS_AUTHENTICATED_REMEMBERED', post)"
+            schemes: ['https']
+            controller: App\Controller\OrderDetail\CreateOrderDetail::class
+    itemOperations:
+        get:
+            method: 'GET'
+            path: '/order_detail/{id}.{_format}'
+            requirements:
+                id: '\d+'
+                _format: 'json\jsonld\html'
+            defaults:
+                _format: 'json'
+            # host: 'localhost'
+            schemes: ['https']
+            access_control: "has_role('ROLE_MEMBER') and is_granted('IS_AUTHENTICATED_REMEMBERED', get)"
+            #options:
+            #    my_option: 'my_option_value'
+            status: 200 # customize the HTTP status code to send                  
+        put:
+            method: 'PUT'
+            path: '/order_detail/{id}'
+            requirements:
+                id: '\d+'
+            access_control: 'has_role("ROLE_ADMIN") and is_granted("IS_AUTHENTICATED_REMEMBERED", put)'
+            schemes: ['https']
+        delete:
+            method: 'DELETE'
+            path: '/order_detail/{id}'
+            requirements:
+                id: '\d+'
+            security: 'has_role("ROLE_ADMIN") and is_granted("IS_AUTHENTICATED_REMEMBERED", delete)'
+            schemes: ['https']

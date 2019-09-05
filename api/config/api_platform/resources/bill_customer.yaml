@@ -1,0 +1,40 @@
+App\Entity\BillCustomer:
+    shortName: 'BillCustomer'
+    description: 'Bill made for an order set purchased by a customer'
+    iri: 'https://schema.org/Invoice'
+    collectionOperations:
+        get:
+            method: 'GET'
+            path: '/customer_bills.{_format}'
+            requirements:
+                _format: 'json\jsonld\html'
+            defaults:
+                _format: 'json'
+            # host: 'localhost'
+            schemes: ['https']
+            access_control: "has_role('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_FULLY', get)"
+            #options:
+            #    my_option: 'my_option_value'
+            status: 200 # customize the HTTP status code to send
+    itemOperations:
+        get:
+            method: 'GET'
+            path: '/customer_bill/{id}.{_format}'
+            requirements:
+                id: '\d+'
+                _format: 'json\jsonld\html'
+            defaults:
+                _format: 'json'
+            # host: 'localhost'
+            schemes: ['https']
+            access_control: "is_granted('IS_AUTHENTICATED_FULLY', get)"
+            #options:
+            #    my_option: 'my_option_value'
+            status: 200 # customize the HTTP status code to send
+        delete:
+            method: 'DELETE'
+            path: '/customer_bill/{id}'
+            requirements:
+                id: '\d+'
+            security: "is_granted('IS_AUTHENTICATED_FULLY', delete) and has_role('ROLE_ADMIN')"
+            schemes: ['https']

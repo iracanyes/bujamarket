@@ -12,7 +12,10 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
+ * @ApiResource(attributes={
+ *     "normalization_context"={"groups"={"user:output"}},
+ *     "denormalization_context"={"groups"={"user:input"}}
+ * })
  * @ORM\Table(name="bjmkt_user")
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  *
@@ -40,6 +43,7 @@ class User implements UserInterface
      * @var string $email Email of this user
      * @ORM\Column(type="string", length=180, unique=true)
      * @Assert\Email()
+     * @Groups({"user:output","admin:output","customer:output","supplier:output","user:input"})
      */
     private $email;
 
@@ -52,6 +56,7 @@ class User implements UserInterface
     /**
      * @var string $password Crypted password
      * @ORM\Column(type="string", length=255)
+     * @Groups({"user:input"})
      */
     private $password;
 
@@ -67,7 +72,7 @@ class User implements UserInterface
      *
      * @ORM\Column(type="string", length=100)
      * @Assert\NotBlank()
-     * @Groups({"admin:output","customer:output","supplier:output"})
+     * @Groups({"user:output","admin:output","customer:output","supplier:output","user:input"})
      *
      */
     private $firstname;
@@ -77,7 +82,7 @@ class User implements UserInterface
      *
      * @ORM\Column(type="string", length=100)
      * @Assert\NotBlank()
-     * @Groups({"admin:output","customer:output","supplier:output"})
+     * @Groups({"user:output","admin:output","customer:output","supplier:output","user:input"})
      */
     private $lastname;
 
@@ -112,7 +117,7 @@ class User implements UserInterface
      *
      * @ORM\Column(type="datetime")
      * @Assert\DateTime()
-     * @Groups({"admin:output","customer:output","supplier:output"})
+     * @Groups({"user:output","admin:output","customer:output","supplier:output"})
      */
     private $dateRegistration;
 
@@ -120,7 +125,7 @@ class User implements UserInterface
      * @var string $language Language's preference
      * @ORM\Column(type="string", length=100)
      * @Assert\Language()
-     * @Groups({"admin:output","customer:output","supplier:output"})
+     * @Groups({"user:output","admin:output","customer:output","supplier:output","user:input"})
      */
     private $language;
 
@@ -129,16 +134,29 @@ class User implements UserInterface
      *
      * @ORM\Column(type="string", length=5)
      * @Assert\Currency()
-     * @Groups({"admin:output","customer:output","supplier:output"})
+     * @Groups({"user:output","admin:output","customer:output","supplier:output","user:input"})
      */
     private $currency;
+
+    /**
+     * @var string
+     * @ORM\Column(name="token", type="string", length=255)
+     *
+     */
+    private $token;
+
+    /**
+     * @var boolean
+     */
+    private $termsAccepted;
 
     /**
      * @var Image $image Image representing this user
      *
      * @ORM\OneToOne(targetEntity="App\Entity\Image", inversedBy="user", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=true)
      * @Assert\Type("App\Entity\Image")
-     * @Groups({"admin:output","customer:output","supplier:output"})
+     * @Groups({"user:output","admin:output","customer:output","supplier:output","user:input"})
      */
     private $image;
 
@@ -174,6 +192,9 @@ class User implements UserInterface
         $this->bankAccounts = new ArrayCollection();
         $this->forums = new ArrayCollection();
         $this->messages = new ArrayCollection();
+        $this->nbErrorConnection = 0;
+        $this->banned = false;
+        $this->signinConfirmed = false;
     }
 
     public function getId(): ?int
@@ -265,6 +286,24 @@ class User implements UserInterface
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
     }
+
+    /**
+     * @return string
+     */
+    public function getToken(): string
+    {
+        return $this->token;
+    }
+
+    /**
+     * @param string $token
+     */
+    public function setToken(string $token): void
+    {
+        $this->token = $token;
+    }
+
+
 
     /**
      * @return string
@@ -393,6 +432,24 @@ class User implements UserInterface
 
         return $this;
     }
+
+    /**
+     * @return bool
+     */
+    public function isTermsAccepted(): bool
+    {
+        return $this->termsAccepted;
+    }
+
+    /**
+     * @param bool $termsAccepted
+     */
+    public function setTermsAccepted(bool $termsAccepted): void
+    {
+        $this->termsAccepted = $termsAccepted;
+    }
+
+
 
     /**
      * @return Collection|Address[]

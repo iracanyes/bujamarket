@@ -1,0 +1,53 @@
+App\Entity\DeliveryDetail:
+    shortName: 'DeliveryDetail'
+    description: 'Delivery details for an element of an order set bought on this platform'
+    collectionOperations:
+        get:
+            method: 'GET'
+            path: '/delivery_details.{_format}'
+            requirements:
+                _format: 'json\jsonld\html'
+            defaults:
+                _format: 'json'
+            # host: 'localhost'
+            schemes: ['https']
+            access_control: "has_role('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_FULLY', get)"
+            #options:
+            #    my_option: 'my_option_value'
+            status: 200 # customize the HTTP status code to send
+        post:
+            method: 'POST'
+            path: '/delivery_detail/create'
+            access_control: "has_role('ROLE_CUSTOMER') and is_granted('IS_AUTHENTICATED_FULLY', post)"
+            schemes: ['https']
+            controller: App\Controller\DeliveryDetail\CreateDeliveryDetail::class
+    itemOperations:
+        get:
+            method: 'GET'
+            path: '/delivery_detail/{id}.{_format}'
+            requirements:
+                id: '\d+'
+                _format: 'json\jsonld\html'
+            defaults:
+                _format: 'json'
+            # host: 'localhost'
+            schemes: ['https']
+            access_control: "has_role('ROLE_MEMBER') and is_granted('IS_AUTHENTICATED_FULLY', get)"
+            #options:
+            #    my_option: 'my_option_value'
+            status: 200 # customize the HTTP status code to send        
+        put:
+            method: 'PUT'
+            path: '/delivery_detail/{id}'
+            requirements:
+                id: '\d+'
+            access_control: 'has_role("ROLE_ADMIN")'
+            schemes: ['https']
+        delete:
+            method: 'DELETE'
+            path: '/delivery_detail/{id}'
+            requirements:
+                id: '\d+'
+            security: 'has_role("ROLE_ADMIN")'
+            schemes: ['https']
+   

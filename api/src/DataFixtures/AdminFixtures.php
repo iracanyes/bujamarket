@@ -74,6 +74,8 @@ class AdminFixtures extends Fixture implements DependentFixtureInterface
         $user->setLanguage($this->faker->languageCode);
         $user->setCurrency($this->faker->currencyCode);
 
+        // Création du token
+        $user->setToken(bin2hex(random_bytes(64)));
         $user->setRoles(["ROLE_SUPERADMIN","ROLE_ADMIN","ROLE_SUPPLIER","ROLE_CUSTOMER","ROLE_MEMBER","ROLE_ALLOWED_TO_SWICTH"]);
 
         /* Relations */

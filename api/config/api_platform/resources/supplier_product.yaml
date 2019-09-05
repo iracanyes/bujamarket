@@ -1,0 +1,66 @@
+App\Entity\SupplierProduct:
+    shortName: 'SupplierProduct'
+    description: 'Products offer by the suppliers on this platform'
+    iri: 'https://schema.ord/Offer'
+    collectionOperations:
+        get:
+            method: 'GET'
+            path: '/supplier_products.{_format}'
+            requirements:
+                _format: 'json\jsonld\html'
+            defaults:
+                _format: 'json'
+            # host: 'localhost'
+            #options:
+            #    my_option: 'my_option_value'
+            status: 200 # customize the HTTP status code to send
+        post:
+            method: 'POST'
+            path: '/supplier_product/create'
+            access_control: "has_role('ROLE_SUPPLIER') and is_granted('IS_AUTHENTICATED_FULLY', post)"
+            schemes: ['https']
+            controller: App\Controller\SupplierProduct\CreateSupplierProduct::class
+    itemOperations:
+        get:
+            method: 'GET'
+            path: '/supplier_product/{id}.{_format}'
+            requirements:
+                id: '\d+'
+                _format: 'json\jsonld\html'
+            defaults:
+                _format: 'json'
+            # host: 'localhost'
+            #options:
+            #    my_option: 'my_option_value'
+            status: 200 # customize the HTTP status code to send        
+        put:
+            method: 'PUT'
+            path: '/supplier_product/{id}'
+            requirements:
+                id: '\d+'
+            access_control: 'has_role("ROLE_SUPPLIER")  and is_granted("IS_AUTHENTICATED_FULLY", put)'
+            schemes: ['https']
+        delete:
+            method: 'DELETE'
+            path: '/supplier_product/{id}'
+            requirements:
+                id: '\d+'
+            security: 'has_role("ROLE_SUPPLIER")  and is_granted("IS_AUTHENTICATED_FULLY", delete)'
+            schemes: ['https']
+    subresourceOperations:
+        supplier_get_subresource:
+            method: 'GET'
+            path: '/supplier_product/{id}/supplier.{_format}'
+            defaults:
+                _format: 'jsonld'
+            requirements:
+                id: '\d+'
+                _format: 'json\jsonld\html'
+        comments_get_subresource:
+            method: 'GET'
+            path: '/supplier_product/{id}/comments.{_format}'
+            defaults:
+                _format: 'jsonld'
+            requirements:
+                id: '\d+'
+                _format: 'json\jsonld\html'

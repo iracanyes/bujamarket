@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20190609025656 extends AbstractMigration
+final class Version20190905011457 extends AbstractMigration
 {
     public function getDescription() : string
     {
@@ -22,6 +22,7 @@ final class Version20190609025656 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
+        $this->addSql('ALTER TABLE bjmkt_user_temp ADD date_registration DATETIME NOT NULL');
         $this->addSql('ALTER TABLE bjmkt_bill CHANGE date_payment date_payment DATETIME DEFAULT NULL');
         $this->addSql('ALTER TABLE bjmkt_order_returned CHANGE bill_refund_id bill_refund_id INT DEFAULT NULL');
         $this->addSql('ALTER TABLE bjmkt_user CHANGE image_id image_id INT DEFAULT NULL, CHANGE roles roles JSON NOT NULL');
@@ -33,7 +34,7 @@ final class Version20190609025656 extends AbstractMigration
         $this->addSql('ALTER TABLE bjmkt_bank_account CHANGE account_balance account_balance DOUBLE PRECISION DEFAULT NULL');
         $this->addSql('ALTER TABLE bjmkt_withdrawal CHANGE bill_refund_id bill_refund_id INT DEFAULT NULL, CHANGE order_delivered order_delivered TINYINT(1) DEFAULT NULL');
         $this->addSql('ALTER TABLE bjmkt_supplier CHANGE website website VARCHAR(255) DEFAULT NULL');
-        $this->addSql('ALTER TABLE supplier_product CHANGE quantity quantity INT DEFAULT NULL');
+        $this->addSql('ALTER TABLE bjmkt_supplier_product CHANGE quantity quantity INT DEFAULT NULL');
     }
 
     public function down(Schema $schema) : void
@@ -50,8 +51,9 @@ final class Version20190609025656 extends AbstractMigration
         $this->addSql('ALTER TABLE bjmkt_message CHANGE attachment_url attachment_url VARCHAR(255) DEFAULT \'NULL\' COLLATE utf8_unicode_ci, CHANGE attachment_file attachment_file VARCHAR(255) DEFAULT \'NULL\' COLLATE utf8_unicode_ci, CHANGE attachment_image attachment_image VARCHAR(255) DEFAULT \'NULL\' COLLATE utf8_unicode_ci');
         $this->addSql('ALTER TABLE bjmkt_order_returned CHANGE bill_refund_id bill_refund_id INT DEFAULT NULL');
         $this->addSql('ALTER TABLE bjmkt_supplier CHANGE website website VARCHAR(255) DEFAULT \'NULL\' COLLATE utf8_unicode_ci');
+        $this->addSql('ALTER TABLE bjmkt_supplier_product CHANGE quantity quantity INT DEFAULT NULL');
         $this->addSql('ALTER TABLE bjmkt_user CHANGE image_id image_id INT DEFAULT NULL, CHANGE roles roles LONGTEXT NOT NULL COLLATE utf8mb4_bin');
+        $this->addSql('ALTER TABLE bjmkt_user_temp DROP date_registration');
         $this->addSql('ALTER TABLE bjmkt_withdrawal CHANGE bill_refund_id bill_refund_id INT DEFAULT NULL, CHANGE order_delivered order_delivered TINYINT(1) DEFAULT \'NULL\'');
-        $this->addSql('ALTER TABLE supplier_product CHANGE quantity quantity INT DEFAULT NULL');
     }
 }

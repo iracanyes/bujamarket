@@ -1,0 +1,55 @@
+App\Entity\Address:
+    shortName: 'Address'
+    description: 'Address of the users and shipper of this platform'
+    iri: 'https://schema.org/PostalAddress'
+    collectionOperations:
+        get:
+            method: 'GET'
+            path: '/addresses.{_format}'
+            requirements:
+                _format: 'json\jsonld\html'
+            defaults:
+                _format: 'json'
+            # host: 'localhost'
+            schemes: ['https']
+            access_control: "has_role('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_FULLY', get)"
+            #options:
+            #    my_option: 'my_option_value'
+            status: 200 # customize the HTTP status code to send
+        post:
+            method: 'POST'
+            path: '/address/create'
+            requirements:
+                address: App\Entity\Customer
+            access_control: "is_granted('IS_AUTHENTICATED_FULLY', post)"
+            schemes: ['https']
+            controller: App\Controller\Customer\CreateAddress::class
+    itemOperations:
+        get:
+            method: 'GET'
+            path: '/address/{id}.{_format}'
+            requirements:
+                id: '\d+'
+                _format: 'json\jsonld\html'
+            defaults:
+                _format: 'json'
+            # host: 'localhost'
+            schemes: ['https']
+            access_control: "is_granted('IS_AUTHENTICATED_FULLY', get)"
+            #options:
+            #    my_option: 'my_option_value'
+            status: 200 # customize the HTTP status code to send        
+        put:
+            method: 'PUT'
+            path: '/address/{id}'
+            requirements:
+                id: '\d+'
+            access_control: "is_granted('IS_AUTHENTICATED_FULLY', put)"
+            schemes: ['https']
+        delete:
+            method: 'DELETE'
+            path: '/address/{id}'
+            requirements:
+                id: '\d+'
+            security: "is_granted('IS_AUTHENTICATED_FULLY', delete)"
+            schemes: ['https']

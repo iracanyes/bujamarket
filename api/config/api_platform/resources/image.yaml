@@ -1,0 +1,52 @@
+App\Entity\Image:
+    shortName: 'Image'
+    description: 'Images illustrating products and person'
+    iri: 'https://schema;org/ImageObject'
+    collectionOperations:
+        get:
+            method: 'GET'
+            path: '/images.{_format}'
+            requirements:
+                _format: 'json\jsonld\html'
+            defaults:
+                _format: 'json'
+            # host: 'localhost'
+            schemes: ['https']
+            access_control: "has_role('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_REMEMBERED', get)"
+            #options:
+            #    my_option: 'my_option_value'
+            status: 200 # customize the HTTP status code to send
+        post:
+            method: 'POST'
+            path: '/image/create'
+            access_control: "has_role('ROLE_MEMBER') and is_granted('IS_AUTHENTICATED_REMEMBERED', post)"
+            schemes: ['https']
+            controller: App\Controller\Image\CreateImage::class
+    itemOperations:
+        get:
+            method: 'GET'
+            path: '/image/{id}.{_format}'
+            requirements:
+                id: '\d+'
+                _format: 'json\jsonld\html'
+            defaults:
+                _format: 'json'
+            # host: 'localhost'
+            schemes: ['https']
+            #options:
+            #    my_option: 'my_option_value'
+            status: 200 # customize the HTTP status code to send        
+        put:
+            method: 'PUT'
+            path: '/image/{id}'
+            requirements:
+                id: '\d+'
+            access_control: 'has_role("ROLE_MEMBER") and is_granted("IS_AUTHENTICATED_REMEMBERED", delete)'
+            schemes: ['https']
+        delete:
+            method: 'DELETE'
+            path: '/image/{id}'
+            requirements:
+                id: '\d+'
+            access_control: 'has_role("ROLE_MEMBER") and is_granted("IS_AUTHENTICATED_REMEMBERED", delete)'
+            schemes: ['https']

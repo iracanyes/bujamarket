@@ -1,0 +1,40 @@
+App\Entity\Bill:
+    shortName: 'Bill'
+    description: 'Invoice made for a payment on this platform'
+    iri: 'https://schema.org/Invoice'
+    collectionOperations:
+        get:
+            method: 'GET'
+            path: '/bills.{_format}'
+            requirements:
+                _format: 'json\jsonld\html'
+            defaults:
+                _format: 'json'
+            # host: 'localhost'
+            schemes: ['https']
+            access_control: "has_role('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_FULLY', get)"
+            #options:
+            #    my_option: 'my_option_value'
+            status: 200 # customize the HTTP status code to send
+    itemOperations:
+        get:
+            method: 'GET'
+            path: '/bill/{id}.{_format}'
+            requirements:
+                id: '\d+'
+                _format: 'json\jsonld\html'
+            defaults:
+                _format: 'json'
+            # host: 'localhost'
+            schemes: ['https']
+            access_control: "is_granted('IS_AUTHENTICATED_FULLY', get) and has_role('ROLE_ADMIN')"
+            #options:
+            #    my_option: 'my_option_value'
+            status: 200 # customize the HTTP status code to send
+        delete:
+            method: 'DELETE'
+            path: '/bill/{id}'
+            requirements:
+                id: '\d+'
+            security: "is_granted('IS_AUTHENTICATED_FULLY', delete) and has_role('ROLE_ADMIN')"
+            schemes: ['https']

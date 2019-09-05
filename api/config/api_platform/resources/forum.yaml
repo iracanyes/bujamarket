@@ -1,0 +1,53 @@
+App\Entity\Forum:
+    shortName: 'Forum'
+    description: 'Conversation with the administrators'
+    iri: 'https://schema.org/Conversation'
+    collectionOperations:
+        get:
+            method: 'GET'
+            path: '/forums.{_format}'
+            requirements:
+                _format: 'json\jsonld\html'
+            defaults:
+                _format: 'json'
+            # host: 'localhost'
+            schemes: ['https']
+            access_control: "has_role('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_FULLY', get)"
+            #options:
+            #    my_option: 'my_option_value'
+            status: 200 # customize the HTTP status code to send
+        post:
+            method: 'POST'
+            path: '/forum/create'
+            access_control: "has_role('ROLE_MEMBER') and is_granted('IS_AUTHENTICATED_REMEMBERED', post)"
+            schemes: ['https']
+            controller: App\Controller\Forum\CreateForum::class
+    itemOperations:
+        get:
+            method: 'GET'
+            path: '/forum/{id}.{_format}'
+            requirements:
+                id: '\d+'
+                _format: 'json\jsonld\html'
+            defaults:
+                _format: 'json'
+            # host: 'localhost'
+            schemes: ['https']
+            access_control: "has_role('ROLE_MEMBER') and is_granted('IS_AUTHENTICATED_FULLY', get)"
+            #options:
+            #    my_option: 'my_option_value'
+            status: 200 # customize the HTTP status code to send        
+        put:
+            method: 'PUT'
+            path: '/forum/{id}'
+            requirements:
+                id: '\d+'
+            access_control: 'has_role("ROLE_ADMIN") and is_granted("IS_AUTHENTICATED_REMEMBERED", put)'
+            schemes: ['https']
+        delete:
+            method: 'DELETE'
+            path: '/forum/{id}'
+            requirements:
+                id: '\d+'
+            access_control: 'has_role("ROLE_ADMIN") and is_granted("IS_AUTHENTICATED_REMEMBERED", delete)'
+            schemes: ['https']
