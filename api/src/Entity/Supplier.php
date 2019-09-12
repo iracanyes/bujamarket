@@ -51,13 +51,13 @@ class Supplier extends User
     private $brandName;
 
     /**
-     * @var string $tradeRegisterNumber Trade register number
+     * @var string $tradeRegistryNumber Trade registry number
      *
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank()
      * @Groups({"supplier:output"})
      */
-    private $tradeRegisterNumber;
+    private $tradeRegistryNumber;
 
     /**
      * @var string $vatNumber VAT number of this supplier
@@ -106,7 +106,7 @@ class Supplier extends User
     /**
      * @var string $supplierKey Supplier key on Stripe platform
      *
-     * @ORM\Column(type="string", length=50)
+     * @ORM\Column(type="string", length=255)
      */
     private $supplierKey;
 
@@ -167,14 +167,14 @@ class Supplier extends User
 
 
 
-    public function getTradeRegisterNumber(): ?string
+    public function getTradeRegistryNumber(): ?string
     {
-        return $this->tradeRegisterNumber;
+        return $this->tradeRegistryNumber;
     }
 
-    public function setTradeRegisterNumber(string $tradeRegisterNumber): self
+    public function setTradeRegistryNumber(string $tradeRegistryNumber): self
     {
-        $this->tradeRegisterNumber = $tradeRegisterNumber;
+        $this->tradeRegistryNumber = $tradeRegistryNumber;
 
         return $this;
     }

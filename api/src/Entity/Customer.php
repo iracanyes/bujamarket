@@ -35,7 +35,7 @@ class Customer extends User
     /**
      * @var string $customerKey Customer key on Stripe platform
      *
-     * @ORM\Column(type="string", length=100)
+     * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank()
      * @Groups({"customer:output"})
      */
@@ -134,6 +134,11 @@ class Customer extends User
         $this->comments = new ArrayCollection();
         $this->favorites = new ArrayCollection();
         $this->shoppingCards = new ArrayCollection();
+        $this->nbAbuseIdentified = 0;
+        $this->nbOrderCompleted = 0;
+        $this->nbOrderWithdrawn = 0;
+        $this->averageRating = 5;
+
     }
 
     public function getUserType(): string

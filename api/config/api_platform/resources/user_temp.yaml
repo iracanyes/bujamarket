@@ -5,7 +5,7 @@ App\Entity\UserTemp:
     collectionOperations:
         get:
             method: 'GET'
-            path: '/subscribers.{_format}'
+            path: '/registers.{_format}'
             requirements: 
                 _formats: 'json\jsonld\html'
             defaults:
@@ -21,21 +21,23 @@ App\Entity\UserTemp:
             schemes: ['https']
             #controller: App\Controller\User\CreateMember::class
             controller: App\Controller\User\CreateMemberAction
-    itemOperations:
-        get:
-            method: 'GET'
-            path: '/user_temp/{id}.{_format}'
+        post_by_token:
+            method: 'POST'
+            path: '/user_temp.{_format}'
             requirements:
-                id: '\d+'
                 _format: 'json\jsonld\html'
             defaults:
                 _format: 'json'
             schemes: ['https']
-            access_control: "has_role('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_FULLY', get)"
+            access_control: "is_granted('IS_AUTHENTICATED_ANONYMOUSLY')"
+            controller: App\Controller\User\GetUserTempAction
+    itemOperations:
+        get: ~            
         delete:
             method: 'DELETE'
-            path: '/user_temp/{id}'
+            path: '/user_temp/{token}'
             requirements:
                 id: '\d+'
-            security: 'has_role("ROLE_ADMIN")'
+            access_control: 'has_role("ROLE_ADMIN")'
+            access_control_message: 'Only administrators can access this resource'
             schemes: ['https']

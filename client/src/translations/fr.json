@@ -1,4 +1,6 @@
 {
+  "app.button.continue": "Continuer",
+  "app.button.unsubscribe": "Annuler inscription",
   "app.header.search_form.search_type.products": "Produits",
   "app.header.search_form.search_type.suppliers": "Fournisseurs",
   "app.search_form.search_input.text": "Recherche",
@@ -20,6 +22,7 @@
   "app.product.item.price_from": "À partir de",
   "app.page.user.login.title": "Connexion",
   "app.page.user.register.title": "Inscription",
+  "app.page.user.subscribe.title": "Devenir membre",
   "app.user.item.email": "Email",
   "app.user.item.email.required": "Email requis",
   "app.user.item.password": "Mot de passe",
@@ -28,6 +31,21 @@
   "app.user.item.firstname": "Prénom",
   "app.user.item.user_type": "Type d'utilisateur",
   "app.user.item.user_type.client": "Client",
-  "app.user.item.user_type.supplier": "Fournisseur"
-
+  "app.user.item.user_type.supplier": "Fournisseur",
+  "app.user.item.language": "Préférence de langue",
+  "app.user.item.language.fr": "Français",
+  "app.user.item.language.en": "Anglais",
+  "app.user.item.language.rn": "Kirundi",
+  "app.user.item.currency": "Préférence monétaire",
+  "app.user.item.currency.eur": "Euro",
+  "app.user.item.currency.usd": "Dollar",
+  "app.user.item.currency.bif": "Francs burundais",
+  "app.supplier.item.social_reason": "Raison sociale",
+  "app.supplier.item.brand_name": "Nom de marque",
+  "app.supplier.item.trade_registry_number": "Numéro de registre de commerce",
+  "app.supplier.item.vat_number":  "Numéro TVA",
+  "app.supplier.item.contact_fullname": "Nom complet personne de contact",
+  "app.supplier.item.contact_phone_number": "Numéro de téléphone personne de contact",
+  "app.supplier.item.contact_email": "E-mail personne de contact",
+  "app.supplier.item.website": "Site web"
 }

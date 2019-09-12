@@ -1,6 +1,6 @@
 import { SubmissionError } from 'redux-form';
 import { fetch } from '../../utils/dataAccess';
-import { createBrowserHistory as history } from "history";
+
 
 export function error(error) {
   return { type: 'USER_REGISTER_ERROR', error };
