@@ -8,9 +8,9 @@
 
 <div>
 
-    <p>Monsieur, madame {{ user.firstname }} </p>
+    <p>Monsieur, madame {{ user.firstname ~ ' ' ~ user.lastname }} </p>
     <p>
-        Merci pour votre inscription à notre plateforme d'e-commerce <a href="https://{{ app.request.server.get('HTTP_HOST') }}">Buja Market</a>
+        Merci pour votre inscription à notre plateforme d'e-commerce <a href="{{ app.request.headers.get('origin') }}">Buja Market</a>
     </p>
 
     {# example, assuming you have a route named "login" #}
@@ -26,34 +26,7 @@
 
     <p>
         Profitez des produits et des promotions dès maintenant:
-        <a href="https://{{ app.request.server.get('HTTP_HOST') }}">Buja Market</a>
-    </p>
-
-    <p>
-        Au plaisir!
-    </p>
-    {# Makes an absolute URL to the /images/logo.png file
-    <img src="{{ absolute_url(asset('images/logo.png')) }}">
-     #}<h3>Monsieur, madame {{ user.name }} </h3>
-
-    <p>
-        Merci pour votre inscription à notre plateforme d'e-commerce <a href="{{ url('app_homepage') }}">Buja Market</a>
-    </p>
-
-    {# example, assuming you have a route named "login" #}
-    <p>
-        Pour confirmer votre inscription, consulter la page : <br>
-        <a href="{{ url('confirmation') }}">Devenir membre</a>
-    </p>
-
-    <p>
-        Si l'action n'est pas de votre fait, cliquez sur ce lien pour automatiquement vous désinscrire de notre plateforme : <br>
-        <a href="{{ url_confirmation }}">Désinscription</a>
-    </p>
-
-    <p>
-        Profitez des produits et des promotions dès maintenant:
-        <a href="">A CHANGER</a>
+        <a href="{{ app.request.headers.get('origin') }}">Buja Market</a>
     </p>
 
     <p>

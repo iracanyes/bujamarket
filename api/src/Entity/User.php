@@ -141,7 +141,7 @@ class User implements UserInterface
     /**
      * @var string
      * @ORM\Column(name="token", type="string", length=255)
-     *
+     * @Groups({"user:output","admin:output","customer:output","supplier:output","user:input"})
      */
     private $token;
 

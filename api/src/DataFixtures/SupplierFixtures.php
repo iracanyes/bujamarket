@@ -48,7 +48,7 @@ class SupplierFixtures extends Fixture implements DependentFixtureInterface
         $supplier->setSupplierKey($this->faker->sha1);
         $supplier->setSocialReason($this->faker->company." ".$this->faker->companySuffix);
         $supplier->setBrandName($this->faker->company);
-        $supplier->setTradeRegisterNumber($this->faker->ean13);
+        $supplier->setTradeRegistryNumber($this->faker->ean13);
         $supplier->setVatNumber($this->faker->ean8);
         $supplier->setContactFullname($this->faker->firstName." ".$this->faker->name);
         $supplier->setContactEmail($this->faker->companyEmail);

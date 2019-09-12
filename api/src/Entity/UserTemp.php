@@ -3,13 +3,18 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiProperty;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
+ * @ApiResource(attributes={
+ *     "normalization_context"={"groups"={"user_temp:output"}},
+ *     "denormalization_context"={"groups"={"user_temp:input"}}
+ * })
  * @ORM\Table(name="bjmkt_user_temp")
  * @ORM\Entity(repositoryClass="App\Repository\UserTempRepository")
  * @UniqueEntity(fields={"email"}, message="Cette adresse E-mail existe déjà ! ")
@@ -20,13 +25,15 @@ class UserTemp implements UserInterface
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"user_temp:output"})
      */
     private $id;
 
     /**
      * @var string $email Email of this user
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, unique=true)
      * @Assert\Email()
+     * @Groups({"user_temp:output","user_temp:input"})
      */
     private $email;
 
@@ -34,6 +41,7 @@ class UserTemp implements UserInterface
      * @var string $password Crypted password
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank()
+     * @Groups({"user_temp:input"})
      */
     private $password;
 
@@ -42,6 +50,7 @@ class UserTemp implements UserInterface
      *
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank()
+     * @Groups({"user_temp:output","user_temp:input"})
      */
     private $firstname;
 
@@ -49,6 +58,7 @@ class UserTemp implements UserInterface
      * @var string $lastname Lastname of the user
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank()
+     * @Groups({"user_temp:output","user_temp:input"})
      */
     private $lastname;
 
@@ -56,21 +66,27 @@ class UserTemp implements UserInterface
      * @var string $userType Type of usage of this platform
      * @ORM\Column(type="string", length=60)
      * @Assert\NotBlank()
+     * @Groups({"user_temp:output","user_temp:input"})
      */
     private $userType;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"user_temp:output","user_temp:input"})
      */
     private $dateRegistration;
 
     /**
+     * @var string $token Token for external communication
      * @ORM\Column(type="string", length=255)
+     *
      */
     private $token;
 
     /**
      * @var boolean
+     * @ORM\Column(type="boolean")
+     * @Groups({"user_temp:output","user_temp:input"})
      */
     private $termsAccepted;
 

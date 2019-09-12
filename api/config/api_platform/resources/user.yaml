@@ -18,12 +18,11 @@ App\Entity\User:
             status: 200 # customize the HTTP status code to send
         post:
             method: 'POST'
-            path: '/confirmation'
+            path: '/subscribe/{token}'
             defaults:
                 _api_receive: false
             schemes: ['https']
-            #controller: App\Controller\User\CreateMember::class
-            controller: App\Controller\User\RegisterMemberAction
+            controller: App\Controller\User\SubscribeMemberAction
     itemOperations:
         get:
             method: 'GET'
