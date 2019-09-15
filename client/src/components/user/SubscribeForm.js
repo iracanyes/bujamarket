@@ -3,11 +3,11 @@
  * Date: 02/09/2019
  * Description:
  */
-import React,{ Component, Fragment } from 'react';
+import React,{ Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
-import { Col, Row, Label } from "reactstrap";
+import { Col, Row } from "reactstrap";
 import { FormattedMessage, injectIntl } from "react-intl";
 import { subscribe, retrieve, reset } from "../../actions/user/subscribe";
 import PropTypes from 'prop-types';
@@ -104,7 +104,7 @@ class SubscribeForm extends React.Component {
     console.log('handleSubmit', user);
     if( user.email && user.firstname && user.lastname && user.userType && user.language && user.currency && user.token )
     {
-      this.props.subscribe(user);
+      this.props.subscribe(user, this.props.history);
     }
 
   }
@@ -178,8 +178,8 @@ class SubscribeForm extends React.Component {
   };
 
   render() {
-    const { intl, registering  } = this.props;
-    const { user, submitted } = this.state;
+    const { intl  } = this.props;
+    //const { user, submitted } = this.state;
 
 
 
@@ -581,7 +581,7 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => ({
-  subscribe: user => dispatch( subscribe(user)),
+  subscribe: (user, history) => dispatch( subscribe(user, history)),
   retrieve: token => dispatch(retrieve(token)),
   reset: eventSource => dispatch(reset(eventSource))
 });

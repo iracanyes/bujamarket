@@ -143,9 +143,24 @@ class SupplierProduct
      */
     private $shoppingCards;
 
+    /**
+     * @var float $rating Rating of this product
+     * @ORM\Column(type="float")
+     * @Assert\Type("float")
+     * @Assert\Range(
+     *      min = 0,
+     *      max = 10,
+     *      minMessage = "L'évaluation minimale est {{ limit }} pour un produit!",
+     *      maxMessage = "L'évaluation maximale est {{ limit }} pour un produit!"
+     * )
+     * @Groups({"supplier_product:output"})
+     */
+    private $rating;
+
     public function __construct()
     {
         $this->initialPrice = 0;
+        $this->rating = 5;
         $this->comments = new ArrayCollection();
         $this->favorites = new ArrayCollection();
         $this->orderDetails = new ArrayCollection();
@@ -380,5 +395,17 @@ class SupplierProduct
     public function updateMinimumPrice(): void
     {
         $this->getProduct()->setMinimumPrice($this->getInitialPrice());
+    }
+
+    public function getRating(): ?float
+    {
+        return $this->rating;
+    }
+
+    public function setRating(float $rating): self
+    {
+        $this->rating = $rating;
+
+        return $this;
     }
 }

@@ -18,8 +18,12 @@ import {
   faUserCheck,
   faUserEdit,
   faUserCog,
-  faSignOutAlt
+  faSignOutAlt,
+  faStar as faStarChecked,
+  faStarHalfAlt
 } from "@fortawesome/free-solid-svg-icons";
+
+import { faStar } from "@fortawesome/free-solid-svg-icons";
 
 
 
@@ -35,5 +39,8 @@ library.add([
   faUserCheck,
   faUserCog,
   faSignOutAlt,
-  faUserEdit
+  faUserEdit,
+  faStar,
+  faStarChecked,
+  faStarHalfAlt
 ]);

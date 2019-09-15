@@ -19,7 +19,7 @@ import {
 } from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FormattedMessage } from "react-intl";
-
+import { logout } from "../actions/user/login";
 
 
 class MainMenu extends Component
@@ -29,9 +29,12 @@ class MainMenu extends Component
     super(props);
 
     this.toggle = this.toggle.bind(this);
+    this.logout = this.logout.bind(this);
     this.state = {
       isOpen: true
     };
+
+
   }
 
 
@@ -42,8 +45,21 @@ class MainMenu extends Component
     });
   }
 
+  logout()
+  {
+    this.props.logout();
+  }
+
   render()
   {
+
+    const  user  = localStorage.getItem('user') && JSON.parse(localStorage.getItem('user'));
+
+    if(process.env.DEBUG){
+      console.log("localStorage user", localStorage.getItem('user'));
+    }
+
+
     return <Fragment>
 
       <NavbarToggler onClick={this.toggle} />
@@ -53,35 +69,45 @@ class MainMenu extends Component
             <DropdownToggle nav caret>
 
                 <FontAwesomeIcon icon="user-alt" className="menu-top-l1"/>
-                <FormattedMessage  id={"app.header.main_menu.profile.link"}
-                                   defaultMessage="Profil"
-                                   description="Main menu profil  navigation link"
-                                   className="main-menu-top-level-text"
-                />
-            </DropdownToggle>
-            <DropdownMenu right>
-              <DropdownItem>
-                <NavLink tag={RRDNavLink} to={"/login"}>
-                  <FontAwesomeIcon icon="user-check" />
-                  <FormattedMessage  id={"app.header.main_menu.profile.sub_menu.sign_in.link"}
-                                     defaultMessage="Connexion"
-                                     description="Main menu profile submenu sign-in  navigation link"
-                                     className="main-menu-sub-level-text"
+                { user
+                  ? user.firstname + " " + user.lastname
+                  : <FormattedMessage  id={"app.header.main_menu.profile.link"}
+                                       defaultMessage="Profil"
+                                       description="Main menu profil  navigation link"
+                                       className="main-menu-top-level-text"
                   />
+                }
 
-                </NavLink>
-              </DropdownItem>
-              <DropdownItem>
-                <NavLink tag={RRDNavLink} to={"/register"}>
-                  <FontAwesomeIcon icon="sign-in-alt" />
-                  <FormattedMessage  id={"app.header.main_menu.profile.sub_menu.register.link"}
-                                     defaultMessage="Inscription"
-                                     description="Main menu profile submenu register  navigation link"
-                                     className="main-menu-sub-level-text"
-                  />
-                </NavLink>
-              </DropdownItem>
-              <DropdownItem divider />
+            </DropdownToggle>
+            <DropdownMenu >
+              { user == null && (
+                <div>
+                  <DropdownItem>
+                    <NavLink tag={RRDNavLink} to={"/login"}>
+                      <FontAwesomeIcon icon="user-check" className={"float-left"} />
+                      <FormattedMessage  id={"app.header.main_menu.profile.sub_menu.sign_in.link"}
+                                         defaultMessage="Connexion"
+                                         description="Main menu profile submenu sign-in  navigation link"
+                                         className="main-menu-sub-level-text"
+                      />
+
+                    </NavLink>
+                  </DropdownItem>
+                  <DropdownItem>
+                    <NavLink tag={RRDNavLink} to={"/register"}>
+                      <FontAwesomeIcon icon="sign-in-alt" />
+                      <FormattedMessage  id={"app.header.main_menu.profile.sub_menu.register.link"}
+                                         defaultMessage="Inscription"
+                                         description="Main menu profile submenu register  navigation link"
+                                         className="main-menu-sub-level-text"
+                      />
+                    </NavLink>
+                  </DropdownItem>
+                  <DropdownItem divider />
+                </div>
+              )}
+
+
               <DropdownItem>
                 <NavLink tag={RRDNavLink} to={"/profile"}>
                   <FontAwesomeIcon icon="user-edit" />
@@ -103,7 +129,7 @@ class MainMenu extends Component
                 </NavLink>
               </DropdownItem>
               <DropdownItem>
-                <NavLink tag={RRDNavLink} to={"/logout"}>
+                <NavLink tag={RRDNavLink} to={"/"} onClick={this.logout}>
                   <FontAwesomeIcon icon="sign-out-alt" />
                   <FormattedMessage  id={"app.header.main_menu.profile.sub_menu.logout.link"}
                                      defaultMessage="Déconnexion"
@@ -163,5 +189,8 @@ class MainMenu extends Component
   }
 }
 
+const mapDispatchToProps = dispatch => ({
+  logout: () => dispatch(logout())
+});
 
-export default withRouter(connect()(MainMenu));
+export default withRouter(connect(null, mapDispatchToProps)(MainMenu));

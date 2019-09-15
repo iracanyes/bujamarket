@@ -21,7 +21,7 @@ export function retrieve(id) {
   return dispatch => {
     dispatch(loading(true));
 
-    return fetch(id)
+    return fetch('/product/'+id)
       .then(response =>
         response
           .json()

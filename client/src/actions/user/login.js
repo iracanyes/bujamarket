@@ -1,6 +1,5 @@
 import { SubmissionError } from 'redux-form';
 import { fetch } from '../../utils/dataAccess';
-//import history from '../../utils/history';
 import { push } from 'connected-react-router';
 
 export function error(error) {
@@ -49,33 +48,33 @@ export function login(email, password, history) {
       .then(response => {
         dispatch(loading(false));
 
-        /* Utilisation si un objet est retourné
+        console.log("fetch response headers", response.headers);
+
+        /* Utilisation si un objet est retourné*/
         return response.json();
 
-         */
-        console.log("fetch response headers", response.headers);
+
+        /* Si un objet n'est pas retourné, on transmet la réponse initial
         return response;
+
+         */
       })
       .then(retrieved => {
         /* Utilisation du localStorage pour stocker les infos non-sécurisé de l'utilisateur authentifié */
-        //localStorage.setItem("user", JSON.stringify(retrieved));
+        localStorage.setItem("user", JSON.stringify(retrieved.user));
 
-        console.log("fetch - retrieved",  retrieved);
-
-        /* Utilisation du React context pour transmettre les infos non-sécurisé */
+        console.log("fetch Login - retrieved",  retrieved);
 
         return retrieved;
 
       })
       .then(retrieved => {
         dispatch(success(retrieved));
-        /* history push change l'URL sans raffraichissement de la page */
-        //dispatch(push('/profile')); /* with push from connected-react-router */
 
         /* En passant l'objet this.props.history du composant vers son action creator permet de transmettre le changement d'URL au connected-react-router  */
-        history.push('/profile');  /* with history from utils/history */
+        history.push('/');
 
-        //window.location.reload(true);
+
 
       })
       .catch(e => {

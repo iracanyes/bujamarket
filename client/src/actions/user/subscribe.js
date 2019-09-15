@@ -52,7 +52,7 @@ export function retrieve(token) {
 }
 
 
-export function subscribe(values) {
+export function subscribe(values, history) {
   return dispatch => {
     dispatch(loading(true));
     dispatch(request(values));
@@ -70,8 +70,10 @@ export function subscribe(values) {
       .then(retrieved => {
         dispatch(success(retrieved));
         /* Enregistrement du token dans le localStorage */
-        localStorage.setItem('token', retrieved.token );
+        localStorage.setItem('user', JSON.stringify(retrieved) );
 
+        /* En passant l'objet this.props.history du composant vers son action creator permet de transmettre le changement d'URL au connected-react-router  */
+        history.push('/');
       })
       .catch(e => {
         dispatch(loading(false));

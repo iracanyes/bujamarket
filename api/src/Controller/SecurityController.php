@@ -10,6 +10,7 @@ namespace App\Controller;
 use ApiPlatform\Core\Api\IriConverterInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -94,23 +95,31 @@ class SecurityController extends AbstractController
             ['groups' => 'user:output']     // context
         );
 
-        Exemple 3: retourner JSON+LD
+        //Exemple 3: retourner JSON+LD
         return $this->json(
-            $this->serializer->serialize($this->getUser(), "jsonld")  // Serialize data into JSON+LD
+            $this->serializer->serialize($this->getUser(), "jsonld"),  // Serialize data into JSON+LD
             201,
             [],
-            ['groups' => ["user:output", "customer:output"]]
+            ['groups' => ['user:output','customer:output','supplier:output']]
         );
-
         */
+
 
         /*
          * On retourne une réponse null ac un code 204 pour indiquer que tout va bien mais il n'y a rien à afficher
          * On retourne dans le header "Location" l'IRI de l'utilisateur connecté
-        */
+
         return new Response(null, 204, [
             'location' => $this->iriConverter->getIriFromItem($this->getUser())
         ]);
+        */
+
+        return $this->json(
+            ["user" => $this->getUser()],   // data
+            200,                            // status
+            [],                             // headers []
+            ['groups' => 'user:output']     // context
+        );
 
 
     }

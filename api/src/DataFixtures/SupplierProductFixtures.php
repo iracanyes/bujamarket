@@ -29,6 +29,7 @@ class SupplierProductFixtures extends Fixture implements DependentFixtureInterfa
         $supplierProduct->setAdditionalInformation($this->faker->realText(50));
         $supplierProduct->setIsAvailable($this->faker->boolean(80));
         $supplierProduct->setIsLimited($this->faker->boolean(20));
+        $supplierProduct->setRating($this->faker->randomFloat(2,0,10));
 
         if($supplierProduct->getIsLimited() == true)
         {

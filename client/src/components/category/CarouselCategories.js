@@ -119,9 +119,9 @@ class CarouselCategories extends Component {
           resultsPer12.push(
             <Col key={"categories" + (i * 12 + j)} xs={"12"} sm="6" md="4" lg="3">
               <Card body className={" text-white bg-dark"}>
-                <Link to={"/products/"}>
+                <Link to={"/products"}>
                   <div className="card-img-custom">
-                    <img src="https://picsum.photos/2000/3000" alt={categories[i * 12 + j]["image"]["alt"]} className="image img-fluid" style={{ width:"100%"}} />
+                    <img src={categories[i * 12 + j]["image"]['url']} alt={categories[i * 12 + j]["image"]["alt"]} className="image img-fluid" style={{ width:"100%"}} />
                     <div className="middle">
                       <div className="btn btn-outline-info text">
                         <FormattedMessage  id={"app.page.customer.list.button.see_more"}
@@ -163,7 +163,7 @@ class CarouselCategories extends Component {
                   to={`categories/show/${encodeURIComponent(categories[i * 12 + j]['id'])}`}
                 >
                   <div className="card-img-custom">
-                    <img src="https://picsum.photos/2000/3000" alt={categories[i * 12 + j]["image"]["alt"]} className="image img-fluid" style={{ width:"100%"}} />
+                    <img src={categories[i * 12 + j]["image"]['url']} alt={categories[i * 12 + j]["image"]["alt"]} className="image img-fluid" style={{ width:"100%"}} />
                     <div className="middle">
                       <div className="btn btn-outline-info text">
                         <FormattedMessage  id={"app.page.customer.list.button.see_more"}

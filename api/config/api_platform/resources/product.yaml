@@ -21,7 +21,7 @@ App\Entity\Product:
             path: '/product/create'
             requirements:
                 product: App\Entity\Product
-            access_control: "has_role('ROLE_SUPPLIER') and is_granted('IS_AUTHENTICATED_FULLY', post)"
+            access_control: "has_role('ROLE_SUPPLIER') and is_granted('IS_AUTHENTICATED_FULLY')"
             schemes: ['https']
             controller: App\Controller\Product\CreateProduct::class
     itemOperations:
@@ -35,9 +35,6 @@ App\Entity\Product:
                 _format: 'json'
             # host: 'localhost'
             schemes: ['https']
-            access_control: "has_role('ROLE_CUSTOMER') and is_granted('IS_AUTHENTICATED_FULLY', get)"
-            #options:
-            #    my_option: 'my_option_value'
             status: 200 # customize the HTTP status code to send        
         put:
             method: 'PUT'
