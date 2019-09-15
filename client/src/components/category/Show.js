@@ -48,6 +48,8 @@ class Show extends Component {
 
     const item = this.props.retrieved;
 
+    console.log("category item", item);
+
     return (
       <div id={"category-show"}>
         <h1>
@@ -81,7 +83,7 @@ class Show extends Component {
           {item && (
             <Row>
               <Col lg={"6"}>
-                <img className={"img-fluid"}  src="https://picsum.photos/1200/600" alt={item["name"]}/>
+                <img className={"img-fluid"}  src={item['image']['url']} alt={item["name"]}/>
               </Col>
               <Col lg={"6"}>
                 <Card>
@@ -100,29 +102,14 @@ class Show extends Component {
 
           )}
           <div className="col-lg-4 mx-auto my-5 category-control-buttons">
-            <Link to={`/categories/`} className="btn btn-primary">
+            <Link to={`/categories/`} className="btn btn-primary d-block mx-auto">
               <FormattedMessage  id={"app.button.return_to_List"}
                                  defaultMessage="Retour à la liste"
                                  description=" Button - Return to list"
               />
 
             </Link>
-            {item && (
-              <Link to={`/categories/update/${encodeURIComponent(item['id'])}`}
-                    className="btn btn-warning"
-              >
-                <FormattedMessage  id={"app.button.edit"}
-                                   defaultMessage="Éditer"
-                                   description=" Button - Edit"
-                />
-              </Link>
-            )}
-            <button onClick={this.del} className="btn btn-danger">
-              <FormattedMessage  id={"app.button.deklete"}
-                                 defaultMessage="Supprimer"
-                                 description=" Button - Delete"
-              />
-            </button>
+
           </div>
 
         </div>

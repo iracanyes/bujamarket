@@ -15,7 +15,6 @@ import {
   CarouselControl,
   CarouselIndicators,
 } from "reactstrap";
-import { FormattedMessage } from "react-intl";
 
 class CarouselCategoryProducts extends Component {
   static propTypes = {
@@ -106,10 +105,10 @@ class CarouselCategoryProducts extends Component {
                 <Card body className={" text-white bg-dark"}>
                   <Link
 
-                    to={`products/show/${encodeURIComponent(products[i * 12 + j]['id'])}`}
+                    to={`/products/show/${encodeURIComponent(products[i * 12 + j]['id'])}`}
                   >
                     <div className="card-img-custom">
-                      <img src="https://picsum.photos/2000/3000" alt={products[i * 12 + j]["images"][0]["alt"]} className="image img-fluid" style={{ width:"100%"}} />
+                      <img src={products[i * 12 + j]["images"][0]['url']} alt={products[i * 12 + j]["images"][0]["alt"]} className="image img-fluid" style={{ width:"100%"}} />
 
                       <CardTitle className={"image-bottom-left-title"}>
 
@@ -171,10 +170,10 @@ class CarouselCategoryProducts extends Component {
               <Card body className={" text-white bg-dark"}>
                 <Link
 
-                  to={`products/show/${encodeURIComponent(products[0]['id'])}`}
+                  to={`/products/show/${encodeURIComponent(products[0]['id'])}`}
                 >
                   <div className="card-img-custom">
-                    <img src="https://picsum.photos/2000/3000" alt={products[0]["images"][0]["alt"]} className="image img-fluid" style={{ width:"100%"}} />
+                    <img src={products[0]["images"][0]['url']} alt={products[0]["images"][0]["alt"]} className="image img-fluid" style={{ width:"100%"}} />
 
 
                     <CardTitle className={"image-bottom-left-title"}>

@@ -142,6 +142,7 @@ class Product
      * @var Collection $productSuppliers Product's supplier
      *
      * @ORM\OneToMany(targetEntity="App\Entity\SupplierProduct", mappedBy="product", orphanRemoval=true)
+     * @ApiSubresource()
      */
     private $productSuppliers;
 

@@ -26,7 +26,7 @@ import {
 } from 'reactstrap';
 /* @fortawesome/react-fontawesome */
 
-import './layout/FontAwesome';
+import './config/FontAwesome';
 
 /* Importation des reducers et des routes de l'appli */
 
@@ -157,8 +157,6 @@ export class App extends Component
   search(results)
   {
     this.setState({results: results});
-
-    console.log("App HOC - results", results);
   }
 
 

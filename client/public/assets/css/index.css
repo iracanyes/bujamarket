@@ -12,17 +12,21 @@
 */
 /************** HEADER ****************/
 header nav#navbar-primary {
+  background-color: #dadbdd !important;
   justify-content: space-evenly;
   padding-top: 10px;
+  padding-bottom: 0;
   /*---- Brand ---------*/
-  /*---- Search Form ----*/
+  /*---- Search Form Component ----*/
   /*---- Main menu -----*/
 }
 header nav#navbar-primary a.navbar-brand {
-  font-size: 1.75em;
+  font-size: 2em;
   font-family: "Carter One", cursive;
 }
 header nav#navbar-primary div.main-menu-search-form {
+  overflow: hidden;
+  /* Search form */
   /* Advanced search button */
 }
 header nav#navbar-primary div.main-menu-search-form form {
@@ -36,24 +40,30 @@ header nav#navbar-primary div.main-menu-search-form form input[type=search] {
   border-radius: unset;
 }
 header nav#navbar-primary div.main-menu-search-form form button.btn-outline-light {
-  color: white;
+  color: darkblue;
+  border-color: darkblue;
   border-color: white;
   border-top-left-radius: unset;
   border-bottom-left-radius: unset;
   border-top-right-radius: 1em;
   border-bottom-right-radius: 1em;
 }
-header nav#navbar-primary div.main-menu-search-form button.btn-advanced-search-toggle-button {
-  margin-left: 15px;
+header nav#navbar-primary div.main-menu-search-form form button.btn-outline-light:hover {
+  border-color: lightgray;
+}
+header nav#navbar-primary div.main-menu-search-form div#advanced-search-toggle-button {
+  padding-left: 15px;
+}
+header nav#navbar-primary div.main-menu-search-form div#advanced-search-toggle-button button.btn-advanced-search-toggle-button {
   background-color: transparent;
-  color: white;
+  color: darkblue;
+  border-color: darkblue;
   border-right: none;
   border-top: none;
   border-left: none;
-  margin-top: 2px;
   border-bottom: 1px solid white;
 }
-header nav#navbar-primary div.main-menu-search-form button.btn-advanced-search-toggle-button:hover {
+header nav#navbar-primary div.main-menu-search-form div#advanced-search-toggle-button button.btn-advanced-search-toggle-button:hover {
   border-bottom: 2px solid white;
 }
 header nav#navbar-primary div.navbar-collapse ul.navbar-nav {
@@ -76,6 +86,8 @@ header nav#navbar-primary div.navbar-collapse ul.navbar-nav li.nav-item i.fa-mai
 header nav#navbar-primary div.navbar-collapse ul.navbar-nav li.nav-item a.nav-link {
   text-align: center;
   line-height: 1;
+  /* Avec le background linear gradient */
+  color: darkblue;
 }
 header nav#navbar-primary div.navbar-collapse ul.navbar-nav li.nav-item a.nav-link svg.menu-top-l1 {
   display: block !important;
@@ -88,10 +100,14 @@ header nav#navbar-primary div.navbar-collapse ul.navbar-nav li.nav-item a.nav-li
 }
 header nav#navbar-primary div.navbar-collapse ul.navbar-nav li.nav-item div.dropdown-menu button.dropdown-item a.nav-link {
   color: #007BFF;
+  text-align: left;
   /*-- SubMenu  - Fontawesome icons  --*/
 }
 header nav#navbar-primary div.navbar-collapse ul.navbar-nav li.nav-item div.dropdown-menu button.dropdown-item a.nav-link svg {
   margin-right: 10px;
+}
+header nav#navbar-primary div.navbar-collapse ul.navbar-nav li.nav-item div.dropdown-menu.show {
+  display: flex;
 }
 
 /************** END HEADER ****************/
@@ -177,9 +193,11 @@ body {
   font-family: "Kanit", "Dosis", "Lato", Arial, sans-serif;
   box-sizing: border-box;
   /* Attention : URL relatif à la page index.scss qui importe ce fichier */
-  background-image: url("./../img/parallax-gris.jpg");
   background-repeat: no-repeat;
   background-size: 100% 2300px;
+}
+body div#root {
+  background-color: #f5a54c;
 }
 
 div.welcome {
@@ -234,10 +252,7 @@ div.welcome {
 /*** MAIN - GLOBAL STYLE ****/
 main {
   overflow: hidden;
-  margin-bottom: 60px;
   width: 100%;
-  padding-right: 15px;
-  padding-left: 15px;
   margin-right: auto;
   margin-left: auto;
   /************** ASIDE **********************/
@@ -245,6 +260,7 @@ main {
 }
 main section#main-content {
   width: 100%;
+  padding: unset;
   /* Carousel - Categories */
   /* List navigation */
   /* Home Parallax 3 - Inscription */
@@ -291,10 +307,53 @@ main section#main-content img.sm-rounded-avatar {
 }
 
 /*** END MAIN - GLOBAL STYLE ****/
+div.error_404 {
+  width: 100%;
+  height: 800px;
+  background-image: url("./../img/error-404-chat-fou.jpg");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
 #homepage {
   background-color: #007BFF;
 }
 
+.parallax {
+  /* The image used */
+  background-image: url("./../../assets/img/parallax1.jpg");
+  /* Full height */
+  height: 500px;
+  /* Create the parallax scrolling effect */
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  /* Card contenue dans un parallax */
+  /* bouton toggler  */
+}
+.parallax div.card {
+  height: 300px;
+  width: 90%;
+  margin: 0 auto;
+}
+.parallax div.card h5.card-title, .parallax div.card h5.card-title + p {
+  text-align: center;
+}
+.parallax div.card h5.card-title + p > button.btn {
+  margin-left: 1.125rem;
+}
+.parallax button.toggler-all {
+  margin-left: 1rem;
+}
+
+/* Turn off parallax scrolling for all tablets and phones. Increase/decrease the pixels if needed */
+@media only screen and (max-device-width: 1366px) {
+  .parallax {
+    background-attachment: scroll;
+  }
+}
 /* Product & Supplier search component */
 div#search-results-component {
   display: none;
@@ -319,8 +378,198 @@ div#search-results-component div#search-results div#search-results-items div.car
   margin: 0.7rem auto;
   font-weight: bold;
 }
+/*
+*  Page de liste par 4
+*/
+div.card-img-custom {
+  position: relative;
+  width: 100%;
+}
+div.card-img-custom img.image {
+  opacity: 1;
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 200px;
+  transition: 0.5s ease;
+  backface-visibility: hidden;
+}
+div.card-img-custom .middle {
+  transition: 0.5s ease;
+  opacity: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+}
+div.card-img-custom:hover .image {
+  opacity: 0.3;
+}
+div.card-img-custom:hover .middle {
+  opacity: 1;
+}
+div.card-img-custom .text {
+  font-size: 16px;
+  padding: 16px 32px;
+}
+
+/* Liste avec card ayant une image ronde placé au dessus */
+div.list-img-middle-rounded div.card {
+  position: relative;
+  margin: 6.25rem 0;
+}
+div.list-img-middle-rounded div.card img.image {
+  position: absolute;
+  top: -7.8125rem;
+  left: 3.75rem;
+  border-radius: 50%;
+  max-width: 12.5rem;
+  max-height: 12.5rem;
+}
+div.list-img-middle-rounded div.card div.card-title {
+  margin-top: 6.25rem;
+}
+div.list-img-middle-rounded div.card div.middle div.btn {
+  position: absolute;
+  bottom: 0;
+  left: -75px;
+}
+
+/* Liste avec 4 cards par ligne */
+div.list-card-by-4 div.row div.card {
+  padding: 0 0 1.25rem 0;
+  margin-bottom: 1rem;
+  border: none;
+}
+div.list-card-by-4 div.row div.card div.card-title, div.list-card-by-4 div.row div.card p.card-text {
+  padding: 1rem 0.8rem 0 0.8rem;
+  font-size: 0.8rem;
+}
+div.list-card-by-4 div.row div.card div.card-title {
+  font-weight: bold;
+  font-size: 0.8rem;
+  margin-bottom: 0;
+}
+div.list-card-by-4 div.row div.card a.btn {
+  font-size: 0.8rem;
+  margin: 0 auto;
+  padding: 0.8rem 1rem;
+}
+
+/* Table contenant une image dans sa 2ème colonne */
+table.table-list-image tbody th {
+  width: 4rem;
+}
+table.table-list-image tbody th :hover {
+  text-decoration: none;
+}
+table.table-list-image tbody tr td.table-td-image-circle div.card-title {
+  text-align: center;
+}
+table.table-list-image tbody tr td.table-td-image-circle a {
+  font-size: 1rem;
+  color: white;
+  transition: 0.1s font-size ease-in;
+}
+table.table-list-image tbody tr td.table-td-image-circle a:hover {
+  text-decoration: none;
+  font-size: 1.25rem;
+  color: white;
+}
+table.table-list-image tbody tr td.table-td-image-circle img.card-img {
+  max-width: 150px;
+  max-height: 150px;
+  border-radius: 50%;
+}
+
+/* Page - Liste categories
+ *
+ */
+div.list-categories div.card {
+  margin: 1rem 0;
+  padding: 0;
+  /*  Titre se trouvant en bas à gauche de l'imaage */
+}
+div.list-categories div.card div.image-bottom-left-title {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  background: linear-gradient(to top, black, transparent);
+  width: 100%;
+  margin: 0 !important;
+  padding: 1.75rem 0.625rem;
+}
+div.list-categories div.card div.btn {
+  font-size: 0.8rem;
+}
+div.list-categories div.card div.card-title, div.list-categories div.card p.card-text {
+  padding: 1rem;
+}
+div.list-categories div.carousel-inner {
+  height: 45rem;
+  flex: 0 0 75%;
+  max-width: 75%;
+  margin: 0 auto !important;
+}
+div.list-categories ol.carousel-indicators {
+  position: unset;
+  left: unset;
+  right: unset;
+  bottom: unset;
+}
+div.list-categories ol.carousel-indicators li {
+  background-image: linear-gradient(to right, red, yellow, green) !important;
+  height: 0.5rem;
+}
+
+/**
+ * Description: Style des pages show
+ *
+ */
+/* Page : show category */
+div.category-detail div.category-control-buttons a, div.category-detail div.category-control-buttons button {
+  display: inline-block;
+  margin: 0 1rem;
+  width: 7.25rem;
+  font-size: 0.8rem;
+}
+
+div.category-detail-products {
+  background-color: #dadbdd;
+}
+div.category-detail-products div.carousel-inner {
+  margin: 1.25rem auto;
+  font-size: 14px;
+}
+div.category-detail-products div.carousel-inner div.card {
+  padding: unset;
+  /*  Titre se trouvant en bas à gauche de l'imaage */
+}
+div.category-detail-products div.carousel-inner div.card div.image-bottom-left-title {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  background: linear-gradient(to top, black, transparent);
+  width: 100%;
+  margin: 0 !important;
+  padding: 1.75rem 0.625rem;
+}
+div.category-detail-products ol.carousel-indicators {
+  position: unset;
+  left: unset;
+  bottom: unset;
+  right: unset;
+}
+@media screen and (min-width: 992px) {
+  div.category-detail-products div.carousel-inner {
+    flex: 0 0 75%;
+    max-width: 75%;
+  }
+}
+
 #root {
-  background-color: #fff;
+  background-color: #dadbdd;
 }
 
 /*# sourceMappingURL=index.css.map */

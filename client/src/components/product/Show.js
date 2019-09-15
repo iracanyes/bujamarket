@@ -1,9 +1,19 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { retrieve, reset } from '../../actions/product/show';
-import { del } from '../../actions/product/delete';
+import CarouselProductSuppliers from "../supplierproduct/CarouselProductSuppliers";
+import {
+  Col,
+  Row,
+  Card,
+  CardBody,
+  CardFooter,
+  CardText,
+  Spinner
+} from "reactstrap";
+import { FormattedMessage } from "react-intl";
 
 class Show extends Component {
   static propTypes = {
@@ -13,10 +23,6 @@ class Show extends Component {
     eventSource: PropTypes.instanceOf(EventSource),
     retrieve: PropTypes.func.isRequired,
     reset: PropTypes.func.isRequired,
-    deleteError: PropTypes.string,
-    deleteLoading: PropTypes.bool.isRequired,
-    deleted: PropTypes.object,
-    del: PropTypes.func.isRequired
   };
 
   componentDidMount() {
@@ -27,106 +33,91 @@ class Show extends Component {
     this.props.reset(this.props.eventSource);
   }
 
-  del = () => {
-    if (window.confirm('Are you sure you want to delete this item?'))
-      this.props.del(this.props.retrieved);
-  };
-
   render() {
     if (this.props.deleted) return <Redirect to=".." />;
 
     const item = this.props.retrieved;
 
+    console.log("Product retrieved", item);
+
     return (
-      <div>
-        <h1>Show {item && item['@id']}</h1>
+      <Fragment>
+        <div id={"category-show"}>
+          <h1>
+            <FormattedMessage  id={"app.page.product.title"}
+                               defaultMessage="Produit"
+                               description=" Page product - title"
+            />
+            &nbsp;:&nbsp;
+            {item && item['title']}
+          </h1>
 
-        {this.props.loading && (
-          <div className="alert alert-info" role="status">
-            Loading...
-          </div>
-        )}
-        {this.props.error && (
-          <div className="alert alert-danger" role="alert">
-            <span className="fa fa-exclamation-triangle" aria-hidden="true" />{' '}
-            {this.props.error}
-          </div>
-        )}
-        {this.props.deleteError && (
-          <div className="alert alert-danger" role="alert">
-            <span className="fa fa-exclamation-triangle" aria-hidden="true" />{' '}
-            {this.props.deleteError}
-          </div>
-        )}
+          {this.props.loading && (
 
-        {item && (
-          <table className="table table-responsive table-striped table-hover">
-            <thead>
-              <tr>
-                <th>Field</th>
-                <th>Value</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <th scope="row">title</th>
-                <td>{item['title']}</td>
-              </tr>
-              <tr>
-                <th scope="row">resume</th>
-                <td>{item['resume']}</td>
-              </tr>
-              <tr>
-                <th scope="row">description</th>
-                <td>{item['description']}</td>
-              </tr>
-              <tr>
-                <th scope="row">countryOrigin</th>
-                <td>{item['countryOrigin']}</td>
-              </tr>
-              <tr>
-                <th scope="row">weight</th>
-                <td>{item['weight']}</td>
-              </tr>
-              <tr>
-                <th scope="row">length</th>
-                <td>{item['length']}</td>
-              </tr>
-              <tr>
-                <th scope="row">width</th>
-                <td>{item['width']}</td>
-              </tr>
-              <tr>
-                <th scope="row">height</th>
-                <td>{item['height']}</td>
-              </tr>
-              <tr>
-                <th scope="row">category</th>
-                <td>{this.renderLinks('categories', item['category'])}</td>
-              </tr>
-              <tr>
-                <th scope="row">productSuppliers</th>
-                <td>{this.renderLinks('supplier_products', item['productSuppliers'])}</td>
-              </tr>
-              <tr>
-                <th scope="row">images</th>
-                <td>{this.renderLinks('images', item['images'])}</td>
-              </tr>
-            </tbody>
-          </table>
-        )}
-        <Link to=".." className="btn btn-primary">
-          Back to list
-        </Link>
-        {item && (
-          <Link to={`/products/edit/${encodeURIComponent(item['@id'])}`}>
-            <button className="btn btn-warning">Edit</button>
-          </Link>
-        )}
-        <button onClick={this.del} className="btn btn-danger">
-          Delete
-        </button>
-      </div>
+            <Spinner color="primary" role={"status"} style={{ width: '3rem', height: '3rem',position: 'absolute', left: '50%', top: '50%' }} type={"grow"} />
+
+          )}
+          {this.props.error && (
+            <div className="alert alert-danger" role="alert">
+              <span className="fa fa-exclamation-triangle" aria-hidden="true" />{' '}
+              {this.props.error}
+            </div>
+          )}
+          {this.props.deleteError && (
+            <div className="alert alert-danger" role="alert">
+              <span className="fa fa-exclamation-triangle" aria-hidden="true" />{' '}
+              {this.props.deleteError}
+            </div>
+          )}
+
+          <div className="category-detail">
+            {item && (
+              <Row>
+                <Col lg={"6"}>
+                  <img className={"img-fluid"}  src={item['images'][0]['url']} alt={item["title"]}/>
+                </Col>
+                <Col lg={"6"}>
+                  <Card>
+                    <CardBody>
+                      <CardText>
+                        {item['description']}
+                      </CardText>
+                    </CardBody>
+                    <CardFooter>
+                      <FormattedMessage  id={"app.product.item.price_from"}
+                                         defaultMessage="À partir de"
+                                         description=" Product item - price from"
+                      />
+                      &nbsp;:&nbsp;
+                      {parseFloat(item['minimumPrice']).toFixed(2)} €
+                    </CardFooter>
+                  </Card>
+                </Col>
+              </Row>
+
+            )}
+            <div className="col-lg-4 mx-auto my-5 category-control-buttons">
+              <Link to={`..`} className="btn btn-outline-primary d-block mx-auto">
+                <FormattedMessage  id={"app.button.return_to_List"}
+                                   defaultMessage="Retour à la liste"
+                                   description=" Button - Return to list"
+                />
+
+              </Link>
+
+
+            </div>
+
+          </div>
+          <div className="category-detail-products">
+              { item  && <CarouselProductSuppliers productId={item["id"]}/>}
+          </div>
+
+
+        </div>
+
+      </Fragment>
+
     );
   }
 
@@ -138,8 +129,8 @@ class Show extends Component {
     }
 
     return (
-      <Link to={`../../${type}/show/${encodeURIComponent(items)}`}>
-        {items}
+      <Link to={`../../${type}/show/${encodeURIComponent(items['id'])}`}>
+        {items['@id'] ? items['@id'] : "Voir le détail"}
       </Link>
     );
   };
@@ -150,14 +141,10 @@ const mapStateToProps = state => ({
   error: state.product.show.error,
   loading: state.product.show.loading,
   eventSource: state.product.show.eventSource,
-  deleteError: state.product.del.error,
-  deleteLoading: state.product.del.loading,
-  deleted: state.product.del.deleted
 });
 
 const mapDispatchToProps = dispatch => ({
   retrieve: id => dispatch(retrieve(id)),
-  del: item => dispatch(del(item)),
   reset: eventSource => dispatch(reset(eventSource))
 });
 

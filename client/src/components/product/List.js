@@ -94,11 +94,11 @@ class List extends Component {
             <Col key={"products" + (i * 10 + j)} xs={"12"} sm="6" md="4" lg="3">
               <Card body>
                 <div className="card-img-custom">
-                  <img src="https://picsum.photos/2000/3000" alt={products[i * 10 + j]["images"][0]["alt"]} className="image img-fluid" style={{ width:"100%"}} />
+                  <img src={products[i * 10 + j]["images"][0]['url']} alt={products[i * 10 + j]["images"][0]["alt"]} className="image img-fluid" style={{ width:"100%"}} />
                     <div className="middle">
 
                       <Link
-                        to={`show/${encodeURIComponent(products[i * 10 + j]['@id'])}`}
+                        to={`products/show/${encodeURIComponent(products[i * 10 + j]['id'])}`}
                         className="btn btn-outline-info"
                       >
                           <FormattedMessage  id={"app.page.customer.list.button.see_more"}
@@ -116,15 +116,7 @@ class List extends Component {
                   /> &nbsp;: &nbsp;
                   {products[i * 10 + j]["minimumPrice"].toFixed(2)} &euro;
                 </CardText>
-                <Link
-                  to={`show/${encodeURIComponent(products[i * 10 + j]['@id'])}`}
-                  className={"btn btn-outline-primary"}
-                >
-                  <FormattedMessage  id={"app.page.customer.list.button.add_shopping_card"}
-                                     defaultMessage="Ajouter au panier"
-                                     description="Customers list - button add shopping card"
-                  />
-                </Link>
+
               </Card>
             </Col>
           );
@@ -203,20 +195,20 @@ class List extends Component {
         </Link>
         <Link
           to={
-            !previous || previous === first ? '.' : encodeURIComponent(previous)
+            !previous || previous === first ? '.' : '/'+previous
           }
           className={`btn btn-primary${previous ? '' : ' disabled'}`}
         >
           <span aria-hidden="true">&larr;</span> Previous
         </Link>
         <Link
-          to={next ? encodeURIComponent(next) : '#'}
+          to={next ? next : '#'}
           className={`btn btn-primary${next ? '' : ' disabled'}`}
         >
           Next <span aria-hidden="true">&rarr;</span>
         </Link>
         <Link
-          to={last ? encodeURIComponent(last) : '#'}
+          to={last ? "/"+last : '#'}
           className={`btn btn-primary${next ? '' : ' disabled'}`}
         >
           Last <span aria-hidden="true">&rArr;</span>

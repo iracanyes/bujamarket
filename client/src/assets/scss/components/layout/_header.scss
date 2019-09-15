@@ -9,7 +9,7 @@
 header{
 
   nav#navbar-primary{
-    background-color: #dadbdd !important;
+    background-color:$primary-color !important;
     justify-content: space-evenly;
     padding-top: 10px;
     padding-bottom: 0;
@@ -40,7 +40,7 @@ header{
             button.btn-outline-light{
                 //color: white;
                 // Avec le background linear-gradient
-                color: darkblue;
+                color: $fifth-color;
                 border-color: darkblue;
                 border-color: white;
                 border-top-left-radius: unset;
@@ -51,6 +51,8 @@ header{
 
             button.btn-outline-light:hover{
                 border-color: lightgray;
+                color: $primary-color;
+                background-color: $fifth-color;
             }
 
         }
@@ -63,7 +65,7 @@ header{
                 background-color: transparent;
                 //color: white;
                 // Avec le background linear-gradient
-                color: darkblue;
+                color: $fifth-color;
                 border-color: darkblue;
                 border-right: none;
                 border-top: none;
@@ -106,7 +108,7 @@ header{
             line-height: 1.0;
 
             /* Avec le background linear gradient */
-            color: darkblue;
+            color: $fifth-color;
 
             svg.menu-top-l1{
               display: block !important;
@@ -122,15 +124,38 @@ header{
 
           /*----- Submenu ------*/
           div.dropdown-menu{
+            padding: unset;
             button.dropdown-item{
+              color: $fifth-color;
+
+
               a.nav-link{
-                color: $primary-color;
+                padding: 0.5rem;
+                text-align: left;
+
                 /*-- SubMenu  - Fontawesome icons  --*/
                 svg{
                   margin-right: 10px;
                 }
               }
+              a.nav-link:hover{
+                  color: $primary-color;
+                  background-color: $fifth-color;
+              }
+
+
             }
+            button.dropdown-item:hover{
+                color: $primary-color;
+                background-color: $fifth-color;
+            }
+
+          }
+
+          div.dropdown-menu.show{
+            display: flex;
+            background-color: $primary-color;
+            border: none;
           }
         }
       }

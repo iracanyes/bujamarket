@@ -84,8 +84,7 @@ class MemberHandler
         */
         $data = json_decode($data);
         dump($data);
-        //$data= $this->serializer->deserialize($data, User::class, 'json');
-        //dump($data);
+
 
         $user = new UserTemp();
         $user->setFirstname($data->firstname);
@@ -268,6 +267,7 @@ class MemberHandler
     {
         /* Création d'une clé client */
         $user->setCustomerKey(bin2hex(random_bytes(64)));
+        $user->setSigninConfirmed(true);
     }
 
     public function setSupplierData(Supplier $user, $data): void

@@ -5,6 +5,11 @@
 
 /* Page : show category */
 div.category-detail{
+    img.img-fluid{
+        width: 48.75rem;
+        height: auto;
+        max-height: 25rem;
+    }
     div.category-control-buttons{
         a, button{
             display: inline-block;
@@ -16,7 +21,7 @@ div.category-detail{
 }
 
 div.category-detail-products{
-    background-color: $forth-color;
+    background-color: whitesmoke;
 
     div.carousel-inner{
         margin: 1.25rem auto;
@@ -34,6 +39,10 @@ div.category-detail-products{
                 margin: 0 !important;
                 padding: 1.75rem 0.625rem;
             }
+
+            div.card-footer svg{
+                color: $primary-color;
+            }
         }
     }
 
@@ -42,6 +51,11 @@ div.category-detail-products{
         left: unset;
         bottom: unset;
         right: unset;
+
+        li{
+            background-color: $primary-color;
+            height: 0.3125rem;
+        }
     }
 
     @media screen and (min-width: 992px) {

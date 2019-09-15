@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 
-let user = JSON.parse(localStorage.getItem("user"));
+let user = localStorage.getItem("user") && JSON.parse(localStorage.getItem("user"));
 const initialState = user ? { loggingIn: true, user } : {};
 
 export function error(state = initialState, action) {
