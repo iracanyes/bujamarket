@@ -119,11 +119,11 @@ class Customer extends User
     private $favorites;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\ShoppingCard", mappedBy="customer", orphanRemoval=true)
-     * @Groups({"customer:output"})
-     * @ApiSubresource(maxDepth=2)
+     * @ORM\OneToOne(targetEntity="App\Entity\ShoppingCard", mappedBy="customer", cascade={"persist", "remove"})
      */
-    private $shoppingCards;
+    private $shoppingCard;
+
+
 
     public function __construct()
     {
@@ -133,7 +133,6 @@ class Customer extends User
         $this->refundBills = new ArrayCollection();
         $this->comments = new ArrayCollection();
         $this->favorites = new ArrayCollection();
-        $this->shoppingCards = new ArrayCollection();
         $this->nbAbuseIdentified = 0;
         $this->nbOrderCompleted = 0;
         $this->nbOrderWithdrawn = 0;
@@ -361,34 +360,23 @@ class Customer extends User
         return $this;
     }
 
-    /**
-     * @return Collection|ShoppingCard[]
-     */
-    public function getShoppingCards(): Collection
+    public function getShoppingCard(): ?ShoppingCard
     {
-        return $this->shoppingCards;
+        return $this->shoppingCard;
     }
 
-    public function addShoppingCard(ShoppingCard $shoppingCard): self
+    public function setShoppingCard(ShoppingCard $shoppingCard): self
     {
-        if (!$this->shoppingCards->contains($shoppingCard)) {
-            $this->shoppingCards[] = $shoppingCard;
+        $this->shoppingCard = $shoppingCard;
+
+        // set the owning side of the relation if necessary
+        if ($this !== $shoppingCard->getCustomer()) {
             $shoppingCard->setCustomer($this);
         }
 
         return $this;
     }
 
-    public function removeShoppingCard(ShoppingCard $shoppingCard): self
-    {
-        if ($this->shoppingCards->contains($shoppingCard)) {
-            $this->shoppingCards->removeElement($shoppingCard);
-            // set the owning side to null (unless already changed)
-            if ($shoppingCard->getCustomer() === $this) {
-                $shoppingCard->setCustomer(null);
-            }
-        }
 
-        return $this;
-    }
+
 }

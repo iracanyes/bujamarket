@@ -67,7 +67,7 @@ class CarouselProductSuppliers extends Component {
   {
     if(this.animating) return;
 
-    const nextIndex = this.state.activeIndex === (Math.ceil(this.props.retrieved.length / 12) - 1) ? 0 : this.state.activeIndex + 1;
+    const nextIndex = this.state.activeIndex === (this.props.retrieved.length / 12 - 1) ? 0 : this.state.activeIndex + 1;
     this.setState({activeIndex: nextIndex});
 
   }
@@ -76,7 +76,7 @@ class CarouselProductSuppliers extends Component {
   {
     if(this.animating) return;
 
-    const nextIndex = this.state.activeIndex === 0 ? (Math.ceil(this.props.retrieved.length / 12) - 1) : this.state.activeIndex -1;
+    const nextIndex = this.state.activeIndex === 0 ? this.props.retrieved.length / 12 - 1 : this.state.activeIndex -1;
     this.setState({activeIndex: nextIndex});
   }
 
@@ -263,6 +263,8 @@ class CarouselProductSuppliers extends Component {
 
     const items = this.props.retrieved  !== null ? this.showProductSuppliers() : {};
 
+    (process.env.DEBUG === 1) && console.log('Product suppliers', items);
+
     const styleCarouselInner = {
         margin: "0 40px"
     };
@@ -284,6 +286,7 @@ class CarouselProductSuppliers extends Component {
                   previous={this.previous}
                   style={styleCarouselInner}
                   className={" col-lg-12"}
+                  interval={false}
               >
 
 
