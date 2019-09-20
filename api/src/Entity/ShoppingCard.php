@@ -27,27 +27,32 @@ class ShoppingCard
      * @ORM\Column(type="integer")
      */
     private $id;
+
     /**
+     * @var \DateTime $dateCreated Date of creation of this shopping card
      * @ORM\Column(type="datetime")
      * @Assert\DateTime()
      * @Groups({"shopping_card:output"})
      */
     private $dateCreated;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Customer", inversedBy="shoppingCards")
-     * @ORM\JoinColumn(nullable=false)
-     * @Assert\Type("App\Entity\Customer")
-     */
-    private $customer;
+
 
     /**
+     * @var Collection $suppliersProducts Suppliers' product added to the shopping card
      * @ORM\ManyToMany(targetEntity="App\Entity\SupplierProduct", inversedBy="shoppingCards")
      * @ApiSubresource()
      * @Groups({"shopping_card:output"})
      *
      */
     private $suppliersProducts;
+
+    /**
+     * @var Customer $customer Customer who made this shopping card
+     * @ORM\OneToOne(targetEntity="App\Entity\Customer", inversedBy="shoppingCard", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $customer;
 
 
 
@@ -76,17 +81,7 @@ class ShoppingCard
         return $this;
     }
 
-    public function getCustomer(): ?Customer
-    {
-        return $this->customer;
-    }
 
-    public function setCustomer(?Customer $customer): self
-    {
-        $this->customer = $customer;
-
-        return $this;
-    }
 
     /**
      * @return Collection|SupplierProduct[]
@@ -109,6 +104,24 @@ class ShoppingCard
     {
         if ($this->suppliersProducts->contains($suppliersProduct)) {
             $this->suppliersProducts->removeElement($suppliersProduct);
+        }
+
+        return $this;
+    }
+
+    public function getCustomer(): ?Customer
+    {
+        return $this->customer;
+    }
+
+    public function setCustomer(Customer $customer): self
+    {
+        $this->customer = $customer;
+
+        /* Ajouter dans l'objet Customer la relation à ce panier de commande */
+        if($this !== $customer->getShoppingCard())
+        {
+            $customer->setShoppingCard($this);
         }
 
         return $this;
