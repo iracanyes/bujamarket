@@ -23,11 +23,13 @@ import {
   faStarHalfAlt
 } from "@fortawesome/free-solid-svg-icons";
 
-import { faStar } from "@fortawesome/free-solid-svg-icons";
+import { faStar, faBars, faAngleDoubleRight } from "@fortawesome/free-solid-svg-icons";
 
 
 
 library.add([
+  faAngleDoubleRight,
+  faBars,
   faComments,
   faGoogle,
   faHeart,

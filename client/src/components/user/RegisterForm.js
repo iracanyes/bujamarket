@@ -62,7 +62,7 @@ class RegisterForm extends React.Component {
 
     if( user.email && user.password && user.firstname && user.lastname && user.userType )
     {
-      this.props.register(user);
+      this.props.register(user, this.props.history);
     }
 
   }
@@ -268,11 +268,12 @@ class RegisterForm extends React.Component {
             <Row>
               <Col>
 
-                <div className={`form-group d-flex`}>
+                <div className={`form-group d-flex mt-2`}>
                   <input
                     name="termsAccepted"
                     type="checkbox"
-                    className={'form-control col-1'}
+                    className={'mx-2'}
+                    style={{position: 'absolute', top: '10px'}}
                     required={true}
                     id={`user_termsAccepted`}
                     onChange={this.handleChange}
@@ -280,7 +281,7 @@ class RegisterForm extends React.Component {
                   />
                   <label
                     htmlFor={`user_termsAccepted`}
-                    className="form-control-label"
+                    className="form-control-label col-10 ml-5"
                   >
                     J'accepte les condition d'utilisation de la plateforme. <Link to={'/terms_condition'}>Voir termes et conditions</Link> <br/>
                     J'autorise l'exploitation de mes données personnelles fournis à cette plateforme dans les limites indiquées par les <Link to={'/rgpd'}>Utilisations des données personnelles</Link>
@@ -315,7 +316,7 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => ({
-  register: user => dispatch( register(user))
+  register: (user, history ) => dispatch( register(user, history))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(

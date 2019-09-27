@@ -20,7 +20,7 @@ export function success(user) {
 
 export function logout() {
   /* Supprimer les infos de l'utilisateur du localStorage */
-  localStorage.removeItem('user');
+  localStorage.removeItem('token');
 
   return { type: 'USER_LOGOUT'};
 }
@@ -44,7 +44,7 @@ export function login(email, password, history) {
       body: JSON.stringify({email, password})
     };
 
-    return fetch('login', requestOptions  )
+    return fetch('authentication_token', requestOptions  )
       .then(response => {
         dispatch(loading(false));
 
@@ -60,10 +60,11 @@ export function login(email, password, history) {
          */
       })
       .then(retrieved => {
-        /* Utilisation du localStorage pour stocker les infos non-sécurisé de l'utilisateur authentifié */
-        localStorage.setItem("user", JSON.stringify(retrieved.user));
+        /* Utilisation du localStorage pour stocker le token de sécurité de l'utilisateur authentifié */
+        localStorage.removeItem("token");
+        localStorage.setItem("token", JSON.stringify(retrieved));
 
-        console.log("fetch Login - retrieved",  retrieved);
+
 
         return retrieved;
 
@@ -71,8 +72,10 @@ export function login(email, password, history) {
       .then(retrieved => {
         dispatch(success(retrieved));
 
-        /* En passant l'objet this.props.history du composant vers son action creator permet de transmettre le changement d'URL au connected-react-router  */
-        history.push('/');
+        /* En passant l'objet this.props.history du composant vers son action creator cela permet de transmettre le changement d'URL au store
+        *
+        */
+        history.goBack();
 
 
 
@@ -86,7 +89,7 @@ export function login(email, password, history) {
         if(e.code === 401)
         {
           dispatch(logout());
-          window.location.reload(true);
+          history.push('login');
         }
 
         if (e instanceof SubmissionError) {

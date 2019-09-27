@@ -68,17 +68,18 @@ class SecurityController extends AbstractController
          * Ouverture d'une session contenant les données sécurisés de l'utilisateur
          * Attention: une session est ouverte automatiquement pour l'utilisateur authentifié "_security_main"
          */
+        /*
         $this->session->set(
             "user",
             $this->serializer->serialize(["user" => $this->getUser()], 'jsonld', [] )
         );
-
+        */
         /*
          * Mise à jour du token de sécurité en cas d'échange externe; ex: email
          */
-        $token =  bin2hex(random_bytes(64));
-        $this->getUser()->setToken($token);
-        $this->session->set("token", $token);
+        //$token =  bin2hex(random_bytes(64));
+        //$this->getUser()->setToken($token);
+        //$this->session->set("token", $token);
 
         /* Basic retour d'un objet contenant l'ID de l'utilisateur
 

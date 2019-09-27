@@ -39,26 +39,22 @@ class ShoppingCard
 
 
     /**
-     * @var Collection $suppliersProducts Suppliers' product added to the shopping card
-     * @ORM\ManyToMany(targetEntity="App\Entity\SupplierProduct", inversedBy="shoppingCards")
-     * @ApiSubresource()
-     * @Groups({"shopping_card:output"})
-     *
-     */
-    private $suppliersProducts;
-
-    /**
      * @var Customer $customer Customer who made this shopping card
      * @ORM\OneToOne(targetEntity="App\Entity\Customer", inversedBy="shoppingCard", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $customer;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\ShoppingCardSupplierProduct", cascade={"persist"}, mappedBy="shoppingCard", orphanRemoval=true)
+     */
+    private $shoppingCardSupplierProducts;
+
 
 
     public function __construct()
     {
-        $this->suppliersProducts = new ArrayCollection();
+        $this->shoppingCardSupplierProducts = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -82,33 +78,6 @@ class ShoppingCard
     }
 
 
-
-    /**
-     * @return Collection|SupplierProduct[]
-     */
-    public function getSuppliersProducts(): Collection
-    {
-        return $this->suppliersProducts;
-    }
-
-    public function addSuppliersProduct(SupplierProduct $suppliersProduct): self
-    {
-        if (!$this->suppliersProducts->contains($suppliersProduct)) {
-            $this->suppliersProducts[] = $suppliersProduct;
-        }
-
-        return $this;
-    }
-
-    public function removeSuppliersProduct(SupplierProduct $suppliersProduct): self
-    {
-        if ($this->suppliersProducts->contains($suppliersProduct)) {
-            $this->suppliersProducts->removeElement($suppliersProduct);
-        }
-
-        return $this;
-    }
-
     public function getCustomer(): ?Customer
     {
         return $this->customer;
@@ -122,6 +91,37 @@ class ShoppingCard
         if($this !== $customer->getShoppingCard())
         {
             $customer->setShoppingCard($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ShoppingCardSupplierProduct[]
+     */
+    public function getShoppingCardSupplierProducts(): Collection
+    {
+        return $this->shoppingCardSupplierProducts;
+    }
+
+    public function addShoppingCardSupplierProduct(ShoppingCardSupplierProduct $shoppingCardSupplierProduct): self
+    {
+        if (!$this->shoppingCardSupplierProducts->contains($shoppingCardSupplierProduct)) {
+            $this->shoppingCardSupplierProducts[] = $shoppingCardSupplierProduct;
+            $shoppingCardSupplierProduct->setShoppingCard($this);
+        }
+
+        return $this;
+    }
+
+    public function removeShoppingCardSupplierProduct(ShoppingCardSupplierProduct $shoppingCardSupplierProduct): self
+    {
+        if ($this->shoppingCardSupplierProducts->contains($shoppingCardSupplierProduct)) {
+            $this->shoppingCardSupplierProducts->removeElement($shoppingCardSupplierProduct);
+            // set the owning side to null (unless already changed)
+            if ($shoppingCardSupplierProduct->getShoppingCard() === $this) {
+                $shoppingCardSupplierProduct->setShoppingCard(null);
+            }
         }
 
         return $this;

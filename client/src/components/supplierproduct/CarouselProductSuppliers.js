@@ -20,6 +20,7 @@ import {
 import { FormattedMessage } from "react-intl";
 import { retrieveByProductId, reset  } from "../../actions/supplierproduct/listByProductId";
 import Rating from "../../layout/Rating";
+import ButtonAddShoppingCard from "./ButtonAddShoppingCard";
 
 class CarouselProductSuppliers extends Component {
   static propTypes = {
@@ -232,12 +233,15 @@ class CarouselProductSuppliers extends Component {
                   <p>
                     À partir de : {productSuppliers[0]["initialPrice"].toFixed(2)} &euro;
                   </p>
+                  <ButtonAddShoppingCard buttonLabel={"Ajouter au panier"} product={productSuppliers[0]}/>
+                  {/*
                   <Link to={'/shopping_card/add/'+productSuppliers[0]['id']} className={"btn btn-outline-primary d-block mx-auto my-2"}>
                     <FormattedMessage  id={"app.button.add_shopping_card"}
                                        defaultMessage="Ajouter au panier"
                                        description=" Button - Add to shopping card"
                     />
                   </Link>
+                  */}
                   <Link to={'/order_set/create/'+productSuppliers[0]['id']} className={"btn btn-outline-danger d-block mx-auto"}>
                     <FormattedMessage  id={"app.button.order_now"}
                                        defaultMessage="Commande immédiat"

@@ -12,7 +12,7 @@ App\Entity\Address:
                 _format: 'json'
             # host: 'localhost'
             schemes: ['https']
-            access_control: "has_role('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_FULLY', get)"
+            access_control: "has_role('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_FULLY')"
             #options:
             #    my_option: 'my_option_value'
             status: 200 # customize the HTTP status code to send
@@ -21,7 +21,7 @@ App\Entity\Address:
             path: '/address/create'
             requirements:
                 address: App\Entity\Customer
-            access_control: "is_granted('IS_AUTHENTICATED_FULLY', post)"
+            access_control: "is_granted('IS_AUTHENTICATED_FULLY')"
             schemes: ['https']
             controller: App\Controller\Customer\CreateAddress::class
     itemOperations:
@@ -35,21 +35,30 @@ App\Entity\Address:
                 _format: 'json'
             # host: 'localhost'
             schemes: ['https']
-            access_control: "is_granted('IS_AUTHENTICATED_FULLY', get)"
+            access_control: "is_granted('IS_AUTHENTICATED_FULLY')"
             #options:
             #    my_option: 'my_option_value'
-            status: 200 # customize the HTTP status code to send        
+            status: 200 # customize the HTTP status code to send
+        my_addresses:
+            method: 'GET'
+            path: '/my_addresses.{_format}'
+            defaults:
+                _format: 'json'
+                _api_receive: false
+            schemes: ['https']
+            access_control: 'has_role("ROLE_MEMBER") and is_granted("IS_AUTHENTICATED_FULLY")'
+            controller: App\Controller\Address\GetAddressesAction
         put:
             method: 'PUT'
             path: '/address/{id}'
             requirements:
                 id: '\d+'
-            access_control: "is_granted('IS_AUTHENTICATED_FULLY', put)"
+            access_control: "is_granted('IS_AUTHENTICATED_FULLY')"
             schemes: ['https']
         delete:
             method: 'DELETE'
             path: '/address/{id}'
             requirements:
                 id: '\d+'
-            security: "is_granted('IS_AUTHENTICATED_FULLY', delete)"
+            security: "is_granted('IS_AUTHENTICATED_FULLY') and has_role('ROLE_MEMBER')"
             schemes: ['https']

@@ -3,7 +3,7 @@
  * Date: 16/08/2019
  * Description:
  */
-import React from 'react';
+import React, { Fragment } from 'react';
 import { Link } from "react-router-dom";
 //import { Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
 import CardImg from "reactstrap/es/CardImg";
@@ -11,6 +11,7 @@ import { login, logout } from "../../actions/user/login";
 import { connect } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
 import { Field, reduxForm } from "redux-form";
+import FlashInfo from "../../layout/FlashInfo";
 
 class LoginForm extends React.Component {
   constructor(props)
@@ -32,8 +33,6 @@ class LoginForm extends React.Component {
   handleChange(e)
   {
     const { name, value } = e.target;
-
-    console.log("handleChange ", {[name]: value });
 
     this.setState({ [name] : value });
   }
@@ -98,64 +97,76 @@ class LoginForm extends React.Component {
     const { loggingIn, intl } = this.props;
     const { email, submitted } = this.state;
     return (
-      <div id={'form-login'} className="col-md-6 mx-auto col-md-offset-3">
-        <h1>
-          <FormattedMessage  id={"app.page.user.login.title"}
-                             defaultMessage="Connexion"
-                             description="Page User - Login title"
-          />
-        </h1>
-        <form
-          name="form"
-          className={"col-lg-6 mx-auto px-3"}
-          onSubmit={this.handleSubmit}
-        >
-          <Field
-            component={this.renderField}
-            name="email"
-            type="email"
-            labelText={intl.formatMessage({
-              id: "app.user.item.email",
-              defaultMessage: "E-mail",
-              description: "User item - email"
-            })}
-            placeholder="tim_dubois@gmail.com"
-            value={email}
-            onChange={this.handleChange}
-          />
-          <Field
-            component={this.renderField}
-            name="password"
-            type="password"
-            labelText={intl.formatMessage({
-              id: "app.user.item.password",
-              defaultMessage: "Mot de passe",
-              description: "User item - password"
-            })}
-            placeholder="*************"
-            onChange={this.handleChange}
-          />
+      <Fragment>
+        <div className="flash-message col-lg-6 mx-auto text-center my-2">
+          {sessionStorage.getItem("flash-message") !== null && (
+            <FlashInfo color={"success"} message={JSON.parse(sessionStorage.getItem("flash-message")).message}/>
+          )}
+          {sessionStorage.getItem("flash-message-error") !== null && (
+            <FlashInfo color={"info"} message={JSON.parse(sessionStorage.getItem("flash-message-error")).message}/>
+          )}
+        </div>
+        <div id={'form-login'} className="col-md-6 mx-auto col-md-offset-3">
+          <h1>
+            <FormattedMessage  id={"app.page.user.login.title"}
+                               defaultMessage="Connexion"
+                               description="Page User - Login title"
+            />
+          </h1>
 
-          <div className="form-group">
-            <button className="btn btn-primary mx-2 my-3">
-              <FormattedMessage  id={"app.page.user.login.title"}
-                                 defaultMessage="Connexion"
-                                 description="Page User - login"
-              />
-            </button>
-            {loggingIn &&
+          <form
+            name="form"
+            className={"col-lg-6 mx-auto px-3"}
+            onSubmit={this.handleSubmit}
+          >
+            <Field
+              component={this.renderField}
+              name="email"
+              type="email"
+              labelText={intl.formatMessage({
+                id: "app.user.item.email",
+                defaultMessage: "E-mail",
+                description: "User item - email"
+              })}
+              placeholder="tim_dubois@gmail.com"
+              value={email}
+              onChange={this.handleChange}
+            />
+            <Field
+              component={this.renderField}
+              name="password"
+              type="password"
+              labelText={intl.formatMessage({
+                id: "app.user.item.password",
+                defaultMessage: "Mot de passe",
+                description: "User item - password"
+              })}
+              placeholder="*************"
+              onChange={this.handleChange}
+            />
+
+            <div className="form-group">
+              <button className="btn btn-primary mx-2 my-3">
+                <FormattedMessage  id={"app.page.user.login.title"}
+                                   defaultMessage="Connexion"
+                                   description="Page User - login"
+                />
+              </button>
+              {loggingIn &&
               <CardImg />
-            }
-            <Link to="/register" className="btn btn-outline-primary mx-2 my-3">
-              <FormattedMessage  id={"app.page.user.register.title"}
-                                 defaultMessage="Inscription"
-                                 description="Page User - register"
-              />
+              }
+              <Link to="/register" className="btn btn-outline-primary mx-2 my-3">
+                <FormattedMessage  id={"app.page.user.register.title"}
+                                   defaultMessage="Inscription"
+                                   description="Page User - register"
+                />
 
-            </Link>
-          </div>
-        </form>
-      </div>
+              </Link>
+            </div>
+          </form>
+        </div>
+      </Fragment>
+
     );
   }
 }
@@ -167,7 +178,7 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => ({
-  login : (email, password, history) => dispatch(login(email,password, history)),
+  login : (email, password, history) => dispatch(login(email, password, history)),
   logout: () => dispatch( logout())
 });
 

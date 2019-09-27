@@ -9,6 +9,7 @@
         "api-platform/api-pack": "^1.2",
         "doctrine/annotations": "^1.6",
         "guzzlehttp/guzzle": "^6.3",
+        "lexik/jwt-authentication-bundle": "^2.6",
         "nelmio/cors-bundle": "^1.5",
         "sensio/framework-extra-bundle": "5.2.4",
         "symfony/config": "4.2.*",

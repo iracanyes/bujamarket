@@ -4,25 +4,25 @@ App\Entity\ShoppingCard:
     collectionOperations:
         get:
             method: 'GET'
-            path: '/shopping_cards.{_format}'
+            path: '/shopping_cardS.{_format}'
             requirements:
                 _format: 'json\jsonld\html'
             defaults:
                 _format: 'json'
             # host: 'localhost'
             schemes: ['https']
-            access_control: "has_role('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_FULLY', get)"
+            access_control: "has_role('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_FULLY')"
             #options:
             #    my_option: 'my_option_value'
             status: 200 # customize the HTTP status code to send
         post:
             method: 'POST'
             path: '/shopping_card/create'
-            requirements:
-                shopping_card: App\Entity\ShoppingCard
-            access_control: "has_role('ROLE_CUSTOMER') and is_granted('IS_AUTHENTICATED_REMEMBERED', post)"
+            defaults:
+                _api_receive: false
+            access_control: "has_role('ROLE_CUSTOMER') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
             schemes: ['https']
-            controller: App\Controller\ShoppingCard\CreateShoppingCard::class
+            controller: App\Controller\ShoppingCard\CreateShoppingCardAction
     itemOperations:
         get:
             method: 'GET'
@@ -34,7 +34,7 @@ App\Entity\ShoppingCard:
                 _format: 'json'
             # host: 'localhost'
             schemes: ['https']
-            access_control: "has_role('ROLE_CUSTOMER') and is_granted('IS_AUTHENTICATED_FULLY', get)"
+            access_control: "has_role('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_FULLY')"
             #options:
             #    my_option: 'my_option_value'
             status: 200 # customize the HTTP status code to send        
@@ -43,14 +43,14 @@ App\Entity\ShoppingCard:
             path: '/shopping_card/{id}'
             requirements:
                 id: '\d+'
-            access_control: 'has_role("ROLE_CUSTOMER")c'
+            access_control: 'has_role("ROLE_CUSTOMER")'
             schemes: ['https']
         delete:
             method: 'DELETE'
             path: '/shopping_card/{id}'
             requirements:
                 id: '\d+'
-            security: 'has_role("ROLE_CUSTOMER") and is_granted("IS_AUTHENTICATED_REMEMBERED", post)'
+            security: 'has_role("ROLE_CUSTOMER") and is_granted("IS_AUTHENTICATED_REMEMBERED")'
             schemes: ['https']
     subresourceOperations:
         suppliers_products_get_subresource:

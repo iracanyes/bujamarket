@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 
-let user = localStorage.getItem("user") && JSON.parse(localStorage.getItem("user"));
-const initialState = user ? { loggingIn: true, user } : {};
+let token = localStorage.getItem("token") && JSON.parse(localStorage.getItem("token"));
+const initialState = token ? { loggingIn: true, token } : {};
 
 export function error(state = initialState, action) {
   switch (action.type) {

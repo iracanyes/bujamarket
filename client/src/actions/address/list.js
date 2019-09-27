@@ -18,17 +18,22 @@ export function success(retrieved) {
   return { type: 'ADDRESS_LIST_SUCCESS', retrieved };
 }
 
-export function list(page = 'addresses') {
+export function list(history) {
   return dispatch => {
     dispatch(loading(true));
     dispatch(error(''));
 
-    fetch(page)
-      .then(response =>
+    fetch('my_addresses')
+      .then(response => {
+
+        if (response.status === 401) {
+          history.push('login');
+        }
+        console.log('Response', response);
         response
           .json()
-          .then(retrieved => ({ retrieved, hubURL: extractHubURL(response) }))
-      )
+          .then(retrieved => ({retrieved, hubURL: extractHubURL(response)}))
+      })
       .then(({ retrieved, hubURL }) => {
         retrieved = normalize(retrieved);
 
@@ -46,6 +51,12 @@ export function list(page = 'addresses') {
       .catch(e => {
         dispatch(loading(false));
         dispatch(error(e.message));
+
+        /* Si une authentification est requise, redirection vers la page de connexion */
+        if(/Full authentication/.test(e))
+        {
+          history.push('login');
+        }
       });
   };
 }

@@ -79,10 +79,11 @@ import imageRoutes from './routes/image';
 import messageRoutes from './routes/message';
 import orderDetailRoutes from './routes/orderdetail';
 import orderGlobalRoutes from './routes/orderglobal';
-import orderreturnedRoutes from './routes/orderreturned';
+import orderReturnedRoutes from './routes/orderreturned';
 import paymentRoutes from './routes/payment';
 import productRoutes from './routes/product';
 import shipperRoutes from './routes/shipper';
+import shoppingCardRoutes from './routes/shoppingcard';
 import supplierRoutes from './routes/supplier';
 import supplierProductRoutes from './routes/supplierproduct';
 import userRoutes from './routes/user';
@@ -99,6 +100,7 @@ import Error404Cat from "./layout/Error404Cat";
 /* Internationalisation : FormatJS/React-Intl */
 import { IntlProvider} from "react-intl";
 import { addLocaleData, messages, language } from "./config/internationalization.js";
+import FlashInfo from "./layout/FlashInfo";
 
 addLocaleData();
 
@@ -153,6 +155,11 @@ export class App extends Component
     this.search = this.search.bind(this);
   }
 
+  componentWillMount() {
+    const token = localStorage.getItem('token') ? JSON.parse(localStorage.getItem('token')) : undefined;
+
+  }
+
   /* Permet de transmettre les résultats de recherche du composant MainMenuSearchForm vers le composant d'affichage des résultats SearchResults. Utilisation de la technique HOC - High Order Component */
   search(results)
   {
@@ -196,6 +203,7 @@ export class App extends Component
                       {results && (<SearchResults results={ results }/>)}
 
                     </div>
+
                     <div>
                       <Switch>
                         <Route path="/dev" component={Welcome} strict={true} exact={true}/>
@@ -219,10 +227,11 @@ export class App extends Component
                         { messageRoutes }
                         { orderDetailRoutes }
                         { orderGlobalRoutes }
-                        { orderreturnedRoutes }
+                        { orderReturnedRoutes }
                         { paymentRoutes }
                         { productRoutes }
                         { shipperRoutes }
+                        { shoppingCardRoutes }
                         { supplierRoutes }
                         { supplierProductRoutes }
                         { userRoutes }
