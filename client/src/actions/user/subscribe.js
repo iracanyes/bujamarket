@@ -46,7 +46,13 @@ export function retrieve(token) {
       })
       .catch(e => {
         dispatch(loading(false));
-        dispatch(error(e.message));
+        dispatch(error(e));
+
+        if(sessionStorage.getItem('flash-message-error') !== null)
+        {
+          sessionStorage.removeItem('flash-message-error');
+        }
+        sessionStorage.setItem('flash-message-error', e);
       });
   };
 }
@@ -70,10 +76,12 @@ export function subscribe(values, history) {
       .then(retrieved => {
         dispatch(success(retrieved));
         /* Enregistrement du token dans le localStorage */
-        localStorage.setItem('user', JSON.stringify(retrieved) );
+
+        sessionStorage.removeItem("flash-message");
+        sessionStorage.setItem('flash-message', JSON.stringify({message: 'Inscription terminée!\nConnectez vous à la plateforme et visitez votre profil pour ajouter les informations de livraison pour vos achats.\nAu plaisir!'}));
 
         /* En passant l'objet this.props.history du composant vers son action creator permet de transmettre le changement d'URL au connected-react-router  */
-        history.push('/');
+        history.push('login');
       })
       .catch(e => {
         dispatch(loading(false));
@@ -84,7 +92,11 @@ export function subscribe(values, history) {
           throw e;
         }
 
-        console.log(Error(e));
+        if(sessionStorage.getItem('flash-message-error') !== null)
+        {
+          sessionStorage.removeItem('flash-message-error');
+        }
+        sessionStorage.setItem('flash-message-error', e);
 
         dispatch(error(e));
         throw e;

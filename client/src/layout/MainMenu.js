@@ -38,6 +38,7 @@ class MainMenu extends Component
   }
 
 
+
   toggle()
   {
     this.setState({
@@ -53,11 +54,7 @@ class MainMenu extends Component
   render()
   {
 
-    const  user  = localStorage.getItem('user') && JSON.parse(localStorage.getItem('user'));
-
-    if(process.env.DEBUG){
-      console.log("localStorage user", localStorage.getItem('user'));
-    }
+    const  user  = localStorage.getItem('token') !== null ? JSON.parse(atob(localStorage.getItem('token').split('.')[1])) : null;
 
 
     return <Fragment>
@@ -69,19 +66,19 @@ class MainMenu extends Component
             <DropdownToggle nav caret>
 
                 <FontAwesomeIcon icon="user-alt" className="menu-top-l1"/>
-                { user
-                  ? user.firstname + " " + user.lastname
+                { user !== null
+                  ? <span className="main-menu-top-level-text">{user.username.split('@')[0]}</span>
                   : <FormattedMessage  id={"app.header.main_menu.profile.link"}
                                        defaultMessage="Profil"
-                                       description="Main menu profil  navigation link"
+                                       description="Main menu profil navigation link"
                                        className="main-menu-top-level-text"
                   />
                 }
 
             </DropdownToggle>
-            <DropdownMenu >
-              { user == null && (
-                <div>
+            <DropdownMenu  >
+              { user ===  null && (
+                <div className={'d-flex'}>
                   <DropdownItem>
                     <NavLink tag={RRDNavLink} to={"/login"}>
                       <FontAwesomeIcon icon="user-check" className={"float-left"} />
@@ -103,63 +100,72 @@ class MainMenu extends Component
                       />
                     </NavLink>
                   </DropdownItem>
-                  <DropdownItem divider />
+
                 </div>
               )}
 
+              {user !== null && (
+                <div>
+                  <DropdownItem>
+                    <NavLink tag={RRDNavLink} to={"/profile"}>
+                      <FontAwesomeIcon icon="user-edit" />
+                      <FormattedMessage  id={"app.header.main_menu.profile.sub_menu.profile.link"}
+                                         defaultMessage="Profil"
+                                         description="Main menu profile submenu profile  navigation link"
+                                         className="main-menu-sub-level-text"
+                      />
+                    </NavLink>
+                  </DropdownItem>
+                  <DropdownItem>
+                    <NavLink tag={RRDNavLink} to={"/profile/parameters"}>
+                      <FontAwesomeIcon icon="user-cog" />
+                      <FormattedMessage  id={"app.header.main_menu.profile.sub_menu.configuration.link"}
+                                         defaultMessage="Configuration"
+                                         description="Main menu profile submenu configuration navigation link"
+                                         className="main-menu-sub-level-text"
+                      />
+                    </NavLink>
+                  </DropdownItem>
+                  <DropdownItem>
+                    <NavLink tag={RRDNavLink} to={"/"} onClick={this.logout}>
+                      <FontAwesomeIcon icon="sign-out-alt" />
+                      <FormattedMessage  id={"app.header.main_menu.profile.sub_menu.logout.link"}
+                                         defaultMessage="Déconnexion"
+                                         description="Main menu profile submenu logout navigation link"
+                                         className="main-menu-sub-level-text"
+                      />
+                    </NavLink>
+                  </DropdownItem>
+                </div>
+              )}
 
-              <DropdownItem>
-                <NavLink tag={RRDNavLink} to={"/profile"}>
-                  <FontAwesomeIcon icon="user-edit" />
-                  <FormattedMessage  id={"app.header.main_menu.profile.sub_menu.profile.link"}
-                                     defaultMessage="Profil"
-                                     description="Main menu profile submenu profile  navigation link"
-                                     className="main-menu-sub-level-text"
-                  />
-                </NavLink>
-              </DropdownItem>
-              <DropdownItem>
-                <NavLink tag={RRDNavLink} to={"/profile/parameters"}>
-                  <FontAwesomeIcon icon="user-cog" />
-                  <FormattedMessage  id={"app.header.main_menu.profile.sub_menu.configuration.link"}
-                                     defaultMessage="Configuration"
-                                     description="Main menu profile submenu configuration navigation link"
-                                     className="main-menu-sub-level-text"
-                  />
-                </NavLink>
-              </DropdownItem>
-              <DropdownItem>
-                <NavLink tag={RRDNavLink} to={"/"} onClick={this.logout}>
-                  <FontAwesomeIcon icon="sign-out-alt" />
-                  <FormattedMessage  id={"app.header.main_menu.profile.sub_menu.logout.link"}
-                                     defaultMessage="Déconnexion"
-                                     description="Main menu profile submenu logout navigation link"
-                                     className="main-menu-sub-level-text"
-                  />
-                </NavLink>
-              </DropdownItem>
             </DropdownMenu>
           </UncontrolledDropdown>
-          <NavItem>
-            <NavLink tag={RRDNavLink} to={"/favorites/"}>
-              <FontAwesomeIcon icon="heart" className="menu-top-l1" />
-              <FormattedMessage  id={"app.header.main_menu.favorites.link"}
-                                 defaultMessage="Favoris"
-                                 description="Main menu favorite navigation link"
-                                 className="main-menu-top-level-text"
-              />
-            </NavLink>
-          </NavItem>
-          <NavItem>
-            <NavLink tag={RRDNavLink} to={"/shopping_card"}>
-              <FontAwesomeIcon icon="shopping-cart" className="menu-top-l1" />
-              <FormattedMessage  id={"app.header.main_menu.shopping_card.link"}
-                                 defaultMessage={"Panier de commande"}
-                                 description="Main menu shopping card navigation link"
-                                 className="main-menu-top-level-text"
-              />
-            </NavLink>
-          </NavItem>
+          { user.roles.includes('ROLE_CUSTOMER') && (
+            <Fragment>
+              <NavItem>
+                <NavLink tag={RRDNavLink} to={"/favorites"}>
+                  <FontAwesomeIcon icon="heart" className="menu-top-l1" />
+                  <FormattedMessage  id={"app.header.main_menu.favorites.link"}
+                                     defaultMessage="Favoris"
+                                     description="Main menu favorite navigation link"
+                                     className="main-menu-top-level-text"
+                  />
+                </NavLink>
+              </NavItem>
+
+              <NavItem>
+                <NavLink tag={RRDNavLink} to={"/shopping_card"}>
+                  <FontAwesomeIcon icon="shopping-cart" className="menu-top-l1" />
+                  <FormattedMessage  id={"app.header.main_menu.shopping_card.link"}
+                                     defaultMessage={"Panier de commande"}
+                                     description="Main menu shopping card navigation link"
+                                     className="main-menu-top-level-text"
+                  />
+                </NavLink>
+              </NavItem>
+            </Fragment>
+          )}
           <NavItem>
             <NavLink tag={RRDNavLink} to={"/chat"}>
               <FontAwesomeIcon icon="comments" className="menu-top-l1" />

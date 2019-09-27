@@ -11,6 +11,7 @@ import { Col, Row } from "reactstrap";
 import { FormattedMessage, injectIntl } from "react-intl";
 import { subscribe, retrieve, reset } from "../../actions/user/subscribe";
 import PropTypes from 'prop-types';
+import FlashInfo from "../../layout/FlashInfo";
 
 class SubscribeForm extends React.Component {
   static propTypes = {
@@ -139,6 +140,7 @@ class SubscribeForm extends React.Component {
           id={`user_${data.input.name}`}
         />
         {isInvalid && <div className="invalid-feedback">{data.meta.error}</div>}
+
       </div>
     );
   };
@@ -186,7 +188,7 @@ class SubscribeForm extends React.Component {
     return (
       <Fragment>
         <div className={"user-authentication-form my-3"}>
-          {this.state.user.email !== '' && console.log("Retrieved user temp",this.state.user.email)}
+
 
           <h1>
             <FormattedMessage  id={"app.page.user.subscribe.title"}
@@ -200,6 +202,9 @@ class SubscribeForm extends React.Component {
               {this.props.error}
             </div>
           )}
+          { sessionStorage.getItem('flash-message-error') !== null &&
+            <FlashInfo color={"danger"} message={JSON.parse(sessionStorage.getItem('flash-message-error')).message}/>
+          }
           { this.props.retrieved !== null && (
             <form
               id="subscribe-form"
@@ -528,14 +533,15 @@ class SubscribeForm extends React.Component {
                       <input
                         name="termsAccepted"
                         type="checkbox"
-                        className={'form-control col-1'}
+                        className={'mx-2'}
+                        style={{position: 'absolute', top: '10px'}}
                         required={true}
                         id={`user_termsAccepted`}
                         onChange={this.handleChange}
                       />
                       <label
                         htmlFor={`user_termsAccepted`}
-                        className="form-control-label"
+                        className="form-control-label  col-10 ml-5"
                       >
                         J'accepte les conditions d'utilisation de la plateforme. <Link to={'/terms_condition'}>Voir termes et conditions</Link> <br/>
                         J'autorise l'exploitation de mes données personnelles fournies à cette plateforme dans les limites indiquées par le réglement d'<Link to={'/rgpd'}>Utilisations des données personnelles</Link>

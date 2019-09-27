@@ -20,12 +20,12 @@ export function success(user) {
 
 export function logout() {
   /* Supprimer les infos de l'utilisateur du localStorage */
-  localStorage.removeItem('user');
+  localStorage.removeItem('token');
 
   return { type: 'USER_LOGOUT'};
 }
 
-export function register(values) {
+export function register(values, history) {
   return dispatch => {
     dispatch(loading(true));
     dispatch(request(values));
@@ -40,7 +40,19 @@ export function register(values) {
 
         return response.json();
       })
-      .then(retrieved => dispatch(success(retrieved)))
+      .then(retrieved => {
+        dispatch(success(retrieved));
+
+        /* Sauvegarde de l'utilisateur temporaire */
+        sessionStorage.setItem(
+          'flash-message',
+          JSON.stringify({
+            message : `Bienvenue ${ retrieved.firstname + " " + retrieved.lastname }, visitez votre boîte de réception pour valider votre inscription!`
+          })
+
+        );
+        history.push('/');
+      })
       .catch(e => {
         dispatch(loading(false));
 
@@ -50,7 +62,7 @@ export function register(values) {
         if(e.code === 401)
         {
           dispatch(logout());
-          window.location.reload(true);
+          history.push('register');
         }
 
 

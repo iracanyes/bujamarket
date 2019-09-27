@@ -25,7 +25,7 @@ class ImageFixtures extends Fixture
         $image->setPlace($this->faker->numberBetween(1,10));
         $image->setTitle($this->faker->sentence(7, true));
         $image->setAlt($this->faker->sentence(7, true));
-        $image->setUrl($this->faker->url);
+        $image->setUrl('https://picsum.photos/1600/900');
         $image->setSize($this->faker->numberBetween(3000,8000));
 
         $manager->persist($image);

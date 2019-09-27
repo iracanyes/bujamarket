@@ -18,7 +18,6 @@ class ShoppingCardFixtures extends Fixture implements DependentFixtureInterface
 
 
         /* Relations */
-        $shopping_card->addSuppliersProduct($this->getReference(SupplierProductFixtures::SUPPLIER_PRODUCT_REFERENCE));
         $shopping_card->setCustomer($this->getReference(CustomerFixtures::CUSTOMER_REFERENCE));
 
         $manager->persist($shopping_card);
@@ -31,8 +30,7 @@ class ShoppingCardFixtures extends Fixture implements DependentFixtureInterface
     public function getDependencies()
     {
         return array(
-            SupplierProductFixtures::class,
-            CustomerFixtures::class,
+            CustomerFixtures::class
         );
     }
 }

@@ -157,6 +157,11 @@ class SupplierProduct
      */
     private $rating;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\ShoppingCardSupplierProduct", mappedBy="supplierProduct", orphanRemoval=true)
+     */
+    private $shoppingCardSupplierProducts;
+
     public function __construct()
     {
         $this->initialPrice = 0;
@@ -165,6 +170,7 @@ class SupplierProduct
         $this->favorites = new ArrayCollection();
         $this->orderDetails = new ArrayCollection();
         $this->shoppingCards = new ArrayCollection();
+        $this->shoppingCardSupplierProducts = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -405,6 +411,37 @@ class SupplierProduct
     public function setRating(float $rating): self
     {
         $this->rating = $rating;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ShoppingCardSupplierProduct[]
+     */
+    public function getShoppingCardSupplierProducts(): Collection
+    {
+        return $this->shoppingCardSupplierProducts;
+    }
+
+    public function addShoppingCardSupplierProduct(ShoppingCardSupplierProduct $shoppingCardSupplierProduct): self
+    {
+        if (!$this->shoppingCardSupplierProducts->contains($shoppingCardSupplierProduct)) {
+            $this->shoppingCardSupplierProducts[] = $shoppingCardSupplierProduct;
+            $shoppingCardSupplierProduct->setSupplierProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeShoppingCardSupplierProduct(ShoppingCardSupplierProduct $shoppingCardSupplierProduct): self
+    {
+        if ($this->shoppingCardSupplierProducts->contains($shoppingCardSupplierProduct)) {
+            $this->shoppingCardSupplierProducts->removeElement($shoppingCardSupplierProduct);
+            // set the owning side to null (unless already changed)
+            if ($shoppingCardSupplierProduct->getSupplierProduct() === $this) {
+                $shoppingCardSupplierProduct->setSupplierProduct(null);
+            }
+        }
 
         return $this;
     }

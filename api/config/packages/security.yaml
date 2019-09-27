@@ -15,13 +15,26 @@ security:
         main:
             pattern: ^/
             anonymous: true
+                        
+            # Session based authentication (HTTPOnly Cookie) 
+            #json_login: 
+            #    check_path: app_login
+            #    username_path: email
+            #    password_path: password
+            #    provider: app_user_provider
             
-            # Session-based authentication (HTTPOnly Cookie)
-            json_login: 
-                check_path: app_login
+            # JWT authentication
+            stateless: true
+            json_login:
+                check_path: /authentication_token
                 username_path: email
                 password_path: password
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
                 provider: app_user_provider
+            guard:
+                authenticators:
+                    - lexik_jwt_authentication.jwt_token_authenticator
             
             logout:
                 path: app_logout
