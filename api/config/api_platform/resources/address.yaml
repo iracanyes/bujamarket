@@ -60,5 +60,5 @@ App\Entity\Address:
             path: '/address/{id}'
             requirements:
                 id: '\d+'
-            security: "is_granted('IS_AUTHENTICATED_FULLY') and has_role('ROLE_MEMBER')"
+            access_control: "is_granted('IS_AUTHENTICATED_FULLY') and has_role('ROLE_CUSTOMER')"
             schemes: ['https']

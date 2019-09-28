@@ -45,12 +45,12 @@ App\Entity\Admin:
             path: '/admin/{id}'
             requirements:
                 id: '\d+'
-            access_control: "has_role('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_FULLY', put)"
+            access_control: "has_role('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_FULLY')"
             schemes: ['https']
         delete:
             method: 'DELETE'
             path: '/admin/{id}'
             requirements:
                 id: '\d+'
-            security: 'has_role("ROLE_ADMIN")'
+            access_control: 'has_role("ROLE_ADMIN")'
             schemes: ['https']

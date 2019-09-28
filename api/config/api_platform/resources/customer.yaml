@@ -13,14 +13,14 @@ App\Entity\Customer:
                 _format: 'json'
             # host: 'localhost'
             schemes: ['https']
-            access_control: "has_role('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_FULLY', get)"
+            access_control: "has_role('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_FULLY')"
             #options:
             #    my_option: 'my_option_value'
             status: 200 # customize the HTTP status code to send
         post:
             method: 'POST'
             path: '/customer/create'
-            access_control: "has_role('ROLE_CUSTOMER') and is_granted('IS_AUTHENTICATED_FULLY', post)"
+            access_control: "has_role('ROLE_CUSTOMER') and is_granted('IS_AUTHENTICATED_FULLY')"
             schemes: ['https']
             controller: App\Controller\Customer\CreateCustomer::class
     itemOperations:
@@ -34,7 +34,7 @@ App\Entity\Customer:
                 _format: 'json'
             # host: 'localhost'
             schemes: ['https']
-            access_control: "has_role('ROLE_CUSTOMER') and is_granted('IS_AUTHENTICATED_FULLY', get)"
+            access_control: "has_role('ROLE_CUSTOMER') and is_granted('IS_AUTHENTICATED_FULLY')"
             #options:
             #    my_option: 'my_option_value'
             status: 200 # customize the HTTP status code to send
@@ -44,14 +44,14 @@ App\Entity\Customer:
             path: '/customer/{id}'
             requirements:
                 id: '\d+'
-            access_control: 'has_role("ROLE_CUSTOMER")'
+            access_control: 'has_role("ROLE_CUSTOMER") and is_granted("IS_AUTHENTICATED_FULLY")'
             schemes: ['https']
         delete:
             method: 'DELETE'
             path: '/customer/{id}'
             requirements:
                 id: '\d+'
-            security: 'has_role("ROLE_CUSTOMER")'
+            access_control: 'has_role("ROLE_ADMIN") and is_granted("IS_AUTHENTICATED_FULLY")'
             schemes: ['https']
     subresourceOperations:
         favorites_get_subresource:

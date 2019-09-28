@@ -1,6 +1,5 @@
 import { SubmissionError } from 'redux-form';
 import { fetch } from '../../utils/dataAccess';
-import { push } from 'connected-react-router';
 
 export function error(error) {
   return { type: 'USER_LOGIN_ERROR', error };

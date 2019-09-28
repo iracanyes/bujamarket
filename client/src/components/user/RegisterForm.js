@@ -3,7 +3,7 @@
  * Date: 02/09/2019
  * Description:
  */
-import React,{ Component, Fragment } from 'react';
+import React,{ Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
@@ -136,8 +136,8 @@ class RegisterForm extends React.Component {
   };
 
   render() {
-    const { intl, registering  } = this.props;
-    const { user, submitted } = this.state;
+    const { intl  } = this.props;
+    const { user } = this.state;
     return (
       <Fragment>
         <div className={"user-authentication-form my-3"}>

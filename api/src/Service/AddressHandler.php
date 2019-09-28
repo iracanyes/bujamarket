@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Security\Core\Security;
 
 class AddressHandler
 {
@@ -16,27 +17,25 @@ class AddressHandler
 
     private $request;
 
-    private $session;
+    private $security;
 
     private $logger;
 
-    public function __construct(EntityManagerInterface $em, RequestStack $request, SessionInterface $session, LoggerInterface $logger)
+    public function __construct(EntityManagerInterface $em, RequestStack $request, SessionInterface $session, LoggerInterface $logger, Security $security)
     {
         $this->em = $em;
         $this->request = $request;
-        $this->session = $session;
+        $this->security = $security;
         $this->logger = $logger;
     }
 
     public function getUserAddresses()
     {
-        $token = $this->session->get('token');
 
-        dump($token);
 
         try{
             $user = $this->em->getRepository(User::class)
-                ->findOneBy(['token' => $token]);
+                ->findOneBy(['email' => $this->security->getUser()->getUsername()]);
 
             if($user !== null)
             {
@@ -50,6 +49,6 @@ class AddressHandler
         }
 
 
-        return $addresses ?? null;
+        return $addresses;
     }
 }

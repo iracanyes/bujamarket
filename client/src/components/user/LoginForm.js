@@ -95,7 +95,7 @@ class LoginForm extends React.Component {
 
   render() {
     const { loggingIn, intl } = this.props;
-    const { email, submitted } = this.state;
+    const { email } = this.state;
     return (
       <Fragment>
         <div className="flash-message col-lg-6 mx-auto text-center my-2">

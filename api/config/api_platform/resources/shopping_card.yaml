@@ -50,7 +50,7 @@ App\Entity\ShoppingCard:
             path: '/shopping_card/{id}'
             requirements:
                 id: '\d+'
-            security: 'has_role("ROLE_CUSTOMER") and is_granted("IS_AUTHENTICATED_REMEMBERED")'
+            access_control: 'has_role("ROLE_CUSTOMER") and is_granted("IS_AUTHENTICATED_REMEMBERED")'
             schemes: ['https']
     subresourceOperations:
         suppliers_products_get_subresource:

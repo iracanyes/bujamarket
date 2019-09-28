@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  *
@@ -25,18 +27,23 @@ class ShoppingCardSupplierProduct
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"shopping_card:output"})
+     * @Assert\Type("integer")
      */
     private $quantity;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\ShoppingCard", inversedBy="shoppingCardSupplierProducts", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
+     * @Assert\Type("App\Entity\ShoppingCard")
      */
     private $shoppingCard;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\SupplierProduct", inversedBy="shoppingCardSupplierProducts", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"shopping_card:output"})
+     * @Assert\Type("App\Entity\SupplierProduct")
      */
     private $supplierProduct;
 

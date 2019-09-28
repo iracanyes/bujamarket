@@ -17,7 +17,7 @@ App\Entity\Category:
         post:
             method: 'POST'
             path: '/category/create'
-            access_control: "has_role('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_REMEMBERED', post)"
+            access_control: "has_role('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
             schemes: ['https']
             controller: App\Controller\Categry\CreateCategory::class
     itemOperations:
@@ -38,14 +38,14 @@ App\Entity\Category:
             path: '/category/{id}'
             requirements:
                 id: '\d+'
-            access_control: 'is_granted("IS_AUTHENTICATED_REMEMBERED", put) and has_role("ROLE_ADMIN")'
+            access_control: 'is_granted("IS_AUTHENTICATED_REMEMBERED") and has_role("ROLE_ADMIN")'
             schemes: ['https']
         delete:
             method: 'DELETE'
             path: '/category/{id}'
             requirements:
                 id: '\d+'
-            security: 'is_granted("IS_AUTHENTICATED_REMEMBERED", delete) and has_role("ROLE_ADMIN")'
+            access_control: 'is_granted("IS_AUTHENTICATED_REMEMBERED") and has_role("ROLE_ADMIN")'
             schemes: ['https']    
     subresourceOperations:
         products_get_subresource:

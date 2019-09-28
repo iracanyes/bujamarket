@@ -100,7 +100,6 @@ import Error404Cat from "./layout/Error404Cat";
 /* Internationalisation : FormatJS/React-Intl */
 import { IntlProvider} from "react-intl";
 import { addLocaleData, messages, language } from "./config/internationalization.js";
-import FlashInfo from "./layout/FlashInfo";
 
 addLocaleData();
 
@@ -155,10 +154,6 @@ export class App extends Component
     this.search = this.search.bind(this);
   }
 
-  componentWillMount() {
-    const token = localStorage.getItem('token') ? JSON.parse(localStorage.getItem('token')) : undefined;
-
-  }
 
   /* Permet de transmettre les résultats de recherche du composant MainMenuSearchForm vers le composant d'affichage des résultats SearchResults. Utilisation de la technique HOC - High Order Component */
   search(results)

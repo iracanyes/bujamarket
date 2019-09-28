@@ -1,4 +1,4 @@
-import {
+  import {
   fetch,
   normalize,
   extractHubURL,
@@ -24,16 +24,19 @@ export function list(page = 'products') {
     dispatch(error(''));
 
     fetch(page)
-      .then(response =>
-        response
-          .json()
-          .then(retrieved => ({ retrieved, hubURL: extractHubURL(response) }))
-      )
+      .then(response => {
+
+        return response
+                .json()
+                .then(retrieved => ({retrieved, hubURL: extractHubURL(response)}))
+      })
       .then(({ retrieved, hubURL }) => {
         retrieved = normalize(retrieved);
 
         dispatch(loading(false));
         dispatch(success(retrieved));
+
+
 
         if (hubURL && retrieved['hydra:member'].length)
           dispatch(

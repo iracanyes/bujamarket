@@ -138,10 +138,7 @@ class SupplierProduct
      */
     private $orderDetails;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\ShoppingCard", mappedBy="suppliersProducts")
-     */
-    private $shoppingCards;
+
 
     /**
      * @var float $rating Rating of this product
@@ -169,7 +166,6 @@ class SupplierProduct
         $this->comments = new ArrayCollection();
         $this->favorites = new ArrayCollection();
         $this->orderDetails = new ArrayCollection();
-        $this->shoppingCards = new ArrayCollection();
         $this->shoppingCardSupplierProducts = new ArrayCollection();
     }
 
@@ -367,33 +363,6 @@ class SupplierProduct
         return $this;
     }
 
-    /**
-     * @return Collection|ShoppingCard[]
-     */
-    public function getShoppingCards(): Collection
-    {
-        return $this->shoppingCards;
-    }
-
-    public function addShoppingCard(ShoppingCard $shoppingCard): self
-    {
-        if (!$this->shoppingCards->contains($shoppingCard)) {
-            $this->shoppingCards[] = $shoppingCard;
-            $shoppingCard->addSuppliersProduct($this);
-        }
-
-        return $this;
-    }
-
-    public function removeShoppingCard(ShoppingCard $shoppingCard): self
-    {
-        if ($this->shoppingCards->contains($shoppingCard)) {
-            $this->shoppingCards->removeElement($shoppingCard);
-            $shoppingCard->removeSuppliersProduct($this);
-        }
-
-        return $this;
-    }
 
     /**
      * @ORM\PrePersist

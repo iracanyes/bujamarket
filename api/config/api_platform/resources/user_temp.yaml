@@ -11,7 +11,7 @@ App\Entity\UserTemp:
             defaults:
                 _format: 'json'
             schemes: ['https']
-            access_control: "has_role('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_FULLY', get)"
+            access_control: "has_role('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_FULLY')"
         # La méthode POST doit être enregistré dans les actions sur les opérations    
         post:
             method: 'POST'
@@ -38,6 +38,6 @@ App\Entity\UserTemp:
             path: '/user_temp/{token}'
             requirements:
                 id: '\d+'
-            access_control: 'has_role("ROLE_ADMIN")'
+            access_control: 'has_role("ROLE_ADMIN") and is_granted("IS_AUTHENTICATED_REMEMBERED")'
             access_control_message: 'Only administrators can access this resource'
             schemes: ['https']

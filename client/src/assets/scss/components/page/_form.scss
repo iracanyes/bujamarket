@@ -1,0 +1,14 @@
+/**
+ * Description: Style des formulaires
+ */
+
+/**
+ * Formulaire adresse de livraison
+ */
+form#delivery-address-form
+{
+    button#add-address{
+        position: absolute;
+        bottom: 0;
+    }
+}
