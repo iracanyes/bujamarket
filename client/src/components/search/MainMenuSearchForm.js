@@ -68,7 +68,7 @@ class MainMenuSearchForm extends Component
       const items = this.props.retrievedProducts;
 
       /* Si les valeurs sont acquis par le composant, on les transmet au composant d'ordre supérieur via la fonction (onSearch) reçu comme propriété du composant */
-      console.log("Main Menu Search Form - Items", items);
+      //console.log("Main Menu Search Form - Items", items);
 
       if( typeof items !== "undefined"  && items !== null && this._isMounted)
       {

@@ -1,6 +1,5 @@
 import { SubmissionError } from 'redux-form';
 import {extractHubURL, fetch, normalize} from '../../utils/dataAccess';
-import {mercureMessage, mercureOpen, mercureSubscribe} from "./show";
 
 export function error(error) {
   return { type: 'USER_SUBSCRIBE_ERROR', error };
@@ -114,4 +113,28 @@ export function reset(eventSource) {
   };
 }
 
+export function mercureSubscribe(hubURL, topic) {
+  return dispatch => {
+    const eventSource = subscribe(hubURL, [topic]);
+    dispatch(mercureOpen(eventSource));
+    eventSource.addEventListener('message', event =>
+      dispatch(mercureMessage(normalize(JSON.parse(event.data))))
+    );
+  };
+}
+
+export function mercureOpen(eventSource) {
+  return { type: 'USER_SUBSCRIBE_MERCURE_OPEN', eventSource };
+}
+
+export function mercureMessage(retrieved) {
+  return dispatch => {
+    if (1 === Object.keys(retrieved).length) {
+      dispatch({ type: 'USER_SUBSCRIBE_MERCURE_DELETED', retrieved });
+      return;
+    }
+
+    dispatch({ type: 'USER_SUBSCRIBE_MERCURE_MESSAGE', retrieved });
+  };
+}
 

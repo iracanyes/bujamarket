@@ -61,7 +61,7 @@ class MainMenu extends Component
 
       <NavbarToggler onClick={this.toggle} />
       <Collapse isOpen={this.state.isOpen} navbar>
-        <Nav className="ml-auto" navbar>
+        <Nav className="ml-auto w-100" navbar>
           <UncontrolledDropdown nav inNavbar>
             <DropdownToggle nav caret>
 
@@ -104,7 +104,7 @@ class MainMenu extends Component
                 </div>
               )}
 
-              {user !== null && (
+              {user && (
                 <div>
                   <DropdownItem>
                     <NavLink tag={RRDNavLink} to={"/profile"}>
@@ -126,22 +126,23 @@ class MainMenu extends Component
                       />
                     </NavLink>
                   </DropdownItem>
-                  <DropdownItem>
-                    <NavLink tag={RRDNavLink} to={"/"} onClick={this.logout}>
-                      <FontAwesomeIcon icon="sign-out-alt" />
-                      <FormattedMessage  id={"app.header.main_menu.profile.sub_menu.logout.link"}
-                                         defaultMessage="Déconnexion"
-                                         description="Main menu profile submenu logout navigation link"
-                                         className="main-menu-sub-level-text"
-                      />
-                    </NavLink>
-                  </DropdownItem>
+
                 </div>
               )}
+                <DropdownItem>
+                  <NavLink tag={RRDNavLink} to={"/"} onClick={this.logout}>
+                    <FontAwesomeIcon icon="sign-out-alt" />
+                    <FormattedMessage  id={"app.header.main_menu.profile.sub_menu.logout.link"}
+                                       defaultMessage="Déconnexion"
+                                       description="Main menu profile submenu logout navigation link"
+                                       className="main-menu-sub-level-text"
+                    />
+                  </NavLink>
+                </DropdownItem>
 
             </DropdownMenu>
           </UncontrolledDropdown>
-          { user.roles.includes('ROLE_CUSTOMER') && (
+          { user !== null && user.roles.includes('ROLE_CUSTOMER') && (
             <Fragment>
               <NavItem>
                 <NavLink tag={RRDNavLink} to={"/favorites"}>

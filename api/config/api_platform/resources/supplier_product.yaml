@@ -45,7 +45,7 @@ App\Entity\SupplierProduct:
             path: '/supplier_product/{id}'
             requirements:
                 id: '\d+'
-            security: 'has_role("ROLE_SUPPLIER")  and is_granted("IS_AUTHENTICATED_FULLY")'
+            access_control: 'has_role("ROLE_SUPPLIER")  and is_granted("IS_AUTHENTICATED_FULLY")'
             schemes: ['https']
     subresourceOperations:
         supplier_get_subresource:

@@ -56,7 +56,7 @@ class Search extends Component {
 
     let urlParams = new URLSearchParams(window.location.search);
 
-    console.log(urlParams.get("title"));
+    //console.log(urlParams.get("title"));
     this.setState({searchValue : urlParams.get("title")});
 
     urlParams.get("title") &&
@@ -128,7 +128,7 @@ class Search extends Component {
 
       for(let j = 0; j < 4; j++)
       {
-        console.log("Résultats produits " + j, products[i * 10 + j]);
+        //console.log("Résultats produits " + j, products[i * 10 + j]);
 
         if(products[i * 10 + j])
         {

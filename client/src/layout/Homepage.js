@@ -11,10 +11,7 @@ import FlashInfo from "./FlashInfo";
 
 export default class Homepage extends Component
 {
-  constructor(props)
-  {
-    super(props);
-  }
+
 
   render(){
 

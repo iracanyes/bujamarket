@@ -6,16 +6,6 @@
  */
 import React, {Component, Fragment} from "react";
 import { Link } from "react-router-dom";
-import RegisterForm from "../components/user/RegisterForm";
-import LoginForm from "../components/user/LoginForm";
-import {
-  Row,
-  Col,
-  UncontrolledCollapse,
-  Button,
-  Card,
-  CardBody,
-} from "reactstrap";
 
 class UserAuth extends Component
 {

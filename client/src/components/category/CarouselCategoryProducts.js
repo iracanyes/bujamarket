@@ -72,7 +72,7 @@ class CarouselCategoryProducts extends Component {
   showProducts()
   {
 
-    const { intl } = this.props;
+    //const { intl } = this.props;
 
     const products = this.props.products && this.props.products;
 

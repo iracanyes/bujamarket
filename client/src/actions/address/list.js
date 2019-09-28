@@ -23,16 +23,21 @@ export function list(history) {
     dispatch(loading(true));
     dispatch(error(''));
 
-    fetch('my_addresses')
+    /* Ajout du JWT authentication token de l'utilisateur connecté */
+    const token = localStorage.getItem('token') !== null ? JSON.parse(localStorage.getItem('token')) : null;
+    const headers = new Headers();
+    headers.set('Authorization', 'Bearer '+ token.token);
+
+    fetch('my_addresses', {headers: headers})
       .then(response => {
 
         if (response.status === 401) {
           history.push('login');
         }
-        console.log('Response', response);
-        response
-          .json()
-          .then(retrieved => ({retrieved, hubURL: extractHubURL(response)}))
+
+        return response
+                  .json()
+                  .then(retrieved => ({ retrieved, hubURL: extractHubURL(response) }))
       })
       .then(({ retrieved, hubURL }) => {
         retrieved = normalize(retrieved);

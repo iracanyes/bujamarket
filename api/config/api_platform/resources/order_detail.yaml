@@ -11,14 +11,14 @@ App\Entity\OrderDetail:
                 _format: 'json'
             # host: 'localhost'
             schemes: ['https']
-            access_control: "has_role('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_REMEMBERED', get)"
+            access_control: "has_role('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
             #options:
             #    my_option: 'my_option_value'
             status: 200 # customize the HTTP status code to send
         post:
             method: 'POST'
             path: '/order_detail/create'
-            access_control: "has_role('ROLE_MEMBER') and is_granted('IS_AUTHENTICATED_REMEMBERED', post)"
+            access_control: "has_role('ROLE_MEMBER') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
             schemes: ['https']
             controller: App\Controller\OrderDetail\CreateOrderDetail::class
     itemOperations:
@@ -32,7 +32,7 @@ App\Entity\OrderDetail:
                 _format: 'json'
             # host: 'localhost'
             schemes: ['https']
-            access_control: "has_role('ROLE_MEMBER') and is_granted('IS_AUTHENTICATED_REMEMBERED', get)"
+            access_control: "has_role('ROLE_MEMBER') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
             #options:
             #    my_option: 'my_option_value'
             status: 200 # customize the HTTP status code to send                  
@@ -41,12 +41,12 @@ App\Entity\OrderDetail:
             path: '/order_detail/{id}'
             requirements:
                 id: '\d+'
-            access_control: 'has_role("ROLE_ADMIN") and is_granted("IS_AUTHENTICATED_REMEMBERED", put)'
+            access_control: 'has_role("ROLE_ADMIN") and is_granted("IS_AUTHENTICATED_REMEMBERED")'
             schemes: ['https']
         delete:
             method: 'DELETE'
             path: '/order_detail/{id}'
             requirements:
                 id: '\d+'
-            security: 'has_role("ROLE_ADMIN") and is_granted("IS_AUTHENTICATED_REMEMBERED", delete)'
+            access_control: 'has_role("ROLE_ADMIN") and is_granted("IS_AUTHENTICATED_REMEMBERED")'
             schemes: ['https']
