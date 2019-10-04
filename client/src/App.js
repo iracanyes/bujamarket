@@ -43,13 +43,13 @@ import category from './reducers/category/';
 import comment from './reducers/comment/';
 import customer from './reducers/customer/';
 import deliverydetail from './reducers/deliverydetail/';
-import deliveryglobal from './reducers/deliveryglobal/';
+import deliveryset from './reducers/deliveryset/';
 import favorite from './reducers/favorite/';
 import forum from './reducers/forum/';
 import image from './reducers/image/';
 import message from './reducers/message/';
 import orderdetail from './reducers/orderdetail/';
-import orderglobal from './reducers/orderglobal/';
+import orderset from './reducers/orderset/';
 import orderreturned from './reducers/orderreturned/';
 import payment from './reducers/payment/';
 import product from './reducers/product/';
@@ -72,13 +72,13 @@ import categoryRoutes from './routes/category';
 import commentRoutes from './routes/comment';
 import customerRoutes from './routes/customer';
 import deliveryDetailRoutes from './routes/deliverydetail';
-import deliveryGlobalRoutes from './routes/deliveryglobal';
+import deliveryGlobalRoutes from './routes/deliveryset';
 import favoriteRoutes from './routes/favorite';
 import forumRoutes from './routes/forum';
 import imageRoutes from './routes/image';
 import messageRoutes from './routes/message';
 import orderDetailRoutes from './routes/orderdetail';
-import orderGlobalRoutes from './routes/orderglobal';
+import orderGlobalRoutes from './routes/orderset';
 import orderReturnedRoutes from './routes/orderreturned';
 import paymentRoutes from './routes/payment';
 import productRoutes from './routes/product';
@@ -122,13 +122,13 @@ const store = createStore(
     comment,
     customer,
     deliverydetail,
-    deliveryglobal,
+    deliveryset,
     favorite,
     forum,
     image,
     message,
     orderdetail,
-    orderglobal,
+    orderset,
     orderreturned,
     payment,
     product,

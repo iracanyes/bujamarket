@@ -95,16 +95,16 @@ class Shipper
     private $addresses;
 
     /**
-     * @var Collection $globalDeliveries Global deliveries made by this shipper
+     * @var Collection $SetDeliveries Set deliveries made by this shipper
      *
-     * @ORM\OneToMany(targetEntity="App\Entity\DeliveryGlobal", mappedBy="shipper")
+     * @ORM\OneToMany(targetEntity="DeliverySet", mappedBy="shipper")
      */
-    private $globalDeliveries;
+    private $SetDeliveries;
 
     public function __construct()
     {
         $this->addresses = new ArrayCollection();
-        $this->globalDeliveries = new ArrayCollection();
+        $this->SetDeliveries = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -240,30 +240,30 @@ class Shipper
     }
 
     /**
-     * @return Collection|DeliveryGlobal[]
+     * @return Collection|DeliverySet[]
      */
-    public function getGlobalDeliveries(): Collection
+    public function getSetDeliveries(): Collection
     {
-        return $this->globalDeliveries;
+        return $this->SetDeliveries;
     }
 
-    public function addGlobalDelivery(DeliveryGlobal $globalDelivery): self
+    public function addSetDelivery(DeliverySet $SetDelivery): self
     {
-        if (!$this->globalDeliveries->contains($globalDelivery)) {
-            $this->globalDeliveries[] = $globalDelivery;
-            $globalDelivery->setShipper($this);
+        if (!$this->SetDeliveries->contains($SetDelivery)) {
+            $this->SetDeliveries[] = $SetDelivery;
+            $SetDelivery->setShipper($this);
         }
 
         return $this;
     }
 
-    public function removeGlobalDelivery(DeliveryGlobal $globalDelivery): self
+    public function removeSetDelivery(DeliverySet $SetDelivery): self
     {
-        if ($this->globalDeliveries->contains($globalDelivery)) {
-            $this->globalDeliveries->removeElement($globalDelivery);
+        if ($this->SetDeliveries->contains($SetDelivery)) {
+            $this->SetDeliveries->removeElement($SetDelivery);
             // set the owning side to null (unless already changed)
-            if ($globalDelivery->getShipper() === $this) {
-                $globalDelivery->setShipper(null);
+            if ($SetDelivery->getShipper() === $this) {
+                $SetDelivery->setShipper(null);
             }
         }
 

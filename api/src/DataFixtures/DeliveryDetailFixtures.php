@@ -41,7 +41,7 @@ class DeliveryDetailFixtures extends Fixture implements DependentFixtureInterfac
 
         /* relations */
         $deliveryDetail->setOrderDetail($this->getReference(OrderDetailFixtures::ORDER_DETAIL_REFERENCE));
-        $deliveryDetail->setDeliveryGlobal($this->getReference(DeliveryGlobalFixtures::DELIVERY_GLOBAL_REFERENCE));
+        $deliveryDetail->setDeliverySet($this->getReference(DeliverySetFixtures::DELIVERY_SET_REFERENCE));
 
         $manager->persist($deliveryDetail);
 
@@ -53,7 +53,7 @@ class DeliveryDetailFixtures extends Fixture implements DependentFixtureInterfac
     public function getDependencies()
     {
         return array(
-            DeliveryGlobalFixtures::class,
+            DeliverySetFixtures::class,
             OrderDetailFixtures::class,
         );
     }

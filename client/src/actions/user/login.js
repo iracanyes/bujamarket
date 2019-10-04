@@ -28,7 +28,7 @@ export function logout() {
 * En passant l'objet this.props.history du composant
 * vers son action creator permet de transmettre le changement d'URL au connected-react-router
 **/
-export function login(email, password, history) {
+export function login(email, password, history, prevRoute) {
   return dispatch => {
     dispatch(request({ email }));
     dispatch(loading(true));
@@ -47,23 +47,14 @@ export function login(email, password, history) {
       .then(response => {
         dispatch(loading(false));
 
-        console.log("fetch response headers", response.headers);
-
         /* Utilisation si un objet est retourné*/
         return response.json();
 
-
-        /* Si un objet n'est pas retourné, on transmet la réponse initial
-        return response;
-
-         */
       })
       .then(retrieved => {
         /* Utilisation du localStorage pour stocker le token de sécurité de l'utilisateur authentifié */
         localStorage.removeItem("token");
         localStorage.setItem("token", JSON.stringify(retrieved));
-
-
 
         return retrieved;
 
@@ -72,11 +63,8 @@ export function login(email, password, history) {
         dispatch(success(retrieved));
 
         /* En passant l'objet this.props.history du composant vers son action creator cela permet de transmettre le changement d'URL au store
-        *
         */
-        history.goBack();
-
-
+        history.push({ pathname: prevRoute });
 
       })
       .catch(e => {
@@ -88,14 +76,26 @@ export function login(email, password, history) {
         if(e.code === 401)
         {
           dispatch(logout());
-          history.push('login');
+          history.push({pathname: 'login', state: {from: prevRoute }});
         }
 
+        if(/Unauthorized/.test(e.message))
+        {
+
+          dispatch(logout());
+          /* Redirection vers la page de connexion + message d'erreur */
+          history.push('login');
+          sessionStorage.removeItem('flash-message-error');
+          sessionStorage.setItem('flash-message-error', JSON.stringify({message: "Connexion non-autorisé! identifiant et/ou mot de passe incorrect."}));
+          history.push({pathname: 'login', state: {from: prevRoute  }});
+        }
+
+        /*
         if (e instanceof SubmissionError) {
           dispatch(error(e.errors._error));
           throw e;
         }
-
+        */
         dispatch(error(e));
         //dispatch(error(e.message));
       });

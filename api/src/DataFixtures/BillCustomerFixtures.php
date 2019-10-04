@@ -36,7 +36,7 @@ class BillCustomerFixtures extends Fixture implements DependentFixtureInterface
 
         /* Relations */
         $billCustomer->setCustomer($this->getReference(CustomerFixtures::CUSTOMER_REFERENCE));
-        $billCustomer->setOrderGlobal($this->getReference(OrderGlobalFixtures::ORDER_GLOBAL_REFERENCE));
+        $billCustomer->setOrderSet($this->getReference(OrderSetFixtures::ORDER_SET_REFERENCE));
 
 
 
@@ -69,7 +69,7 @@ class BillCustomerFixtures extends Fixture implements DependentFixtureInterface
     {
         return array(
             CustomerFixtures::class,
-            OrderGlobalFixtures::class
+            OrderSetFixtures::class
 
         );
     }

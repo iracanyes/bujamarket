@@ -81,13 +81,13 @@ class DeliveryDetail
     private $orderDetail;
 
     /**
-     * @var DeliveryGlobal $deliveryGlobal Delivery set which is in
+     * @var DeliverySet $deliverySet Delivery set which is in
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\DeliveryGlobal", inversedBy="deliveryDetails")
+     * @ORM\ManyToOne(targetEntity="DeliverySet", inversedBy="deliveryDetails")
      * @ORM\JoinColumn(nullable=false)
      * @Assert\NotNull()
      */
-    private $deliveryGlobal;
+    private $deliverySet;
 
     public function getId(): ?int
     {
@@ -178,14 +178,14 @@ class DeliveryDetail
         return $this;
     }
 
-    public function getDeliveryGlobal(): ?DeliveryGlobal
+    public function getDeliverySet(): ?DeliverySet
     {
-        return $this->deliveryGlobal;
+        return $this->deliverySet;
     }
 
-    public function setDeliveryGlobal(?DeliveryGlobal $deliveryGlobal): self
+    public function setDeliverySet(?DeliverySet $deliverySet): self
     {
-        $this->deliveryGlobal = $deliveryGlobal;
+        $this->deliverySet = $deliverySet;
 
         return $this;
     }

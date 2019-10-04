@@ -167,10 +167,10 @@ class Show extends React.Component {
               </Button>
             )}
 
-            <Button outline color={"danger"} onClick={() => this.props.history.push('..')}>
-              <FormattedMessage  id={"app.button.cancel"}
-                                 defaultMessage="Annuler"
-                                 description="Button - cancel"
+            <Button outline color={"danger"} onClick={() => this.props.history.goBack()}>
+              <FormattedMessage  id={"app.button.return"}
+                                 defaultMessage="Retour"
+                                 description="Button - return"
               />
             </Button>
           </div>

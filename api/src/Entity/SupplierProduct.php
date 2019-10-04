@@ -159,6 +159,12 @@ class SupplierProduct
      */
     private $shoppingCardSupplierProducts;
 
+    /**
+     * @ORM\Column(type="float")
+     * @Groups({"supplier_product:output"})
+     */
+    private $finalPrice;
+
     public function __construct()
     {
         $this->initialPrice = 0;
@@ -365,11 +371,11 @@ class SupplierProduct
 
 
     /**
-     * @ORM\PrePersist
+     *
      */
     public function updateMinimumPrice(): void
     {
-        $this->getProduct()->setMinimumPrice($this->getInitialPrice());
+        $this->getProduct()->setMinimumPrice($this->getFinalPrice());
     }
 
     public function getRating(): ?float
@@ -411,6 +417,24 @@ class SupplierProduct
                 $shoppingCardSupplierProduct->setSupplierProduct(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getFinalPrice(): ?float
+    {
+        return $this->finalPrice;
+    }
+
+    /**
+     * @ORM\PrePersist()
+     * @return $this
+     */
+    public function setFinalPrice(): self
+    {
+        $rate = $this->getProduct()->getCategory()->getPlatformFee();
+        $this->finalPrice = $this->getInitialPrice() + ($this->getInitialPrice() * $rate);
+        $this->updateMinimumPrice();
 
         return $this;
     }

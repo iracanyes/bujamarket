@@ -2,25 +2,25 @@
 
 namespace App\Repository;
 
-use App\Entity\DeliveryGlobal;
+use App\Entity\DeliverySet;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
- * @method DeliveryGlobal|null find($id, $lockMode = null, $lockVersion = null)
- * @method DeliveryGlobal|null findOneBy(array $criteria, array $orderBy = null)
- * @method DeliveryGlobal[]    findAll()
- * @method DeliveryGlobal[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method DeliverySet|null find($id, $lockMode = null, $lockVersion = null)
+ * @method DeliverySet|null findOneBy(array $criteria, array $orderBy = null)
+ * @method DeliverySet[]    findAll()
+ * @method DeliverySet[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class DeliveryGlobalRepository extends ServiceEntityRepository
 {
     public function __construct(RegistryInterface $registry)
     {
-        parent::__construct($registry, DeliveryGlobal::class);
+        parent::__construct($registry, DeliverySet::class);
     }
 
     // /**
-    //  * @return DeliveryGlobal[] Returns an array of DeliveryGlobal objects
+    //  * @return DeliverySet[] Returns an array of DeliverySet objects
     //  */
     /*
     public function findByExampleField($value)
@@ -37,7 +37,7 @@ class DeliveryGlobalRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?DeliveryGlobal
+    public function findOneBySomeField($value): ?DeliverySet
     {
         return $this->createQueryBuilder('d')
             ->andWhere('d.exampleField = :val')

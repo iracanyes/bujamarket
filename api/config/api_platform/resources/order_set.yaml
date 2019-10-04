@@ -1,0 +1,53 @@
+App\Entity\OrderSet:
+    shortName: 'OrderSet'
+    description: "Order's set for a purchase by a client on the platform"
+    iri: 'https://schema.org/OrderAction'
+    collectionOperations:
+        get:
+            method: 'GET'
+            path: '/order_sets.{_format}'
+            requirements:
+                _format: 'json\jsonld\html'
+            defaults:
+                _format: 'json'
+            # host: 'localhost'
+            schemes: ['https']
+            access_control: "has_role('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
+            #options:
+            #    my_option: 'my_option_value'
+            status: 200 # customize the HTTP status code to send
+        post:
+            method: 'POST'
+            path: '/order_set/create'
+            access_control: "has_role('ROLE_MEMBER') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
+            schemes: ['https']
+            controller: App\Controller\OrderSet\CreateOrderSetAction
+    itemOperations:
+        get:
+            method: 'GET'
+            path: '/order_set/{id}.{_format}'
+            requirements:
+                id: '\d+'
+                _format: 'json\jsonld\html'
+            defaults:
+                _format: 'json'
+            # host: 'localhost'
+            schemes: ['https']
+            access_control: "has_role('ROLE_MEMBER') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
+            #options:
+            #    my_option: 'my_option_value'
+            status: 200 # customize the HTTP status code to send        
+        put:
+            method: 'PUT'
+            path: '/order_set/{id}'
+            requirements:
+                id: '\d+'
+            access_control: 'has_role("ROLE_ADMIN") and is_granted("IS_AUTHENTICATED_REMEMBERED")'
+            schemes: ['https']
+        delete:
+            method: 'DELETE'
+            path: '/order_set/{id}'
+            requirements:
+                id: '\d+'
+            access_control: 'has_role("ROLE_ADMIN") and is_granted("IS_AUTHENTICATED_REMEMBERED")'
+            schemes: ['https']

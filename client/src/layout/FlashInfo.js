@@ -19,7 +19,16 @@ class FlashInfo extends React.Component {
 
   onDismiss() {
     this.setState({ visible: false });
-    sessionStorage.removeItem('flash-message');
+
+    if(sessionStorage.getItem('flash-message') !== null){
+      sessionStorage.removeItem('flash-message');
+    }
+
+    if(sessionStorage.getItem('flash-message-error') !== null )
+    {
+      sessionStorage.removeItem('flash-message-error');
+    }
+
   }
 
   render() {

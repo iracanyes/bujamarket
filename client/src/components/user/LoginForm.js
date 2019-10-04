@@ -1,5 +1,5 @@
 /**
- * Author: dashouney
+ * Author: iracanyes
  * Date: 16/08/2019
  * Description:
  */
@@ -48,12 +48,12 @@ class LoginForm extends React.Component {
     /* On récupère les infos du formulaire contenu dans l'état du composant */
     const { email,  password } = this.state;
 
-    console.log("handleSubmit", { email, password });
-    console.log("handleSubmit - state", this.state );
+
 
     if( email && password )
     {
-      this.props.login(email, password, this.props.history);
+      let prevRoute = this.props.location.state ? this.props.location.state.from : '/';
+      this.props.login(email, password, this.props.history, prevRoute);
     }
 
   }
@@ -178,7 +178,7 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => ({
-  login : (email, password, history) => dispatch(login(email, password, history)),
+  login : (email, password, history, prevRoute) => dispatch(login(email, password, history, prevRoute)),
   logout: () => dispatch( logout())
 });
 

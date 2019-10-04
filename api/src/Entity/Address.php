@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -87,6 +89,16 @@ class Address
      * @ORM\ManyToOne(targetEntity="App\Entity\Shipper", inversedBy="addresses")
      */
     private $shipper;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\OrderSet", mappedBy="address")
+     */
+    private $orderSets;
+
+    public function __construct()
+    {
+        $this->orderSets = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -201,6 +213,37 @@ class Address
     public function setShipper(?Shipper $shipper): self
     {
         $this->shipper = $shipper;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|OrderSet[]
+     */
+    public function getOrderSets(): Collection
+    {
+        return $this->orderSets;
+    }
+
+    public function addOrderSet(OrderSet $orderSet): self
+    {
+        if (!$this->orderSets->contains($orderSet)) {
+            $this->orderSets[] = $orderSet;
+            $orderSet->setAddress($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrderSet(OrderSet $orderSet): self
+    {
+        if ($this->orderSets->contains($orderSet)) {
+            $this->orderSets->removeElement($orderSet);
+            // set the owning side to null (unless already changed)
+            if ($orderSet->getAddress() === $this) {
+                $orderSet->setAddress(null);
+            }
+        }
 
         return $this;
     }

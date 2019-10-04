@@ -1,8 +1,4 @@
-/**
- * Author: iracanyes
- * Date: 9/23/19
- * Description: Form for the delivery address
- */
+
 import React from 'react';
 import { connect } from 'react-redux';
 import {
@@ -16,6 +12,7 @@ import PropTypes from 'prop-types';
 import { Field, reduxForm } from 'redux-form';
 import { injectIntl } from 'react-intl';
 import { list, reset } from '../../actions/address/list';
+import { create } from '../../actions/orderset/create';
 
 class DeliveryAddressForm extends React.Component {
   static propTypes = {
@@ -41,11 +38,20 @@ class DeliveryAddressForm extends React.Component {
   }
 
   componentWillMount() {
+    /* Si token existant, on charge les adresses existantes. Sinon redirection vers la page de connexion */
     if(localStorage.getItem('token') !== null )
     {
       this.props.list(this.props.history);
     }else{
-      this.props.history.push('login');
+
+      this.props.history.push({
+        pathname: 'login',
+        state: {
+          from: this.props.location.pathname
+        }
+      });
+
+
     }
   }
 
@@ -56,14 +62,14 @@ class DeliveryAddressForm extends React.Component {
   showFormNewAddress()
   {
     /* Affichage du formulaire pour ajouter une nouvelle adresse */
-    if(document.getElementById('newAddress').style.display == 'none')
+    if(document.getElementById('newAddress').style.display === 'none')
     {
       /* Affichage du formulaire d'ajout d'une nouvelle adresse */
       document.getElementById('newAddress').style.display = "flex";
       /* Désactivation du choix parmi les adresses existantes */
       document.getElementsByName('existingAddress')[0].setAttribute('disabled', "");
       /* Remise à zéro du choix parmi les adresses existantes */
-      document.getElementsByName('existingAddress')[0].getElementsByTagName('option')[0].selected = 'selected'
+      document.getElementsByName('existingAddress')[0].getElementsByTagName('option')[0].selected = 'selected';
 
     }else{
       document.getElementById('newAddress').style.display = "none";
@@ -106,8 +112,33 @@ class DeliveryAddressForm extends React.Component {
     );
   };
 
-  handleSubmit(e)
+  handleSubmit()
   {
+    /* Récupération des données du formulaire */
+    const data = new FormData(document.getElementById('delivery-address-form'));
+
+    console.log("Form-data",data);
+
+    const delivery_address = {
+      existingAddress: data.get('existingAddress') ? data.get('existingAddress') : 0,
+      newAddress: {
+        street: data.get('street') ? data.get('street') : "",
+        number: data.get('streetNumber') ? data.get('streetNumber') : 0,
+        town: data.get('town') ? data.get('town') : "",
+        state: data.get('state') ? data.get('state') : "",
+        zipCode: data.get('zipCode') ? data.get('zipCode') : "",
+        country: data.get('country') ? data.get('country') : ""
+
+      }
+    };
+
+    console.log('handle submit', delivery_address);
+
+    if(delivery_address.existingAddress !== 0 || (delivery_address.newAddress.street !== "" && delivery_address.newAddress.town !== "" && delivery_address.newAddress.state && delivery_address.newAddress.zipCode !== "" && delivery_address.newAddress.country !== "" ))
+    {
+      this.props.create(delivery_address, this.props.history, this.props.location.pathname);
+    }
+
 
   }
 
@@ -224,7 +255,7 @@ class DeliveryAddressForm extends React.Component {
                             .join(' ') + " " + item.number + " "
                           + item.town +" " + item.state + " "
                           + item.zipCode + " " + item.country }
-                          {console.log('item', item)}
+
                         </option>
                       ))}
 
@@ -256,7 +287,7 @@ class DeliveryAddressForm extends React.Component {
                 <Col>
                   <Field
                     component={this.renderField}
-                    name="street_number"
+                    name="streetNumber"
                     type="text"
                     placeholder="9/101  "
                     labelText={intl.formatMessage({
@@ -299,7 +330,7 @@ class DeliveryAddressForm extends React.Component {
                 <Col>
                   <Field
                     component={this.renderField}
-                    name="zip_code"
+                    name="zipCode"
                     type="text"
                     placeholder="1000"
                     labelText={intl.formatMessage({
@@ -325,120 +356,13 @@ class DeliveryAddressForm extends React.Component {
               </Row>
             </div>
 
-            {/*
-            <Row>
-              <Col>
-                <Field
-                  component={this.renderField}
-                  name="lastname"
-                  type="text"
-                  placeholder="Dubois"
-                  required={true}
-                  labelText={intl.formatMessage({
-                    id: "app.user.item.lastname",
-                    defaultMessage: "Nom",
-                    description: "User item - lastname"
-                  })}
-                  onChange={this.handleChange}
-                  value={user.lastname}
-                />
-              </Col>
-              <Col>
-                <Field
-                  component={this.renderField}
-                  name="firstname"
-                  type="text"
-                  placeholder="Timothy"
-                  required={true}
-                  labelText={intl.formatMessage({
-                    id: "app.user.item.firstname",
-                    defaultMessage: "Prénom",
-                    description: "User item - firstname"
-                  })}
-                  onChange={this.handleChange}
-                  value={user.firstname}
-                />
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                <label
-                  htmlFor={'userType'}
-                  className="form-control-label"
-                >
-                  <FormattedMessage  id={"app.user.item.user_type"}
-                                     defaultMessage="Type d'utilisateur"
-                                     description="User item - user type"
 
-                  />
-                </label>
-                &nbsp;:&nbsp;
-                <Field
-                  component={"select"}
-                  name="userType"
-                  type="select"
-                  placeholder=""
-                  onChange={this.handleChange}
-                  value={this.state.user.userType}
-                >
-                  <option value="customer">
-                    { intl.formatMessage({
-                      id: "app.user.item.user_type.client",
-                      description: "User item - user type client",
-                      defaultMessage: "Client"
-                    })}
-                  </option>
-                  <option value="supplier">
-                    { intl.formatMessage({
-                      id: "app.user.item.user_type.supplier",
-                      description: "User item - user type supplier",
-                      defaultMessage: "Fournisseur"
-                    })}
-
-                  </option>
-                </Field>
-              </Col>
-
-            </Row>
-            <Row>
-              <Col>
-
-                <div className={`form-group d-flex`}>
-                  <input
-                    name="termsAccepted"
-                    type="checkbox"
-                    className={'form-control col-1'}
-                    required={true}
-                    id={`user_termsAccepted`}
-                    onChange={this.handleChange}
-                    value={true}
-                  />
-                  <label
-                    htmlFor={`user_termsAccepted`}
-                    className="form-control-label"
-                  >
-                    J'accepte les condition d'utilisation de la plateforme. <Link to={'/terms_condition'}>Voir termes et conditions</Link> <br/>
-                    J'autorise l'exploitation de mes données personnelles fournis à cette plateforme dans les limites indiquées par les <Link to={'/rgpd'}>Utilisations des données personnelles</Link>
-                  </label>
-
-
-                </div>
-              </Col>
-            </Row>
-            <Row>
-              <button type="submit" className="btn btn-success my-3 mx-2">
-                Envoyer
-              </button>
-              <Link to={"/login"} className={"btn btn-outline-danger my-3 mx-2"}>
-                Annuler
-              </Link>
-            </Row>
-            */}
 
           </form>
           <div className="col-4 d-flex mx-auto mt-3">
+            {/* Créer une fonction qui vérifie que tout le formulaire soit complet (adresse existante ou nouvel adresse ) */}
             { true && (
-              <Button outline color={"success"} className={'mr-3'} onClick={() => this.props.history.push('/payment')}>
+              <Button outline color={"success"} className={'mr-3'} onClick={this.handleSubmit}>
                 <FormattedMessage  id={"app.button.validate"}
                                    defaultMessage="Valider"
                                    description="Button - validate"
@@ -470,6 +394,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({
   list: (history) => dispatch( list(history)),
+  create: (values, history, prevRoute) => dispatch(create(values, history, prevRoute)),
   reset: eventSource => dispatch(reset(eventSource))
 });
 

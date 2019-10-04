@@ -10,6 +10,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
  * @ApiResource()
  * @ORM\Table(name="bjmkt_order_detail")
  * @ORM\Entity(repositoryClass="App\Repository\OrderDetailRepository")
+ * @ORM\HasLifecycleCallbacks()
  */
 class OrderDetail
 {
@@ -96,13 +97,13 @@ class OrderDetail
     private $deliveryDetail;
 
     /**
-     * @var OrderGlobal $orderGlobal Order set which is a part of
-     * @ORM\ManyToOne(targetEntity="App\Entity\OrderGlobal", inversedBy="orderDetails")
+     * @var OrderSet $orderSet Order set which is a part of
+     * @ORM\ManyToOne(targetEntity="OrderSet", inversedBy="orderDetails", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
-     * @Assert\Type("App\Entity\OrderGlobal")
+     * @Assert\Type("App\Entity\OrderSet")
      * @Assert\NotNull()
      */
-    private $orderGlobal;
+    private $orderSet;
 
     /**
      * @var SupplierProduct $supplierProduct Supplier product concerned by this order detail
@@ -160,9 +161,13 @@ class OrderDetail
         return $this->totalCost;
     }
 
-    public function setTotalCost(float $totalCost): self
+    /**
+     *
+     * @return $this
+     */
+    public function setTotalCost()
     {
-        $this->totalCost = $totalCost;
+        $this->totalCost = $this->getUnitCost() * $this->getQuantity();
 
         return $this;
     }
@@ -235,14 +240,14 @@ class OrderDetail
         return $this;
     }
 
-    public function getOrderGlobal(): ?OrderGlobal
+    public function getOrderSet(): ?OrderSet
     {
-        return $this->orderGlobal;
+        return $this->orderSet;
     }
 
-    public function setOrderGlobal(?OrderGlobal $orderGlobal): self
+    public function setOrderSet(?OrderSet $orderSet): self
     {
-        $this->orderGlobal = $orderGlobal;
+        $this->orderSet = $orderSet;
 
         return $this;
     }

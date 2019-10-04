@@ -8,6 +8,7 @@ use App\Entity\Customer;
 use App\Entity\ShoppingCard;
 use App\Entity\ShoppingCardSupplierProduct;
 use App\Entity\SupplierProduct;
+use App\Entity\User;
 use Doctrine\DBAL\Driver\PDOException;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityNotFoundException;
@@ -74,7 +75,7 @@ class ShoppingCardHandler
                         $customer->getShoppingCard()->addShoppingCardSupplierProduct($shopping_card_supplier_product);
                         $this->em->persist($customer);
                     }else{
-                        throw new EntityNotFoundException(`Customer (username=${$this->security->getUser()->getUsername()}) doesn't exist.`, 404);
+                        throw new UserNotFoundException(`Customer (username=${$this->security->getUser()->getUsername()}) doesn't exist.`, 404);
                     }
                 }else{
                     throw new EntityNotFoundException(`Supplier product (id=${$item->productId}) doesn't exist.`, 404);
@@ -92,6 +93,19 @@ class ShoppingCardHandler
 
         return $customer->getShoppingCard();
 
+    }
+
+    public function getShoppingCard()
+    {
+        try{
+            $customer = $this->em->getRepository(Customer::class)
+                ->findOneBy(['email' => $this->security->getUser()->getUsername()]);
+        }catch (PDOException $exception){
+            throw new UserNotFoundException("email", $this->security->getUser()->getUsername() );
+        }
+
+
+        return $customer->getShoppingCard();
     }
 
 }

@@ -62,13 +62,13 @@ class BillCustomer extends  Bill
     private $totalShippingCost;
 
     /**
-     * @var OrderGlobal $orderGlobal Order set associated to this bill
+     * @var OrderSet $orderSet Order set associated to this bill
      *
-     * @ORM\OneToOne(targetEntity="App\Entity\OrderGlobal", inversedBy="billCustomer", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="OrderSet", inversedBy="billCustomer", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
      * @Assert\NotNull()
      */
-    private $orderGlobal;
+    private $orderSet;
 
     /**
      * @var Customer $customer Customer associated  to this bill
@@ -156,14 +156,14 @@ class BillCustomer extends  Bill
         return $this;
     }
 
-    public function getOrderGlobal(): ?OrderGlobal
+    public function getOrderSet(): ?OrderSet
     {
-        return $this->orderGlobal;
+        return $this->orderSet;
     }
 
-    public function setOrderGlobal(OrderGlobal $orderGlobal): self
+    public function setOrderSet(OrderSet $orderSet): self
     {
-        $this->orderGlobal = $orderGlobal;
+        $this->orderSet = $orderSet;
 
         return $this;
     }
