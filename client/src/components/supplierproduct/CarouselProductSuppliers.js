@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { injectIntl } from "react-intl";
+import { injectIntl, FormattedMessage } from "react-intl";
 import 'bootstrap/dist/css/bootstrap.css';
 
 /* Carousel */
@@ -17,7 +17,6 @@ import {
   CarouselControl,
   CarouselIndicators,
 } from "reactstrap";
-import { FormattedMessage } from "react-intl";
 import { retrieveByProductId, reset  } from "../../actions/supplierproduct/listByProductId";
 import Rating from "../../layout/Rating";
 import ButtonAddShoppingCard from "./ButtonAddShoppingCard";
@@ -88,6 +87,8 @@ class CarouselProductSuppliers extends Component {
   }
 
 
+
+
   showProductSuppliers()
   {
 
@@ -153,18 +154,8 @@ class CarouselProductSuppliers extends Component {
                     <p>
                       À partir de : {productSuppliers[i*12+j]["minimumPrice"]}
                     </p>
-                    <Link to={'/shopping_card/add/'+productSuppliers[i*12+j]['id']} className={"btn btn-outline-primary d-block mx-auto"}>
-                      <FormattedMessage  id={"app.button.add_shopping_card"}
-                                         defaultMessage="Ajouter au panier"
-                                         description=" Button - Add to shopping card"
-                      />
-                    </Link>
-                    <Link to={'/order_set/create/'+productSuppliers[i*12+j]['id']} className={"btn btn-outline-danger d-block mx-auto"}>
-                      <FormattedMessage  id={"app.button.order_now"}
-                                         defaultMessage="Commande immédiat"
-                                         description=" Button - Order now"
-                      />
-                    </Link>
+                    <ButtonAddShoppingCard buttonLabel={"Ajouter au panier"} product={productSuppliers[i*12+j]}/>
+
                   </CardFooter>
                 </Card>
               </Col>
@@ -231,7 +222,7 @@ class CarouselProductSuppliers extends Component {
                   <Rating rating={productSuppliers[0]["rating"]} />
 
                   <p>
-                    À partir de : {productSuppliers[0]["initialPrice"].toFixed(2)} &euro;
+                    À partir de : {productSuppliers[0]["finalPrice"].toFixed(2)} &euro;
                   </p>
                   <ButtonAddShoppingCard buttonLabel={"Ajouter au panier"} product={productSuppliers[0]}/>
                   {/*
@@ -242,12 +233,7 @@ class CarouselProductSuppliers extends Component {
                     />
                   </Link>
                   */}
-                  <Link to={'/order_set/create/'+productSuppliers[0]['id']} className={"btn btn-outline-danger d-block mx-auto"}>
-                    <FormattedMessage  id={"app.button.order_now"}
-                                       defaultMessage="Commande immédiat"
-                                       description=" Button - Order now"
-                    />
-                  </Link>
+
                 </CardFooter>
               </Card>
             </Col>

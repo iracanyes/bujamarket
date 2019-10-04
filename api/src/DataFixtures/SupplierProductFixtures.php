@@ -7,6 +7,7 @@ use \Faker\Factory;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
+ini_set('memory_limit', '1024M');
 
 class SupplierProductFixtures extends Fixture implements DependentFixtureInterface
 {
@@ -54,6 +55,7 @@ class SupplierProductFixtures extends Fixture implements DependentFixtureInterfa
         return array(
             SupplierFixtures::class,
             ProductFixtures::class,
+            CategoryFixtures::class,
         );
 
     }

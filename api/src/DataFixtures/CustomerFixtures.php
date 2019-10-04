@@ -48,7 +48,7 @@ class CustomerFixtures extends Fixture implements DependentFixtureInterface
         $customer->setCustomerKey($this->faker->unique()->sha1);
         $customer->setNbAbuseIdentified(0);
         $customer->setAverageRating($this->faker->randomFloat(1,0,10));
-        $customer->setNbOrderCompleted(count($customer->getOrderGlobals()));
+        $customer->setNbOrderCompleted(count($customer->getOrderSets()));
         $customer->setNbOrderWithdrawn(0);
 
 

@@ -12,6 +12,7 @@
         "lexik/jwt-authentication-bundle": "^2.6",
         "nelmio/cors-bundle": "^1.5",
         "sensio/framework-extra-bundle": "5.2.4",
+        "stripe/stripe-php": "^7.3",
         "symfony/config": "4.2.*",
         "symfony/console": "4.2.*",
         "symfony/dotenv": "4.2.*",

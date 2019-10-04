@@ -8,6 +8,7 @@
 import React from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, Label, Form, FormGroup } from 'reactstrap';
 import { FormattedMessage } from "react-intl";
+import { Link } from 'react-router-dom';
 
 class ButtonAddShoppingCard extends React.Component {
   constructor(props) {
@@ -17,6 +18,7 @@ class ButtonAddShoppingCard extends React.Component {
       quantity: 1
     };
 
+    this.addToShoppingCard = this.addToShoppingCard.bind(this);
     this.toggle = this.toggle.bind(this);
     this.cancel = this.cancel.bind(this);
     this.changeQuantity = this.changeQuantity.bind(this);
@@ -27,6 +29,12 @@ class ButtonAddShoppingCard extends React.Component {
       modal: !prevState.modal
     }));
 
+    this.addToShoppingCard();
+
+  }
+
+  addToShoppingCard()
+  {
     /* Ajout au  panier de commande dans LocalStorage  */
     let shopping_card = localStorage.getItem("shopping_card") !== null ? JSON.parse(localStorage.getItem("shopping_card")) : [];
 
@@ -48,7 +56,7 @@ class ButtonAddShoppingCard extends React.Component {
           'productId': this.props.product.id,
           'title': this.props.product.product.title,
           'description': this.props.product.product.resume,
-          'price': this.props.product.initialPrice,
+          'price': this.props.product.finalPrice,
           'quantity': this.state.quantity
         });
 
@@ -59,7 +67,7 @@ class ButtonAddShoppingCard extends React.Component {
         'productId': this.props.product.id,
         'title': this.props.product.product.title,
         'description': this.props.product.product.resume,
-        'price': this.props.product.initialPrice,
+        'price': this.props.product.finalPrice,
         'quantity': this.state.quantity
       });
 
@@ -68,7 +76,6 @@ class ButtonAddShoppingCard extends React.Component {
     /* Enregistrement du panier de commande */
     localStorage.removeItem('shopping_card');
     localStorage.setItem('shopping_card', JSON.stringify(shopping_card));
-
   }
 
   cancel(){
@@ -104,7 +111,7 @@ class ButtonAddShoppingCard extends React.Component {
 
     return (
       <div>
-        <Form inline onSubmit={(e) => e.preventDefault()}>
+        <Form inline id={"add-shopping-card"} onSubmit={(e) => e.preventDefault()}>
           <FormGroup className={'w-100'}>
             <Label for="quantity" className={"mr-2"}>
               <FormattedMessage  id={"app.form.quantity"}
@@ -116,7 +123,18 @@ class ButtonAddShoppingCard extends React.Component {
 
           </FormGroup>
           {' '}
-          <Button outline color="success" className={"w-100 my-2"} onClick={this.toggle}>{this.props.buttonLabel}</Button>
+          <Button outline color="success" className={"w-100 my-2"} onClick={this.toggle}>
+            <FormattedMessage  id={"app.button.add_shopping_card"}
+                               defaultMessage="Ajouter au panier"
+                               description=" Button - Order now"
+            />
+          </Button>
+          <Link to={'/shopping_card'} className={"btn btn-outline-danger w-100"} onClick={this.addToShoppingCard}>
+            <FormattedMessage  id={"app.button.order_now"}
+                               defaultMessage="Commande immédiat"
+                               description=" Button - Order now"
+            />
+          </Link>
         </Form>
         <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className} >
           <ModalHeader toggle={this.toggle}>Panier de commande</ModalHeader>

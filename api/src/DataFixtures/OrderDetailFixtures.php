@@ -26,11 +26,11 @@ class OrderDetailFixtures extends Fixture implements DependentFixtureInterface
         $orderDetail->setStatus($this->faker->randomElement(['pending','in progress','shipped','finalized','blocked']));
         $orderDetail->setQuantity($this->faker->numberBetween(1,20));
         $orderDetail->setUnitCost($this->faker->numberBetween(2, 5000));
-        $orderDetail->setTotalCost($this->faker->numberBetween(2, 20000));
+        $orderDetail->setTotalCost();
 
         /* Relations */
         $orderDetail->setSupplierProduct($this->getReference(SupplierProductFixtures::SUPPLIER_PRODUCT_REFERENCE));
-        $orderDetail->setOrderGlobal($this->getReference(OrderGlobalFixtures::ORDER_GLOBAL_REFERENCE));
+        $orderDetail->setOrderSet($this->getReference(OrderSetFixtures::ORDER_SET_REFERENCE));
 
 
 
@@ -44,7 +44,7 @@ class OrderDetailFixtures extends Fixture implements DependentFixtureInterface
     public function getDependencies()
     {
         return array(
-            OrderGlobalFixtures::class,
+            OrderSetFixtures::class,
             SupplierProductFixtures::class,
         );
     }

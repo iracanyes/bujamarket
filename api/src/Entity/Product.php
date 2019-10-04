@@ -277,25 +277,21 @@ class Product
     }
 
     /**
-     * @param float $minimumPrice
+     *
      * @return void
      */
     public function setMinimumPrice(float $minimumPrice): void
     {
 
-
-        $product_suppliers = $this->getProductSuppliers();
-        $taille = $product_suppliers->count();
-
-        if($taille > 1 && $minimumPrice !== 0)
+        if($this->minimumPrice == 0)
         {
-            for($i = 0; $i < $taille; $i++)
+            $this->minimumPrice = $minimumPrice;
+        }else{
+            if($this->minimumPrice > $minimumPrice)
             {
-                $minimumPrice = $product_suppliers[$i]->getInitialPrice() < $minimumPrice ? $product_suppliers[$i]->getInitialPrice() : $minimumPrice;
+                $this->minimumPrice = $minimumPrice;
             }
         }
-
-        $this->minimumPrice = $minimumPrice;
 
     }
 

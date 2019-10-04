@@ -80,7 +80,7 @@ class MainMenu extends Component
               { user ===  null && (
                 <div className={'d-flex'}>
                   <DropdownItem>
-                    <NavLink tag={RRDNavLink} to={"/login"}>
+                    <NavLink tag={RRDNavLink} to={{pathname:"/login", state: { from : this.props.location.pathname }}}>
                       <FontAwesomeIcon icon="user-check" className={"float-left"} />
                       <FormattedMessage  id={"app.header.main_menu.profile.sub_menu.sign_in.link"}
                                          defaultMessage="Connexion"
@@ -104,7 +104,7 @@ class MainMenu extends Component
                 </div>
               )}
 
-              {user && (
+              {user !== null && (
                 <div>
                   <DropdownItem>
                     <NavLink tag={RRDNavLink} to={"/profile"}>

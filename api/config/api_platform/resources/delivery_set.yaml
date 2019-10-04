@@ -1,0 +1,52 @@
+App\Entity\DeliverySet:
+    shortName: 'DeliverySet'
+    description: "Delivery informations for an order's set purchased on this platform"
+    collectionOperations:
+        get:
+            method: 'GET'
+            path: '/delivery_sets.{_format}'
+            requirements:
+                _format: 'json\jsonld\html'
+            defaults:
+                _format: 'json'
+            # host: 'localhost'
+            schemes: ['https']
+            access_control: "has_role('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_FULLY')"
+            #options:
+            #    my_option: 'my_option_value'
+            status: 200 # customize the HTTP status code to send
+        post:
+            method: 'POST'
+            path: '/delivery_set/create'
+            access_control: "has_role('ROLE_CUSTOMER') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
+            schemes: ['https']
+            controller: App\Controller\DeliverySet\CreateDeliverySet::class
+    itemOperations:
+        get:
+            method: 'GET'
+            path: '/delivery_set/{id}.{_format}'
+            requirements:
+                id: '\d+'
+                _format: 'json\jsonld\html'
+            defaults:
+                _format: 'json'
+            # host: 'localhost'
+            schemes: ['https']
+            access_control: "has_role('ROLE_CUSTOMER') and is_granted('IS_AUTHENTICATED_FULLY')"
+            #options:
+            #    my_option: 'my_option_value'
+            status: 200 # customize the HTTP status code to send        
+        put:
+            method: 'PUT'
+            path: '/delivery_set/{id}'
+            requirements:
+                id: '\d+'
+            access_control: 'has_role("ROLE_CUSTOMER") and is_granted("IS_AUTHENTICATED_REMEMBERED")'
+            schemes: ['https']
+        delete:
+            method: 'DELETE'
+            path: '/delivery_set/{id}'
+            requirements:
+                id: '\d+'
+            access_control: 'has_role("ROLE_ADMIN") and is_granted("IS_AUTHENTICATED_FULLY")'
+            schemes: ['https']

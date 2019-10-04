@@ -78,12 +78,12 @@ class Customer extends User
     private $nbOrderWithdrawn;
 
     /**
-     * @var Collection $orderGlobals Order sets made by this customer
+     * @var Collection $orderSets Order sets made by this customer
      *
-     * @ORM\OneToMany(targetEntity="App\Entity\OrderGlobal", mappedBy="customer")
+     * @ORM\OneToMany(targetEntity="OrderSet", mappedBy="customer")
      * @Groups({"customer:output"})
      */
-    private $orderGlobals;
+    private $orderSets;
 
     /**
      * @var Collection $customerBills Orders Bill of this customer
@@ -128,7 +128,7 @@ class Customer extends User
     public function __construct()
     {
         parent::__construct();
-        $this->orderGlobals = new ArrayCollection();
+        $this->orderSets = new ArrayCollection();
         $this->customerBills = new ArrayCollection();
         $this->refundBills = new ArrayCollection();
         $this->comments = new ArrayCollection();
@@ -206,30 +206,30 @@ class Customer extends User
     }
 
     /**
-     * @return Collection|OrderGlobal[]
+     * @return Collection|OrderSet[]
      */
-    public function getOrderGlobals(): Collection
+    public function getOrderSets(): Collection
     {
-        return $this->orderGlobals;
+        return $this->orderSets;
     }
 
-    public function addOrderGlobal(OrderGlobal $orderGlobal): self
+    public function addOrderSet(OrderSet $orderSet): self
     {
-        if (!$this->orderGlobals->contains($orderGlobal)) {
-            $this->orderGlobals[] = $orderGlobal;
-            $orderGlobal->setCustomer($this);
+        if (!$this->orderSets->contains($orderSet)) {
+            $this->orderSets[] = $orderSet;
+            $orderSet->setCustomer($this);
         }
 
         return $this;
     }
 
-    public function removeOrderGlobal(OrderGlobal $orderGlobal): self
+    public function removeOrderSet(OrderSet $orderSet): self
     {
-        if ($this->orderGlobals->contains($orderGlobal)) {
-            $this->orderGlobals->removeElement($orderGlobal);
+        if ($this->orderSets->contains($orderSet)) {
+            $this->orderSets->removeElement($orderSet);
             // set the owning side to null (unless already changed)
-            if ($orderGlobal->getCustomer() === $this) {
-                $orderGlobal->setCustomer(null);
+            if ($orderSet->getCustomer() === $this) {
+                $orderSet->setCustomer(null);
             }
         }
 
