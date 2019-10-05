@@ -11,7 +11,7 @@ docs
 # Volumes DB
 shared
 #les fichiers de développement
-*.save
+**/*.save
 ###< Custom ###
 
 ###> Security ###
