@@ -10,7 +10,8 @@ docs
 .idea
 # Volumes DB
 shared
-
+#les fichiers de développement
+*.save
 ###< Custom ###
 
 ###> Security ###
