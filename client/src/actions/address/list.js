@@ -18,7 +18,7 @@ export function success(retrieved) {
   return { type: 'ADDRESS_LIST_SUCCESS', retrieved };
 }
 
-export function list(history) {
+export function list(history, prevRoute) {
   return dispatch => {
     dispatch(loading(true));
     dispatch(error(''));

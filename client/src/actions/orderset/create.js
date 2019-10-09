@@ -15,7 +15,7 @@ export function success(created) {
   return { type: 'ORDERSET_CREATE_SUCCESS', created };
 }
 
-export function create(values, history, prevRoute) {
+export function create(values, history, locationState) {
   return dispatch => {
     dispatch(loading(true));
 
@@ -39,7 +39,9 @@ export function create(values, history, prevRoute) {
 
         console.log('retrieved', retrieved);
         /* Redirection vers la page de paiement  */
-        history.push({pathname:'payment', state: {from: prevRoute, orderSet: retrieved}});
+        sessionStorage.removeItem('my_order');
+        sessionStorage.setItem('my_order', JSON.stringify(retrieved));
+        history.push({pathname:'validate_order', state: {from: locationState ,  params : {orderSet: retrieved}}});
       })
       .catch(e => {
         dispatch(loading(false));
@@ -53,8 +55,8 @@ export function create(values, history, prevRoute) {
         {
           dispatch(logout());
           sessionStorage.removeItem('flash-message-error');
-          sessionStorage.setItem("flash-message-error", JSON.stringify({ message: "Connexion non-autorisé! Reconnectez-vous."}));
-          history.push({pathname:'login', state: {from: prevRoute}});
+          sessionStorage.setItem("flash-message-error", JSON.stringify({ message: "Accés non-autorisé! Identifiez-vous."}));
+          history.push({pathname:'login', state: {from: locationState.from }});
         }
 
         dispatch(error(e.message));

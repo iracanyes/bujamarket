@@ -18,12 +18,17 @@ export function success(retrieved) {
   return { type: 'SHIPPER_LIST_SUCCESS', retrieved };
 }
 
-export function list(page = 'shippers') {
+export function list(history, prevRoute) {
   return dispatch => {
     dispatch(loading(true));
     dispatch(error(''));
 
-    fetch(page)
+    /* Ajout du JWT authentication token de l'utilisateur connecté */
+    const token = localStorage.getItem('token') !== null ? JSON.parse(localStorage.getItem('token')) : null;
+    const headers = new Headers();
+    headers.set('Authorization', 'Bearer '+ token.token);
+
+    fetch('shippers', { headers: headers})
       .then(response =>
         response
           .json()
@@ -46,6 +51,13 @@ export function list(page = 'shippers') {
       .catch(e => {
         dispatch(loading(false));
         dispatch(error(e.message));
+
+        if(e.code === 401)
+        {
+          sessionStorage.removeItem('flash-message-error');
+          sessionStorage.setItem('flash-message-error', JSON.parse({message: 'Authentification nécessaire!'}));
+          history.push({pathname: 'login', state: {from: prevRoute}});
+        }
       });
   };
 }

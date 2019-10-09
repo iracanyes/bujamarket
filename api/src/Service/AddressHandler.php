@@ -55,10 +55,8 @@ class AddressHandler
         return $addresses;
     }
 
-    public function handleDeliveryAddress()
+    public function getDeliveryAddress($data)
     {
-        /* Récupération du body de la requête POST */
-        $data = json_decode($this->request->getContent());
 
         /* Si aucune adresse existante n'est séléctionné, on ajoute la nouvel addresse
          * Sinon on récupère l'adresse existant.
@@ -96,8 +94,8 @@ class AddressHandler
 
         try{
             $user = $this->em->getRepository(User::class)
-                        ->findBy(['email' => $user->getUsername()]);
-
+                        ->findOneBy(['email' => $user->getUsername()]);
+            dump($user);
             $address->setUser($user);
 
             $this->em->persist($address);

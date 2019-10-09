@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import {
   Button,
@@ -11,17 +11,19 @@ import { FormattedMessage } from 'react-intl';
 import PropTypes from 'prop-types';
 import { Field, reduxForm } from 'redux-form';
 import { injectIntl } from 'react-intl';
-import { list, reset } from '../../actions/address/list';
+import { list, reset as resetAddresses } from '../../actions/address/list';
+import { list as listShipper, reset as resetShipper } from '../../actions/shipper/list';
 import { create } from '../../actions/orderset/create';
 
 class DeliveryAddressForm extends React.Component {
   static propTypes = {
-    retrieved: PropTypes.object,
-    loading: PropTypes.bool.isRequired,
-    error: PropTypes.string,
+    retrievedAddresses: PropTypes.object,
+    retrievedShipper: PropTypes.object,
+    loadingAddresses: PropTypes.bool.isRequired,
+    errorAddresses: PropTypes.string,
     list: PropTypes.func.isRequired,
-    reset: PropTypes.func.isRequired,
-    eventSource: PropTypes.instanceOf(EventSource)
+    resetAddresses: PropTypes.func.isRequired,
+    eventSourceAddresses: PropTypes.instanceOf(EventSource)
   };
 
   constructor(props)
@@ -33,6 +35,7 @@ class DeliveryAddressForm extends React.Component {
       newAddress: {}
     };
 
+    this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.showFormNewAddress = this.showFormNewAddress.bind(this);
   }
@@ -41,7 +44,10 @@ class DeliveryAddressForm extends React.Component {
     /* Si token existant, on charge les adresses existantes. Sinon redirection vers la page de connexion */
     if(localStorage.getItem('token') !== null )
     {
+      /* Récupération des adresses existantes  */
       this.props.list(this.props.history);
+      /* Récupération des transporteurs disponibles */
+      this.props.listShipper(this.props.history, this.props.location.pathname);
     }else{
 
       this.props.history.push({
@@ -112,6 +118,32 @@ class DeliveryAddressForm extends React.Component {
     );
   };
 
+  handleChange(e)
+  {
+    let value = e.target.value;
+    console.log('value', value);
+    console.log('retrievedShipper', this.props.retrievedShipper );
+
+    let shipper =  this.props.retrievedShipper && this.props.retrievedShipper['hydra:member'].filter(item => item.id === parseInt(value) )[0];
+
+    let shopping_card = localStorage.getItem("shopping_card") ? JSON.parse(localStorage.getItem("shopping_card")) : [];
+
+    let sum = 0;
+    shopping_card.forEach( item => sum += parseFloat(item.price) * item.quantity );
+
+    document.getElementById('list-shipper-choice-social-reason').innerHTML = shipper.socialReason;
+
+    /* Calcul et affichage du coût de transport*/
+    let deliveryCost = 0;
+
+    document.getElementById('list-shipper-choice-price').innerHTML = deliveryCost+ '€';
+
+    /* Affichage du coût total */
+    document.getElementById('list-total-price').innerHTML = parseFloat(sum + deliveryCost).toFixed(2) + '€';
+
+
+  }
+
   handleSubmit()
   {
     /* Récupération des données du formulaire */
@@ -120,6 +152,7 @@ class DeliveryAddressForm extends React.Component {
     console.log("Form-data",data);
 
     const delivery_address = {
+      shipper: data.get('shipper') ? data.get('shipper') : 0,
       existingAddress: data.get('existingAddress') ? data.get('existingAddress') : 0,
       newAddress: {
         street: data.get('street') ? data.get('street') : "",
@@ -134,7 +167,7 @@ class DeliveryAddressForm extends React.Component {
 
     console.log('handle submit', delivery_address);
 
-    if(delivery_address.existingAddress !== 0 || (delivery_address.newAddress.street !== "" && delivery_address.newAddress.town !== "" && delivery_address.newAddress.state && delivery_address.newAddress.zipCode !== "" && delivery_address.newAddress.country !== "" ))
+    if(delivery_address.shipper !== 0 && ( delivery_address.existingAddress !== 0 || (delivery_address.newAddress.street !== "" && delivery_address.newAddress.town !== "" && delivery_address.newAddress.state && delivery_address.newAddress.zipCode !== "" && delivery_address.newAddress.country !== "" )))
     {
       this.props.create(delivery_address, this.props.history, this.props.location.pathname);
     }
@@ -145,257 +178,357 @@ class DeliveryAddressForm extends React.Component {
 
   render() {
     const { intl } = this.props;
+    /* Clé pour la liste des courses */
+    let key= 1;
+    /* Récupération du panier de commande */
+    let shopping_card = localStorage.getItem("shopping_card") ? JSON.parse(localStorage.getItem("shopping_card")) : [];
+
+    /* Calcul de la somme du panier de commande */
+    let sum = 0;
+    shopping_card.forEach( item => sum += parseFloat(item.price) * item.quantity );
+
 
     return (
-      <div className={"col-lg-6 col-xs-12 mx-auto"}>
-        <div>
-          {/* Breadcrumb */}
-          <div className="col-lg-12 px-0">
+      <Fragment>
+        <div className={"col-lg-6 col-xs-12 mx-auto "}>
+          <div>
+            {/* Breadcrumb */}
+            <div className="col-lg-12 px-0">
 
-            <nav className="navbar navbar-expand-md navbar-dark bg-primary mb-5 no-content w-100">
+              <nav className="navbar navbar-expand-md navbar-dark bg-primary mb-5 no-content w-100">
 
-              <div className="col-12 mr-auto">
-                <nav aria-label="breadcrumb" className={"w-100 bg-primary text-white"}>
-                  <ol className="breadcrumb clearfix d-none d-md-inline-flex p-0 w-100 mb-0 bg-primary">
-                    <li className="" onClick={() => this.props.history.push('..')}>
+                <div className="col-12 mr-auto">
+                  <nav aria-label="breadcrumb" className={"w-100 bg-primary text-white"}>
+                    <ol className="breadcrumb clearfix d-none d-md-inline-flex p-0 w-100 mb-0 bg-primary">
+                      <li className="" onClick={() => this.props.history.push('..')}>
                         <FormattedMessage  id={"app.page.shopping_card.shopping_card_validation"}
                                            defaultMessage="Validation du panier de commande"
                                            description="App - Delivery address"
                         />
-                      <FontAwesomeIcon icon={'angle-double-right'} className={'mx-2 text-white'} aria-hidden={'true'}/>
+                        <FontAwesomeIcon icon={'angle-double-right'} className={'mx-2 text-white'} aria-hidden={'true'}/>
 
-                    </li>
-                    <li className="">
-                      <b>
-                        <span className="text-white">
-                          <FormattedMessage  id={"app.delivery_address"}
-                                             defaultMessage="Adresse de livraison"
-                                             description="App - Delivery address"
+                      </li>
+                      <li className="">
+                        <b>
+                          <span className="text-white">
+                            <FormattedMessage  id={"app.delivery_address"}
+                                               defaultMessage="Adresse de livraison"
+                                               description="App - Delivery address"
+                            />
+
+                          </span>
+                        </b>
+
+                        <FontAwesomeIcon icon={'angle-double-right'} className={'mx-2 text-white'} aria-hidden={'true'}/>
+
+                      </li>
+                      <li className="">
+                        <span className="text-white" >
+                          <FormattedMessage  id={"app.payment"}
+                                             defaultMessage="Paiement"
+                                             description="App - Payment"
                           />
 
                         </span>
-                      </b>
+                        <FontAwesomeIcon icon={'angle-double-right'} className={'mx-2 text-white'} aria-hidden={'true'}/>
 
-                      <FontAwesomeIcon icon={'angle-double-right'} className={'mx-2 text-white'} aria-hidden={'true'}/>
+                      </li>
+                      <li className="breadcrumb-item">
+                        <span>
+                          <FormattedMessage  id={"app.bill"}
+                                             defaultMessage="Facture"
+                                             description="App - bill"
+                          />
+                        </span>
+                      </li>
+                    </ol>
+                  </nav>
+                </div>
 
-                    </li>
-                    <li className="">
-                      <span className="text-white" >
-                        <FormattedMessage  id={"app.payment"}
-                                           defaultMessage="Paiement"
-                                           description="App - Payment"
-                        />
+              </nav>
 
-                      </span>
-                      <FontAwesomeIcon icon={'angle-double-right'} className={'mx-2 text-white'} aria-hidden={'true'}/>
-
-                    </li>
-                    <li className="breadcrumb-item">
-                      <span>
-                        <FormattedMessage  id={"app.bill"}
-                                           defaultMessage="Facture"
-                                           description="App - bill"
-                        />
-                      </span>
-                    </li>
-                  </ol>
-                </nav>
-              </div>
-
-            </nav>
+            </div>
 
           </div>
+          <div className={"order-md-4 my-4"}>
+            <h4 className="d-flex justify-content-between align-items-center mb-3">
+              <span className="text-muted">Adresse de livraison</span>
 
-        </div>
-        <div className={"order-md-4 my-4"}>
-          <h4 className="d-flex justify-content-between align-items-center mb-3">
-            <span className="text-muted">Adresse de livraison</span>
+            </h4>
+            {this.props.error && (
+              <div className="alert alert-danger" role="alert">
+                <span className="fa fa-exclamation-triangle" aria-hidden="true" />{' '}
+                {this.props.error}
+              </div>
+            )}
+            <form
+              id="delivery-address-form"
+              name="delivery-address"
+              className={" mx-auto px-3"}
+              onSubmit={this.handleSubmit}
+            >
+              {/* Transporteur */}
+              {this.props.retrievedShipper && (
+                <div className="row px-3">
+                  <Row className={'w-100 my-3'}>
+                    <Col lg={9}>
+                      <label
+                        htmlFor={'shipper'}
+                        className="form-control-label"
+                      >
+                        <FormattedMessage  id={"app.form.delivery_address.shipper"}
+                                           defaultMessage="Transporteur"
+                                           description="Form delivery address - shipper"
 
-          </h4>
-          {this.props.error && (
-            <div className="alert alert-danger" role="alert">
-              <span className="fa fa-exclamation-triangle" aria-hidden="true" />{' '}
-              {this.props.error}
-            </div>
-          )}
-          <form
-            id="delivery-address-form"
-            name="delivery-address"
-            className={" mx-auto px-3"}
-            onSubmit={this.handleSubmit}
-          >
-            {this.props.retrieved && (
-              <div className="row px-3">
-                <Row className={'w-100 my-3'}>
-                  <Col lg={9}>
-                    <label
-                      htmlFor={'existingAddress'}
-                      className="form-control-label"
-                    >
-                      <FormattedMessage  id={"app.form.delivery_address.existing_address"}
-                                         defaultMessage="Adresse enregistrée"
-                                         description="Form delivery address - existing address"
+                        />
+                      </label>
+                      &nbsp;:&nbsp;
+                      <Field
+                        component={"select"}
+                        name="shipper"
+                        type="select"
+                        className={'form-control'}
+                        onChange={this.handleChange}
+                        value={this.state.existingAddress}
+                      >
+                        <option value="">--Choisir parmi nos expéditeurs--</option>
+                        {this.props.retrievedShipper && this.props.retrievedShipper['hydra:member'].map(item => (
+                          <option value={ item.id } key={item.id}>
+                            { item.socialReason }
+                          </option>
+                        ))}
 
-                      />
-                    </label>
-                    &nbsp;:&nbsp;
+
+                      </Field>
+                    </Col>
+
+                  </Row>
+                </div>
+              )}
+
+              {/* Adresses existantes */}
+              {this.props.retrievedAddresses && (
+                <div className="row px-3">
+                  <Row className={'w-100 my-3'}>
+                    <Col lg={9}>
+                      <label
+                        htmlFor={'existingAddress'}
+                        className="form-control-label"
+                      >
+                        <FormattedMessage  id={"app.form.delivery_address.existing_address"}
+                                           defaultMessage="Adresse enregistrée"
+                                           description="Form delivery address - existing address"
+
+                        />
+                      </label>
+                      &nbsp;:&nbsp;
+                      <Field
+                        component={"select"}
+                        name="existingAddress"
+                        type="select"
+                        className={'form-control'}
+                        value={this.state.existingAddress}
+                      >
+                        <option value="">--Choisir parmi les adresses déjà enregistrées--</option>
+                        {this.props.retrievedAddresses && this.props.retrievedAddresses['hydra:member'].map(item => (
+                          <option value={ item.id } key={item.id}>
+                            { item.street.toLowerCase().split(' ')
+                              .map(w => w[0].toUpperCase() + w.substr(1).toLowerCase())
+                              .join(' ') + " " + item.number + " "
+                            + item.town +" " + item.state + " "
+                            + item.zipCode + " " + item.country }
+
+                          </option>
+                        ))}
+
+
+                      </Field>
+                    </Col>
+                    <Col>
+                      <Button outline id={'add-address'} color={'info'} className={'mx-auto'} onClick={this.showFormNewAddress}>Livrer à une autre adresse</Button>
+                    </Col>
+                  </Row>
+                </div>
+
+              )}
+              <div id={'newAddress'} className={'row pl-3'} style={{display: 'none'}}>
+                <Row className={'w-100'}>
+                  <Col>
                     <Field
-                      component={"select"}
-                      name="existingAddress"
-                      type="select"
-                      className={'form-control'}
-                      onChange={this.handleChange}
-                      value={this.state.existingAddress}
-                    >
-                      <option value="">--Choisir parmi les adresses déjà enregistrées--</option>
-                      {this.props.retrieved && this.props.retrieved['hydra:member'].map(item => (
-                        <option value={ item.id } key={item.id}>
-                          { item.street.toLowerCase().split(' ')
-                            .map(w => w[0].toUpperCase() + w.substr(1).toLowerCase())
-                            .join(' ') + " " + item.number + " "
-                          + item.town +" " + item.state + " "
-                          + item.zipCode + " " + item.country }
-
-                        </option>
-                      ))}
-
-
-                    </Field>
+                      component={this.renderField}
+                      name="street"
+                      type="text"
+                      placeholder="Rue neuve"
+                      labelText={intl.formatMessage({
+                        id: "app.address.item.street",
+                        defaultMessage: "Rue",
+                        description: "Address item - street"
+                      })}
+                    />
                   </Col>
                   <Col>
-                    <Button outline id={'add-address'} color={'info'} className={'mx-auto'} onClick={this.showFormNewAddress}>Livrer à une autre adresse</Button>
+                    <Field
+                      component={this.renderField}
+                      name="streetNumber"
+                      type="text"
+                      placeholder="9/101  "
+                      labelText={intl.formatMessage({
+                        id: "app.address.item.street_number",
+                        defaultMessage: "N° de rue",
+                        description: "Address item - street number"
+                      })}
+                    />
+                  </Col>
+                </Row>
+                <Row className={'w-100'}>
+                  <Col>
+                    <Field
+                      component={this.renderField}
+                      name="town"
+                      type="text"
+                      placeholder="Schaerbeek"
+                      labelText={intl.formatMessage({
+                        id: "app.address.item.town",
+                        defaultMessage: "Ville",
+                        description: "Address item - town"
+                      })}
+                    />
+                  </Col>
+                  <Col>
+                    <Field
+                      component={this.renderField}
+                      name="state"
+                      type="text"
+                      placeholder="Bruxelles"
+                      labelText={intl.formatMessage({
+                        id: "app.address.item.state",
+                        defaultMessage: "Province/Région/État",
+                        description: "Address item - state"
+                      })}
+                    />
+                  </Col>
+                </Row>
+                <Row className={'w-100'}>
+                  <Col>
+                    <Field
+                      component={this.renderField}
+                      name="zipCode"
+                      type="text"
+                      placeholder="1000"
+                      labelText={intl.formatMessage({
+                        id: "app.address.item.zip_code",
+                        defaultMessage: "Code postal",
+                        description: "Address item - zip code"
+                      })}
+                    />
+                  </Col>
+                  <Col>
+                    <Field
+                      component={this.renderField}
+                      name="country"
+                      type="text"
+                      placeholder="Belgique"
+                      labelText={intl.formatMessage({
+                        id: "app.address.item.country",
+                        defaultMessage: "Pays",
+                        description: "Address item - country"
+                      })}
+                    />
                   </Col>
                 </Row>
               </div>
 
-            )}
-            <div id={'newAddress'} className={'row pl-3'} style={{display: 'none'}}>
-              <Row className={'w-100'}>
-                <Col>
-                  <Field
-                    component={this.renderField}
-                    name="street"
-                    type="text"
-                    placeholder="Rue neuve"
-                    labelText={intl.formatMessage({
-                      id: "app.address.item.street",
-                      defaultMessage: "Rue",
-                      description: "Address item - street"
-                    })}
-                  />
-                </Col>
-                <Col>
-                  <Field
-                    component={this.renderField}
-                    name="streetNumber"
-                    type="text"
-                    placeholder="9/101  "
-                    labelText={intl.formatMessage({
-                      id: "app.address.item.street_number",
-                      defaultMessage: "N° de rue",
-                      description: "Address item - street number"
-                    })}
-                  />
-                </Col>
-              </Row>
-              <Row className={'w-100'}>
-                <Col>
-                  <Field
-                    component={this.renderField}
-                    name="town"
-                    type="text"
-                    placeholder="Schaerbeek"
-                    labelText={intl.formatMessage({
-                      id: "app.address.item.town",
-                      defaultMessage: "Ville",
-                      description: "Address item - town"
-                    })}
-                  />
-                </Col>
-                <Col>
-                  <Field
-                    component={this.renderField}
-                    name="state"
-                    type="text"
-                    placeholder="Bruxelles"
-                    labelText={intl.formatMessage({
-                      id: "app.address.item.state",
-                      defaultMessage: "Province/Région/État",
-                      description: "Address item - state"
-                    })}
-                  />
-                </Col>
-              </Row>
-              <Row className={'w-100'}>
-                <Col>
-                  <Field
-                    component={this.renderField}
-                    name="zipCode"
-                    type="text"
-                    placeholder="1000"
-                    labelText={intl.formatMessage({
-                      id: "app.address.item.zip_code",
-                      defaultMessage: "Code postal",
-                      description: "Address item - zip code"
-                    })}
-                  />
-                </Col>
-                <Col>
-                  <Field
-                    component={this.renderField}
-                    name="country"
-                    type="text"
-                    placeholder="Belgique"
-                    labelText={intl.formatMessage({
-                      id: "app.address.item.country",
-                      defaultMessage: "Pays",
-                      description: "Address item - country"
-                    })}
-                  />
-                </Col>
-              </Row>
-            </div>
 
 
+            </form>
+            <div className="col-4 d-flex mx-auto mt-3">
+              {/* Créer une fonction qui vérifie que tout le formulaire soit complet (adresse existante ou nouvel adresse ) */}
+              { true && (
+                <Button outline color={"success"} className={'mr-3'} onClick={this.handleSubmit}>
+                  <FormattedMessage  id={"app.button.validate"}
+                                     defaultMessage="Valider"
+                                     description="Button - validate"
+                  />
+                </Button>
+              )}
 
-          </form>
-          <div className="col-4 d-flex mx-auto mt-3">
-            {/* Créer une fonction qui vérifie que tout le formulaire soit complet (adresse existante ou nouvel adresse ) */}
-            { true && (
-              <Button outline color={"success"} className={'mr-3'} onClick={this.handleSubmit}>
-                <FormattedMessage  id={"app.button.validate"}
-                                   defaultMessage="Valider"
-                                   description="Button - validate"
+              <Button outline color={"danger"} onClick={() => this.props.history.push('..')}>
+                <FormattedMessage  id={"app.button.cancel"}
+                                   defaultMessage="Annuler"
+                                   description="Button - cancel"
                 />
               </Button>
-            )}
+            </div>
 
-            <Button outline color={"danger"} onClick={() => this.props.history.push('..')}>
-              <FormattedMessage  id={"app.button.cancel"}
-                                 defaultMessage="Annuler"
-                                 description="Button - cancel"
-              />
-            </Button>
           </div>
+        </div>
+        <div id={"delivery-address-shopping-card"} className="col-lg-2 col-md-4 order-md-2 mb-4">
+          <h4 className="d-flex justify-content-between align-items-center mb-3">
+            <span className="text-muted">Coût total</span>
+            <span className="badge badge-secondary badge-pill">{shopping_card.length}</span>
+          </h4>
+          <ul className="list-group mb-3">
+            {
+              shopping_card.map( item => (
+                <li className="list-group-item d-flex justify-content-between lh-condensed" key={key++}>
+                  <div className={""}>
+                    <h6 className="my-0">{item.title}</h6>
+                    <small className="text-muted">{item.description}</small>
+                  </div>
+                  <div>
+                    <span className="text-muted">{parseFloat(item.price).toFixed(2) + "€"}</span>
+                    <br/>
+                    <span className="text-muted float-right">{"x " + item.quantity}</span>
+                  </div>
+
+                </li>
+              ))
+            }
+              <li className="list-group-item d-flex justify-content-between lh-condensed" key={key++}>
+              <div id={"list-shipper-choice"} className={""}>
+                <h6 id={"list-shipper-choice-social-reason"} className="my-0">{"Your shipping preference"}</h6>
+                <small id={"list-shipper-choice-description"} className="text-muted">{}</small>
+              </div>
+              <div>
+                <span id={"list-shipper-choice-price"} className="text-muted">{0 + "€"}</span>
+
+              </div>
+
+            </li>
+
+
+            <li className="list-group-item d-flex justify-content-between" key={key++}>
+              <span>Total (USD)</span>
+              <strong id={'list-total-price'}>{parseFloat(sum).toFixed(2) + "€"}</strong>
+            </li>
+          </ul>
 
         </div>
-      </div>
+      </Fragment>
+
 
 
     );
   }
 }
 
-const mapStateToProps = state => {
-  const { retrieved, error, loading, eventSource } = state.address.list;
-
-  return { retrieved, error, loading, eventSource };
-};
+const mapStateToProps = state => ({
+  retrievedAddresses: state.address.list.retrieved,
+  errorAddresses: state.address.list.error,
+  loadingAddresses: state.address.list.loading,
+  eventSourceAddresses: state.address.list.eventSource,
+  retrievedShipper: state.shipper.list.retrieved,
+  errorShipper: state.shipper.list.error,
+  loadingShipper: state.shipper.list.loading,
+  eventSourceShipper: state.shipper.list.eventSource
+});
 
 const mapDispatchToProps = dispatch => ({
   list: (history) => dispatch( list(history)),
+  listShipper : (history) => dispatch( listShipper(history)),
   create: (values, history, prevRoute) => dispatch(create(values, history, prevRoute)),
-  reset: eventSource => dispatch(reset(eventSource))
+  resetAddresses: eventSource => dispatch(resetAddresses(eventSource)),
+  resetShipper: eventSource => dispatch( resetShipper(eventSource))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(

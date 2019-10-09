@@ -53,7 +53,8 @@ class LoginForm extends React.Component {
     if( email && password )
     {
       let prevRoute = this.props.location.state ? this.props.location.state.from : '/';
-      this.props.login(email, password, this.props.history, prevRoute);
+      let params = this.props.location.state.params ? this.props.location.state.params : null;
+      this.props.login(email, password, this.props.history, {from: prevRoute, params: params  });
     }
 
   }

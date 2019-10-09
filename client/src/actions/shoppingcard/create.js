@@ -14,7 +14,7 @@ export function success(created) {
   return { type: 'ADDRESS_CREATE_SUCCESS', created };
 }
 
-export function create(values, history) {
+export function create(values, history, locationState) {
   return dispatch => {
     dispatch(loading(true));
 
@@ -55,9 +55,10 @@ export function create(values, history) {
         if(/Unauthorized/.test(e.message))
         {
           dispatch(logout());
-          history.push('login');
+
           sessionStorage.removeItem('flash-message-error');
           sessionStorage.setItem('flash-message-error', JSON.stringify({message: "Rappel: Seul les clients de la plateforme peuvent effectuer des achats.\nUne re-connexion est nécessaire."}));
+          history.push({pathname:'login', state: locationState });
         }
 
         dispatch(error(e.message));

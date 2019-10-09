@@ -13,10 +13,12 @@ use Doctrine\DBAL\Driver\PDOException;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\ORM\ORMException;
+use Lexik\Bundle\JWTAuthenticationBundle\Exception\UserNotFoundException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Serializer\SerializerInterface;
 
 class MemberHandler
@@ -49,6 +51,11 @@ class MemberHandler
     private $logger;
 
     /**
+     * @var Security $security
+     */
+    private $security;
+
+    /**
      * MemberHandler constructor.
      * @param EntityManagerInterface $em
      * @param RequestStack $request
@@ -56,13 +63,14 @@ class MemberHandler
      * @param SerializerInterface $serializer
      * @param LoggerInterface $logger
      */
-    public function __construct(EntityManagerInterface $em, RequestStack $request, UserPasswordEncoderInterface $encoder,SerializerInterface $serializer, LoggerInterface $logger)
+    public function __construct(EntityManagerInterface $em, RequestStack $request, UserPasswordEncoderInterface $encoder,SerializerInterface $serializer, LoggerInterface $logger, Security $security)
     {
         $this->em = $em;
         $this->request = $request->getCurrentRequest();
         $this->encoder = $encoder;
         $this->serializer = $serializer;
         $this->logger = $logger;
+        $this->security = $security;
     }
 
     /**
@@ -284,6 +292,30 @@ class MemberHandler
 
         /* Création d'une clé supplier */
         $user->setSupplierKey(bin2hex(random_bytes(64)));
+    }
+
+    public function getUser()
+    {
+        try{
+            $user = $this->em->getRepository(User::class)
+                ->findOneBy(["email" => $this->security->getUser()->getUsername()]);
+        }catch(PDOException $exception){
+            throw new UserNotFoundException("email", $this->security->getUser()->getUsername());
+        }
+
+        return $user;
+    }
+
+    public function getCustomer()
+    {
+        try{
+            $customer = $this->em->getRepository(Customer::class)
+                ->findOneBy(["email" => $this->security->getUser()->getUsername()]);
+        }catch(PDOException $exception){
+            throw new UserNotFoundException("email", $this->security->getUser()->getUsername());
+        }
+
+        return $customer;
     }
 
 

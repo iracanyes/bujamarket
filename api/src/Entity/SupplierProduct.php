@@ -111,7 +111,7 @@ class SupplierProduct
      * @ORM\JoinColumn(nullable=false)
      * @Assert\Type("App\Entity\Product")
      * @Assert\NotNull()
-     * @Groups({"favorite:output","supplier_product:output"})
+     * @Groups({"favorite:output","supplier_product:output","order_set:output"})
      *
      */
     private $product;
@@ -161,7 +161,7 @@ class SupplierProduct
 
     /**
      * @ORM\Column(type="float")
-     * @Groups({"supplier_product:output"})
+     * @Groups({"supplier_product:output","order_set:output"})
      */
     private $finalPrice;
 

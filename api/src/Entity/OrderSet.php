@@ -7,9 +7,12 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
+ * @ApiResource(attributes={
+ *     "normalization_context"={"groups"={"order_set:output"}}
+ * })
  * @ORM\Table(name="bjmkt_order_set")
  * @ORM\Entity(repositoryClass="App\Repository\OrderSetRepository")
  * @ORM\HasLifecycleCallbacks()
@@ -21,6 +24,7 @@ class OrderSet
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"order_set:output"})
      */
     private $id;
 
@@ -28,6 +32,7 @@ class OrderSet
      * @var \DateTime $dateCreated Creation's date of the order set
      * @ORM\Column(type="datetime")
      * @Assert\DateTime()
+     * @Groups({"order_set:output"})
      */
     private $dateCreated;
 
@@ -40,6 +45,7 @@ class OrderSet
      *     minMessage="The minimum value is {{ limit }}.\nThe current value is {{ value }}."
      *
      * )
+     * @Groups({"order_set:output"})
      */
     private $totalWeight;
 
@@ -48,6 +54,7 @@ class OrderSet
      *
      * @ORM\Column(type="integer")
      * @Assert\GreaterThanOrEqual(0)
+     * @Groups({"order_set:output"})
      */
     private $nbPackage;
 
@@ -55,6 +62,7 @@ class OrderSet
      * @var float $totalCost Total cost of the order set
      * @ORM\Column(type="float")
      * @Assert\GreaterThanOrEqual(0)
+     * @Groups({"order_set:output"})
      */
     private $totalCost;
 
@@ -81,19 +89,22 @@ class OrderSet
      *
      * @ORM\OneToOne(targetEntity="DeliverySet", mappedBy="orderSet", cascade={"persist", "remove"})
      * @Assert\Type("App\Entity\DeliverySet")
+     * @Groups({"order_set:output"})
      */
     private $deliverySet;
 
     /**
      * @var Collection $orderDetails Each details  for this order set
      *
-     * @ORM\OneToMany(targetEntity="App\Entity\OrderDetail", cascade={"persist"}, mappedBy="orderSet", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\OrderDetail", cascade={"persist","remove"}, mappedBy="orderSet", orphanRemoval=true)
+     * @Groups({"order_set:output"})
      */
     private $orderDetails;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Address", inversedBy="orderSets")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"order_set:output"})
      */
     private $address;
 
@@ -156,10 +167,21 @@ class OrderSet
     {
         $totalCost = 0;
 
+        /* Somme des achats  */
         foreach( $this->getOrderDetails() as $item)
         {
             $totalCost += $item->getTotalCost();
         }
+
+        /* Calcul de la taxe */
+
+
+        /* Ajout du coût d'expédition du colis */
+        if($this->getDeliverySet() !== null)
+        {
+            $totalCost += $this->getDeliverySet()->getShippingCost();
+        }
+
 
         $this->totalCost = $totalCost;
 

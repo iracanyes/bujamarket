@@ -95,16 +95,16 @@ class Shipper
     private $addresses;
 
     /**
-     * @var Collection $SetDeliveries Set deliveries made by this shipper
+     * @var Collection $setDeliveries Set deliveries made by this shipper
      *
      * @ORM\OneToMany(targetEntity="DeliverySet", mappedBy="shipper")
      */
-    private $SetDeliveries;
+    private $setDeliveries;
 
     public function __construct()
     {
         $this->addresses = new ArrayCollection();
-        $this->SetDeliveries = new ArrayCollection();
+        $this->setDeliveries = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -242,28 +242,28 @@ class Shipper
     /**
      * @return Collection|DeliverySet[]
      */
-    public function getSetDeliveries(): Collection
+    public function getsetDeliveries(): Collection
     {
-        return $this->SetDeliveries;
+        return $this->setDeliveries;
     }
 
-    public function addSetDelivery(DeliverySet $SetDelivery): self
+    public function addSetDelivery(DeliverySet $setDelivery): self
     {
-        if (!$this->SetDeliveries->contains($SetDelivery)) {
-            $this->SetDeliveries[] = $SetDelivery;
-            $SetDelivery->setShipper($this);
+        if (!$this->setDeliveries->contains($setDelivery)) {
+            $this->setDeliveries[] = $setDelivery;
+            $setDelivery->setShipper($this);
         }
 
         return $this;
     }
 
-    public function removeSetDelivery(DeliverySet $SetDelivery): self
+    public function removeSetDelivery(DeliverySet $setDelivery): self
     {
-        if ($this->SetDeliveries->contains($SetDelivery)) {
-            $this->SetDeliveries->removeElement($SetDelivery);
+        if ($this->setDeliveries->contains($setDelivery)) {
+            $this->setDeliveries->removeElement($setDelivery);
             // set the owning side to null (unless already changed)
-            if ($SetDelivery->getShipper() === $this) {
-                $SetDelivery->setShipper(null);
+            if ($setDelivery->getShipper() === $this) {
+                $setDelivery->setShipper(null);
             }
         }
 

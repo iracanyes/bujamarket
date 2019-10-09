@@ -19,9 +19,11 @@ App\Entity\Payment:
         post:
             method: 'POST'
             path: '/payment/create'
-            access_control: "has_role('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_FULLY')"
+            defaults:
+                _api_receive: false
+            access_control: "has_role('ROLE_CUSTOMER') and is_granted('IS_AUTHENTICATED_FULLY')"
             schemes: ['https']
-            controller: App\Controller\Payment\CreatePayment::class
+            controller: App\Controller\Payment\CreatePaymentAction
     itemOperations:
         get:
             method: 'GET'

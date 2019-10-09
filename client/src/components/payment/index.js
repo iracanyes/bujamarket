@@ -2,5 +2,6 @@ import Create from './Create';
 import List from './List';
 import Update from './Update';
 import Show from './Show';
+import PaymentSuccess from "./PaymentSuccess";
 
-export { Create, List, Update, Show };
+export { Create, List, Update, Show, PaymentSuccess };

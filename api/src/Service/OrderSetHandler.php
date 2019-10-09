@@ -3,10 +3,12 @@
 
 namespace App\Service;
 
+use App\Entity\DeliverySet;
 use App\Entity\OrderDetail;
 use App\Entity\OrderSet;
 use App\Entity\Customer;
 use Doctrine\DBAL\Driver\PDOException;
+use Doctrine\ORM\EntityNotFoundException;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\UserNotFoundException;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Security;
@@ -14,23 +16,44 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class OrderSetHandler
 {
+    /**
+     * @var Security $security
+     */
     private $security;
 
+    /**
+     * @var \Symfony\Component\HttpFoundation\Request|null $request
+     */
     private $request;
 
+    /**
+     * @var EntityManagerInterface $em
+     */
     private $em;
 
+    /**
+     * @var AddressHandler $addressHandler
+     */
     private $addressHandler;
 
+    /**
+     * @var ShoppingCardHandler $shoppingCardHandler
+     */
     private $shoppingCardHandler;
 
-    public function __construct(Security $security, RequestStack $requestStack, EntityManagerInterface $em, AddressHandler $addressHandler, ShoppingCardHandler $shoppingCardHandler)
+    /**
+     * @var ShipperHandler $shipperHandler
+     */
+    private $shipperHandler;
+
+    public function __construct(Security $security, RequestStack $requestStack, EntityManagerInterface $em, AddressHandler $addressHandler, ShoppingCardHandler $shoppingCardHandler, ShipperHandler $shipperHandler)
     {
         $this->security = $security;
         $this->request = $requestStack->getCurrentRequest();
         $this->em = $em;
         $this->addressHandler = $addressHandler;
         $this->shoppingCardHandler = $shoppingCardHandler;
+        $this->shipperHandler = $shipperHandler;
     }
 
     public function createOrderSet()
@@ -38,8 +61,11 @@ class OrderSetHandler
         /* Ouverture d'une transaction ac la db */
         $this->em->getConnection()->beginTransaction();
 
+        /* Récupération du body de la requête POST */
+        $data = json_decode($this->request->getContent());
+
         /* Gestion de l'adresse de livraison  */
-        $address = $this->addressHandler->handleDeliveryAddress();
+        $address = $this->addressHandler->getDeliveryAddress($data);
 
         /* Création de l'ensemble de commande */
         $orderSet = new OrderSet();
@@ -47,6 +73,8 @@ class OrderSetHandler
         $orderSet->setDateCreated(new \DateTime());
         /* Ajout de l'adresse de livraison à la commande */
         $orderSet->setAddress($address);
+
+
 
         /* Récupération du panier de commande */
         $shoppingCard = $this->shoppingCardHandler->getShoppingCard();
@@ -73,6 +101,22 @@ class OrderSetHandler
 
         }
 
+        /* Récupération de l'expéditeur */
+        $shipper = $this->shipperHandler->getShipper($data);
+        /* Création d'un ensemble de livraison */
+        $deliverySet = new DeliverySet();
+        $deliverySet->setDateCreated(new \DateTime());
+        /* Calcul du coût d'expédition  */
+        $totalShippingCost = 0;
+
+
+        $deliverySet->setShippingCost($totalShippingCost);
+
+        /* Ajout de l'expéditeur responsable à l'ensemble de commande */
+        $deliverySet->setShipper($shipper);
+        /* Association de l'ensemble de commande à son ensemble de livraison correspondant */
+        $orderSet->setDeliverySet($deliverySet);
+
         try{
             $customer = $this->em->getRepository(Customer::class)
                 ->findOneBy(['email' => $this->security->getUser()->getUsername()]);
@@ -91,5 +135,24 @@ class OrderSetHandler
         return $orderSet;
 
 
+    }
+
+    public function getOrderSet($data = null)
+    {
+        if( $data === null)
+        {
+            $data = $this->request->getContent();
+        }
+
+        dump($data);
+
+        try{
+            $orderSet = $this->em->getRepository(OrderSet::class)
+                ->find($data->orderSet);
+        }catch (PDOException $exception){
+            throw new EntityNotFoundException("La commande n'existe pas!");
+        }
+
+        return $orderSet;
     }
 }

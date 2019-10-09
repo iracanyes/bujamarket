@@ -62,7 +62,7 @@ class Image
      * @ORM\Column(type="string", length=255)
      * @Assert\NotNull()
      * @Assert\Url()
-     * @Groups({"category:output", "product:output","supplier:output","favorite:output"})
+     * @Groups({"category:output", "product:output","supplier:output","favorite:output","order_set:output"})
      */
     private $url;
 
