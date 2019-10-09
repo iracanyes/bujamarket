@@ -5,9 +5,12 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
+ * @ApiResource(attributes={
+ *     "normalization_context"={"groups"={"order_detail:output","order_set:output"}}
+ * })
  * @ORM\Table(name="bjmkt_order_detail")
  * @ORM\Entity(repositoryClass="App\Repository\OrderDetailRepository")
  * @ORM\HasLifecycleCallbacks()
@@ -27,6 +30,7 @@ class OrderDetail
      *
      * @ORM\Column(type="string", length=100)
      * @Assert\NotBlank()
+     * @Groups({"order_set:output","order_detail:output"})
      */
     private $status;
 
@@ -38,6 +42,7 @@ class OrderDetail
      *     min=0,
      *     minMessage="The minimum value is {{ limit }}.\nThe current value is {{ value }}."
      * )
+     * @Groups({"order_set:output","order_detail:output"})
      */
     private $quantity;
 
@@ -49,6 +54,7 @@ class OrderDetail
      *     min=0.0,
      *     minMessage="The minimum value is {{ limit }}.\nThe current value is {{ value }}."
      * )
+     * @Groups({"order_set:output","order_detail:output"})
      */
     private $unitCost;
 
@@ -61,6 +67,7 @@ class OrderDetail
      *     min=0.0,
      *     minMessage="The minimum value is {{ limit }}.\nThe current value is {{ value }}."
      * )
+     * @Groups({"order_set:output","order_detail:output"})
      */
     private $totalCost;
 
@@ -112,6 +119,7 @@ class OrderDetail
      * @ORM\JoinColumn(nullable=false)
      * @Assert\Type("App\Entity\SupplierProduct")
      * @Assert\NotNull()
+     * @Groups({"order_set:output","order_detail:output"})
      */
     private $supplierProduct;
 

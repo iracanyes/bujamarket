@@ -12,6 +12,8 @@ docs
 shared
 #les fichiers de développement
 **/*.*.save
+*.*.save
+*.save
 ###< Custom ###
 
 ###> Security ###

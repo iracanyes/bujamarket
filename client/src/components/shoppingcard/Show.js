@@ -50,7 +50,8 @@ class Show extends React.Component {
 
   onSubmit()
   {
-    this.props.create(JSON.parse(localStorage.getItem('shopping_card')), this.props.history);
+    let locationState = { from : this.props.location.pathname};
+    this.props.create(JSON.parse(localStorage.getItem('shopping_card')), this.props.history, locationState);
 
   }
 
@@ -184,7 +185,7 @@ class Show extends React.Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-  create: (values, history) => dispatch( create(values, history))
+  create: (values, history, currentRoute) => dispatch( create(values, history, currentRoute))
 });
 
 export default connect(null, mapDispatchToProps)(Show);

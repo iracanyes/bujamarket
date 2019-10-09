@@ -19,5 +19,5 @@
 ###< lexik/jwt-authentication-bundle ###
 
 ###> Custom ###
-**/*.*.save
+/**/*.*.save
 ###< Custom ###

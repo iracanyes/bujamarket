@@ -40,7 +40,7 @@ class Product
      *
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank()
-     * @Groups({"product:output","category:output","supplier_product:output","favorite:output"})
+     * @Groups({"product:output","category:output","supplier_product:output","favorite:output","order_set:output"})
      */
     private $title;
 
@@ -150,7 +150,7 @@ class Product
      * @var Collection $images Images of the product
      * @ORM\OneToMany(targetEntity="App\Entity\Image", mappedBy="product")
      * @ApiSubresource()
-     * @Groups({"product:output","category:output","supplier_product:output","favorite:output"})
+     * @Groups({"product:output","category:output","supplier_product:output","favorite:output","order_set:output"})
      */
     private $images;
 

@@ -28,7 +28,7 @@ export function logout() {
 * En passant l'objet this.props.history du composant
 * vers son action creator permet de transmettre le changement d'URL au connected-react-router
 **/
-export function login(email, password, history, prevRoute) {
+export function login(email, password, history, locationState) {
   return dispatch => {
     dispatch(request({ email }));
     dispatch(loading(true));
@@ -64,7 +64,7 @@ export function login(email, password, history, prevRoute) {
 
         /* En passant l'objet this.props.history du composant vers son action creator cela permet de transmettre le changement d'URL au store
         */
-        history.push({ pathname: prevRoute });
+        history.push({ pathname: locationState.from, state: { params: locationState.params } });
 
       })
       .catch(e => {
@@ -76,7 +76,7 @@ export function login(email, password, history, prevRoute) {
         if(e.code === 401)
         {
           dispatch(logout());
-          history.push({pathname: 'login', state: {from: prevRoute }});
+          history.push({pathname: 'login', state: locationState });
         }
 
         if(/Unauthorized/.test(e.message))
@@ -87,7 +87,7 @@ export function login(email, password, history, prevRoute) {
           history.push('login');
           sessionStorage.removeItem('flash-message-error');
           sessionStorage.setItem('flash-message-error', JSON.stringify({message: "Connexion non-autorisé! identifiant et/ou mot de passe incorrect."}));
-          history.push({pathname: 'login', state: {from: prevRoute  }});
+          history.push({pathname: 'login', state: locationState });
         }
 
         /*

@@ -4,15 +4,15 @@ import {logout} from "../user/login";
 
 
 export function error(error) {
-  return { type: 'PAYMENT_CREATE_ERROR', error };
+  return { type: 'BILL_CUSTOMER_CREATE_ERROR', error };
 }
 
 export function loading(loading) {
-  return { type: 'PAYMENT_CREATE_LOADING', loading };
+  return { type: 'BILL_CUSTOMER_CREATE_LOADING', loading };
 }
 
 export function success(created) {
-  return { type: 'PAYMENT_CREATE_SUCCESS', created };
+  return { type: 'BILL_CUSTOMER_CREATE_SUCCESS', created };
 }
 
 export function create(values, history, location, stripe) {
@@ -25,10 +25,9 @@ export function create(values, history, location, stripe) {
 
     /*  */
     const user = JSON.parse(atob(userToken.token.split('.')[1]));
-    // Création du token Stripe
-    //let {token} = stripe.createToken({email: user.username});
 
-    return fetch('payment/create', { method: 'POST', headers: headers, body: JSON.stringify({orderSet:values}) })
+
+    return fetch('bill_customer/create', { method: 'POST', headers: headers, body: JSON.stringify(values) })
       .then(response => {
         dispatch(loading(false));
 

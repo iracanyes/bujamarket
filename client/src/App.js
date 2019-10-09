@@ -15,6 +15,7 @@ import {
   connectRouter,
   routerMiddleware
 } from 'connected-react-router';
+import { StripeProvider } from 'react-stripe-elements';
 
 /* Stylesheets */
 import 'bootstrap/dist/css/bootstrap.css';
@@ -72,13 +73,13 @@ import categoryRoutes from './routes/category';
 import commentRoutes from './routes/comment';
 import customerRoutes from './routes/customer';
 import deliveryDetailRoutes from './routes/deliverydetail';
-import deliveryGlobalRoutes from './routes/deliveryset';
+import deliverySetRoutes from './routes/deliveryset';
 import favoriteRoutes from './routes/favorite';
 import forumRoutes from './routes/forum';
 import imageRoutes from './routes/image';
 import messageRoutes from './routes/message';
 import orderDetailRoutes from './routes/orderdetail';
-import orderGlobalRoutes from './routes/orderset';
+import orderSetRoutes from './routes/orderset';
 import orderReturnedRoutes from './routes/orderreturned';
 import paymentRoutes from './routes/payment';
 import productRoutes from './routes/product';
@@ -100,6 +101,10 @@ import Error404Cat from "./layout/Error404Cat";
 /* Internationalisation : FormatJS/React-Intl */
 import { IntlProvider} from "react-intl";
 import { addLocaleData, messages, language } from "./config/internationalization.js";
+
+/* Rendre accessible les variables d'environnement REACT_APP_* */
+import dotenv from 'dotenv';
+dotenv.config();
 
 addLocaleData();
 
@@ -167,86 +172,92 @@ export class App extends Component
   {
     const { results } = this.state;
 
+
     return (
       <Provider store={store}>
         <IntlProvider locale={language} messages={messages[language]}>
-          <ConnectedRouter history={history}>
-            <BrowserRouter>
-              <div>
-                <header>
-                  <Navbar color={"bg-primary"} dark expand={"lg"}   id="navbar-primary" className="navbar navbar-expand-lg navbar-dark bg-primary">
-                    {/* Navbar brand*/}
-                    <NavbarBrand href="/" className="col-lg-2">Buja Market</NavbarBrand>
+          <StripeProvider apiKey={`${process.env.REACT_APP_STRIPE_PUBLIC_KEY}`}>
+            <ConnectedRouter history={history}>
+              <BrowserRouter>
+                <div>
+                  <header>
+                    <Navbar color={"bg-primary"} dark expand={"lg"}   id="navbar-primary" className="navbar navbar-expand-lg navbar-dark bg-primary">
+                      {/* Navbar brand*/}
+                      <NavbarBrand href="/" className="col-lg-2">Buja Market</NavbarBrand>
 
 
-                    <div className="main-menu-search-form col-lg-5">
-                      <MainMenuSearchForm onSearch={this.search}/>
-                    </div>
+                      <div className="main-menu-search-form col-lg-5">
+                        <MainMenuSearchForm onSearch={this.search}/>
+                      </div>
 
 
-                    <MainMenu/>
+                      <MainMenu/>
 
-                  </Navbar>
-                </header>
+                    </Navbar>
+                  </header>
 
-                <main>
-                  <aside id="aside-left">
+                  <main>
+                    <aside id="aside-left">
 
-                  </aside>
-                  <section id="main-content" className="col col-lg-12">
-                    <div id="search-results-component">
-                      {results && (<SearchResults results={ results }/>)}
+                    </aside>
+                    <section id="main-content" className="col col-lg-12">
+                      <div id="search-results-component">
+                        {results && (<SearchResults results={ results }/>)}
 
-                    </div>
+                      </div>
 
-                    <div>
-                      <Switch>
-                        <Route path="/dev" component={Welcome} strict={true} exact={true}/>
-                        <Route path="/" component={Homepage} strict={true} exact={true} />
-                        {/* Add your routes here */}
-                        { addressRoutes }
-                        { adminRoutes }
-                        { bankAccountRoutes }
-                        { billRoutes }
-                        { billCustomerRoutes }
-                        { billRefundRoutes }
-                        { billSupplierRoutes }
-                        { categoryRoutes }
-                        { commentRoutes }
-                        { customerRoutes }
-                        { deliveryDetailRoutes }
-                        { deliveryGlobalRoutes }
-                        { favoriteRoutes }
-                        { forumRoutes }
-                        { imageRoutes }
-                        { messageRoutes }
-                        { orderDetailRoutes }
-                        { orderGlobalRoutes }
-                        { orderReturnedRoutes }
-                        { paymentRoutes }
-                        { productRoutes }
-                        { shipperRoutes }
-                        { shoppingCardRoutes }
-                        { supplierRoutes }
-                        { supplierProductRoutes }
-                        { userRoutes }
-                        { withdrawalRoutes }
-                        <Route render={() => (
-                          <Fragment>
-                            <Error404Cat/>
-                          </Fragment>
+                      <div>
+                        <Switch>
+                          <Route path="/dev" component={Welcome} strict={true} exact={true}/>
+                          <Route path="/" component={Homepage} strict={true} exact={true} />
+                          {/* Add your routes here */}
+                          { addressRoutes }
+                          { adminRoutes }
+                          { bankAccountRoutes }
+                          { billRoutes }
+                          { billCustomerRoutes }
+                          { billRefundRoutes }
+                          { billSupplierRoutes }
+                          { categoryRoutes }
+                          { commentRoutes }
+                          { customerRoutes }
+                          { deliveryDetailRoutes }
+                          { deliverySetRoutes }
+                          { favoriteRoutes }
+                          { forumRoutes }
+                          { imageRoutes }
+                          { messageRoutes }
+                          { orderDetailRoutes }
+                          { orderReturnedRoutes }
 
-                        )} />
-                      </Switch>
+                          { paymentRoutes }
+                          { orderSetRoutes }
 
 
-                    </div>
+                          { productRoutes }
+                          { shipperRoutes }
+                          { shoppingCardRoutes }
+                          { supplierRoutes }
+                          { supplierProductRoutes }
+                          { userRoutes }
+                          { withdrawalRoutes }
+                          <Route render={() => (
+                            <Fragment>
+                              <Error404Cat/>
+                            </Fragment>
 
-                  </section>
-                </main>
-              </div>
-            </BrowserRouter>
-          </ConnectedRouter>
+                          )} />
+                        </Switch>
+
+
+                      </div>
+
+                    </section>
+                  </main>
+                </div>
+              </BrowserRouter>
+            </ConnectedRouter>
+          </StripeProvider>
         </IntlProvider>
       </Provider>
     );

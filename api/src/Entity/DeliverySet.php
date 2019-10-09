@@ -7,9 +7,12 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
+ * @ApiResource(attributes={
+ *     "normalization_context"={"groups"={"order_set:output"}}
+ * })
  * @ORM\Table(name="bjmkt_delivery_set")
  * @ORM\Entity(repositoryClass="App\Repository\DeliverySetRepository")
  */
@@ -33,6 +36,7 @@ class DeliverySet
      *     min=0,
      *     minMessage="The minimum value is {{ limit }}.\nThe current value is {{ value }}."
      * )
+     * @Groups({"order_set:output"})
      */
     private $shippingCost;
 
@@ -87,6 +91,8 @@ class DeliverySet
     public function __construct()
     {
         $this->deliveryDetails = new ArrayCollection();
+        $this->allReceived= false;
+        $this->allShipped = false;
     }
 
     public function getId(): ?int
