@@ -25,8 +25,9 @@ class PaymentCustomerFixtures extends Fixture implements DependentFixtureInterfa
 
         /* Outrepasser la limite de mémoire -1 = pas de limite  */
         ini_set('memory_limit', '-1');
-
-        $payment->setReference($this->faker->iban('BE'));
+        $payment->setSessionId('cs_test_'.$this->faker->sha1);
+        $payment->setPaymentIntent('pi_'.$this->faker->sha1);
+        $payment->setReference('bjmktp_'.$this->faker->sha1);
         $payment->setDateCreated($this->faker->dateTimeBetween('-2 years','now'));
         $payment->setCurrency($this->faker->randomElement(['BIF','EUR','USD']));
         $payment->setDescription($this->faker->realText(50));

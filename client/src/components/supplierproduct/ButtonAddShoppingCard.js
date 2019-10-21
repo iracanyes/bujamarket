@@ -6,22 +6,42 @@
 /* eslint react/no-multi-comp: 0, react/prop-types: 0 */
 
 import React from 'react';
+import { connect } from 'react-redux';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, Label, Form, FormGroup } from 'reactstrap';
 import { FormattedMessage } from "react-intl";
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 
 class ButtonAddShoppingCard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       modal: false,
-      quantity: 1
+      quantity: 1,
+      update: false
     };
 
     this.addToShoppingCard = this.addToShoppingCard.bind(this);
     this.toggle = this.toggle.bind(this);
     this.cancel = this.cancel.bind(this);
     this.changeQuantity = this.changeQuantity.bind(this);
+    this.orderNow = this.orderNow.bind(this);
+    this.deleteProduct = this.deleteProduct.bind(this);
+  }
+
+  componentWillMount() {
+    const { modal, quantity} = this.state;
+
+    this.setState({
+      modal: modal,
+      quantity: quantity,
+      update: false
+    });
+  }
+
+  orderNow()
+  {
+    console.log(this.props.history);
+    this.props.history.push('/shopping_card');
   }
 
   toggle() {
@@ -77,6 +97,26 @@ class ButtonAddShoppingCard extends React.Component {
     localStorage.removeItem('shopping_card');
     localStorage.setItem('shopping_card', JSON.stringify(shopping_card));
   }
+
+  deleteProduct(id)
+  {
+    let shopping_card = localStorage.getItem("shopping_card") ? JSON.parse(localStorage.getItem("shopping_card")) : [];
+
+    let index = shopping_card.findIndex(value => value.id === id);
+    // Suppression du produit dans le panier de commande
+    shopping_card.splice(index, 1);
+    // Mise à jour du panier de commade
+    if(shopping_card.length > 0)
+    {
+      localStorage.removeItem('shopping_card');
+      localStorage.setItem('shopping_card', JSON.stringify(shopping_card));
+      this.setState({update: true});
+    }else{
+      this.toggle();
+    }
+
+  }
+
 
   cancel(){
     this.setState(prevState => ({
@@ -161,6 +201,12 @@ class ButtonAddShoppingCard extends React.Component {
                     <p>
                       {'Quantité: '+ item.quantity}
                     </p>
+                    <Button outline color={'danger'} onClick={() => this.deleteProduct(item.id)}>
+                      <FormattedMessage  id={"app.button.delete"}
+                                         defaultMessage="Supprimer"
+                                         description="Button - delete"
+                      />
+                    </Button>
                   </div>
 
                 </li>
@@ -175,7 +221,7 @@ class ButtonAddShoppingCard extends React.Component {
 
           </ModalBody>
           <ModalFooter>
-            <Button color="primary" onClick={this.toggle}>Commander</Button>{' '}
+            <Button color="primary" onClick={this.orderNow}>Commander</Button>{' '}
             <Button color="secondary" onClick={this.cancel}>Annuler</Button>
           </ModalFooter>
         </Modal>
@@ -184,5 +230,5 @@ class ButtonAddShoppingCard extends React.Component {
   }
 }
 
-export default ButtonAddShoppingCard;
+export default withRouter(ButtonAddShoppingCard);
 

@@ -12,7 +12,6 @@
     "bootstrap": "4.3.1",
     "connected-react-router": "^5.0.1",
     "core-js": "3",
-    "dotenv": "^8.1.0",
     "eslint-utils": "^1.4.1",
     "font-awesome": "^4.7.0",
     "history": "^4.7.2",

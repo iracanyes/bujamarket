@@ -60,7 +60,7 @@ export function list(history, prevRoute) {
         /* Si une authentification est requise, redirection vers la page de connexion */
         if(/Full authentication/.test(e))
         {
-          history.push('login');
+          history.push({pathname: 'login', state: {from: window.location.pathname }});
         }
       });
   };

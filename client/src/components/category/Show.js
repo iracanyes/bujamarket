@@ -102,13 +102,13 @@ class Show extends Component {
 
           )}
           <div className="col-lg-4 mx-auto my-5 category-control-buttons">
-            <Link to={`/categories/`} className="btn btn-primary d-block mx-auto">
-              <FormattedMessage  id={"app.button.return_to_List"}
-                                 defaultMessage="Retour à la liste"
-                                 description=" Button - Return to list"
+            <button onClick={() => this.props.history.goBack()} className="btn btn-outline-primary d-block mx-auto">
+              <FormattedMessage  id={"app.button.return"}
+                                 defaultMessage="Retour "
+                                 description="Button - Return "
               />
 
-            </Link>
+            </button>
 
           </div>
 

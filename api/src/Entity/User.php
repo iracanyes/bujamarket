@@ -72,7 +72,7 @@ class User implements UserInterface
      *
      * @ORM\Column(type="string", length=100)
      * @Assert\NotBlank()
-     * @Groups({"profile:output","user:output","admin:output","customer:output","supplier:output","user:input"})
+     * @Groups({"profile:output","user:output","admin:output","customer:output","supplier:output","user:input","payment:output"})
      *
      */
     private $firstname;
@@ -82,7 +82,7 @@ class User implements UserInterface
      *
      * @ORM\Column(type="string", length=100)
      * @Assert\NotBlank()
-     * @Groups({"profile:output","user:output","admin:output","customer:output","supplier:output","user:input"})
+     * @Groups({"profile:output","user:output","admin:output","customer:output","supplier:output","user:input","payment:output"})
      */
     private $lastname;
 

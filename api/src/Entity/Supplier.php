@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -113,6 +114,8 @@ class Supplier extends User
     /**
      * @var Collection $supplierProducts Supplier products
      * @ORM\OneToMany(targetEntity="App\Entity\SupplierProduct", mappedBy="supplier", orphanRemoval=true)
+     * @Groups({"supplier:output"})
+     * @ApiSubresource()
      */
     private $supplierProducts;
 

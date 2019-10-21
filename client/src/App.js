@@ -102,10 +102,8 @@ import Error404Cat from "./layout/Error404Cat";
 import { IntlProvider} from "react-intl";
 import { addLocaleData, messages, language } from "./config/internationalization.js";
 
-/* Rendre accessible les variables d'environnement REACT_APP_* */
-import dotenv from 'dotenv';
-dotenv.config();
 
+/* chargement des données locales */
 addLocaleData();
 
 
@@ -201,7 +199,7 @@ export class App extends Component
 
                     </aside>
                     <section id="main-content" className="col col-lg-12">
-                      <div id="search-results-component">
+                      <div id="search-results-component" className={'col-lg-9 mx-auto'}>
                         {results && (<SearchResults results={ results }/>)}
 
                       </div>

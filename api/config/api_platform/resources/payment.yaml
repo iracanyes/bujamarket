@@ -24,6 +24,20 @@ App\Entity\Payment:
             access_control: "has_role('ROLE_CUSTOMER') and is_granted('IS_AUTHENTICATED_FULLY')"
             schemes: ['https']
             controller: App\Controller\Payment\CreatePaymentAction
+        checkoutSessionCompleted:
+            method: 'POST'
+            path: '/validate_payment'
+            defaults:
+                _api_receive: false
+            schemes: ['https']
+            controller: App\Controller\Stripe\Webhook\CheckoutSessionCompletedAction
+        paymentSuccess:
+            method: 'POST'
+            path: '/payment_success'
+            defaults:
+                _api_receive: false
+            schemes: ['https']
+            controller: App\Controller\Payment\GetPaymentSuccessAction
     itemOperations:
         get:
             method: 'GET'
@@ -35,7 +49,7 @@ App\Entity\Payment:
                 _format: 'json'
             # host: 'localhost'
             schemes: ['https']
-            access_control: "has_role('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
+            access_control: "has_role('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_FULLY')"
             #options:
             #    my_option: 'my_option_value'
             status: 200 # customize the HTTP status code to send

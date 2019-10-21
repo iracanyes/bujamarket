@@ -17,11 +17,16 @@ export function success(retrieved) {
   return { type: 'SUPPLIER_SHOW_SUCCESS', retrieved };
 }
 
-export function retrieve(id) {
+export function retrieve(id, history) {
   return dispatch => {
     dispatch(loading(true));
 
-    return fetch(id)
+    /* Récupération de la clé JWT et ajout au header de la requête */
+    const userToken = JSON.parse(localStorage.getItem('token'));
+    let headers = new Headers();
+    headers.set('Authorization', 'Bearer ' + userToken.token);
+
+    return fetch('/supplier/' + id, {method: 'GET', headers: headers})
       .then(response =>
         response
           .json()
@@ -38,6 +43,15 @@ export function retrieve(id) {
       .catch(e => {
         dispatch(loading(false));
         dispatch(error(e.message));
+
+        if( /Unauthorized/.test(e))
+        {
+          sessionStorage.removeItem('flash-message-error');
+          sessionStorage.setItem('flash-message-error', JSON.stringify({message: "Authentification nécessaire avant de continuer!"}));
+          history.push('');
+          history.push({pathname: '../login', state: { from: window.location.pathname}});
+        }
+
       });
   };
 }

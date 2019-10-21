@@ -128,7 +128,7 @@ class Search extends Component {
 
       for(let j = 0; j < 4; j++)
       {
-        //console.log("Résultats produits " + j, products[i * 10 + j]);
+        console.log("Résultats produits " + j, products[i * 10 + j]);
 
         if(products[i * 10 + j])
         {
@@ -142,7 +142,7 @@ class Search extends Component {
                 <CardImg top width="100%" src="https://picsum.photos/2000/3000" alt={products[i * 10 + j].images[0].alt} />
                 <CardTitle>{products[i * 10 + j]["title"]}</CardTitle>
                 <CardText>{products[i * 10 + j]["resume"]}</CardText>
-                <Link to={`show/${encodeURIComponent(products[i * 10 + j]['@id'])}`}>
+                <Link to={`../../products/show/${encodeURIComponent(products[i * 10 + j]['id'])}`}>
                   Voir le détail
                 </Link>
               </Card>

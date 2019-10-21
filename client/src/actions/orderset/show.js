@@ -17,11 +17,15 @@ export function success(retrieved) {
   return { type: 'ORDERSET_SHOW_SUCCESS', retrieved };
 }
 
-export function retrieve(id) {
+export function retrieve(id, history, location) {
   return dispatch => {
     dispatch(loading(true));
 
-    return fetch(id)
+    const userToken = JSON.parse(localStorage.getItem('token'));
+    let headers = new Headers();
+    headers.set('Authorization', 'Bearer ' + userToken.token);
+
+    return fetch('order_set/success', {method: 'POST', headers: headers, body: JSON.stringify({sessionId: id})})
       .then(response =>
         response
           .json()
@@ -30,14 +34,27 @@ export function retrieve(id) {
       .then(({ retrieved, hubURL }) => {
         retrieved = normalize(retrieved);
 
-        dispatch(loading(false));
-        dispatch(success(retrieved));
 
-        if (hubURL) dispatch(mercureSubscribe(hubURL, retrieved['@id']));
+        if(retrieved !== null){
+          dispatch(loading(false));
+          dispatch(success(retrieved));
+
+          if (hubURL) dispatch(mercureSubscribe(hubURL, retrieved['@id']));
+        }
+
       })
       .catch(e => {
         dispatch(loading(false));
         dispatch(error(e.message));
+
+        if( /Unauthorized/.test(e))
+        {
+          sessionStorage.removeItem('flash-message-error');
+          sessionStorage.setItem('flash-message-error', JSON.stringify({message: "Authentification nécessaire avant de continuer!"}));
+          history.push('');
+          history.push({pathname: '../login', state: { from: location.pathname}});
+          //window.location.reload();
+        }
       });
   };
 }

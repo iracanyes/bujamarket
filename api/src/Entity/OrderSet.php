@@ -8,11 +8,14 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
 /**
  * @ApiResource(attributes={
  *     "normalization_context"={"groups"={"order_set:output"}}
  * })
+ * @ApiFilter(SearchFilter::class, properties={"id": "exact", "sessionId": "exact" })
  * @ORM\Table(name="bjmkt_order_set")
  * @ORM\Entity(repositoryClass="App\Repository\OrderSetRepository")
  * @ORM\HasLifecycleCallbacks()
@@ -107,6 +110,11 @@ class OrderSet
      * @Groups({"order_set:output"})
      */
     private $address;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $sessionId;
 
     public function __construct()
     {
@@ -273,6 +281,18 @@ class OrderSet
     public function setAddress(?Address $address): self
     {
         $this->address = $address;
+
+        return $this;
+    }
+
+    public function getSessionId(): ?string
+    {
+        return $this->sessionId;
+    }
+
+    public function setSessionId(string $sessionId): self
+    {
+        $this->sessionId = $sessionId;
 
         return $this;
     }

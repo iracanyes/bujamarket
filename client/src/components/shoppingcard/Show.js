@@ -21,11 +21,16 @@ class Show extends React.Component {
   {
     super(props);
 
+    this.state = {
+      update: false
+    };
+
     this.deleteProduct = this.deleteProduct.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
   }
 
   componentWillMount() {
+    this.setState({update: false});
     if(localStorage.getItem('token'))
     {
       ;

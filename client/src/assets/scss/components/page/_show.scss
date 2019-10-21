@@ -67,3 +67,61 @@ div.category-detail-products{
 
 
 }
+
+/* Page : show supplier */
+div.supplier-details
+{
+    margin-top: 2rem;
+    h2
+    {
+        margin-top: 1rem;
+    }
+
+
+    div.supplier-products-offer
+    {
+        div.card{
+            padding: unset;
+            /*  Titre se trouvant en bas à gauche de l'imaage */
+            div.image-bottom-left-title{
+                position: absolute;
+                left: 0;
+                bottom: 0;
+                background: linear-gradient(to top, black, transparent);
+                width: 100%;
+                margin: 0 !important;
+                padding: 1.75rem 0.625rem;
+            }
+
+            div.card-footer svg{
+                color: $primary-color;
+            }
+        }
+
+        ol.carousel-indicators
+        {
+            position: unset;
+            margin-top: 1rem;
+            color: blue;
+            background-color: $sixth-color;
+
+            li
+            {
+                background-color: lighten(black, 0.9);
+            }
+        }
+
+        a.carousel-control-prev
+        {
+            left: -6rem;
+            background-color: $primary-color;
+        }
+
+        a.carousel-control-next
+        {
+            right: 6rem;
+            background-color: $primary-color;
+        }
+    }
+}
+

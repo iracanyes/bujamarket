@@ -7,6 +7,10 @@ import React, { Component, Fragment } from "react";
 import { Card, CardImg, CardText, CardTitle, Col, Row } from "reactstrap";
 import { Link } from "react-router-dom";
 import { FormattedMessage } from "react-intl";
+import {
+  Button,
+  Spinner
+} from 'reactstrap';
 
 class SearchResults extends  Component{
   constructor(props)
@@ -19,7 +23,7 @@ class SearchResults extends  Component{
   }
 
   componentDidMount() {
-    this.setState({results: this.props.results})
+    this.setState({results: this.props.results});
   }
 
 
@@ -30,9 +34,6 @@ class SearchResults extends  Component{
 
     const products = this.props.results && this.props.results.searchResults;
 
-
-    //console.log("Résultats produits", products);
-
     let rows = [];
 
     for(let i = 0; i < Math.ceil(products.length / 12 ); i++)
@@ -42,7 +43,6 @@ class SearchResults extends  Component{
 
       for(let j = 0; j < 12; j++)
       {
-        //console.log("Résultats produits " + j, products[i * 12 + j]);
 
         if(products[i * 12 + j])
         {
@@ -61,7 +61,7 @@ class SearchResults extends  Component{
                   {products[i * 10 + j]["minimumPrice"].toFixed(2)} &euro;
                 </CardText>
                 <Link
-                  to={`show/${encodeURIComponent(products[i * 12 + j]['@id'])}`}
+                  to={`../../products/show/${encodeURIComponent(products[i * 12 + j]['id'])}`}
                   className={"btn btn-outline-primary"}
                 >
                   Voir le détail
@@ -99,7 +99,7 @@ class SearchResults extends  Component{
     const suppliers = this.props.results.searchResults && this.props.results.searchResults;
 
 
-    console.log("Résultats produits", suppliers);
+
 
     let rows = [];
 
@@ -110,7 +110,7 @@ class SearchResults extends  Component{
 
       for(let j = 0; j < 12; j++)
       {
-        console.log("Résultats produits " + j, suppliers[i * 12 + j]);
+
 
         if(suppliers[i * 12 + j])
         {
@@ -124,7 +124,7 @@ class SearchResults extends  Component{
                 <CardImg top width="100%" src="https://picsum.photos/2000/3000" alt={suppliers[i * 12 + j].image.alt} />
                 <CardTitle>{suppliers[i * 12 + j]["socialReason"]}</CardTitle>
                 <CardText>{suppliers[i * 12 + j]["contactPhoneNumber"]}</CardText>
-                <Link to={`/suppliers/show/${encodeURIComponent(suppliers[i * 12 + j]['id'])}`}>
+                <Link to={`../../suppliers/show/${encodeURIComponent(suppliers[i * 12 + j]['id'])}`}>
                   Voir le détail
                 </Link>
               </Card>
@@ -210,26 +210,22 @@ class SearchResults extends  Component{
     );
   };
 
+  close(e)
+  {
+    let element = document.getElementById("search-results-component");
+    element.style.display = 'none';
+  }
+
   render()
   {
     const { results } = this.props;
 
     return (<Fragment>
       <div id="search-results-header">
+        <Button outline color={'secondary'} className={'float-right mr-3'} onClick={this.close}>Fermer</Button>
         <h4>Recherche avancée</h4>
       </div>
 
-      {this.props.loading && (
-        <div className="alert alert-info">Loading...</div>
-      )}
-      {this.props.deletedItem && (
-        <div className="alert alert-success">
-          {this.props.deletedItem['@id']} deleted.
-        </div>
-      )}
-      {this.props.error && (
-        <div className="alert alert-danger">{this.props.error}</div>
-      )}
 
       <div id="search-results">
         {

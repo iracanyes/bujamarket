@@ -21,24 +21,24 @@ export default function Rating(props) {
       /* partie entière */
       for(let i = 0; i < n_entier; i++)
       {
-        retour.push(<FontAwesomeIcon key={++key} icon={faStarChecked}/>);
+        retour.push(<FontAwesomeIcon key={++key} icon={faStarChecked} style={{color: '#FFD700'}}/>);
       }
 
       if(n_decimal > 0.0)
       {
         if(n_decimal >= 0.5){
 
-          retour.push(<FontAwesomeIcon key={++key} icon={faStarHalfAlt}/>);
+          retour.push(<FontAwesomeIcon key={++key} icon={faStarHalfAlt} style={{color: '#FFD700'}}/>);
 
           for(let i= 0; i < 5 - n_entier - 1 ; i++)
           {
-            retour.push(<FontAwesomeIcon key={++key} icon={faStar}/>)
+            retour.push(<FontAwesomeIcon key={++key} icon={faStar} style={{color: 'white'}}/>)
           }
 
         }else{
           for(let i= 0; i < 5 - n_entier ; i++)
           {
-            retour.push(<FontAwesomeIcon key={++key} icon={faStar}/>)
+            retour.push(<FontAwesomeIcon key={++key} icon={faStar} style={{color: 'white'}}/>)
           }
         }
 
@@ -46,13 +46,13 @@ export default function Rating(props) {
       }else{
         for(let i= 0; i < 5 - n_entier ; i++)
         {
-          retour.push(<FontAwesomeIcon key={++key} icon={faStar}/>)
+          retour.push(<FontAwesomeIcon key={++key} icon={faStar} style={{color: 'white'}}/>)
         }
       }
     }else{
       for(let i = 0; i < 5; i++)
       {
-        retour.push(<FontAwesomeIcon key={++key} icon={faStar}/>);
+        retour.push(<FontAwesomeIcon key={++key} icon={faStar} style={{color: 'white'}}/>);
       }
     }
 
