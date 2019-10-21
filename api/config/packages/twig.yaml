@@ -2,3 +2,9 @@ twig:
     default_path: '%kernel.project_dir%/templates'
     debug: '%kernel.debug%'
     strict_variables: '%kernel.debug%'
+    globals:
+        APP_OWNER_ADDRESS: '%env(APP_OWNER_ADDRESS)%'
+        APP_OWNER_PHONE_NUMBER: '%env(APP_OWNER_PHONE_NUMBER)%'
+        APP_OWNER_CONTACT_EMAIL: '%env(APP_OWNER_CONTACT_EMAIL)%'
+        APP_HOST_URL: '%env(APP_HOST_URL)%'
+        APP_FULLNAME: '%env(APP_FULLNAME)%'

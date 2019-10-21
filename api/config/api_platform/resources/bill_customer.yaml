@@ -27,10 +27,18 @@ App\Entity\BillCustomer:
                 _format: 'json'
             # host: 'localhost'
             schemes: ['https']
-            access_control: "is_granted('IS_AUTHENTICATED_FULLY' and has_role('ROLE_CUSTOMER'))"
+            access_control: "is_granted('IS_AUTHENTICATED_FULLY') and has_role('ROLE_CUSTOMER')"
             #options:
             #    my_option: 'my_option_value'
             status: 200 # customize the HTTP status code to send
+        download:
+            method: 'GET'
+            path: '/customer_bill/download'
+            defaults:
+                _api_receive: false
+            schemes: ['https']
+            access_control: "is_granted('IS_AUTHENTICATED_FULLY') and has_role('ROLE_CUSTOMER')"
+            controller: App\Controller\BillCustomer\DownloadPdfAction
         delete:
             method: 'DELETE'
             path: '/customer_bill/{id}'

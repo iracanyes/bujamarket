@@ -306,11 +306,43 @@ class MemberHandler
         return $user;
     }
 
-    public function getCustomer()
+    public function getCustomer($data = null): ?Customer
     {
+        /* Pr test webhook
+        if(getenv('DEBUG_WEBHOOK') === 1 && $data !== null)
+        {
+            $data->customer_email = 'guillaume52@pinto.com';
+        }
+        */
+
+        dump($data);
+
         try{
-            $customer = $this->em->getRepository(Customer::class)
-                ->findOneBy(["email" => $this->security->getUser()->getUsername()]);
+            switch(true)
+            {
+                case $data === null :
+                    $customer = $this->em->getRepository(Customer::class)
+                        ->findOneBy(["email" => $this->security->getUser()->getUsername()]);
+                    break;
+                case $data->customer_email !== null:
+                    $customer = $this->em->getRepository(Customer::class)
+                        ->findOneBy(['email' => $data->customer_email]);
+                    break;
+                case $data->customer !== null:
+                    $customer = $this->em->getRepository(Customer::class)
+                        ->findOneBy(['customerKey' => $data->customer]);
+                    break;
+                case $data->client_reference_id !== null:
+                    $customer = $this->em->getRepository(Customer::class)
+                        ->findOneBy(['customerKey' => $data->client_reference_id]);
+                    break;
+                default:
+                    throw new \Exception('Customer not found for this checkout session');
+                    break;
+            }
+
+
+
         }catch(PDOException $exception){
             throw new UserNotFoundException("email", $this->security->getUser()->getUsername());
         }

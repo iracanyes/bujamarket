@@ -19,6 +19,19 @@ class BillCustomerRepository extends ServiceEntityRepository
         parent::__construct($registry, BillCustomer::class);
     }
 
+    public function findOneByUrlAndCustomer($value)
+    {
+        return $this->createQueryBuilder('bc')
+            ->leftJoin('bc.customer', 'c')
+            ->andWhere('bc.url = :url')
+            ->setParameter('url', $value['url'])
+            ->andWhere('c.email = :email')
+            ->setParameter('email', $value['email'])
+            ->getQuery()
+            ->execute();
+
+    }
+
     // /**
     //  * @return BillCustomer[] Returns an array of BillCustomer objects
     //  */

@@ -29,21 +29,21 @@ class Address
      *
      * @ORM\Column(type="string", length=255)
      * @Assert\Choice({"Résidence","Adresse de dépôt","Siége social"})
-     * @Groups({"supplier:output"})
+     * @Groups({"supplier:output","order_set:output"})
      */
     private $locationName;
 
     /**
      * @var string $street Street name
      * @ORM\Column(type="string", length=255)
-     * @Groups({"supplier:output"})
+     * @Groups({"supplier:output","order_set:output"})
      */
     private $street;
 
     /**
      * @var string $number Address's number
      * @ORM\Column(type="string", length=50)
-     * @Groups({"supplier:output"})
+     * @Groups({"supplier:output","order_set:output"})
      */
     private $number;
 
@@ -51,21 +51,21 @@ class Address
      * @var string $state State, District
      *
      * @ORM\Column(type="string", length=255)
-     * @Groups({"supplier:output"})
+     * @Groups({"supplier:output","order_set:output"})
      */
     private $state;
 
     /**
      * @var string $town Address's Town
      * @ORM\Column(type="string", length=255)
-     * @Groups({"supplier:output"})
+     * @Groups({"supplier:output","order_set:output"})
      */
     private $town;
 
     /**
      * @var string $zipCode Zip code
      * @ORM\Column(type="string", length=50)
-     * @Groups({"supplier:output"})
+     * @Groups({"supplier:output","order_set:output"})
      */
     private $zipCode;
 
@@ -73,7 +73,7 @@ class Address
      * @var string $country Country
      * @ORM\Column(type="string", length=255)
      * @Assert\Country()
-     * @Groups({"supplier:output"})
+     * @Groups({"supplier:output","order_set:output"})
      */
     private $country;
 

@@ -5,9 +5,12 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
+ * @ApiResource(attributes={
+ *     "normalization_context"={"groups"={"payment:output"}}
+ * })
  * @ORM\Table(name="bjmkt_payment")
  * @ORM\Entity(repositoryClass="App\Repository\PaymentRepository")
  */
@@ -27,6 +30,7 @@ class Payment
      *
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank()
+     * @Groups({"payment:output"})
      */
     private $reference;
 
@@ -35,6 +39,7 @@ class Payment
      *
      * @ORM\Column(type="datetime")
      * @Assert\DateTime()
+     * @Groups({"payment:output"})
      */
     private $dateCreated;
 
@@ -43,6 +48,7 @@ class Payment
      *
      * @ORM\Column(type="string", length=5)
      * @Assert\Currency()
+     * @Groups({"payment:output"})
      */
     private $currency;
 
@@ -50,6 +56,7 @@ class Payment
      * @var string $description Optional description of the reason of this payment
      *
      * @ORM\Column(type="text")
+     * @Groups({"payment:output"})
      */
     private $description;
 
@@ -58,6 +65,7 @@ class Payment
      *
      * @ORM\Column(type="string", length=50)
      * @Assert\NotBlank()
+     * @Groups({"payment:output"})
      */
     private $status;
 
@@ -69,6 +77,7 @@ class Payment
      *     min=0.0,
      *     minMessage="The minimum value is {{ limit }}.\nThe current value is {{ value }}"
      * )
+     * @Groups({"payment:output"})
      */
     private $amount;
 
@@ -80,14 +89,15 @@ class Payment
      *     min=0.0,
      *     minMessage="The minimum value is {{ limit }}.\nThe current value is {{ value }}"
      * )
+     * @Groups({"payment:output"})
      */
     private $amountRefund;
 
     /**
      * @var string $balanceTransaction Balance transaction
      *
-     * @ORM\Column(type="string", length=255)
-     *
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"payment:output"})
      */
     private $balanceTransaction;
 
@@ -97,14 +107,16 @@ class Payment
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank()
      * @Assert\Email()
+     * @Groups({"payment:output"})
      */
     private $emailReceipt;
 
     /**
      * @var string $source Source (Credit or Debit card). A hash describing that card
      *
-     * @ORM\Column(type="string", length=30)
+     * @ORM\Column(type="string", length=30, nullable=true)
      * @Assert\NotBlank()
+     * @Groups({"payment:output"})
      */
     private $source;
 
@@ -115,8 +127,21 @@ class Payment
      * @ORM\JoinColumn(nullable=false)
      * @Assert\Type("App\Entity\Bill")
      * @Assert\NotNull()
+     * @Groups({"payment:output"})
      */
     private $bill;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"payment:output"})
+     */
+    private $sessionId;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     * @Groups({"payment:output"})
+     */
+    private $paymentIntent;
 
     public function __construct()
     {
@@ -257,6 +282,30 @@ class Payment
     public function setBill(Bill $bill): self
     {
         $this->bill = $bill;
+
+        return $this;
+    }
+
+    public function getSessionId(): ?string
+    {
+        return $this->sessionId;
+    }
+
+    public function setSessionId(string $sessionId): self
+    {
+        $this->sessionId = $sessionId;
+
+        return $this;
+    }
+
+    public function getPaymentIntent(): ?string
+    {
+        return $this->paymentIntent;
+    }
+
+    public function setPaymentIntent(string $paymentIntent): self
+    {
+        $this->paymentIntent = $paymentIntent;
 
         return $this;
     }

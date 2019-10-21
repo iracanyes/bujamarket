@@ -54,7 +54,15 @@ class Show extends Component {
 
           {this.props.loading && (
 
-            <Spinner color="primary" role={"status"} style={{ width: '3rem', height: '3rem',position: 'absolute', left: '50%', top: '50%' }} type={"grow"} />
+            <div className="alert alert-light col-lg-3 mx-auto" role="status">
+              <Spinner type={'grow'} color={'info'} className={'mx-auto'}/>
+              <strong className={'mx-2 align-baseline'} style={{fontSize: '1.75rem'}}>
+                <FormattedMessage id={'app.loading'}
+                                  defaultMessage={'Chargement en cours'}
+                                  description={'App - Loading'}
+                />
+              </strong>
+            </div>
 
           )}
           {this.props.error && (
@@ -97,6 +105,7 @@ class Show extends Component {
 
             )}
             <div className="col-lg-4 mx-auto my-5 category-control-buttons">
+              {/*
               <Link to={`..`} className="btn btn-outline-primary d-block mx-auto">
                 <FormattedMessage  id={"app.button.return_to_List"}
                                    defaultMessage="Retour à la liste"
@@ -104,7 +113,14 @@ class Show extends Component {
                 />
 
               </Link>
+              */}
+              <button onClick={() => this.props.history.goBack()} className="btn btn-outline-primary d-block mx-auto">
+                <FormattedMessage  id={"app.button.return"}
+                                   defaultMessage="Retour "
+                                   description=" Button - Return "
+                />
 
+              </button>
 
             </div>
 

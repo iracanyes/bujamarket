@@ -17,11 +17,15 @@ export function success(retrieved) {
   return { type: 'PAYMENT_SHOW_SUCCESS', retrieved };
 }
 
-export function retrieve(id) {
+export function retrieve(id, history, location) {
   return dispatch => {
     dispatch(loading(true));
 
-    return fetch(id)
+    const userToken = JSON.parse(localStorage.getItem('token'));
+    let headers = new Headers();
+    headers.set('Authorization', 'Bearer ' + userToken.token);
+
+    return fetch('payment_success', { method: 'POST', headers: headers, body: JSON.stringify({sessionId: id}) })
       .then(response =>
         response
           .json()
@@ -34,10 +38,22 @@ export function retrieve(id) {
         dispatch(success(retrieved));
 
         if (hubURL) dispatch(mercureSubscribe(hubURL, retrieved['@id']));
+
+
       })
       .catch(e => {
         dispatch(loading(false));
         dispatch(error(e.message));
+
+        if( /Unauthorized/.test(e))
+        {
+          sessionStorage.removeItem('flash-message-error');
+          sessionStorage.setItem('flash-message-error', JSON.stringify({message: "Authentification nécessaire avant de continuer!"}));
+          history.push('');
+          history.push({pathname: '../login', state: { from: location.pathname }});
+          window.location.reload();
+        }
+
       });
   };
 }

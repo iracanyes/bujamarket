@@ -224,7 +224,7 @@ class CarouselProductSuppliers extends Component {
                   <p>
                     À partir de : {productSuppliers[0]["finalPrice"].toFixed(2)} &euro;
                   </p>
-                  <ButtonAddShoppingCard buttonLabel={"Ajouter au panier"} product={productSuppliers[0]}/>
+                  <ButtonAddShoppingCard buttonLabel={"Ajouter au panier"} product={productSuppliers[0]} history={this.props.history}/>
                   {/*
                   <Link to={'/shopping_card/add/'+productSuppliers[0]['id']} className={"btn btn-outline-primary d-block mx-auto my-2"}>
                     <FormattedMessage  id={"app.button.add_shopping_card"}

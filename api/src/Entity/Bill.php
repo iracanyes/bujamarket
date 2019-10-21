@@ -5,9 +5,12 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
+ * @ApiResource(attributes={
+ *     "normalization_context"={"groups"={"payment:output"}}
+ * })
  * @ORM\Table(name="bjmkt_bill")
  * @ORM\Entity(repositoryClass="App\Repository\BillRepository")
  *
@@ -36,7 +39,8 @@ class Bill
      * @var string $status Status of this bill
      *
      * @ORM\Column(type="string", length=100)
-     * @Assert\Choice({"paid","pending","failed","withdrawn"})
+     * @Assert\Choice({"completed","paid","pending","failed","withdrawn"})
+     * @Groups({"bill_customer:output","bill_refund:output","bill_supplier:output","payment:output"})
      */
     private $status;
 
@@ -45,6 +49,7 @@ class Bill
      *
      * @ORM\Column(type="string", length=30, unique=true)
      * @Assert\NotBlank()
+     * @Groups({"bill_customer:output","bill_refund:output","bill_supplier:output","payment:output"})
      */
     private $reference;
 
@@ -53,14 +58,16 @@ class Bill
      *
      * @ORM\Column(type="datetime")
      * @Assert\DateTime()
+     * @Groups({"bill_customer:output","bill_refund:output","bill_supplier:output","payment:output"})
      */
     private $dateCreated;
 
     /**
-     * @var \DateTime $datePayment Date of the payment of this bill
+     * @var \DateTime $datePayment Date of the payment:output of this bill
      *
      * @ORM\Column(type="datetime", nullable=true)
      * @Assert\DateTime()
+     * @Groups({"bill_customer:output","bill_refund:output","bill_supplier:output","payment:output"})
      */
     private $datePayment;
 
@@ -69,6 +76,7 @@ class Bill
      *
      * @ORM\Column(type="string", length=3)
      * @Assert\Currency()
+     * @Groups({"bill_customer:output","bill_refund:output","bill_supplier:output","payment:output"})
      */
     private $currencyUsed;
 
@@ -77,6 +85,7 @@ class Bill
      *
      * @ORM\Column(type="float")
      * @Assert\Type("float")
+     * @Groups({"bill_customer:output","bill_refund:output","bill_supplier:output","payment:output"})
      */
     private $vatRateUsed;
 
@@ -85,6 +94,7 @@ class Bill
      *
      * @ORM\Column(type="float")
      * @Assert\Type("float")
+     * @Groups({"bill_customer:output","bill_refund:output","bill_supplier:output","payment:output"})
      */
     private $totalExclTax;
 
@@ -93,6 +103,7 @@ class Bill
      *
      * @ORM\Column(type="float")
      * @Assert\Type("float")
+     * @Groups({"bill_customer:output","bill_refund:output","bill_supplier:output","payment:output"})
      */
     private $totalInclTax;
 
@@ -101,6 +112,7 @@ class Bill
      *
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank()
+     * @Groups({"bill_customer:output","bill_refund:output","bill_supplier:output","payment:output"})
      */
     private $url;
 
@@ -109,6 +121,7 @@ class Bill
      *
      * @ORM\OneToOne(targetEntity="App\Entity\Payment", mappedBy="bill", cascade={"persist", "remove"})
      * @Assert\NotNull()
+     * @Groups({"bill_customer:output","bill_refund:output","bill_supplier:output"})
      */
     private $payment;
 

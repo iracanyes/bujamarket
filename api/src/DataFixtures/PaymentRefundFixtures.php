@@ -23,7 +23,8 @@ class PaymentRefundFixtures extends Fixture implements DependentFixtureInterface
     {
         $payment = new Payment();
 
-        $payment->setReference($this->faker->iban('BE'));
+        $payment->setPaymentIntent('pi_'.$this->faker->sha1);
+        $payment->setReference('bjmktr_'.$this->faker->sha1);
         $payment->setDateCreated($this->faker->dateTimeBetween('-2 years','now'));
         $payment->setCurrency($this->faker->randomElement(['BIF','EUR','USD']));
         $payment->setDescription($this->faker->realText(50));

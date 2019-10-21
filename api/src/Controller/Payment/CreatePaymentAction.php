@@ -18,7 +18,7 @@ class CreatePaymentAction
     public function __invoke()
     {
         /* Création de la session de paiement sur Stripe Checkout */
-        $retour = $this->paymentHandler->createPayment();
+        $retour = $this->paymentHandler->createCheckoutSession();
 
         return $retour;
     }

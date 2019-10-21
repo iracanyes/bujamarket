@@ -20,4 +20,6 @@
 
 ###> Custom ###
 /**/*.*.save
+/public/download/**/*.pdf
+/public/upload/**/*.jpeg
 ###< Custom ###

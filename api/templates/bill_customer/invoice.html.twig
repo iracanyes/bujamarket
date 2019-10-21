@@ -1,0 +1,133 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Customer - Invoice{% endblock %}
+
+{%  block stylesheets %}
+    <link href="https://fonts.googleapis.com/css?family=Carter+One|Lato&display=swap" rel="stylesheet">
+    <style type="text/css">
+        {% include('assets/bootstrap-4.3.1-dist/css/bootstrap-reboot.css') %}
+        {% include('assets/bootstrap-4.3.1-dist/css/bootstrap-grid.css') %}
+        {% include('assets/bootstrap-4.3.1-dist/css/bootstrap.css') %}
+        {% include('assets/index.css') %}
+    </style>
+
+
+
+{% endblock %}
+
+{% block body %}
+    <div class="container " style="font-size: 0.9rem">
+        <h1 class="text-center">Customer invoice</h1>
+        <div style="min-width: 600px">
+            <section class="m-0 p-0">
+                <div class="row d-flex flex-row m-0 p-0">
+                    {#
+                    <div class="col-sm ">
+                        <a target="_blank" href="{{ APP_HOST_URL }}">
+
+                            <img src="{{ asset('assets/img/logo.png') }}" class="img-thumbnail rounded-circle" alt="Buja Market"  style="max-height: 4.375rem;max-width: 4.375rem" data-holder-rendered="true">
+
+                        </a>
+                    </div>
+                    #}
+                    <div class="col-sm text-right">
+                        <h6 class="">
+                            <a target="_blank" href="{{ APP_HOST_URL }}">
+                                Buja market
+                            </a>
+                        </h6>
+                        <div>{{ APP_OWNER_ADDRESS }}</div>
+                        <div>{{ APP_OWNER_PHONE_NUMBER }}</div>
+                        <div>{{ APP_OWNER_CONTACT_EMAIL }}</div>
+                    </div>
+                </div>
+            </section>
+            <section class="d-block m-0 p-0">
+                <div class="row m-0 p-0">
+                    <div class="col text-left">
+                        <div class="text-gray-light"><strong>Destinataire:</strong></div>
+                        <strong class="">{{ payment.bill.customer.firstname ~ ' ' ~ payment.bill.customer.lastname }}</strong>
+                        <div class="">796 Silver Harbour, TX 79273, US</div>
+                        <div class=""><a href="mailto:john@example.com">{{ payment.bill.customer.email }}</a></div>
+                    </div>
+                    <div class="col mb-0 text-right">
+                        <div class="text-gray-light"><strong>Facture:</strong></div>
+                        <strong class="">{{ payment.bill.reference }}</strong>
+                        <div class="">Date de facturation: {{ payment.dateCreated|date("d/m/Y", "Europe/Paris") }}</div>
+                        <div class="">Date d'échéance: {{ payment.dateCreated|date_modify("+10 day")|date("d/m/Y", "Europe/Paris") }}</div>
+                    </div>
+                </div>
+                <table class="table table-light mx-0 p-0" style="font-size: 0.8rem">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>#</th>
+                            <th scope="col" class="text-left">Description</th>
+                            <th scope="col" class="text-right">Prix</th>
+                            <th scope="col" class="text-right">Quantité</th>
+                            <th scope="col" class="text-right">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in session.display_items %}
+                            <tr>
+                                <td class="no">{{ loop.index }}</td>
+                                <td class="text-left">
+                                    <strong>
+                                            {{ item.custom.name }}
+                                    </strong>
+                                    <br/>
+                                    <span>
+                                        {{ item.custom.description }}
+                                    </span>
+                                </td>
+                                {% set price =  item.amount / 100.0 %}
+                                <td class="text-right">{{ price|round(2, 'ceil')  ~ ' €'}}</td>
+                                <td class="text-right">{{ item.quantity }}</td>
+                                <td class="text-right">{{ (price * item.quantity)|round(2)  ~ ' €' }}</td>
+                            </tr>
+                        {% endfor %}
+
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <td colspan="2"></td>
+                        <td colspan="2"><strong>Transport</strong></td>
+                        <td class="text-right">{{ payment.bill.totalShippingCost|round(2, 'ceil')  ~ ' €'}}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"></td>
+                        <td colspan="2"><strong>Total Excl Tax</strong></td>
+                        <td class="text-right">{{ payment.bill.totalExclTax|round(2, 'ceil')  ~ ' €'}}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"></td>
+                        <td colspan="2">TAX {{ payment.bill.vatRateUsed }}%</td>
+                        <td class="text-right">{{ (payment.bill.totalExclTax * payment.bill.vatRateUsed)|round(2, 'ceil')  ~ ' €'}}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"></td>
+                        <td colspan="2"><strong>Total Incl Tax</strong></td>
+                        <td class="text-right">{{ payment.bill.totalInclTax|round(2, 'ceil')  ~ ' €'}}</td>
+                    </tr>
+                    </tfoot>
+                </table>
+                <div class="">Au plaisir!</div>
+                <div class="font-weight-light" style="font-size:0.8rem;line-height: 0.9rem;position:absolute;bottom:0">
+                    <h6>Notice:</h6>
+                    <p>
+                        Les <a href="{{ APP_HOST_URL }}/conditions_generales">conditions générales</a> comportent principalement des dispositions relatives au délai de livraison ou d’exécution, au délai de payement, aux sanctions en cas de retard ou de défaut de payement à l’échéance, au droit applicable et à la juridiction compétente en cas de litige.
+                    </p>
+                </div>
+            </section>
+            <footer>
+
+            </footer>
+        </div>
+
+        <div></div>
+
+    </div>
+{% endblock %}
+{% block javascripts %}
+    <script src="{{ asset('public/assets/bootstrap-4.3.1-dist/js/bootstrap.js') }}"></script>
+{% endblock %}

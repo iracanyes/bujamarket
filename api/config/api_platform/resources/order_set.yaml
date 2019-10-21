@@ -22,6 +22,21 @@ App\Entity\OrderSet:
             access_control: "has_role('ROLE_MEMBER') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
             schemes: ['https']
             controller: App\Controller\OrderSet\CreateOrderSetAction
+        getOrderSetSuccess:
+            method: 'POST'
+            path: '/order_set/success'
+            requirements:
+                sessionId: '\d+'
+                _format: 'json\jsonld\html'
+            defaults:
+                _format: 'json'
+            # host: 'localhost'
+            schemes: ['https']
+            access_control: "has_role('ROLE_CUSTOMER') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
+            #options:
+            #    my_option: 'my_option_value'
+            status: 200 # customize the HTTP status code to send
+            controller: App\Controller\OrderSet\GetOrderSetSuccessAction
     itemOperations:
         get:
             method: 'GET'
@@ -33,10 +48,10 @@ App\Entity\OrderSet:
                 _format: 'json'
             # host: 'localhost'
             schemes: ['https']
-            access_control: "has_role('ROLE_MEMBER') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
+            access_control: "has_role('ROLE_CUSTOMER') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
             #options:
             #    my_option: 'my_option_value'
-            status: 200 # customize the HTTP status code to send        
+            status: 200 # customize the HTTP status code to send            
         put:
             method: 'PUT'
             path: '/order_set/{id}'

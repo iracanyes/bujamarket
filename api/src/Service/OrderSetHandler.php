@@ -9,7 +9,9 @@ use App\Entity\OrderSet;
 use App\Entity\Customer;
 use Doctrine\DBAL\Driver\PDOException;
 use Doctrine\ORM\EntityNotFoundException;
+use App\Exception\OrderSetNotFoundException;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\UserNotFoundException;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Security;
 use Doctrine\ORM\EntityManagerInterface;
@@ -101,6 +103,8 @@ class OrderSetHandler
 
         }
 
+        /**/
+
         /* Récupération de l'expéditeur */
         $shipper = $this->shipperHandler->getShipper($data);
         /* Création d'un ensemble de livraison */
@@ -116,6 +120,9 @@ class OrderSetHandler
         $deliverySet->setShipper($shipper);
         /* Association de l'ensemble de commande à son ensemble de livraison correspondant */
         $orderSet->setDeliverySet($deliverySet);
+
+        /* Définition de l'ID de session checkout, par défaut "Not started" qui sera modifié lorsqu'une session d'achat sera lancé */
+        $orderSet->setSessionId('Not started');
 
         try{
             $customer = $this->em->getRepository(Customer::class)
@@ -141,18 +148,55 @@ class OrderSetHandler
     {
         if( $data === null)
         {
-            $data = $this->request->getContent();
+            $data = json_decode($this->request->getContent());
         }
 
         dump($data);
+        dump($data->sessionId);
 
         try{
-            $orderSet = $this->em->getRepository(OrderSet::class)
-                ->find($data->orderSet);
+            if($data !== null && isset($data->orderSet))
+            {
+                $orderSet = $this->em->getRepository(OrderSet::class)
+                    ->find($data->orderSet);
+
+                dump($orderSet);
+            }
+
+
+            if($data !== null && isset($data->sessionId) )
+            {
+                $orderSet = $this->em->getRepository(OrderSet::class)
+                    ->findOneBy([ "sessionId" => $data->sessionId ]);
+
+                dump($orderSet);
+            }
         }catch (PDOException $exception){
-            throw new EntityNotFoundException("La commande n'existe pas!");
+            throw new OrderSetNotFoundException("La commande n'existe pas!");
         }
 
         return $orderSet;
+    }
+
+    public function getOrderSetBySessionId($sessionId): OrderSet
+    {
+        try{
+            $orderSet = $this->em->getRepository(OrderSet::class)
+                ->findOneBy(['sessionId'=> $sessionId ]);
+
+            if(!$orderSet)
+            {
+                throw new OrderSetNotFoundException(sprintf("The order set associated to the checkout session %s does not exist!", $sessionId));
+            }
+
+        } catch(PDOException $exception){
+
+            throw new OrderSetNotFoundException(sprintf("The order set associated to the checkout session %s can't be retrieved!", $sessionId));
+        }
+
+        dump($orderSet);
+
+        return $orderSet;
+
     }
 }

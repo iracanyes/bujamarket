@@ -13,7 +13,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ApiResource(attributes={
- *     "normalization_context"={"groups"={"customer:output"}},
+ *     "normalization_context"={"groups"={"customer:output","payment:output"}},
  *     "denormalization_context"={"groups"={"customer:input"}}
  * })
  * @ORM\Table(name="bjmkt_customer")

@@ -5,9 +5,12 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
+ * @ApiResource(attributes={
+ *     "normalization_context"={"groups"={"payment:output"}}
+ * })
  * @ORM\Table(name="bjmkt_customer_bill")
  * @ORM\Entity(repositoryClass="App\Repository\BillCustomerRepository")
  */
@@ -30,6 +33,7 @@ class BillCustomer extends  Bill
      *     min=0,
      *     minMessage="The minimum value is {{ limit }}.\nThe current value is {{ value }}"
      * )
+     * @Groups({"bill_customer:output","payment:output"})
      */
     private $additionalCost;
 
@@ -43,6 +47,7 @@ class BillCustomer extends  Bill
      *     minMessage="The minimum value is {{ limit }}.\nThe current value is {{ value }}",
      *     maxMessage="The maximum value is {{ limit }}.\nThe current value is {{ value }}"
      * )
+     * @Groups({"bill_customer:output","payment:output"})
      */
     private $additionalFee;
 
@@ -50,6 +55,7 @@ class BillCustomer extends  Bill
      * @var string $additionalInformation Reason of the additonal fee or charges
      *
      * @ORM\Column(type="text", nullable=true)
+     * @Groups({"bill_customer:output","payment:output"})
      */
     private $additionalInformation;
 
@@ -58,6 +64,7 @@ class BillCustomer extends  Bill
      *
      * @ORM\Column(type="float")
      * @Assert\NotBlank()
+     * @Groups({"bill_customer:output","payment:output"})
      */
     private $totalShippingCost;
 
@@ -65,8 +72,9 @@ class BillCustomer extends  Bill
      * @var OrderSet $orderSet Order set associated to this bill
      *
      * @ORM\OneToOne(targetEntity="OrderSet", inversedBy="billCustomer", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      * @Assert\NotNull()
+     *
      */
     private $orderSet;
 
@@ -76,6 +84,7 @@ class BillCustomer extends  Bill
      * @ORM\ManyToOne(targetEntity="App\Entity\Customer", inversedBy="customerBills")
      * @ORM\JoinColumn(nullable=false)
      * @Assert\NotNull()
+     * @Groups({"bill_customer:output","payment:output"})
      */
     private $customer;
 

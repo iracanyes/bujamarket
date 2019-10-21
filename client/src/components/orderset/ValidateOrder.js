@@ -192,7 +192,7 @@ class ValidateOrder extends Component {
                 </div>
                 <div>
                   <p>
-                    <span className="text-muted">{ parseFloat(item.totalCost * (0.21)).toFixed(2)  + ' €'}</span>
+                    <span className="text-muted">{ parseFloat(item.totalCost * (0.0)).toFixed(2)  + ' €'}</span>
                   </p>
                 </div>
               </ListGroupItem>
@@ -217,7 +217,7 @@ class ValidateOrder extends Component {
                 </div>
                 <div>
                   <p>
-                    <span className="text-muted">{ parseFloat((item.totalCost * 1.21) + (item.deliverySet.shippingCost || 0)).toFixed(2)  + ' €'}</span>
+                    <span className="text-muted">{ parseFloat((item.totalCost * 1.0) + (item.deliverySet.shippingCost || 0)).toFixed(2)  + ' €'}</span>
                   </p>
                 </div>
               </ListGroupItem>

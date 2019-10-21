@@ -18,12 +18,14 @@ class OrderSetFixtures extends Fixture implements DependentFixtureInterface
     public function __construct()
     {
         $this->faker = Factory::create('fr_FR');
+
     }
 
     public function load(ObjectManager $manager)
     {
         $orderSet = new OrderSet();
 
+        $orderSet->setSessionId('cs_test_'.$this->faker->sha1);
         $orderSet->setTotalWeight($this->faker->randomFloat(2, 1));
         $orderSet->setDateCreated($this->faker->dateTimeBetween('-2 years','now'));
 

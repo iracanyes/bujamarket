@@ -23,7 +23,8 @@
         "symfony/monolog-bundle": "^3.4",
         "symfony/orm-pack": "^1.0",
         "symfony/swiftmailer-bundle": "dev-master",
-        "symfony/yaml": "4.2.*"
+        "symfony/yaml": "4.2.*",
+        "vich/uploader-bundle": "^1.10"
     },
     "require-dev": {
         "api-platform/schema-generator": "^2.1",

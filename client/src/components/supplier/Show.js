@@ -3,7 +3,18 @@ import { connect } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { retrieve, reset } from '../../actions/supplier/show';
-import { del } from '../../actions/supplier/delete';
+import {
+  Col,
+  Row,
+  Button,
+  Card,
+  CardTitle,
+  CardText,
+  CardFooter,
+  Spinner
+} from 'reactstrap';
+import { FormattedMessage } from 'react-intl';
+import CarouselProductSuppliersBySupplier from "../supplierproduct/CarouselProductSuppliersBySupplier";
 
 class Show extends Component {
   static propTypes = {
@@ -13,37 +24,38 @@ class Show extends Component {
     eventSource: PropTypes.instanceOf(EventSource),
     retrieve: PropTypes.func.isRequired,
     reset: PropTypes.func.isRequired,
-    deleteError: PropTypes.string,
-    deleteLoading: PropTypes.bool.isRequired,
-    deleted: PropTypes.object,
-    del: PropTypes.func.isRequired
   };
 
   componentDidMount() {
-    this.props.retrieve(decodeURIComponent(this.props.match.params.id));
+    if(JSON.parse(localStorage.getItem('token')) === null)
+    {
+      this.props.history.push({pathname: '../../login', state: { from : window.location.pathname }});
+    }else{
+      this.props.retrieve(decodeURIComponent(this.props.match.params.id), this.props.history);
+    }
+
   }
 
   componentWillUnmount() {
     this.props.reset(this.props.eventSource);
   }
 
-  del = () => {
-    if (window.confirm('Are you sure you want to delete this item?'))
-      this.props.del(this.props.retrieved);
-  };
-
   render() {
-    if (this.props.deleted) return <Redirect to=".." />;
 
     const item = this.props.retrieved;
 
     return (
-      <div>
-        <h1>Show {item && item['@id']}</h1>
+      <div className={'supplier-details'}>
 
         {this.props.loading && (
-          <div className="alert alert-info" role="status">
-            Loading...
+          <div className="alert alert-light col-lg-3 mx-auto" role="status">
+            <Spinner type={'grow'} color={'info'} className={'mx-auto'}/>
+            <strong className={'mx-2 align-baseline'} style={{fontSize: '1.75rem'}}>
+              <FormattedMessage id={'app.loading'}
+                                defaultMessage={'Chargement en cours'}
+                                description={'App - Loading'}
+              />
+            </strong>
           </div>
         )}
         {this.props.error && (
@@ -60,148 +72,95 @@ class Show extends Component {
         )}
 
         {item && (
-          <table className="table table-responsive table-striped table-hover">
-            <thead>
-              <tr>
-                <th>Field</th>
-                <th>Value</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <th scope="row">userType</th>
-                <td>{item['userType']}</td>
-              </tr>
-              <tr>
-                <th scope="row">socialReason</th>
-                <td>{item['socialReason']}</td>
-              </tr>
-              <tr>
-                <th scope="row">tradeRegisterNumber</th>
-                <td>{item['tradeRegisterNumber']}</td>
-              </tr>
-              <tr>
-                <th scope="row">vatNumber</th>
-                <td>{item['vatNumber']}</td>
-              </tr>
-              <tr>
-                <th scope="row">contactFullname</th>
-                <td>{item['contactFullname']}</td>
-              </tr>
-              <tr>
-                <th scope="row">contactPhoneNumber</th>
-                <td>{item['contactPhoneNumber']}</td>
-              </tr>
-              <tr>
-                <th scope="row">contactEmail</th>
-                <td>{item['contactEmail']}</td>
-              </tr>
-              <tr>
-                <th scope="row">website</th>
-                <td>{item['website']}</td>
-              </tr>
-              <tr>
-                <th scope="row">supplierProducts</th>
-                <td>{this.renderLinks('supplier_products', item['supplierProducts'])}</td>
-              </tr>
-              <tr>
-                <th scope="row">supplierBills</th>
-                <td>{this.renderLinks('bills', item['supplierBills'])}</td>
-              </tr>
-              <tr>
-                <th scope="row">supplierKey</th>
-                <td>{item['supplierKey']}</td>
-              </tr>
-              <tr>
-                <th scope="row">email</th>
-                <td>{item['email']}</td>
-              </tr>
-              <tr>
-                <th scope="row">username</th>
-                <td>{item['username']}</td>
-              </tr>
-              <tr>
-                <th scope="row">roles</th>
-                <td>{item['roles']}</td>
-              </tr>
-              <tr>
-                <th scope="row">plainPassword</th>
-                <td>{item['plainPassword']}</td>
-              </tr>
-              <tr>
-                <th scope="row">password</th>
-                <td>{item['password']}</td>
-              </tr>
-              <tr>
-                <th scope="row">salt</th>
-                <td>{item['salt']}</td>
-              </tr>
-              <tr>
-                <th scope="row">firstname</th>
-                <td>{item['firstname']}</td>
-              </tr>
-              <tr>
-                <th scope="row">lastname</th>
-                <td>{item['lastname']}</td>
-              </tr>
-              <tr>
-                <th scope="row">nbErrorConnection</th>
-                <td>{item['nbErrorConnection']}</td>
-              </tr>
-              <tr>
-                <th scope="row">banned</th>
-                <td>{item['banned']}</td>
-              </tr>
-              <tr>
-                <th scope="row">signinConfirmed</th>
-                <td>{item['signinConfirmed']}</td>
-              </tr>
-              <tr>
-                <th scope="row">dateRegistration</th>
-                <td>{item['dateRegistration']}</td>
-              </tr>
-              <tr>
-                <th scope="row">language</th>
-                <td>{item['language']}</td>
-              </tr>
-              <tr>
-                <th scope="row">currency</th>
-                <td>{item['currency']}</td>
-              </tr>
-              <tr>
-                <th scope="row">image</th>
-                <td>{this.renderLinks('images', item['image'])}</td>
-              </tr>
-              <tr>
-                <th scope="row">addresses</th>
-                <td>{this.renderLinks('addresses', item['addresses'])}</td>
-              </tr>
-              <tr>
-                <th scope="row">bankAccounts</th>
-                <td>{this.renderLinks('bank_accounts', item['bankAccounts'])}</td>
-              </tr>
-              <tr>
-                <th scope="row">forums</th>
-                <td>{this.renderLinks('forums', item['forums'])}</td>
-              </tr>
-              <tr>
-                <th scope="row">messages</th>
-                <td>{this.renderLinks('messages', item['messages'])}</td>
-              </tr>
-            </tbody>
-          </table>
+
+          <div class={'col-lg-9 mx-auto'}>
+            <Row>
+              <Col lg={2}>
+                <img src={item['image']['url']}
+                     className={'img-thumbnail rounded-circle'}
+                     style={{width: '7.5rem', height:'7.5rem'}}
+                     alt={item['image']['alt']}
+                     title={item['image']['title']}
+                />
+              </Col>
+              <Col>
+                <h2>{item['brandName']}</h2>
+                <strong>{item['socialReason']}</strong>
+              </Col>
+            </Row>
+            <Row className={'mt-3'}>
+              <Col>
+                <Card body outline color={'info'} style={{height:'100%'}}>
+                  <CardTitle color={'info'}><h6 className={'text-center'}>Business information</h6></CardTitle>
+                  <CardText>
+                    <p>
+                      Responsable : <br/> <strong>{ item['firstname'] + ' ' + item['lastname']}</strong>
+                    </p>
+                    <p>
+                      Numéro registre de commerce  : <br/> <strong>{ item['tradeRegistryNumber']}</strong>
+                    </p>
+                    <p>
+                      Numéro TVA : <br/> <strong>{ item['vatNumber']}</strong>
+                    </p>
+                    <p>
+                      Date d'inscription : <br/> <strong>{new Date(item['dateRegistration']).toLocaleDateString('fr-FR')}</strong>
+                    </p>
+                  </CardText>
+                </Card>
+              </Col>
+              <Col>
+                <Card body outline color={'warning'} style={{height:'100%'}}>
+                  <CardTitle><h6 className={'text-center'}>Contact Information</h6></CardTitle>
+                  <CardText>
+                    <p>
+                      Responsable  : <br/> <strong>{ item['contactFullname']}</strong>
+                    </p>
+                    <p>
+                      Numéro de téléphone: <br/> <strong>{ item['contactPhoneNumber']}</strong>
+                    </p>
+                    <p>
+                      E-mail: <br/> <strong>{item['contactEmail']}</strong>
+                    </p>
+                    <p>
+                      Site web : <a href={item['website']} target={'_blank'}>{item['website']}</a>
+                    </p>
+                  </CardText>
+                </Card>
+              </Col>
+              <Col>
+                <Card body outline color={'secondary'} style={{height:'100%'}}>
+                  <CardTitle><h6 className={'text-center'}>Adresses</h6></CardTitle>
+                  <CardText>
+                    {item.addresses.map((item, index) => (
+                      <div>
+                        <p>
+                          <strong>{item.locationName}</strong>
+                        </p>
+                        <ul style={{listStyle: 'none'}}>
+                          <li key={1}>
+                            {item.street + ', ' + item.number}
+                          </li>
+                          <li key={2}>
+                            { item.state + ' ' + item.zipCode }
+                          </li>
+                          <li key={3}>
+                            { item.state + ' ' + item.country }
+                          </li>
+                        </ul>
+                      </div>
+                    ))}
+                  </CardText>
+                </Card>
+              </Col>
+
+            </Row>
+            <Row className={'mt-3 bg-light'}>
+              <CarouselProductSuppliersBySupplier supplierId={item.id}/>
+
+            </Row>
+          </div>
         )}
-        <Link to=".." className="btn btn-primary">
-          Back to list
-        </Link>
-        {item && (
-          <Link to={`/suppliers/edit/${encodeURIComponent(item['@id'])}`}>
-            <button className="btn btn-warning">Edit</button>
-          </Link>
-        )}
-        <button onClick={this.del} className="btn btn-danger">
-          Delete
-        </button>
+
       </div>
     );
   }
@@ -212,10 +171,11 @@ class Show extends Component {
         <div key={i}>{this.renderLinks(type, item)}</div>
       ));
     }
-
+    console.log("item - "+ type, items);
     return (
-      <Link to={`../../${type}/show/${encodeURIComponent(items)}`}>
-        {items}
+      <Link to={`../../${type}/show/${encodeURIComponent(items['id'])}`}>
+        {items['title'] && items['title']}
+        {items['name'] && items['name']}
       </Link>
     );
   };
@@ -232,8 +192,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  retrieve: id => dispatch(retrieve(id)),
-  del: item => dispatch(del(item)),
+  retrieve: (id, history) => dispatch(retrieve(id, history)),
   reset: eventSource => dispatch(reset(eventSource))
 });
 

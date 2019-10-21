@@ -68,7 +68,7 @@ class MainMenuSearchForm extends Component
       const items = this.props.retrievedProducts;
 
       /* Si les valeurs sont acquis par le composant, on les transmet au composant d'ordre supérieur via la fonction (onSearch) reçu comme propriété du composant */
-      //console.log("Main Menu Search Form - Items", items);
+
 
       if( typeof items !== "undefined"  && items !== null && this._isMounted)
       {
@@ -120,9 +120,6 @@ class MainMenuSearchForm extends Component
     /* Affichage du composant de résultat */
     this.showSearchResults();
 
-    console.log(e.target.name + " => " +  e.target.value);
-    console.log("state.searchType : " + this.state.searchType);
-
     let searchTypeValue = e.target.value;
 
 
@@ -170,15 +167,11 @@ class MainMenuSearchForm extends Component
 
     if(this.state.searchType === "products")
     {
-      console.log("SearchType : ", this.state.searchType);
-      console.log("SearchValue (state): ", this.state.searchValue);
-      console.log("SearchValue (event): ", e.target.value);
 
-      console.log("Produits - Resultat avant filtrage", this.props.retrievedProducts["hydra:member"] );
 
       const results = this.props.retrievedProducts["hydra:member"].filter(item => item.title.toLowerCase().indexOf(e.target.value.toLowerCase()) > -1 );
 
-      console.log("Produits - Resultat après filtrage", results );
+
 
       this.props.onSearch({
         searchType: this.state.searchType,
@@ -187,15 +180,11 @@ class MainMenuSearchForm extends Component
       });
     }else
     {
-      console.log("SearchType : ", this.state.searchType);
-      console.log("SearchValue (state): ", this.state.searchValue);
-      console.log("SearchValue (event): ", e.target.value);
 
-      console.log("Produits - Resultat avant filtrage", this.props.retrievedProducts["hydra:member"] );
 
       const results = this.props.retrievedSuppliers["hydra:member"].filter(item => item["socialReason"].toLowerCase().indexOf(e.target.value.toLowerCase()) > -1);
 
-      console.log("Produits - Resultat après filtrage", results );
+
 
       this.props.onSearch({
         searchType: this.state.searchType,
@@ -211,7 +200,7 @@ class MainMenuSearchForm extends Component
     /* Eviter l'envoi du formulaire */
     e.preventDefault();
 
-
+    document.getElementById("search-results-component").style.display= 'block';
   }
 
   handleToggleAdvancedSearchButton()
@@ -281,7 +270,7 @@ class MainMenuSearchForm extends Component
                  onChange={this.handleSearchValueChange}
                  onClick={this.reset}
           />
-          <Button type="submit" outline color="light" className={"my-2 my-sm-0"}>
+          <Button type="submit" outline color="light" className={"my-2 my-sm-0"} onClick={this.handleSubmit}>
             <FontAwesomeIcon icon="search" />
           </Button>
         </Form>
