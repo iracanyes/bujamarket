@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import Form from './Form';
+import SupplierProductForm from './SupplierProductForm';
 import { create, reset } from '../../actions/supplierproduct/create';
 
 class Create extends Component {
@@ -28,7 +28,7 @@ class Create extends Component {
 
     return (
       <div>
-        <h1>New SupplierProduct</h1>
+        <h1>Proposer un produit à la vente</h1>
 
         {this.props.loading && (
           <div className="alert alert-info" role="status">
@@ -42,10 +42,8 @@ class Create extends Component {
           </div>
         )}
 
-        <Form onSubmit={this.props.create} values={this.props.item} />
-        <Link to="." className="btn btn-primary">
-          Back to list
-        </Link>
+        <SupplierProductForm values={this.props.item} />
+
       </div>
     );
   }

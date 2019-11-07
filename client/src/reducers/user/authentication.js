@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 
-let token = localStorage.getItem("token") && JSON.parse(localStorage.getItem("token"));
+let token = localStorage.getItem("token") || (localStorage.getItem("token") !== "undefined") && JSON.parse(localStorage.getItem("token"));
 const initialState = token ? { loggingIn: true, token } : {};
 
 export function error(state = initialState, action) {

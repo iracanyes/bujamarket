@@ -12,18 +12,34 @@ export function success(deleted) {
   return { type: 'FAVORITE_DELETE_SUCCESS', deleted };
 }
 
-export function del(item) {
+export function del(item, history) {
   return dispatch => {
     dispatch(loading(true));
 
-    return fetch(item['@id'], { method: 'DELETE' })
+    /* Récupération de la clé JWT et ajout au header de la requête */
+    const userToken = JSON.parse(localStorage.getItem('token'));
+    let headers = new Headers();
+    headers.set('Authorization', 'Bearer ' + userToken.token);
+
+    return fetch('favorite/'+ item, { method: 'DELETE', headers: headers })
       .then(() => {
         dispatch(loading(false));
         dispatch(success(item));
+
+        /* On supprime l'élément des favorites */
+        
       })
       .catch(e => {
         dispatch(loading(false));
         dispatch(error(e.message));
+
+        if( /Unauthorized/.test(e))
+        {
+          sessionStorage.removeItem('flash-message-error');
+          sessionStorage.setItem('flash-message-error', JSON.stringify({message: "Authentification nécessaire avant de continuer!"}));
+          history.push({pathname: '../../login', state: { from: window.location.pathname}});
+        }
+
       });
   };
 }

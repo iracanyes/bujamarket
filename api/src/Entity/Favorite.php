@@ -7,6 +7,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiSubresource;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ApiResource(attributes={
@@ -15,6 +16,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * })
  * @ORM\Table(name="bjmkt_favorite")
  * @ORM\Entity(repositoryClass="App\Repository\FavoriteRepository")
+ * @ UniqueEntity(fields={"supplierProduct","customer"})
  */
 class Favorite
 {

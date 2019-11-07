@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Exception;
+namespace App\Exception\User;
 
 
 class MemberNotFoundException extends \Exception

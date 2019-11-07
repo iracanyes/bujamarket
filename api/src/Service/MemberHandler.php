@@ -8,7 +8,7 @@ use App\Entity\Customer;
 use App\Entity\Supplier;
 use App\Entity\User;
 use App\Entity\UserTemp;
-use App\Exception\MemberNotFoundException;
+use App\Exception\User\MemberNotFoundException;
 use Doctrine\DBAL\Driver\PDOException;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityNotFoundException;

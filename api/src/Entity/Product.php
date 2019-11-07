@@ -130,7 +130,7 @@ class Product
 
     /**
      * @var Category $category Classification category of this product
-     * @ORM\ManyToOne(targetEntity="App\Entity\Category", inversedBy="products")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Category", inversedBy="products", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      * @Assert\Type("App\Entity\Category")
      * @Groups({"product:output"})
@@ -148,7 +148,7 @@ class Product
 
     /**
      * @var Collection $images Images of the product
-     * @ORM\OneToMany(targetEntity="App\Entity\Image", mappedBy="product")
+     * @ORM\OneToMany(targetEntity="App\Entity\Image", mappedBy="product", cascade={"persist","remove"})
      * @ApiSubresource()
      * @Groups({"product:output","category:output","supplier_product:output","favorite:output","order_set:output"})
      */

@@ -13,17 +13,33 @@ export function success(created) {
   return { type: 'FAVORITE_CREATE_SUCCESS', created };
 }
 
-export function create(values) {
+export function create(values, history) {
   return dispatch => {
     dispatch(loading(true));
 
-    return fetch('favorites', { method: 'POST', body: JSON.stringify(values) })
+    /* Récupération de la clé JWT et ajout au header de la requête */
+    const userToken = JSON.parse(localStorage.getItem('token'));
+    let headers = new Headers();
+    headers.set('Authorization', 'Bearer ' + userToken.token);
+
+    return fetch('favorite/create', { method: 'POST', headers: headers, body: JSON.stringify(values) })
       .then(response => {
         dispatch(loading(false));
 
         return response.json();
       })
-      .then(retrieved => dispatch(success(retrieved)))
+      .then(retrieved => {
+        dispatch(success(retrieved));
+
+        let favorites = JSON.parse(localStorage.getItem('favorites'));
+        favorites.favorites.push({id: retrieved.supplierProduct.id});
+
+        localStorage.removeItem('favorites');
+        localStorage.setItem('favorites', JSON.stringify(favorites.favorites));
+
+
+
+      })
       .catch(e => {
         dispatch(loading(false));
 

@@ -7,7 +7,7 @@ namespace App\Service;
 use App\Entity\BillCustomer;
 use App\Entity\Customer;
 use App\Entity\Payment;
-use App\Exception\BillCustomerNotFoundException;
+use App\Exception\BillCustomer\BillCustomerNotFoundException;
 use Doctrine\DBAL\Driver\PDOException;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityNotFoundException;
