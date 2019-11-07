@@ -284,7 +284,6 @@ const mapStateToProps = (state) => {
     retrieved: state.category.list.retrieved,
     error: state.category.list.error,
     loading: state.category.list.loading,
-    deletedItem: state.category.del.deleted,
   };
 };
 

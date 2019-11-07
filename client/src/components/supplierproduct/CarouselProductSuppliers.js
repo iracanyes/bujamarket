@@ -1,9 +1,13 @@
 import React, { Component, Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { injectIntl, FormattedMessage } from "react-intl";
 import 'bootstrap/dist/css/bootstrap.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import ButtonAddToFavorite from '../favorite/ButtonAddToFavorite';
+import { retrieveIds } from '../../actions/favorite/list';
 
 /* Carousel */
 import {
@@ -29,6 +33,8 @@ class CarouselProductSuppliers extends Component {
     error: PropTypes.string,
     eventSource: PropTypes.instanceOf(EventSource),
     retrieveByProductId: PropTypes.func.isRequired,
+    retrieveIds: PropTypes.func.isRequired,
+    retrievedIds: PropTypes.object,
     reset: PropTypes.func.isRequired,
   };
 
@@ -46,7 +52,15 @@ class CarouselProductSuppliers extends Component {
   }
 
   componentDidMount() {
+    if(localStorage.getItem('token') === null)
+    {
+      this.props.history.push({pathname: '../../login', state: { from : window.location.pathname}});
+    }
+
     this.props.retrieveByProductId(this.props.productId);
+
+    /* Récupération des ID des favoris afin d'indiquer quel produit */
+    this.props.retrieveIds(this.props.history);
   }
 
   componentWillUnmount() {
@@ -125,7 +139,7 @@ class CarouselProductSuppliers extends Component {
                 <Card body className={" text-white bg-dark"}>
                   <Link
 
-                    to={`/supplier_product/show/${encodeURIComponent(productSuppliers[i * 12 + j]['id'])}`}
+                    to={`/product/show/${encodeURIComponent(productSuppliers[i * 12 + j]['id'])}`}
                   >
                     <div className="card-img-custom">
                       <img src="https://picsum.photos/2000/3000" alt={productSuppliers[i * 12 + j]["images"][0]["alt"]} className="image img-fluid" style={{ width:"100%"}} />
@@ -150,11 +164,26 @@ class CarouselProductSuppliers extends Component {
                   </Link>
 
                   <CardFooter>
-                    <Rating rating={productSuppliers[i*12+j]["rating"]} />
-                    <p>
-                      À partir de : {productSuppliers[i*12+j]["minimumPrice"]}
-                    </p>
-                    <ButtonAddShoppingCard buttonLabel={"Ajouter au panier"} product={productSuppliers[i*12+j]}/>
+                    <Row className={''}>
+                      <Col>
+                        <Rating rating={productSuppliers[i * 12 + j]["rating"]} />
+                      </Col>
+                      <Col className={'text-right'}>
+                        <ButtonAddToFavorite supplierProductId={productSuppliers[i * 12 + j].id}/>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col>
+                        <p>
+                          Offre de : <Link to={'../../suppliers/show/' + productSuppliers[i * 12 + j].supplier.id }><strong>{productSuppliers[i * 12 + j].supplier.brandName }</strong></Link>
+                        </p>
+                        <p>
+                          Prix : {productSuppliers[i * 12 + j]["finalPrice"].toFixed(2)} &euro;
+                        </p>
+                        <ButtonAddShoppingCard buttonLabel={"Ajouter au panier"} product={productSuppliers[i * 12 + j]} history={this.props.history}/>
+                      </Col>
+
+                    </Row>
 
                   </CardFooter>
                 </Card>
@@ -179,6 +208,7 @@ class CarouselProductSuppliers extends Component {
         );
       }
     }else{
+
       /* Cas table contenant 1 seul élément */
       rows.push(
         <CarouselItem
@@ -219,20 +249,27 @@ class CarouselProductSuppliers extends Component {
                 </Link>
 
                 <CardFooter>
-                  <Rating rating={productSuppliers[0]["rating"]} />
+                  <Row className={''}>
+                    <Col>
+                      <Rating rating={productSuppliers[0]["rating"]} />
+                    </Col>
+                    <Col className={'text-right'}>
+                      <ButtonAddToFavorite supplierProductId={productSuppliers[0].id}/>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col>
+                      <p>
+                        Offre de : <Link to={'../../suppliers/show/' + productSuppliers[0].supplier.id }><strong>{productSuppliers[0].supplier.brandName }</strong></Link>
+                      </p>
+                      <p>
+                        Prix : {productSuppliers[0]["finalPrice"].toFixed(2)} &euro;
+                      </p>
+                      <ButtonAddShoppingCard buttonLabel={"Ajouter au panier"} product={productSuppliers[0]} history={this.props.history}/>
+                    </Col>
 
-                  <p>
-                    À partir de : {productSuppliers[0]["finalPrice"].toFixed(2)} &euro;
-                  </p>
-                  <ButtonAddShoppingCard buttonLabel={"Ajouter au panier"} product={productSuppliers[0]} history={this.props.history}/>
-                  {/*
-                  <Link to={'/shopping_card/add/'+productSuppliers[0]['id']} className={"btn btn-outline-primary d-block mx-auto my-2"}>
-                    <FormattedMessage  id={"app.button.add_shopping_card"}
-                                       defaultMessage="Ajouter au panier"
-                                       description=" Button - Add to shopping card"
-                    />
-                  </Link>
-                  */}
+                  </Row>
+
 
                 </CardFooter>
               </Card>
@@ -313,11 +350,13 @@ const mapStateToProps = state => ({
   error: state.supplierproduct.listByProductId.error,
   loading: state.supplierproduct.listByProductId.loading,
   eventSource: state.supplierproduct.listByProductId.eventSource,
+  retrievedIds: state.favorite.list.retrieved
 });
 
 const mapDispatchToProps = dispatch => ({
   retrieveByProductId: id => dispatch(retrieveByProductId(id)),
+  retrieveIds: history => dispatch(retrieveIds(history)),
   reset: eventSource => dispatch(reset(eventSource))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(CarouselProductSuppliers));
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(injectIntl(CarouselProductSuppliers)));

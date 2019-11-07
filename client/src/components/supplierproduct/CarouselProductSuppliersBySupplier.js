@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { injectIntl, FormattedMessage } from "react-intl";
 import 'bootstrap/dist/css/bootstrap.css';
+import { retrieveIds } from '../../actions/favorite/list';
 
 /* Carousel */
 import {
@@ -21,6 +22,7 @@ import {
 import { retrieveBySupplierId, reset  } from "../../actions/supplierproduct/listBySupplierId";
 import Rating from "../../layout/Rating";
 import ButtonAddShoppingCard from "./ButtonAddShoppingCard";
+import ButtonAddToFavorite from "../favorite/ButtonAddToFavorite";
 
 class CarouselProductSuppliers extends Component {
   static propTypes = {
@@ -30,6 +32,8 @@ class CarouselProductSuppliers extends Component {
     error: PropTypes.string,
     eventSource: PropTypes.instanceOf(EventSource),
     retrieveBySupplierId: PropTypes.func.isRequired,
+    retrievedIds: PropTypes.object,
+    retrieveIds: PropTypes.func.isRequired,
     reset: PropTypes.func.isRequired,
   };
 
@@ -48,6 +52,9 @@ class CarouselProductSuppliers extends Component {
 
   componentDidMount() {
     this.props.retrieveBySupplierId(this.props.supplierId);
+
+    /* Récupération des ID des favoris afin d'indiquer quel produit */
+    this.props.retrieveIds(this.props.history);
   }
 
   componentWillUnmount() {
@@ -93,7 +100,7 @@ class CarouselProductSuppliers extends Component {
   showProductSuppliers()
   {
 
-    //const { intl } = this.props;
+    const { intl } = this.props;
 
     const productSuppliers = this.props.retrieved && this.props.retrieved['hydra:member'];
 
@@ -151,11 +158,25 @@ class CarouselProductSuppliers extends Component {
                   </Link>
 
                   <CardFooter>
-                    <Rating rating={productSuppliers[i*12+j]["rating"]} />
-                    <p>
-                      À partir de : {productSuppliers[i*12+j]["minimumPrice"]}
-                    </p>
-                    <ButtonAddShoppingCard buttonLabel={"Ajouter au panier"} product={productSuppliers[i*12+j]}/>
+                    <Row>
+                      <Col>
+                        <Rating rating={productSuppliers[i * 12 + j]["rating"]} />
+                      </Col>
+                      <Col className={'text-right'}>
+                        <ButtonAddToFavorite supplierProductId={productSuppliers[i * 12 + j].id}/>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col>
+                        <p>
+                          Offre de : <Link to={'../../suppliers/show/' + productSuppliers[i * 12 + j].supplier.id }><strong>{productSuppliers[i * 12 + j].supplier.brandName }</strong></Link>
+                        </p>
+                        <p>
+                          Prix : {productSuppliers[0]["finalPrice"].toFixed(2)} &euro;
+                        </p>
+                        <ButtonAddShoppingCard buttonLabel={"Ajouter au panier"} product={productSuppliers[i * 12 + j]} history={this.props.history}/>
+                      </Col>
+                    </Row>
 
                   </CardFooter>
                 </Card>
@@ -220,20 +241,25 @@ class CarouselProductSuppliers extends Component {
                 </Link>
 
                 <CardFooter>
-                  <Rating rating={productSuppliers[0]["rating"]} />
-
-                  <p>
-                    À partir de : {productSuppliers[0]["finalPrice"].toFixed(2)} &euro;
-                  </p>
-                  <ButtonAddShoppingCard buttonLabel={"Ajouter au panier"} product={productSuppliers[0]} history={this.props.history}/>
-                  {/*
-                  <Link to={'/shopping_card/add/'+productSuppliers[0]['id']} className={"btn btn-outline-primary d-block mx-auto my-2"}>
-                    <FormattedMessage  id={"app.button.add_shopping_card"}
-                                       defaultMessage="Ajouter au panier"
-                                       description=" Button - Add to shopping card"
-                    />
-                  </Link>
-                  */}
+                  <Row>
+                    <Col>
+                      <Rating rating={productSuppliers[0]["rating"]} />
+                    </Col>
+                    <Col className={'text-right'}>
+                      <ButtonAddToFavorite supplierProductId={productSuppliers[0].id}/>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col>
+                      <p>
+                        Offre de : <Link to={'../../suppliers/show/' + productSuppliers[0].supplier.id }><strong>{productSuppliers[0].supplier.brandName }</strong></Link>
+                      </p>
+                      <p>
+                        Prix : {productSuppliers[0]["finalPrice"].toFixed(2)} &euro;
+                      </p>
+                      <ButtonAddShoppingCard buttonLabel={"Ajouter au panier"} product={productSuppliers[0]} history={this.props.history}/>
+                    </Col>
+                  </Row>
 
                 </CardFooter>
               </Card>
@@ -327,10 +353,12 @@ const mapStateToProps = state => ({
   error: state.supplierproduct.listByProductId.error,
   loading: state.supplierproduct.listByProductId.loading,
   eventSource: state.supplierproduct.listByProductId.eventSource,
+  retrievedIds: state.favorite.list.retrieved
 });
 
 const mapDispatchToProps = dispatch => ({
   retrieveBySupplierId: id => dispatch(retrieveBySupplierId(id)),
+  retrieveIds : history => dispatch(retrieveIds(history)),
   reset: eventSource => dispatch(reset(eventSource))
 });
 

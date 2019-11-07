@@ -8,7 +8,7 @@ use App\Entity\OrderDetail;
 use App\Entity\OrderSet;
 use App\Entity\Customer;
 use App\Entity\Payment;
-use App\Exception\PaymentNotFoundException;
+use App\Exception\Payment\PaymentNotFoundException;
 use Doctrine\DBAL\Driver\PDOException;
 use Doctrine\ORM\EntityNotFoundException;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\UserNotFoundException;

@@ -50,6 +50,68 @@ export function list(page = 'favorites') {
   };
 }
 
+export function retrieveIds(history) {
+  return dispatch => {
+    dispatch(loading(true));
+    dispatch(error(''));
+
+    /* Récupération de la clé JWT et ajout au header de la requête */
+    const userToken = JSON.parse(localStorage.getItem('token'));
+    /* Ajout du header */
+    let headers = new Headers();
+    if(userToken !== null)
+    {
+
+      headers.set('Authorization', 'Bearer ' + userToken.token);
+    }else{
+      history.push({pathname:"../login", state: { from: window.location.pathname }})
+    }
+
+
+    fetch('favorites/ids', {method: 'GET', headers: headers})
+      .then(response =>
+        response
+          .json()
+          .then(retrieved => ({ retrieved, hubURL: extractHubURL(response) }))
+      )
+      .then(({ retrieved, hubURL }) => {
+        retrieved = normalize(retrieved);
+
+        dispatch(loading(false));
+
+
+        if(localStorage.getItem('favorites') !== null)
+        {
+          localStorage.removeItem('favorites');
+        }
+
+        localStorage.setItem("favorites", JSON.stringify(retrieved.favorites));
+
+        dispatch(success(retrieved));
+
+        if (hubURL && retrieved['hydra:member'].length)
+          dispatch(
+            mercureSubscribe(
+              hubURL,
+              retrieved['hydra:member'].map(i => i['@id'])
+            )
+          );
+      })
+      .catch(e => {
+        dispatch(loading(false));
+        dispatch(error(e.message));
+
+        if( /Unauthorized/.test(e))
+        {
+          sessionStorage.removeItem('flash-message-error');
+          sessionStorage.setItem('flash-message-error', JSON.stringify({message: "Authentification nécessaire avant de continuer!"}));
+          history.push({pathname: '../../login', state: { from: window.location.pathname}});
+        }
+
+      });
+  };
+}
+
 export function reset(eventSource) {
   return dispatch => {
     if (eventSource) eventSource.close();

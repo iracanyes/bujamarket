@@ -19,6 +19,18 @@ class FavoriteRepository extends ServiceEntityRepository
         parent::__construct($registry, Favorite::class);
     }
 
+    public function findIdsByCustomerEmail($email)
+    {
+        return $this->createQueryBuilder('f')
+            ->leftJoin('f.customer', 'c')
+            ->andWhere('c.email=:email')
+            ->setParameter('email', $email)
+            ->leftJoin('f.supplierProduct', 'sp')
+            ->select('sp.id')
+            ->getQuery()
+            ->execute();
+    }
+
     // /**
     //  * @return Favorite[] Returns an array of Favorite objects
     //  */

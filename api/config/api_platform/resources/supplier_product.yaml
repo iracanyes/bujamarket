@@ -19,7 +19,27 @@ App\Entity\SupplierProduct:
             path: '/supplier_product/create'
             access_control: "has_role('ROLE_SUPPLIER') and is_granted('IS_AUTHENTICATED_FULLY')"
             schemes: ['https']
-            controller: App\Controller\SupplierProduct\CreateSupplierProduct::class
+            controller: App\Controller\SupplierProduct\CreateSupplierProductAction
+            deserialize: false
+            validation_groups: ['Default']
+            openapi_context:
+                requestBody:
+                    content:
+                        "multipart/form-data":
+                            schema:
+                                type: "object"
+                                properties:
+                                    product:
+                                        images:
+                                            file:
+                                                type: string
+                                                format: binary
+                                        category:
+                                            image:
+                                                file:
+                                                    type: string
+                                                    format: binary
+                                                
     itemOperations:
         get:
             method: 'GET'

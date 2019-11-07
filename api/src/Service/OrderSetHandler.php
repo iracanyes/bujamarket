@@ -9,7 +9,7 @@ use App\Entity\OrderSet;
 use App\Entity\Customer;
 use Doctrine\DBAL\Driver\PDOException;
 use Doctrine\ORM\EntityNotFoundException;
-use App\Exception\OrderSetNotFoundException;
+use App\Exception\OrderSet\OrderSetNotFoundException;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\UserNotFoundException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RequestStack;

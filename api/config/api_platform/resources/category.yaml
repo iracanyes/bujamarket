@@ -13,13 +13,18 @@ App\Entity\Category:
             #options:
             #    my_option: 'my_option_value'
             status: 200 # customize the HTTP status code to send
-        # Opération POST à inclure dans les opérations sur les collections    
+        # Opération POST à inclure dans les opérations sur les collections  
+        getNames:
+            method: 'GET'
+            path: '/categories_names'
+            schemes: ["https","http"]
+            controller: App\Controller\Category\GetCategoriesNameAction
         post:
             method: 'POST'
             path: '/category/create'
             access_control: "has_role('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
             schemes: ['https']
-            controller: App\Controller\Categry\CreateCategory::class
+            controller: App\Controller\Categry\CreateCategoryAction
     itemOperations:
         get:
             method: 'GET'

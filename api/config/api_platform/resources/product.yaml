@@ -16,6 +16,11 @@ App\Entity\Product:
             #options:
             #    my_option: 'my_option_value'
             status: 200 # customize the HTTP status code to send
+        getNames:
+            method: 'GET'
+            path: '/products_names'
+            schemes: ['https','http']  
+            controller: App\Controller\Product\GetNamesAction
         post:
             method: 'POST'
             path: '/product/create'

@@ -29,7 +29,7 @@ class Supplier extends User
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"supplier:output"})
+     * @Groups({"supplier:output", "supplier_product:output"})
      */
     private $id;
 
@@ -38,7 +38,7 @@ class Supplier extends User
      *
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank()
-     * @Groups({"supplier:output"})
+     * @Groups({"supplier:output","supplier_product:output"})
      */
     private $socialReason;
 
@@ -47,7 +47,7 @@ class Supplier extends User
      *
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank()
-     * @Groups({"supplier:output"})
+     * @Groups({"supplier:output","supplier_product:output"})
      */
     private $brandName;
 

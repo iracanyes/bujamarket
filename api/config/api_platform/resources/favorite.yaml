@@ -15,6 +15,17 @@ App\Entity\Favorite:
             #options:
             #    my_option: 'my_option_value'
             status: 200 # customize the HTTP status code to send
+        getIds:
+            method: 'GET'
+            path: 'favorites/ids'
+            requirements: 
+                id: '\d+'
+                _format: 'json\jsonld'
+            defaults:
+                _format: 'json'
+            schemes: ['https']
+            access_control: "has_role('ROLE_CUSTOMER') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
+            controller: App\Controller\Favorite\GetFavoriteIdsAction
         post:
             method: 'POST'
             path: '/favorite/create'
@@ -22,7 +33,7 @@ App\Entity\Favorite:
                 favorite: App\Entity\Favorite
             access_control: "has_role('ROLE_CUSTOMER') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
             schemes: ['https']
-            controller: App\Controller\Favorite\CreateFavorite::class
+            controller: App\Controller\Favorite\CreateFavoriteAction
     itemOperations:
         get:
             method: 'GET'
@@ -37,14 +48,7 @@ App\Entity\Favorite:
             access_control: "has_role('ROLE_CUSTOMER') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
             #options:
             #    my_option: 'my_option_value'
-            status: 200 # customize the HTTP status code to send        
-        put:
-            method: 'PUT'
-            path: '/favorite/{id}'
-            requirements:
-                id: '\d+'
-            access_control: 'has_role("ROLE_CUSTOMER") and is_granted("IS_AUTHENTICATED_REMEMBERED")'
-            schemes: ['https']
+            status: 200 # customize the HTTP status code to send
         delete:
             method: 'DELETE'
             path: '/favorite/{id}'
@@ -52,3 +56,4 @@ App\Entity\Favorite:
                 id: '\d+'
             access_control: 'has_role("ROLE_CUSTOMER") and is_granted("IS_AUTHENTICATED_REMEMBERED")'
             schemes: ['https']
+            controller: App\Controller\Favorite\DeleteFavoriteAction

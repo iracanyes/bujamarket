@@ -29,6 +29,7 @@ class SupplierProduct
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      * @Groups({"favorite:output","supplier_product:output"})
+     *
      */
     private $id;
 
@@ -101,13 +102,14 @@ class SupplierProduct
      * @ORM\JoinColumn(nullable=false)
      * @Assert\Type("App\Entity\Supplier")
      * @Assert\NotNull()
+     * @Groups({"supplier_product:output"})
      * @ApiSubresource()
      */
     private $supplier;
 
     /**
      * @var Product $product Product made available by the supplier
-     * @ORM\ManyToOne(targetEntity="App\Entity\Product", inversedBy="productSuppliers")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Product", inversedBy="productSuppliers", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      * @Assert\Type("App\Entity\Product")
      * @Assert\NotNull()

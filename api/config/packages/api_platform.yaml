@@ -226,6 +226,8 @@ api_platform:
 
         html:
             mime_types: ['text/html']
+        form-data:
+            mime_types: ['multipart/form-data']
 
     # The list of enabled error formats. The first one will be the default.
     error_formats:

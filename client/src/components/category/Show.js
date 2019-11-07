@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { retrieve, reset } from '../../actions/category/show';
-import { del } from '../../actions/category/delete';
 import CarouselCategoryProducts from "./CarouselCategoryProducts";
 import {
   Col,
@@ -23,11 +22,7 @@ class Show extends Component {
     error: PropTypes.string,
     eventSource: PropTypes.instanceOf(EventSource),
     retrieve: PropTypes.func.isRequired,
-    reset: PropTypes.func.isRequired,
-    deleteError: PropTypes.string,
-    deleteLoading: PropTypes.bool.isRequired,
-    deleted: PropTypes.object,
-    del: PropTypes.func.isRequired
+    reset: PropTypes.func.isRequired
   };
 
   componentDidMount() {
@@ -38,13 +33,8 @@ class Show extends Component {
     this.props.reset(this.props.eventSource);
   }
 
-  del = () => {
-    if (window.confirm('Are you sure you want to delete this item?'))
-      this.props.del(this.props.retrieved);
-  };
 
   render() {
-    if (this.props.deleted) return <Redirect to=".." />;
 
     const item = this.props.retrieved;
 
@@ -72,12 +62,7 @@ class Show extends Component {
             {this.props.error}
           </div>
         )}
-        {this.props.deleteError && (
-          <div className="alert alert-danger" role="alert">
-            <span className="fa fa-exclamation-triangle" aria-hidden="true" />{' '}
-            {this.props.deleteError}
-          </div>
-        )}
+
 
         <div className="category-detail">
           {item && (
@@ -141,15 +126,11 @@ const mapStateToProps = state => ({
   retrieved: state.category.show.retrieved,
   error: state.category.show.error,
   loading: state.category.show.loading,
-  eventSource: state.category.show.eventSource,
-  deleteError: state.category.del.error,
-  deleteLoading: state.category.del.loading,
-  deleted: state.category.del.deleted
+  eventSource: state.category.show.eventSource
 });
 
 const mapDispatchToProps = dispatch => ({
   retrieve: id => dispatch(retrieve(id)),
-  del: item => dispatch(del(item)),
   reset: eventSource => dispatch(reset(eventSource))
 });
 
