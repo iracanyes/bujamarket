@@ -96,7 +96,7 @@ api_platform:
 
         # Max number of joined relations before EagerLoading
         # throws a RuntimeException
-        max_joins: 600
+        max_joins: 800
 
         # Force join on every relation
         # If disabled, it will only join relations having the EAGER fetch mode.

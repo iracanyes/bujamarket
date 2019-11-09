@@ -6,7 +6,7 @@
 # Variables d'environnement
 .env
 # Documentation du développement
-docs
+# docs
 .idea
 # Volumes DB
 shared

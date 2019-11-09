@@ -31,10 +31,3 @@ App\Entity\Bill:
             #options:
             #    my_option: 'my_option_value'
             status: 200 # customize the HTTP status code to send
-        delete:
-            method: 'DELETE'
-            path: '/bill/{id}'
-            requirements:
-                id: '\d+'
-            access_control: "is_granted('IS_AUTHENTICATED_FULLY') and has_role('ROLE_ADMIN')"
-            schemes: ['https']
