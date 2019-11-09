@@ -125,3 +125,20 @@ div.supplier-details
     }
 }
 
+/* Page: show Supplier product */
+
+div.detail-gallery-preview{
+    img{
+        max-width: 6.875rem;
+        max-width: 6rem;
+        margin-right: 0;
+    }
+}
+
+.review-image img{
+    height: 5rem;
+}
+
+.detail-overview-rating svg{
+    color: #ffd700
+}

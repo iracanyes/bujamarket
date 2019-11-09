@@ -13,7 +13,7 @@
     prop-types "^15.6.2"
     react-admin "^2.9.0"
 
-"@api-platform/api-doc-parser@^0.8.1":
+"@api-platform/api-doc-parser@^0.8.1", "@api-platform/api-doc-parser@^0.8.2":
   version "0.8.2"
   resolved "https://registry.yarnpkg.com/@api-platform/api-doc-parser/-/api-doc-parser-0.8.2.tgz#4a8edae414650b26f3ddd8acf42a201522523a14"
   integrity sha512-TUa6MMcvzouC5wjGn72fky1GBC0gu1hVRqKqooV2HUuOCmn5oQb6TAbVhyuDZjRPvmkB3I3pZwIkLxSo4t6UBw==

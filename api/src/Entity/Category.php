@@ -36,7 +36,7 @@ class Category
      *
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank()
-     * @Groups({"category:output","product:output"})
+     * @Groups({"category:output","product:output","supplier_product:output"})
      */
     private $name;
 
@@ -45,7 +45,7 @@ class Category
      *
      * @ORM\Column(type="text")
      * @Assert\NotBlank()
-     * @Groups({"category:output","product:output"})
+     * @Groups({"category:output","product:output","supplier_product:output"})
      */
     private $description;
 
@@ -63,6 +63,7 @@ class Category
      *
      * @ORM\Column(type="boolean")
      * @Assert\Type("boolean")
+     * @Groups({"supplier_product:output"})
      */
     private $isValid;
 

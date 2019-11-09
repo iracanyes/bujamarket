@@ -4,6 +4,7 @@
   "private": false,
   "dependencies": {
     "@api-platform/admin": "^1.0.1",
+    "@api-platform/api-doc-parser": "^0.8.2",
     "@babel/runtime": "7.0.0-beta.55",
     "eslint-utils": "^1.4.1",
     "lodash": "^4.17.13",

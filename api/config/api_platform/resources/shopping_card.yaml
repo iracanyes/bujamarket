@@ -4,7 +4,7 @@ App\Entity\ShoppingCard:
     collectionOperations:
         get:
             method: 'GET'
-            path: '/shopping_cardS.{_format}'
+            path: '/shopping_cards.{_format}'
             requirements:
                 _format: 'json\jsonld\html'
             defaults:

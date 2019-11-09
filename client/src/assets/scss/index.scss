@@ -3,9 +3,7 @@
  * Description: Page principal du style
  *
  */
-
-//@import '~bootstrap/dist/css/bootstrap.css';
-//@import "~bootstrap/scss/variables";
+$screen-xs-max: 460px;
 
 @import "variables";
 
@@ -15,6 +13,14 @@
 @import "components/layout/header";
 @import "components/layout/sidebar-left";
 
+
+
+/* Superlist styles */
+@import "helpers/detail";
+@import "helpers/detail_gallery";
+@import "helpers/forms";
+@import "helpers/reviews";
+
 /* Pages */
 @import "components/page/global";
 @import "components/page/homepage";
@@ -23,6 +29,8 @@
 @import "components/page/show";
 @import "components/page/form";
 
+
+
 #root{
-  background-color: $forth-color;
+  background-color: #f7f8f9;
 }
