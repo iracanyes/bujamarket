@@ -11,7 +11,7 @@ use App\Entity\Admin;
 use \Faker\Factory;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-class AdminFixtures extends Fixture implements DependentFixtureInterface
+class SuperAdminFixtures extends Fixture implements DependentFixtureInterface
 {
     public const ADMIN_REFERENCE = 'admin';
 
@@ -63,7 +63,7 @@ class AdminFixtures extends Fixture implements DependentFixtureInterface
     {
         $user->setEmail($this->faker->unique()->email);
 
-        $password = $this->encoder->encodePassword($user, getenv('FIXTURE_ADMIN_PASSWORD'));
+        $password = $this->encoder->encodePassword($user, getenv('FIXTURE_SUPER_ADMIN_PASSWORD'));
         $user->setPassword($password);
         $user->setFirstname($this->faker->firstName);
         $user->setLastname($this->faker->lastName);
@@ -76,7 +76,7 @@ class AdminFixtures extends Fixture implements DependentFixtureInterface
 
         // Création du token
         $user->setToken(bin2hex(random_bytes(64)));
-        $user->setRoles(["ROLE_ADMIN","ROLE_SUPPLIER","ROLE_CUSTOMER","ROLE_MEMBER","ROLE_ALLOWED_TO_SWICTH"]);
+        $user->setRoles(["ROLE_SUPERADMIN","ROLE_ADMIN","ROLE_SUPPLIER","ROLE_CUSTOMER","ROLE_MEMBER","ROLE_ALLOWED_TO_SWICTH"]);
 
         /* Relations */
 

@@ -5,6 +5,7 @@ import { dataProvider as baseDataProvider, fetchHydra as baseFetchHydra  } from 
 import { Redirect } from 'react-router-dom';
 import authProvider from "./authProvider";
 import AddressesList from "./component/address/AddressesList";
+import history from "./utils/history";
 
 const entrypoint = process.env.REACT_APP_API_ENTRYPOINT;
 const fetchHeaders = {'Authorization': `Bearer ${window.localStorage.getItem('token')}`, 'Content-Type': 'application/json' };
@@ -27,15 +28,24 @@ const apiDocumentationParser = entrypoint => parseHydraDocumentation(entrypoint,
       console.log(result);
       switch (result.status) {
         case 401:
+          console.log("apiDocumentationParser - result", result);
           return Promise.resolve({
             api: result.api,
             customRoutes: [{
               props: {
                 path: '/',
-                render: () => <Redirect to={`/login`}/>,
+                render: () => (
+                  <Redirect to={{
+                      pathname: `login`,
+                      state: { from: window.location }
+                    }}
+                  />
+                ),
               },
             }],
           });
+
+
 
         case 200:
           console.log("apiDocumentationParser - result",result);
@@ -58,6 +68,8 @@ export default () => (
     authProvider={authProvider}
     dataProvider={dataProvider}
   >
+
+
     <ResourceGuesser name={"addresses"} list={AddressesList}/>
     <ResourceGuesser name={"bank_accounts"}/>
     <ResourceGuesser name={"bills"}/>

@@ -16,12 +16,12 @@ App\Entity\Image:
             #options:
             #    my_option: 'my_option_value'
             status: 200 # customize the HTTP status code to send
-        post:
-            method: 'POST'
-            path: '/image/create'
-            access_control: "has_role('ROLE_MEMBER') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
-            schemes: ['https']
-            controller: App\Controller\Image\CreateImage::class
+        #post:
+        #    method: 'POST'
+        #    path: '/image/create'
+        #    access_control: "has_role('ROLE_MEMBER') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
+        #    schemes: ['https']
+        #    controller: App\Controller\Image\CreateImage::class
     itemOperations:
         get:
             method: 'GET'
@@ -36,13 +36,13 @@ App\Entity\Image:
             #options:
             #    my_option: 'my_option_value'
             status: 200 # customize the HTTP status code to send        
-        put:
-            method: 'PUT'
-            path: '/image/{id}'
-            requirements:
-                id: '\d+'
-            access_control: 'has_role("ROLE_MEMBER") and is_granted("IS_AUTHENTICATED_REMEMBERED")'
-            schemes: ['https']
+        #put:
+        #    method: 'PUT'
+        #    path: '/image/{id}'
+        #    requirements:
+        #        id: '\d+'
+        #    access_control: 'has_role("ROLE_MEMBER") and is_granted("IS_AUTHENTICATED_REMEMBERED")'
+        #    schemes: ['https']
         delete:
             method: 'DELETE'
             path: '/image/{id}'
