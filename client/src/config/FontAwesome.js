@@ -6,7 +6,21 @@
 
 
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faGoogle } from '@fortawesome/free-brands-svg-icons';
+import {
+  faFacebook,
+  faGoogle,
+  faGooglePlus,
+  faPaypal,
+  faPinterest,
+  faCcAmex,
+  faCcMastercard,
+  faCcStripe,
+  faCcVisa,
+  faTwitter,
+  faTripadvisor,
+  faYoutube,
+
+} from '@fortawesome/free-brands-svg-icons';
 import {
   faComments,
   faHeart,
@@ -20,10 +34,20 @@ import {
   faUserCog,
   faSignOutAlt,
   faStar as faStarChecked,
-  faStarHalfAlt
+  faStarHalfAlt,
+  faStar,
+  faBars,
+  faAngleDoubleRight,
+  faPlus,
+  faShareAlt,
+  faHandshake,
+  faPaperPlane,
 } from "@fortawesome/free-solid-svg-icons";
 
-import { faStar, faBars, faAngleDoubleRight } from "@fortawesome/free-solid-svg-icons";
+import {
+  faStar as faStarEmpty
+
+} from "@fortawesome/free-regular-svg-icons";
 
 
 
@@ -44,5 +68,23 @@ library.add([
   faUserEdit,
   faStar,
   faStarChecked,
-  faStarHalfAlt
+  faStarHalfAlt,
+  faPaypal,
+  faCcAmex,
+  faCcMastercard,
+  faCcStripe,
+  faCcVisa,
+  faFacebook,
+  faTwitter,
+  faGooglePlus,
+  faPinterest,
+  faPlus,
+  faShareAlt,
+  faHandshake,
+  faStarEmpty,
+  faTripadvisor,
+  faTwitter,
+  faYoutube,
+  faPaperPlane
+
 ]);

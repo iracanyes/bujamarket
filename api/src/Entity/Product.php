@@ -133,7 +133,7 @@ class Product
      * @ORM\ManyToOne(targetEntity="App\Entity\Category", inversedBy="products", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      * @Assert\Type("App\Entity\Category")
-     * @Groups({"product:output"})
+     * @Groups({"product:output","supplier_product:output"})
      * @MaxDepth(1)
      */
     private $category;

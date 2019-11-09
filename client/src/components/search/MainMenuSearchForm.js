@@ -233,8 +233,8 @@ class MainMenuSearchForm extends Component
 
     return (
       <Fragment>
-        <Form inline className="col-lg-12" onSubmit={this.handleSubmit}>
-          <FormGroup>
+        <Form inline className="col-lg-12 px-0" onSubmit={this.handleSubmit}>
+          <FormGroup className={'mr-0'}>
             <Input type="select"
                    name="searchType"
                    id="searchType"

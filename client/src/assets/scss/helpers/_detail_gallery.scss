@@ -11,7 +11,7 @@
     }
 
     .owl-next, .owl-prev {
-        @extend .btn, .btn-primary;
+        // Ajouter les classes btn et btn-primary
         line-height: 1;
         padding: 0px;
         position: absolute;

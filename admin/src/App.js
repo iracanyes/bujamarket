@@ -3,20 +3,28 @@ import { HydraAdmin, ResourceGuesser  } from '@api-platform/admin';
 import parseHydraDocumentation from '@api-platform/api-doc-parser/lib/hydra/parseHydraDocumentation';
 import { dataProvider as baseDataProvider, fetchHydra as baseFetchHydra  } from '@api-platform/admin';
 import { Redirect } from 'react-router-dom';
-import jsonServerProvider from 'ra-data-json-server';
 import authProvider from "./authProvider";
 import AddressesList from "./component/address/AddressesList";
 
 const entrypoint = process.env.REACT_APP_API_ENTRYPOINT;
 const fetchHeaders = {'Authorization': `Bearer ${window.localStorage.getItem('token')}`, 'Content-Type': 'application/json' };
-const fetchHydra = (url, options = {}) => baseFetchHydra(url, {
-  ...options,
-  headers: new Headers(fetchHeaders),
-});
+const fetchHydra = (url, options = {}) => {
+  options.headers = new Headers(fetchHeaders);
+  return baseFetchHydra(url, options)
+          .then(response => {
+            console.log("fetchHydra - response", response);
+
+            /* Corriger une erreur de définitions dans @api-platform/admin/src/hydra/dataProvider */
+            response.json['hydra:totalItems'] = response.json['hydra:member'] ? response.json['hydra:member'].length : 0;
+
+            return response;
+          })
+};
 const apiDocumentationParser = entrypoint => parseHydraDocumentation(entrypoint, { headers: new Headers(fetchHeaders) })
   .then(
     ({ api }) => ({api}),
     (result) => {
+      console.log(result);
       switch (result.status) {
         case 401:
           return Promise.resolve({
@@ -29,13 +37,19 @@ const apiDocumentationParser = entrypoint => parseHydraDocumentation(entrypoint,
             }],
           });
 
+        case 200:
+          console.log("apiDocumentationParser - result",result);
+          return Promise.resolve(result);
+
         default:
+          console.log(result);
           return Promise.reject(result);
       }
     },
   );
-const dataProvider = baseDataProvider(entrypoint, fetchHydra, apiDocumentationParser);
 
+
+const dataProvider = baseDataProvider(entrypoint, fetchHydra, apiDocumentationParser);
 
 export default () => (
   <HydraAdmin
@@ -76,3 +90,5 @@ export default () => (
 
   </HydraAdmin>
 );
+
+

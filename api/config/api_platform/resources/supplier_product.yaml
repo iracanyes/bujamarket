@@ -49,6 +49,7 @@ App\Entity\SupplierProduct:
                 _format: 'json\jsonld\html'
             defaults:
                 _format: 'json'
+            schemes: ['https']
             # host: 'localhost'
             #options:
             #    my_option: 'my_option_value'
