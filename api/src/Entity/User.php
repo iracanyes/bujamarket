@@ -164,7 +164,7 @@ class User implements UserInterface
     /**
      * @var Collection $addresses Receiving addresses of this user
      *
-     * @ORM\OneToMany(targetEntity="App\Entity\Address", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="App\Entity\Address", mappedBy="user", cascade={"persist"})
      * @Groups({"supplier:output"})
      */
     private $addresses;

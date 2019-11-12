@@ -77,25 +77,41 @@ export function subscribe(values, history) {
         /* Enregistrement du token dans le localStorage */
 
         sessionStorage.removeItem("flash-message");
-        sessionStorage.setItem('flash-message', JSON.stringify({message: 'Inscription terminée!\nConnectez vous à la plateforme et visitez votre profil pour ajouter les informations de livraison pour vos achats.\nAu plaisir!'}));
+
+        if(retrieved['hydra:member'].userType === 'customer')
+        {
+          sessionStorage.setItem('flash-message', JSON.stringify({message: 'Inscription terminée!\nConnectez vous à la plateforme et visitez votre profil pour ajouter les informations de livraison pour vos achats.\nAu plaisir!'}));
+        }else{
+          sessionStorage.setItem(
+            'flash-message',
+            JSON.stringify({
+              message: 'Inscription terminée!\nConnectez vous à la plateforme et visitez votre profil pour ajouter les informations de vos produits.\nAu plaisir!'
+            })
+          );
+        }
+
 
         /* En passant l'objet this.props.history du composant vers son action creator permet de transmettre le changement d'URL au connected-react-router  */
-        history.push('login');
+        history.push('../../login');
       })
       .catch(e => {
         dispatch(loading(false));
 
+        console.log("error",e);
+
+        if(sessionStorage.getItem('flash-message-error') !== null)
+        {
+          sessionStorage.removeItem('flash-message-error');
+        }
+        sessionStorage.setItem('flash-message-error', JSON.stringify({message: e}));
+        history.push({pathname: '.'});
 
         if (e instanceof SubmissionError) {
           dispatch(error(e));
           throw e;
         }
 
-        if(sessionStorage.getItem('flash-message-error') !== null)
-        {
-          sessionStorage.removeItem('flash-message-error');
-        }
-        sessionStorage.setItem('flash-message-error', e);
+
 
         dispatch(error(e));
         throw e;
