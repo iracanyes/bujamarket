@@ -62,7 +62,7 @@ class CustomerFixtures extends Fixture implements DependentFixtureInterface
     {
         $user->setEmail($this->faker->unique()->email);
 
-        $password = $this->encoder->encodePassword($user, 'customer');
+        $password = $this->encoder->encodePassword($user, getenv('FIXTURE_CUSTOMER_PASSWORD'));
         $user->setPassword($password);
         $user->setFirstname($this->faker->firstName);
         $user->setLastname($this->faker->lastName);
