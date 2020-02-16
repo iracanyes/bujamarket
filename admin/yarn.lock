@@ -8777,6 +8777,11 @@ ra-language-english@^2.9.3:
   resolved "https://registry.yarnpkg.com/ra-language-english/-/ra-language-english-2.9.3.tgz#346528ad8bc54c16ba23c011b7866d98541c6d7b"
   integrity sha512-ni923vBW0V+vMfo1NoaF8Bhk/T7GZdAyoO3J5B+/czQKCGh3bFm7D3xZExf/0NB/e/TmYUEy4noVQ+SsflY7ew==
 
+ra-language-french@^2.9.3:
+  version "2.9.3"
+  resolved "https://registry.yarnpkg.com/ra-language-french/-/ra-language-french-2.9.3.tgz#8181fb445f4090c5e997c786ae29b2c6309426ec"
+  integrity sha512-dbTtF4brOrGFlxckGzlbxQP3sGe+1efh7WlpRqyYeEo35JiFkkvqMzaOR9EPEama/0zTtxvatnU0IRwJARrzyA==
+
 ra-ui-materialui@^2.9.8:
   version "2.9.8"
   resolved "https://registry.yarnpkg.com/ra-ui-materialui/-/ra-ui-materialui-2.9.8.tgz#8727b281a5b9d8c871d2e4546a88fff3765c1667"

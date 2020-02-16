@@ -124,13 +124,6 @@ class Dashboard extends Component
 
     const user = this.getAuthData();
 
-    const handleDrawerOpen = () => {
-      this.setState({open: true})
-    };
-
-    const handleDrawerClose = () => {
-      this.setState({open: false})
-    };
     const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
     return (
