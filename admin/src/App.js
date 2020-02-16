@@ -5,7 +5,7 @@ import { dataProvider as baseDataProvider, fetchHydra as baseFetchHydra  } from 
 import { Redirect } from 'react-router-dom';
 import authProvider from "./authProvider";
 import AddressesList from "./component/address/AddressesList";
-//import Dashboard from "./component/page/Dashboard";
+import { messages, i18nProvider } from "./config/i18n";
 import Dashboard  from "./component/page/dashboard/Dashboard";
 import history from "./utils/history";
 import isIndex from "lodash-es/_isIndex";
@@ -47,8 +47,6 @@ const fetchHydra = (url, options = {}) => {
   options.headers = new Headers(fetchHeaders);
   return baseFetchHydra(url, options)
           .then(response => {
-
-
             /* Corriger une erreur de définitions dans @api-platform/admin/src/hydra/dataProvider */
             response.json['hydra:totalItems'] = response.json['hydra:member'] ? response.json['hydra:member'].length : 0;
 
@@ -62,6 +60,8 @@ const apiDocumentationParser = entrypoint => parseHydraDocumentation(entrypoint,
 
       switch (result.status) {
         case 401:
+          console.log("Error 401 - result",result);
+          //return Promise.resolve({redirectTo: 'login'});
 
           return Promise.resolve({
             api: result.api,
@@ -78,8 +78,6 @@ const apiDocumentationParser = entrypoint => parseHydraDocumentation(entrypoint,
               },
             }],
           });
-
-
 
         case 200:
 
@@ -102,9 +100,11 @@ export default () => (
     authProvider={authProvider}
     dataProvider={dataProvider}
     dashboard={Dashboard}
+    //title={"Buja Market - Admin"}
+    locale={'fr'}
+    i18nProvider={i18nProvider}
     //appLayout={AdminDashboardLayout}
   >
-
 
     <ResourceGuesser name={"addresses"} icon={LocationOnTwoTone} options={{label: 'Adresses'}} list={AddressesList}/>
     <ResourceGuesser name={"bank_accounts"} icon={PaymentTwoTone} options={{label: 'Comptes bancaires'}} />
@@ -121,9 +121,10 @@ export default () => (
     <ResourceGuesser name={"forums"} icon={QuestionAnswerTwoTone} options={{label: 'Discussions'}} />
     <ResourceGuesser name={"images"} icon={CollectionsTwoTone} options={{label: 'Images'}} />
     <ResourceGuesser name={"messages"} icon={MessageTwoTone} options={{label: 'Messages'}} />
-    <ResourceGuesser name={"order_details"} icon={AssignmentTwoTone} options={{label: 'Commandes - Détail'}} />
-    <ResourceGuesser name={"returned_orders"} icon={AssignmentReturnTwoTone} options={{label: 'Commandes - Retour'}} />
     <ResourceGuesser name={"order_sets"} icon={AllInboxTwoTone} options={{label: 'Commandes - Ensemble'}} />
+    <ResourceGuesser name={"order_details"} icon={AssignmentTwoTone} options={{label: 'Commandes - Détail'}} />
+    <ResourceGuesser name={"withdrawals"} icon={CancelPresentationTwoTone} options={{label: 'Commandes - Annulations'}} />
+    <ResourceGuesser name={"returned_orders"} icon={AssignmentReturnTwoTone} options={{label: 'Commandes - Retour'}} />
     <ResourceGuesser name={"payments"} icon={MonetizationOnTwoTone} options={{label: 'Paiements'}} />
     <ResourceGuesser name={"products"} icon={StorageTwoTone} options={{label: 'Produits'}} />
     <ResourceGuesser name={"registers"} icon={GroupAddTwoTone} options={{label: 'Inscriptions'}} />
@@ -133,7 +134,7 @@ export default () => (
     <ResourceGuesser name={"suppliers"} icon={AccountBoxTwoTone} options={{label: 'Fournisseurs'}} />
     <ResourceGuesser name={"supplier_products"} icon={QueueTwoTone} options={{label: 'Fournisseurs - produits'}} />
     <ResourceGuesser name={"users"} icon={PeopleAltTwoTone} options={{label: 'Utilisateurs'}} />
-    <ResourceGuesser name={"withdrawals"} icon={CancelPresentationTwoTone} options={{label: 'Annulations'}} />
+
 
 
   </HydraAdmin>

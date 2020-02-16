@@ -60,8 +60,8 @@ export default function Orders() {
         </TableBody>
       </Table>
       <div className={classes.seeMore}>
-        <a href="javascript:;">
-          See more orders
+        <a href="#">
+          Voir plus de commandes
         </a>
       </div>
     </React.Fragment>
