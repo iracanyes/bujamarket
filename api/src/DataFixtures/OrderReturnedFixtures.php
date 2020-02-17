@@ -3,12 +3,13 @@
 namespace App\DataFixtures;
 
 use App\Entity\OrderReturned;
+use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use \Faker\Factory;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 
-class OrderReturnedFixtures extends Fixture implements DependentFixtureInterface
+class OrderReturnedFixtures extends Fixture implements DependentFixtureInterface, FixtureGroupInterface
 {
     public const ORDER_RETURNED_REFERENCE = 'orderReturned';
 
@@ -33,7 +34,7 @@ class OrderReturnedFixtures extends Fixture implements DependentFixtureInterface
         /* Relations */
         $orderReturned->setOrderDetail($this->getReference(OrderDetailFixtures::ORDER_DETAIL_REFERENCE));
 
-        
+
 
         $manager->persist($orderReturned);
 
@@ -48,5 +49,11 @@ class OrderReturnedFixtures extends Fixture implements DependentFixtureInterface
             OrderDetailFixtures::class,
         );
     }
+
+    public static function getGroups(): array
+    {
+        return ["group1","group2"];
+    }
+
 
 }

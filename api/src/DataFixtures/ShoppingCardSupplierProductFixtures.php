@@ -5,12 +5,13 @@ namespace App\DataFixtures;
 
 use App\Entity\ShoppingCard;
 use App\Entity\ShoppingCardSupplierProduct;
+use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use \Faker\Factory;
 
-class ShoppingCardSupplierProductFixtures extends Fixture implements DependentFixtureInterface
+class ShoppingCardSupplierProductFixtures extends Fixture implements DependentFixtureInterface, FixtureGroupInterface
 {
     public const SHOPPING_CARD_SUPPLIER_PRODUCT_REFERENCE = 'shopping_card_supplier_product';
 
@@ -45,4 +46,10 @@ class ShoppingCardSupplierProductFixtures extends Fixture implements DependentFi
             ShoppingCardFixtures::class,
         );
     }
+
+    public static function getGroups(): array
+    {
+        return ["group1","group2"];
+    }
+
 }

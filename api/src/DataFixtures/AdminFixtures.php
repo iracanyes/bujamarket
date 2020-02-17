@@ -4,14 +4,15 @@ namespace App\DataFixtures;
 
 use App\Entity\Supplier;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use App\Entity\User;
 use App\Entity\Admin;
 use \Faker\Factory;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-class AdminFixtures extends Fixture implements DependentFixtureInterface
+class AdminFixtures extends Fixture implements DependentFixtureInterface, FixtureGroupInterface
 {
     public const ADMIN_REFERENCE = 'admin';
 
@@ -93,5 +94,10 @@ class AdminFixtures extends Fixture implements DependentFixtureInterface
         return array(
             ImageAdminFixtures::class,
         );
+    }
+
+    public static function getGroups(): array
+    {
+        return ["group1","group2"];
     }
 }

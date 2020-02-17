@@ -5,10 +5,12 @@ namespace App\DataFixtures;
 use App\Entity\Bill;
 use App\Entity\BillCustomer;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
+use Doctrine\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Faker\Factory;
-class BillCustomerFixtures extends Fixture implements DependentFixtureInterface
+
+class BillCustomerFixtures extends Fixture implements DependentFixtureInterface, FixtureGroupInterface
 {
     public const BILL_CUSTOMER_REFERENCE = "billCustomer";
 
@@ -73,4 +75,10 @@ class BillCustomerFixtures extends Fixture implements DependentFixtureInterface
 
         );
     }
+
+    public static function getGroups(): array
+    {
+        return ["group1","group2"];
+    }
+
 }

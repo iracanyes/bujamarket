@@ -3,12 +3,13 @@
 namespace App\DataFixtures;
 
 use App\Entity\Product;
+use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use \Faker\Factory;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 
-class ProductFixtures extends Fixture implements DependentFixtureInterface
+class ProductFixtures extends Fixture implements DependentFixtureInterface, FixtureGroupInterface
 {
     public const PRODUCT_REFERENCE = 'product';
 
@@ -53,4 +54,10 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface
         );
 
     }
+
+    public static function getGroups(): array
+    {
+        return ["group1","group2"];
+    }
+
 }

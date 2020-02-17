@@ -1,17 +1,15 @@
 # the different stages of this Dockerfile are meant to be built into separate images
 # https://docs.docker.com/develop/develop-images/multistage-build/#stop-at-a-specific-build-stage
 # https://docs.docker.com/compose/compose-file/#target
-
-
+#
 # https://docs.docker.com/engine/reference/builder/#understand-how-arg-and-from-interact
-ARG PHP_VERSION=7.3
+ARG PHP_VERSION=7.4
 ARG NGINX_VERSION=1.15
 ARG VARNISH_VERSION=6.2
-
-
+#
 # "php" stage
 FROM php:${PHP_VERSION}-fpm-alpine AS api_platform_php
-
+#
 # persistent / runtime deps
 RUN apk add --no-cache \
 		acl \
@@ -35,7 +33,7 @@ RUN set -eux; \
 		zlib-dev \
 	; \
 	\
-	docker-php-ext-configure zip --with-libzip; \
+	docker-php-ext-configure zip ; \
 	docker-php-ext-install -j$(nproc) \
 		intl \
 		# Changement de driver DB PostGre => MySQL
