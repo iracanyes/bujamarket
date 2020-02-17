@@ -8,18 +8,19 @@ use \Faker\Factory;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
-class ImageCustomerFixtures extends Fixture implements FixtureGroupInterface
+
+class ImageSuperAdminFixtures extends Fixture implements FixtureGroupInterface
 {
     private $faker;
 
-    public const IMAGE_CUSTOMER_REFERENCE = 'imageCustomer';
+    public const IMAGE_SUPER_ADMIN_REFERENCE = 'imageSuperAdmin';
 
     public function __construct()
     {
         $this->faker = Factory::create('fr_FR');
     }
 
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         $image = new Image();
 
@@ -33,12 +34,12 @@ class ImageCustomerFixtures extends Fixture implements FixtureGroupInterface
 
         $manager->flush();
 
-        $this->addReference(self::IMAGE_CUSTOMER_REFERENCE, $image);
+        $this->addReference(self::IMAGE_SUPER_ADMIN_REFERENCE, $image);
     }
 
     public static function getGroups(): array
     {
-        return ["group1","group2"];
+        return ["group1"];
     }
 
 

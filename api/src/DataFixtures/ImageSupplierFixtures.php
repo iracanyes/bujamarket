@@ -3,11 +3,12 @@
 namespace App\DataFixtures;
 
 use App\Entity\Image;
+use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use \Faker\Factory;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 
-class ImageSupplierFixtures extends Fixture
+class ImageSupplierFixtures extends Fixture implements FixtureGroupInterface
 {
     private $faker;
 
@@ -34,6 +35,12 @@ class ImageSupplierFixtures extends Fixture
 
         $this->addReference(self::IMAGE_SUPPLIER_REFERENCE, $image);
     }
+
+    public static function getGroups(): array
+    {
+        return ["group1","group2"];
+    }
+
 
 
 }

@@ -6,11 +6,12 @@ use App\Entity\Bill;
 use App\Entity\BillRefund;
 use App\Entity\Withdrawal;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
+use Doctrine\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Faker\Factory;
 
-class BillRefundFixtures extends Fixture implements DependentFixtureInterface
+class BillRefundFixtures extends Fixture implements DependentFixtureInterface, FixtureGroupInterface
 {
     public const BILL_REFUND_REFERENCE = 'billRefund';
 
@@ -84,4 +85,10 @@ class BillRefundFixtures extends Fixture implements DependentFixtureInterface
 
         );
     }
+
+    public static function getGroups(): array
+    {
+        return ["group1","group2"];
+    }
+
 }

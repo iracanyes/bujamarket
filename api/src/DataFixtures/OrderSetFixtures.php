@@ -3,13 +3,14 @@
 namespace App\DataFixtures;
 
 use App\Entity\OrderSet;
+use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Tests\Common\DataFixtures\AddressFixture;
 use \Faker\Factory;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 
-class OrderSetFixtures extends Fixture implements DependentFixtureInterface
+class OrderSetFixtures extends Fixture implements DependentFixtureInterface, FixtureGroupInterface
 {
     public const ORDER_SET_REFERENCE = 'orderSet';
 
@@ -63,5 +64,11 @@ class OrderSetFixtures extends Fixture implements DependentFixtureInterface
             AddressCustomerFixtures::class
         );
     }
+
+    public static function getGroups(): array
+    {
+        return ["group1","group2"];
+    }
+
 
 }

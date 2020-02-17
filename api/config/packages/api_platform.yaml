@@ -9,7 +9,7 @@ parameters:
 
 api_platform:
     # The title of the API.
-    title: Buja Market
+    title: 'Buja Market'
 
     # The description of the API.
     description: 'Platforme de commerce en ligne. Place de marché en ligne pour les produits provenant des grands lacs. '

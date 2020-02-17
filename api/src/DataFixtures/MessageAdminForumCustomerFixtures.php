@@ -3,12 +3,13 @@
 namespace App\DataFixtures;
 
 use App\Entity\Message;
+use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use \Faker\Factory;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 
-class MessageAdminForumCustomerFixtures extends Fixture implements DependentFixtureInterface
+class MessageAdminForumCustomerFixtures extends Fixture implements DependentFixtureInterface, FixtureGroupInterface
 {
     private $faker;
 
@@ -55,4 +56,10 @@ class MessageAdminForumCustomerFixtures extends Fixture implements DependentFixt
             ForumCustomerFixtures::class,
         );
     }
+
+    public static function getGroups(): array
+    {
+        return ["group1","group2"];
+    }
+
 }

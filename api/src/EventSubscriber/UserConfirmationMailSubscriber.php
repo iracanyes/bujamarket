@@ -7,6 +7,7 @@ use ApiPlatform\Core\EventListener\EventPriorities;
 use App\Entity\UserTemp;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
@@ -16,7 +17,7 @@ class UserConfirmationMailSubscriber implements EventSubscriberInterface
 
     private $templating;
 
-    public function __construct(\Swift_Mailer $mailer, \Twig_Environment $twig_Environment)
+    public function __construct(\Swift_Mailer $mailer, \Twig\Environment $twig_Environment)
     {
         $this->mailer = $mailer;
         $this->templating = $twig_Environment;
@@ -30,7 +31,7 @@ class UserConfirmationMailSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function sendMail(GetResponseForControllerResultEvent $event): void
+    public function sendMail(ViewEvent $event): void
     {
         $user = $event->getControllerResult();
         $request = $event->getRequest();
