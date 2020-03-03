@@ -103,9 +103,12 @@ class LoginForm extends React.Component {
           {sessionStorage.getItem("flash-message") !== null && (
             <FlashInfo color={"success"} message={JSON.parse(sessionStorage.getItem("flash-message")).message}/>
           )}
-          {sessionStorage.getItem("flash-message-error") !== null && (
+          {sessionStorage.getItem("flash-message-error") !== null && /^"{\\/.test(sessionStorage.getItem('flash-message-error')) && (
             <FlashInfo color={"info"} message={JSON.parse(sessionStorage.getItem("flash-message-error")).message}/>
           )}
+          { sessionStorage.getItem('flash-message-error') !== null && !/^"{\\/.test(sessionStorage.getItem('flash-message-error')) &&
+          <FlashInfo color={"danger"} message={sessionStorage.getItem('flash-message-error')}/>
+          }
         </div>
         <div id={'form-login'} className="col-md-6 mx-auto col-md-offset-3">
           <h1>

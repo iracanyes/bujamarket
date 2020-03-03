@@ -4,6 +4,7 @@
 namespace App\Service;
 
 
+use App\Entity\Address;
 use App\Entity\Customer;
 use App\Entity\Supplier;
 use App\Entity\User;
@@ -289,6 +290,17 @@ class MemberHandler
         $user->setContactPhoneNumber($data->contactPhoneNumber);
         $user->setContactEmail($data->contactEmail);
         $user->setWebsite($data->website ?? '');
+
+        /* Siége social */
+        $address = new Address();
+        $address->setLocationName($data->address->locationName);
+        $address->setStreet($data->address->street);
+        $address->setNumber($data->address->number);
+        $address->setTown($data->address->town);
+        $address->setState($data->address->state);
+        $address->setZipCode($data->address->zipCode);
+        $address->setCountry($data->address->country);
+        $user->addAddress($address);
 
         /* Création d'une clé supplier */
         $user->setSupplierKey(bin2hex(random_bytes(64)));
