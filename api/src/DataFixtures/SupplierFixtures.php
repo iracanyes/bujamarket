@@ -71,7 +71,7 @@ class SupplierFixtures extends Fixture implements DependentFixtureInterface
         /* user informations */
         $user->setEmail($this->faker->unique()->email);
 
-        $password = $this->encoder->encodePassword($user, 'supplier');
+        $password = $this->encoder->encodePassword($user, getenv('FIXTURE_SUPPLIER_PASSWORD'));
 
         $user->setPassword($password);
         $user->setFirstname($this->faker->firstName);

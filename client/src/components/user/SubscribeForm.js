@@ -56,19 +56,6 @@ class SubscribeForm extends React.Component {
     this.props.reset(this.props.eventSource);
   }
 
-  handleChange(event) {
-    const { name, value } = event.target;
-    const { user } = this.state;
-
-    this.setState({
-      user: {
-        ...user,
-        [name]: value
-      }
-    });
-
-    console.log("HandleChange - New state ", this.state);
-  }
 
   handleSubmit(e)
   {
@@ -79,19 +66,23 @@ class SubscribeForm extends React.Component {
     // Récupération des données de formulaires
     const data = new FormData(document.getElementById('subscribe-form'));
 
+
+
     const user = {
       email: data.get('email'),
       lastname: data.get('lastname'),
       firstname: data.get('firstname'),
-      userType: data.get('userType'),
+      userType: this.props.retrieved.userType,
       language: data.get('language'),
       currency: data.get('currency'),
-      token: this.props.match.params.token
+      token: this.props.match.params.token,
+      address: {}
     };
 
     /* Ajout des données fournisseurs  */
-    if(data.get('userType') === 'supplier')
+    if(this.props.retrieved.userType === 'supplier')
     {
+      // Données fournisseur
       user.socialReason = data.get('socialReason');
       user.brandName = data.get('brandName');
       user.tradeRegistryNumber = data.get('tradeRegistryNumber');
@@ -100,9 +91,18 @@ class SubscribeForm extends React.Component {
       user.contactPhoneNumber = data.get('contactPhoneNumber');
       user.contactEmail = data.get('contactEmail');
 
+      // Données d'adresse
+      user.address.locationName = 'Head office';
+      user.address.street = data.get('address[street]');
+      user.address.number = data.get('address[number]');
+      user.address.town = data.get('address[town]');
+      user.address.state = data.get('address[state]');
+      user.address.zipCode= data.get('address[zipCode]');
+      user.address.country = data.get('address[country]');
+
     }
 
-    console.log('handleSubmit', user);
+
     if( user.email && user.firstname && user.lastname && user.userType && user.language && user.currency && user.token )
     {
       this.props.subscribe(user, this.props.history);
@@ -181,7 +181,6 @@ class SubscribeForm extends React.Component {
 
   render() {
     const { intl  } = this.props;
-    //const { user, submitted } = this.state;
 
 
 
@@ -196,15 +195,23 @@ class SubscribeForm extends React.Component {
                                description="Page User - Subscribe title"
             />
           </h1>
-          {this.props.error && (
-            <div className="alert alert-danger" role="alert">
-              <span className="fa fa-exclamation-triangle" aria-hidden="true" />{' '}
-              {this.props.error}
-            </div>
-          )}
-          { sessionStorage.getItem('flash-message-error') !== null &&
+          <div className={"col-lg-6 mx-auto px-3"}>
+            {this.props.error && (
+              <div className="alert alert-danger" role="alert">
+                <span className="fa fa-exclamation-triangle" aria-hidden="true" />{' '}
+                {this.props.error}
+              </div>
+            )}
+            { sessionStorage.getItem('flash-message-error') !== null && /^"{\\/.test(sessionStorage.getItem('flash-message-error')) &&
             <FlashInfo color={"danger"} message={JSON.parse(sessionStorage.getItem('flash-message-error')).message}/>
-          }
+            }
+            { sessionStorage.getItem('flash-message-error') !== null && !/^"{\\/.test(sessionStorage.getItem('flash-message-error')) &&
+            <FlashInfo color={"danger"} message={sessionStorage.getItem('flash-message-error')}/>
+            }
+          </div>
+
+
+
           { this.props.retrieved !== null && (
             <form
               id="subscribe-form"
@@ -212,223 +219,25 @@ class SubscribeForm extends React.Component {
               className={"col-lg-6 mx-auto px-3"}
               onSubmit={this.handleSubmit}
               /* Si la clé change un réaffichage du composant est lancé */
-              key={this.state.user.id}
-              autoComplete={true}
+              key={this.props.retrieved['hydra:member'].id}
+              autoComplete={"on"}
             >
               <fieldset>
                 <legend>Information utilisateur</legend>
-                <Row>
-                  <Col>
-                    <Field
-                      component={this.renderField}
-                      name="email"
-                      type="email"
-                      placeholder={this.props.retrieved.email}
-                      labelText={intl.formatMessage({
-                        id: "app.user.item.email",
-                        defaultMessage: "Email",
-                        description: "User item - email"
-                      })}
-                      onChange={this.handleChange}
-                      value={this.props.retrieved.email}
-                    />
-                  </Col>
-                </Row>
-                <Row>
-                  <Col>
-                    <Field
-                      component={this.renderField}
-                      name="lastname"
-                      type="text"
-                      placeholder={this.props.retrieved.lastname}
-                      required={true}
-                      labelText={intl.formatMessage({
-                        id: "app.user.item.lastname",
-                        defaultMessage: "Nom",
-                        description: "User item - lastname"
-                      })}
-                      onChange={this.handleChange}
-                    />
-                  </Col>
-                  <Col>
-                    <Field
-                      component={this.renderField}
-                      name="firstname"
-                      type="text"
-                      placeholder={this.props.retrieved.firstname}
-                      required={true}
-                      labelText={intl.formatMessage({
-                        id: "app.user.item.firstname",
-                        defaultMessage: "Prénom",
-                        description: "User item - firstname"
-                      })}
-                      onChange={this.handleChange}
-                    />
-                  </Col>
-                </Row>
-                <Row>
-                  <Col className={'mb-3'}>
-                    <label
-                      htmlFor={'userType'}
-                      className="form-control-label"
-                    >
-                      <FormattedMessage  id={"app.user.item.user_type"}
-                                         defaultMessage="Type d'utilisateur"
-                                         description="User item - user type"
-
-                      />
-                    </label>
-                    &nbsp;:&nbsp;
-                    <Field
-                      component={"select"}
-                      name="userType"
-                      type="select"
-                      className={'custom-select ml-2 col-2'}
-                      onChange={this.handleChange}
-                    >
-                      <option value="customer">
-                        { intl.formatMessage({
-                          id: "app.user.item.user_type.client",
-                          description: "User item - user type client",
-                          defaultMessage: "Client"
-                        })}
-                      </option>
-                      <option value="supplier" >
-                        { intl.formatMessage({
-                          id: "app.user.item.user_type.supplier",
-                          description: "User item - user type supplier",
-                          defaultMessage: "Fournisseur"
-                        })}
-
-                      </option>
-                    </Field>
-                  </Col>
-
-                </Row>
-                <Row>
-                  <Col>
-                    <label
-                      htmlFor={'language'}
-                      className="form-control-label"
-                    >
-                      <FormattedMessage  id={"app.user.item.language"}
-                                         defaultMessage="Préférence de langue"
-                                         description="User item - preferred language"
-
-                      />
-                    </label>
-                    &nbsp;:&nbsp;
-                    <Field
-                      component={"select"}
-                      name="language"
-                      type="select"
-                      className={'custom-select d-block col-4'}
-                      onChange={this.handleChange}
-                      value={this.state.user.language}
-                    >
-                      <option value="FR">
-                        { intl.formatMessage({
-                          id: "app.user.item.language.fr",
-                          description: "User item - language french (FR)",
-                          defaultMessage: "Français"
-                        })}
-                      </option>
-                      <option value="EN">
-                        { intl.formatMessage({
-                          id: "app.user.item.language.en",
-                          description: "User item - language english (EN)",
-                          defaultMessage: "Anglais"
-                        })}
-
-                      </option>
-                      <option value="RN">
-                        { intl.formatMessage({
-                          id: "app.user.item.language.rn",
-                          description: "User item - language kirundi (RN)",
-                          defaultMessage: "Kirundi"
-                        })}
-
-                      </option>
-                    </Field>
-                  </Col>
-                  <Col>
-                    <label
-                      htmlFor={'currency'}
-                      className="form-control-label"
-                    >
-                      <FormattedMessage  id={"app.user.item.currency"}
-                                         defaultMessage="Préférence monétaire"
-                                         description="User item - preferred currency"
-
-                      />
-                    </label>
-                    &nbsp;:&nbsp;
-                    <Field
-                      component={"select"}
-                      name="currency"
-                      type="select"
-                      className={'custom-select d-block col-4'}
-                      onChange={this.handleChange}
-                      value={this.state.user.currency}
-                    >
-                      <option value="EUR">
-                        { intl.formatMessage({
-                          id: "app.user.item.currency.eur",
-                          description: "User item - currency EUR",
-                          defaultMessage: "Euro"
-                        })}
-                      </option>
-                      <option value="USD">
-                        { intl.formatMessage({
-                          id: "app.user.item.currency.usd",
-                          description: "User item - currency USD",
-                          defaultMessage: "Dollar"
-                        })}
-
-                      </option>
-                      <option value="BIF">
-                        { intl.formatMessage({
-                          id: "app.user.item.currency.bif",
-                          description: "User item - currency BIF",
-                          defaultMessage: "Francs Burundais"
-                        })}
-
-                      </option>
-                    </Field>
-                  </Col>
-                </Row>
-
-              </fieldset>
-              {this.props.retrieved.userType === 'supplier' && (
                 <fieldset>
-                  <legend>Information fournisseur</legend>
                   <Row>
                     <Col>
                       <Field
                         component={this.renderField}
-                        name="socialReason"
-                        type="text"
-                        placeholder={"Ex: Google LLC"}
-                        required={true}
+                        name="email"
+                        type="email"
+                        placeholder={this.props.retrieved.email}
                         labelText={intl.formatMessage({
-                          id: "app.supplier.item.social_reason",
-                          defaultMessage: "Raison sociale",
-                          description: "Supplier item - social reason"
+                          id: "app.user.item.email",
+                          defaultMessage: "Email",
+                          description: "User item - email"
                         })}
-                      />
-                    </Col>
-                    <Col>
-                      <Field
-                        component={this.renderField}
-                        name="brandName"
-                        type="text"
-                        placeholder={"Ex: Google"}
-                        required={true}
-                        labelText={intl.formatMessage({
-                          id: "app.supplier.item.brand_name",
-                          defaultMessage: "Nom de marque",
-                          description: "Supplier item - brand name"
-                        })}
+                        value={this.props.retrieved.email}
                       />
                     </Col>
                   </Row>
@@ -436,97 +245,439 @@ class SubscribeForm extends React.Component {
                     <Col>
                       <Field
                         component={this.renderField}
-                        name="tradeRegistryNumber"
+                        name="lastname"
                         type="text"
-                        placeholder={"0000000000000"}
+                        placeholder={this.props.retrieved.lastname}
                         required={true}
                         labelText={intl.formatMessage({
-                          id: "app.supplier.item.trade_registry_number",
-                          defaultMessage: "Numéro de registre commercial",
-                          description: "Supplier item - trade registry number"
+                          id: "app.user.item.lastname",
+                          defaultMessage: "Nom",
+                          description: "User item - lastname"
                         })}
                       />
                     </Col>
                     <Col>
                       <Field
                         component={this.renderField}
-                        name="vatNumber"
+                        name="firstname"
                         type="text"
-                        placeholder={"00000000"}
+                        placeholder={this.props.retrieved.firstname}
                         required={true}
                         labelText={intl.formatMessage({
-                          id: "app.supplier.item.vat_number",
-                          defaultMessage: "Numéro TVA",
-                          description: "Supplier item - VAT number"
+                          id: "app.user.item.firstname",
+                          defaultMessage: "Prénom",
+                          description: "User item - firstname"
                         })}
                       />
                     </Col>
                   </Row>
                   <Row>
-                    <Col>
+                    <Col className={'mb-3'}>
+                      <label
+                        htmlFor={'userType'}
+                        className="form-control-label"
+                      >
+                        <FormattedMessage  id={"app.user.item.user_type"}
+                                           defaultMessage="Type d'utilisateur"
+                                           description="User item - user type"
+
+                        />
+                      </label>
+                      &nbsp;:&nbsp;
                       <Field
-                        component={this.renderField}
-                        name="contactFullname"
-                        type="text"
-                        placeholder={"Dubois Charles"}
-                        required={true}
-                        labelText={intl.formatMessage({
-                          id: "app.supplier.item.contact_fullname",
-                          defaultMessage: "Nom complet personne de contact",
-                          description: "Supplier item - contact fullname"
-                        })}
-                      />
-                    </Col>
-                    <Col>
-                      <Field
-                        component={this.renderField}
-                        name="contactPhoneNumber"
-                        type="text"
-                        placeholder={"Ex: +257 22 _ _ _ _ _ _ "}
-                        required={true}
-                        labelText={intl.formatMessage({
-                          id: "app.supplier.item.contact_phone_number",
-                          defaultMessage: "Numéro de téléphone personne de contact",
-                          description: "Supplier item - contact phone number"
-                        })}
-                      />
+                        component={"select"}
+                        name="userType"
+                        type="select"
+                        className={'custom-select ml-2 col-2'}
+                        disabled={'disabled'}
+                        value={this.props.retrieved.userType ? this.props.retrieved.userType : ''}
+
+                      >
+                        <option value="customer" >
+                          { intl.formatMessage({
+                            id: "app.user.item.user_type.client",
+                            description: "User item - user type client",
+                            defaultMessage: "Client"
+                          })}
+                        </option>
+                        <option value="supplier"  >
+                          { intl.formatMessage({
+                            id: "app.user.item.user_type.supplier",
+                            description: "User item - user type supplier",
+                            defaultMessage: "Fournisseur"
+                          })}
+
+                        </option>
+                      </Field>
                     </Col>
 
                   </Row>
                   <Row>
                     <Col>
+                      <label
+                        htmlFor={'language'}
+                        className="form-control-label"
+                      >
+                        <FormattedMessage  id={"app.user.item.language"}
+                                           defaultMessage="Préférence de langue"
+                                           description="User item - preferred language"
+
+                        />
+                      </label>
+                      &nbsp;:&nbsp;
                       <Field
-                        component={this.renderField}
-                        name="contactEmail"
-                        type="email"
-                        placeholder={"Ex: contact@monsite.ext "}
-                        required={true}
-                        labelText={intl.formatMessage({
-                          id: "app.supplier.item.contact_email",
-                          defaultMessage: "E-mail personne de contact",
-                          description: "Supplier item - contact email"
-                        })}
-                      />
+                        component={"select"}
+                        name="language"
+                        type="select"
+                        className={'custom-select d-block col-4'}
+                        value={this.state.user.language}
+                      >
+                        <option value="FR">
+                          { intl.formatMessage({
+                            id: "app.user.item.language.fr",
+                            description: "User item - language french (FR)",
+                            defaultMessage: "Français"
+                          })}
+                        </option>
+                        <option value="EN">
+                          { intl.formatMessage({
+                            id: "app.user.item.language.en",
+                            description: "User item - language english (EN)",
+                            defaultMessage: "Anglais"
+                          })}
+
+                        </option>
+                        <option value="RN">
+                          { intl.formatMessage({
+                            id: "app.user.item.language.rn",
+                            description: "User item - language kirundi (RN)",
+                            defaultMessage: "Kirundi"
+                          })}
+
+                        </option>
+                      </Field>
                     </Col>
-                  </Row>
-                  <Row>
                     <Col>
+                      <label
+                        htmlFor={'currency'}
+                        className="form-control-label"
+                      >
+                        <FormattedMessage  id={"app.user.item.currency"}
+                                           defaultMessage="Préférence monétaire"
+                                           description="User item - preferred currency"
+
+                        />
+                      </label>
+                      &nbsp;:&nbsp;
                       <Field
-                        component={this.renderField}
-                        name="website"
-                        type="text"
-                        placeholder={"www.google.com"}
-                        labelText={intl.formatMessage({
-                          id: "app.supplier.item.website",
-                          defaultMessage: "Site web",
-                          description: "Supplier item - website"
-                        })}
-                      />
+                        component={"select"}
+                        name="currency"
+                        type="select"
+                        className={'custom-select d-block col-4'}
+                        value={this.state.user.currency}
+                      >
+                        <option value="EUR">
+                          { intl.formatMessage({
+                            id: "app.user.item.currency.eur",
+                            description: "User item - currency EUR",
+                            defaultMessage: "Euro"
+                          })}
+                        </option>
+                        <option value="USD">
+                          { intl.formatMessage({
+                            id: "app.user.item.currency.usd",
+                            description: "User item - currency USD",
+                            defaultMessage: "Dollar"
+                          })}
+
+                        </option>
+                        <option value="BIF">
+                          { intl.formatMessage({
+                            id: "app.user.item.currency.bif",
+                            description: "User item - currency BIF",
+                            defaultMessage: "Francs Burundais"
+                          })}
+
+                        </option>
+                      </Field>
                     </Col>
                   </Row>
                 </fieldset>
+
+
+
+              {this.props.retrieved.userType === 'supplier' && (
+                <fieldset>
+                  <fieldset className={'mt-2'}>
+                    <legend>Information fournisseur</legend>
+                    <Row>
+                      <Col>
+                        <Field
+                          component={this.renderField}
+                          name="socialReason"
+                          type="text"
+                          placeholder={"Ex: Google LLC"}
+                          required={true}
+                          labelText={intl.formatMessage({
+                            id: "app.supplier.item.social_reason",
+                            defaultMessage: "Raison sociale",
+                            description: "Supplier item - social reason"
+                          })}
+                        />
+                      </Col>
+                      <Col>
+                        <Field
+                          component={this.renderField}
+                          name="brandName"
+                          type="text"
+                          placeholder={"Ex: Google"}
+                          required={true}
+                          labelText={intl.formatMessage({
+                            id: "app.supplier.item.brand_name",
+                            defaultMessage: "Nom de marque",
+                            description: "Supplier item - brand name"
+                          })}
+                        />
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col>
+                        <Field
+                          component={this.renderField}
+                          name="tradeRegistryNumber"
+                          type="text"
+                          placeholder={"0000000000000"}
+                          required={true}
+                          labelText={intl.formatMessage({
+                            id: "app.supplier.item.trade_registry_number",
+                            defaultMessage: "Numéro de registre commercial",
+                            description: "Supplier item - trade registry number"
+                          })}
+                        />
+                      </Col>
+                      <Col>
+                        <Field
+                          component={this.renderField}
+                          name="vatNumber"
+                          type="text"
+                          placeholder={"00000000"}
+                          required={true}
+                          labelText={intl.formatMessage({
+                            id: "app.supplier.item.vat_number",
+                            defaultMessage: "Numéro TVA",
+                            description: "Supplier item - VAT number"
+                          })}
+                        />
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col>
+                        <Field
+                          component={this.renderField}
+                          name="contactFullname"
+                          type="text"
+                          placeholder={"Dubois Charles"}
+                          required={true}
+                          labelText={intl.formatMessage({
+                            id: "app.supplier.item.contact_fullname",
+                            defaultMessage: "Nom complet personne de contact",
+                            description: "Supplier item - contact fullname"
+                          })}
+                        />
+                      </Col>
+                      <Col>
+                        <Field
+                          component={this.renderField}
+                          name="contactPhoneNumber"
+                          type="text"
+                          placeholder={"Ex: +257 22 _ _ _ _ _ _ "}
+                          required={true}
+                          labelText={intl.formatMessage({
+                            id: "app.supplier.item.contact_phone_number",
+                            defaultMessage: "Numéro de téléphone personne de contact",
+                            description: "Supplier item - contact phone number"
+                          })}
+                        />
+                      </Col>
+
+                    </Row>
+                    <Row>
+                      <Col>
+                        <Field
+                          component={this.renderField}
+                          name="contactEmail"
+                          type="email"
+                          placeholder={"Ex: contact@monsite.ext "}
+                          required={true}
+                          labelText={intl.formatMessage({
+                            id: "app.supplier.item.contact_email",
+                            defaultMessage: "E-mail personne de contact",
+                            description: "Supplier item - contact email"
+                          })}
+                        />
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col>
+                        <Field
+                          component={this.renderField}
+                          name="website"
+                          type="text"
+                          placeholder={"www.google.com"}
+                          labelText={intl.formatMessage({
+                            id: "app.supplier.item.website",
+                            defaultMessage: "Site web",
+                            description: "Supplier item - website"
+                          })}
+                        />
+                      </Col>
+                    </Row>
+                  </fieldset>
+                  <fieldset>
+                    <legend>Siége social</legend>
+                    <Row>
+                      <Col className={'mb-3'}>
+                        <label
+                          htmlFor={'address[locationName]'}
+                          className="form-control-label"
+                        >
+                          <FormattedMessage  id={"app.address.item.location_name"}
+                                             defaultMessage="Type d'adresse"
+                                             description="Address item - location name"
+
+                          />
+                        </label>
+                        &nbsp;:&nbsp;
+                        <Field
+                          component={"select"}
+                          name='address[locationName]'
+                          type="select"
+                          className={'custom-select ml-2 col-2'}
+                          disabled={'disabled'}
+                        >
+                          <option value="Head office">
+                            { intl.formatMessage({
+                              id: "app.address.item.location_name.head_office",
+                              description: "Address item - location name : head office",
+                              defaultMessage: "Siége social"
+                            })}
+                          </option>
+                          <option value="Delivery address" >
+                            { intl.formatMessage({
+                              id: "app.address.item.location_name.head_office",
+                              description: "Address item - location name : head office",
+                              defaultMessage: "Adresse de livraison"
+                            })}
+
+                          </option>
+                          <option value="Billing address" >
+                            { intl.formatMessage({
+                              id: "app.address.item.location_name.billing_address",
+                              description: "Address item - location name : billing address",
+                              defaultMessage: "Adresse de facturation"
+                            })}
+
+                          </option>
+                        </Field>
+                      </Col>
+
+                    </Row>
+                    <Row>
+                      <Col>
+                        <Field
+                          component={this.renderField}
+                          name='address[street]'
+                          type="text"
+                          placeholder={"Ex: Rue du collège"}
+                          required={true}
+                          labelText={intl.formatMessage({
+                            id: "app.address.item.street",
+                            defaultMessage: "Nom de rue",
+                            description: "Address item - street"
+                          })}
+                        />
+                      </Col>
+                      <Col>
+                        <Field
+                          component={this.renderField}
+                          name='address[number]'
+                          type="text"
+                          placeholder={"Ex: 98/110"}
+                          required={true}
+                          labelText={intl.formatMessage({
+                            id: "app.address.item.number",
+                            defaultMessage: "Numéro",
+                            description: "Address item - number"
+                          })}
+                        />
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col>
+                        <Field
+                          component={this.renderField}
+                          name='address[town]'
+                          type="text"
+                          placeholder={"EX: Zaventem"}
+                          required={true}
+                          labelText={intl.formatMessage({
+                            id: "app.address.item.town",
+                            defaultMessage: "Ville",
+                            description: "Address item - town"
+                          })}
+                        />
+                      </Col>
+                      <Col>
+                        <Field
+                          component={this.renderField}
+                          name='address[state]'
+                          type="text"
+                          placeholder={"Ex: Bruxelles"}
+                          required={true}
+                          labelText={intl.formatMessage({
+                            id: "app.address.item.state",
+                            defaultMessage: "État/Province/Région",
+                            description: "Address item - state"
+                          })}
+                        />
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col>
+                        <Field
+                          component={this.renderField}
+                          name='address[zipCode]'
+                          type="text"
+                          placeholder={"1000"}
+                          required={true}
+                          labelText={intl.formatMessage({
+                            id: "app.address.item.zip_code",
+                            defaultMessage: "Code postal",
+                            description: "Address item - zip code"
+                          })}
+                        />
+                      </Col>
+                      <Col>
+                        <Field
+                          component={this.renderField}
+                          name='address[country]'
+                          type="text"
+                          placeholder={"Ex: Belgium"}
+                          required={true}
+                          labelText={intl.formatMessage({
+                            id: "app.address.item.country",
+                            defaultMessage: "Numéro de téléphone personne de contact",
+                            description: "Address item - country"
+                          })}
+                        />
+                      </Col>
+
+                    </Row>
+
+                  </fieldset>
+                </fieldset>
               )}
-              <fieldset>
+
                 <Row className={'pt-3'}>
                   <Col>
                     <div className={`form-group d-flex`}>
@@ -537,7 +688,6 @@ class SubscribeForm extends React.Component {
                         style={{position: 'absolute', top: '10px'}}
                         required={true}
                         id={`user_termsAccepted`}
-                        onChange={this.handleChange}
                       />
                       <label
                         htmlFor={`user_termsAccepted`}

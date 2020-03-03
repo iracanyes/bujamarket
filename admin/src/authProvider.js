@@ -37,13 +37,14 @@ export default (type, params) => {
     const status  = params.status;
     if (status === 401 || status === 403) {
       localStorage.removeItem('token');
-      return Promise.reject();
+      return Promise.reject({redirectTo: '/login'});
     }
     return Promise.resolve();
   }
 
   if (type === AUTH_CHECK) {
-    return localStorage.getItem('token') ? Promise.resolve() : Promise.reject({ redirectTo: '/no-access' });
+    const user = localStorage.getItem('token') !== null ?  JSON.parse(atob(localStorage.getItem('token').split('.')[1])) : null;
+    return localStorage.getItem('token') || !user || user.roles.includes('ROLE_ADMIN') ? Promise.resolve() : Promise.reject({ redirectTo: '/login' });
   }
 
   return Promise.resolve();
