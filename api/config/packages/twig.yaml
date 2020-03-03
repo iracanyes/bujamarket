@@ -3,8 +3,10 @@ twig:
     debug: '%kernel.debug%'
     strict_variables: '%kernel.debug%'
     globals:
-        APP_OWNER_ADDRESS: '%env(APP_OWNER_ADDRESS)%'
-        APP_OWNER_PHONE_NUMBER: '%env(APP_OWNER_PHONE_NUMBER)%'
-        APP_OWNER_CONTACT_EMAIL: '%env(APP_OWNER_CONTACT_EMAIL)%'
-        APP_HOST_URL: '%env(APP_HOST_URL)%'
-        APP_FULLNAME: '%env(APP_FULLNAME)%'
+        # Si on utilise Docker pour monter l'API dans un container, 
+        # il faut décommenter ces informations après la procédure de montage des containers
+        #APP_OWNER_ADDRESS: '%env(APP_OWNER_ADDRESS)%'
+        #APP_OWNER_PHONE_NUMBER: '%env(APP_OWNER_PHONE_NUMBER)%'
+        #APP_OWNER_CONTACT_EMAIL: '%env(APP_OWNER_CONTACT_EMAIL)%'
+        #APP_HOST_URL: '%env(APP_HOST_URL)%'
+        #APP_FULLNAME: '%env(APP_FULLNAME)%'

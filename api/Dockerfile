@@ -4,26 +4,29 @@
 
 
 # https://docs.docker.com/engine/reference/builder/#understand-how-arg-and-from-interact
-ARG PHP_VERSION=7.3
-ARG NGINX_VERSION=1.15
+ARG PHP_VERSION=7.4.2
+ARG NGINX_VERSION=1.17
 ARG VARNISH_VERSION=6.2
 
 
 # "php" stage
 FROM php:${PHP_VERSION}-fpm-alpine AS api_platform_php
 
+# Update package manager
+RUN apk update
+
 # persistent / runtime deps
+
 RUN apk add --no-cache \
 		acl \
 		file \
+		fcgi \
 		gettext \
 		git \
 	;
 
-ARG APCU_VERSION=5.1.17
+ARG APCU_VERSION=5.1.18
 RUN set -eux; \
-    # Mise à jour du gestionnaire de dépendances
-    apk update; \
 	apk add --no-cache --virtual .build-deps \
 		$PHPIZE_DEPS \
 		icu-dev \
@@ -35,7 +38,7 @@ RUN set -eux; \
 		zlib-dev \
 	; \
 	\
-	docker-php-ext-configure zip --with-libzip; \
+	docker-php-ext-configure zip ; \
 	docker-php-ext-install -j$(nproc) \
 		intl \
 		# Changement de driver DB PostGre => MySQL
@@ -100,6 +103,7 @@ COPY bin bin/
 COPY config config/
 COPY public public/
 COPY src src/
+COPY templates templates/
 
 RUN set -eux; \
 	mkdir -p var/cache var/log; \
