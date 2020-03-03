@@ -3,13 +3,14 @@
 namespace App\DataFixtures;
 
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use App\Entity\Address;
 use App\DataFixtures\CustomerFixtures;
 use \Faker\Factory;
 
-class AddressCustomerFixtures extends Fixture implements DependentFixtureInterface
+class AddressCustomerFixtures extends Fixture implements DependentFixtureInterface, FixtureGroupInterface
 {
     public const ADDRESS_CUSTOMER_REFERENCE = "addressCustomer";
 
@@ -57,5 +58,10 @@ class AddressCustomerFixtures extends Fixture implements DependentFixtureInterfa
         return array(
             CustomerFixtures::class
         );
+    }
+
+    public static function getGroups(): array
+    {
+        return ["group1","group2"];
     }
 }

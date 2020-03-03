@@ -4,13 +4,14 @@ namespace App\DataFixtures;
 
 use App\Entity\Customer;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use App\Entity\User;
 use \Faker\Factory;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-class CustomerFixtures extends Fixture implements DependentFixtureInterface
+class CustomerFixtures extends Fixture implements DependentFixtureInterface, FixtureGroupInterface
 {
     public const CUSTOMER_REFERENCE = 'customer';
 
@@ -92,5 +93,10 @@ class CustomerFixtures extends Fixture implements DependentFixtureInterface
         return array(
             ImageCustomerFixtures::class
         );
+    }
+
+    public static function getGroups(): array
+    {
+        return ["group1","group2"];
     }
 }

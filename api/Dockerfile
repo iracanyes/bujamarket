@@ -1,20 +1,27 @@
 # the different stages of this Dockerfile are meant to be built into separate images
 # https://docs.docker.com/develop/develop-images/multistage-build/#stop-at-a-specific-build-stage
 # https://docs.docker.com/compose/compose-file/#target
-
-
+#
 # https://docs.docker.com/engine/reference/builder/#understand-how-arg-and-from-interact
+<<<<<<< HEAD
 ARG PHP_VERSION=7.4.2
 ARG NGINX_VERSION=1.17
+=======
+ARG PHP_VERSION=7.4
+ARG NGINX_VERSION=1.15
+>>>>>>> origin/dev-2020
 ARG VARNISH_VERSION=6.2
-
-
+#
 # "php" stage
 FROM php:${PHP_VERSION}-fpm-alpine AS api_platform_php
+<<<<<<< HEAD
 
 # Update package manager
 RUN apk update
 
+=======
+#
+>>>>>>> origin/dev-2020
 # persistent / runtime deps
 
 RUN apk add --no-cache \

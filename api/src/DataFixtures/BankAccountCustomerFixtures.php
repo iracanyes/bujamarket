@@ -4,11 +4,12 @@ namespace App\DataFixtures;
 
 use App\Entity\BankAccount;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
+use Doctrine\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use \Faker\Factory;
 
-class BankAccountCustomerFixtures extends Fixture implements DependentFixtureInterface
+class BankAccountCustomerFixtures extends Fixture implements DependentFixtureInterface, FixtureGroupInterface
 {
     public const BANK_ACCOUNT_CUSTOMER_REFERENCE = "bankAccountCustomer";
 
@@ -51,5 +52,10 @@ class BankAccountCustomerFixtures extends Fixture implements DependentFixtureInt
         return array(
             CustomerFixtures::class
         );
+    }
+
+    public static function getGroups(): array
+    {
+        return ["group1","group2"];
     }
 }

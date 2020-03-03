@@ -4,16 +4,17 @@ namespace App\DataFixtures;
 
 use App\Entity\Supplier;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use App\Entity\User;
 use App\Entity\Admin;
 use \Faker\Factory;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-class SuperAdminFixtures extends Fixture implements DependentFixtureInterface
+class SuperAdminFixtures extends Fixture implements DependentFixtureInterface, FixtureGroupInterface
 {
-    public const ADMIN_REFERENCE = 'admin';
+    public const SUPER_ADMIN_REFERENCE = 'superAdmin';
 
     /**
      * @var \Faker\Generator
@@ -56,12 +57,12 @@ class SuperAdminFixtures extends Fixture implements DependentFixtureInterface
         $manager->persist($admin);
         $manager->flush();
 
-        $this->addReference(self::ADMIN_REFERENCE, $admin);
+        $this->addReference(self::SUPER_ADMIN_REFERENCE, $admin);
     }
 
     public function setUserInfo(User $user)
     {
-        $user->setEmail($this->faker->unique()->email);
+        $user->setEmail("iracanyes@gmail.com");
 
         $password = $this->encoder->encodePassword($user, getenv('FIXTURE_SUPER_ADMIN_PASSWORD'));
         $user->setPassword($password);
@@ -80,7 +81,7 @@ class SuperAdminFixtures extends Fixture implements DependentFixtureInterface
 
         /* Relations */
 
-        $user->setImage($this->getReference(ImageAdminFixtures::IMAGE_ADMIN_REFERENCE));
+        $user->setImage($this->getReference(ImageSuperAdminFixtures::IMAGE_SUPER_ADMIN_REFERENCE));
 
     }
 
@@ -91,7 +92,13 @@ class SuperAdminFixtures extends Fixture implements DependentFixtureInterface
     public function getDependencies()
     {
         return array(
-            ImageAdminFixtures::class,
+            ImageSuperAdminFixtures::class,
         );
     }
+
+    public static function getGroups(): array
+    {
+        return ["group1"];
+    }
+
 }

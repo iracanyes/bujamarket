@@ -3,11 +3,13 @@
 namespace App\DataFixtures;
 
 use App\Entity\Image;
+use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use \Faker\Factory;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 
-class ImageAdminFixtures extends Fixture
+class ImageAdminFixtures extends Fixture implements FixtureGroupInterface
 {
     private $faker;
 
@@ -33,6 +35,11 @@ class ImageAdminFixtures extends Fixture
         $manager->flush();
 
         $this->addReference(self::IMAGE_ADMIN_REFERENCE, $image);
+    }
+
+    public static function getGroups(): array
+    {
+        return ["group1","group2"];
     }
 
 

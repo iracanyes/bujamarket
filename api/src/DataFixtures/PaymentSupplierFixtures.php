@@ -3,12 +3,13 @@
 namespace App\DataFixtures;
 
 use App\Entity\Payment;
+use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use \Faker\Factory;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 
-class PaymentSupplierFixtures extends Fixture implements DependentFixtureInterface
+class PaymentSupplierFixtures extends Fixture implements DependentFixtureInterface, FixtureGroupInterface
 {
     private $faker;
 
@@ -53,4 +54,11 @@ class PaymentSupplierFixtures extends Fixture implements DependentFixtureInterfa
             BillSupplierFixtures::class,
         );
     }
+
+    public static function getGroups(): array
+    {
+        return ["group1","group2"];
+    }
+
+
 }
