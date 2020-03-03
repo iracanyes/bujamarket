@@ -3,13 +3,14 @@
 namespace App\DataFixtures;
 
 use App\Entity\SupplierProduct;
+use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use \Faker\Factory;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\Persistence\ObjectManager;
-ini_set('memory_limit', '1024M');
+use Doctrine\Persistence\ObjectManager;
+ini_set('memory_limit', '2500M');
 
-class SupplierProductFixtures extends Fixture implements DependentFixtureInterface
+class SupplierProductFixtures extends Fixture implements DependentFixtureInterface, FixtureGroupInterface
 {
     public const SUPPLIER_PRODUCT_REFERENCE = 'supplierProduct';
 
@@ -58,5 +59,10 @@ class SupplierProductFixtures extends Fixture implements DependentFixtureInterfa
             CategoryFixtures::class,
         );
 
+    }
+
+    public static function getGroups(): array
+    {
+        return ["group1","group2"];
     }
 }

@@ -3,12 +3,13 @@
 namespace App\DataFixtures;
 
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use App\Entity\Address;
 use \Faker\Factory;
 
-class AddressShipperFixtures extends Fixture implements DependentFixtureInterface
+class AddressShipperFixtures extends Fixture implements DependentFixtureInterface, FixtureGroupInterface
 {
     public const ADDRESS_SHIPPER_REFERENCE = "addressShipper";
     /**
@@ -55,5 +56,10 @@ class AddressShipperFixtures extends Fixture implements DependentFixtureInterfac
         return array(
             ShipperFixtures::class,
         );
+    }
+
+    public static function getGroups(): array
+    {
+        return ["group1","group2"];
     }
 }

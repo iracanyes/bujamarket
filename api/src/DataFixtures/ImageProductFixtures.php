@@ -3,12 +3,13 @@
 namespace App\DataFixtures;
 
 use App\Entity\Image;
+use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use \Faker\Factory;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 
-class ImageProductFixtures extends Fixture implements DependentFixtureInterface
+class ImageProductFixtures extends Fixture implements DependentFixtureInterface, FixtureGroupInterface
 {
     private $faker;
 
@@ -45,4 +46,10 @@ class ImageProductFixtures extends Fixture implements DependentFixtureInterface
             ProductFixtures::class,
         );
     }
+
+    public static function getGroups(): array
+    {
+        return ["group1","group2"];
+    }
+
 }

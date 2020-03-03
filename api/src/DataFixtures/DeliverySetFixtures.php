@@ -3,12 +3,13 @@
 namespace App\DataFixtures;
 
 use App\Entity\DeliverySet;
+use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use \Faker\Factory;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 
-class DeliverySetFixtures extends Fixture implements DependentFixtureInterface
+class DeliverySetFixtures extends Fixture implements DependentFixtureInterface, FixtureGroupInterface
 {
     /**
      * @var \Faker\Factory
@@ -51,4 +52,10 @@ class DeliverySetFixtures extends Fixture implements DependentFixtureInterface
             ShipperFixtures::class,
         );
     }
+
+    public static function getGroups(): array
+    {
+        return ["group1","group2"];
+    }
+
 }

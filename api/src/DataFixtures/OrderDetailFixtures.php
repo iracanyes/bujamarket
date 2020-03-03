@@ -3,12 +3,13 @@
 namespace App\DataFixtures;
 
 use App\Entity\OrderDetail;
+use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use \Faker\Factory;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 
-class OrderDetailFixtures extends Fixture implements DependentFixtureInterface
+class OrderDetailFixtures extends Fixture implements DependentFixtureInterface, FixtureGroupInterface
 {
     public const ORDER_DETAIL_REFERENCE = 'orderDetail';
 
@@ -48,5 +49,11 @@ class OrderDetailFixtures extends Fixture implements DependentFixtureInterface
             SupplierProductFixtures::class,
         );
     }
+
+    public static function getGroups(): array
+    {
+        return ["group1","group2"];
+    }
+
 
 }

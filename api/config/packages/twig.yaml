@@ -3,8 +3,10 @@ twig:
     debug: '%kernel.debug%'
     strict_variables: '%kernel.debug%'
     globals:
-        # Si on utilise Docker pour monter l'API dans un container, 
-        # il faut décommenter ces informations après la procédure de montage des containers
+        # This parameters are not available when Docker build the php container
+        # Error : EnvVarProcessor - Environment variable are not available 
+        # Uncomment after building the docker container 
+        # 
         #APP_OWNER_ADDRESS: '%env(APP_OWNER_ADDRESS)%'
         #APP_OWNER_PHONE_NUMBER: '%env(APP_OWNER_PHONE_NUMBER)%'
         #APP_OWNER_CONTACT_EMAIL: '%env(APP_OWNER_CONTACT_EMAIL)%'

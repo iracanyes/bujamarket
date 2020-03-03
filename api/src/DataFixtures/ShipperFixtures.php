@@ -3,11 +3,12 @@
 namespace App\DataFixtures;
 
 use App\Entity\Shipper;
+use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use \Faker\Factory;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 
-class ShipperFixtures extends Fixture
+class ShipperFixtures extends Fixture implements FixtureGroupInterface
 {
     public const SHIPPER_REFERENCE = 'shipper';
 
@@ -42,6 +43,12 @@ class ShipperFixtures extends Fixture
 
         $this->addReference(self::SHIPPER_REFERENCE, $shipper);
     }
+
+    public static function getGroups(): array
+    {
+        return ["group1","group2"];
+    }
+
 
 
 }
