@@ -52,10 +52,10 @@ export function list(history, prevRoute) {
         dispatch(loading(false));
         dispatch(error(e.message));
 
-        if(e.code === 401)
+        if(/Unauthorized/.test(e))
         {
           sessionStorage.removeItem('flash-message-error');
-          sessionStorage.setItem('flash-message-error', JSON.parse({message: 'Authentification nécessaire!'}));
+          sessionStorage.setItem('flash-message-error', JSON.stringify({message: 'Authentification nécessaire!'}));
           history.push({pathname: 'login', state: {from: prevRoute}});
         }
       });

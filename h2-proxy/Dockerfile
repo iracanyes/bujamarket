@@ -2,7 +2,8 @@ FROM alpine:latest
 
 ARG cert_pass
 
-RUN apk add --no-cache openssl
+RUN apk update; \
+	apk add --no-cache openssl
 
 # Use this self-generated certificate only in dev, IT IS NOT SECURE!
 RUN openssl genrsa -des3 -passout pass:$cert_pass -out cert.pass.key 2048

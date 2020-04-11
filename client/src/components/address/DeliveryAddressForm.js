@@ -40,7 +40,7 @@ class DeliveryAddressForm extends React.Component {
     this.showFormNewAddress = this.showFormNewAddress.bind(this);
   }
 
-  componentWillMount() {
+  componentDidMount() {
     /* Si token existant, on charge les adresses existantes. Sinon redirection vers la page de connexion */
     if(localStorage.getItem('token') !== null )
     {

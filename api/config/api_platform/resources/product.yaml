@@ -26,7 +26,7 @@ App\Entity\Product:
             path: '/product/create'
             requirements:
                 product: App\Entity\Product
-            access_control: "has_role('ROLE_SUPPLIER') and is_granted('IS_AUTHENTICATED_FULLY')"
+            access_control: "is_granted('ROLE_SUPPLIER') and is_granted('IS_AUTHENTICATED_FULLY')"
             schemes: ['https']
             controller: App\Controller\Product\CreateProduct::class
     itemOperations:
@@ -46,14 +46,14 @@ App\Entity\Product:
             path: '/product/{id}'
             requirements:
                 id: '\d+'
-            access_control: 'has_role("ROLE_SUPPLIER") and is_granted("IS_AUTHENTICATED_FULLY")'
+            access_control: 'is_granted("ROLE_SUPPLIER") and is_granted("IS_AUTHENTICATED_FULLY")'
             schemes: ['https']
         delete:
             method: 'DELETE'
             path: '/product/{id}'
             requirements:
                 id: '\d+'
-            access_control: 'has_role("ROLE_ADMIN") and is_granted("IS_AUTHENTICATED_FULLY")'
+            access_control: 'is_granted("ROLE_ADMIN") and is_granted("IS_AUTHENTICATED_FULLY")'
             schemes: ['https']
     subresourceOperations:
         images_get_subresource:

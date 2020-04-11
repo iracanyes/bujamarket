@@ -12,14 +12,14 @@ App\Entity\Image:
                 _format: 'json'
             # host: 'localhost'
             schemes: ['https']
-            access_control: "has_role('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
+            access_control: "is_granted('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
             #options:
             #    my_option: 'my_option_value'
             status: 200 # customize the HTTP status code to send
         #post:
         #    method: 'POST'
         #    path: '/image/create'
-        #    access_control: "has_role('ROLE_MEMBER') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
+        #    access_control: "is_granted('ROLE_MEMBER') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
         #    schemes: ['https']
         #    controller: App\Controller\Image\CreateImage::class
     itemOperations:
@@ -41,12 +41,12 @@ App\Entity\Image:
         #    path: '/image/{id}'
         #    requirements:
         #        id: '\d+'
-        #    access_control: 'has_role("ROLE_MEMBER") and is_granted("IS_AUTHENTICATED_REMEMBERED")'
+        #    access_control: 'is_granted("ROLE_MEMBER") and is_granted("IS_AUTHENTICATED_REMEMBERED")'
         #    schemes: ['https']
         delete:
             method: 'DELETE'
             path: '/image/{id}'
             requirements:
                 id: '\d+'
-            access_control: 'has_role("ROLE_MEMBER") and is_granted("IS_AUTHENTICATED_REMEMBERED")'
+            access_control: 'is_granted("ROLE_MEMBER") and is_granted("IS_AUTHENTICATED_REMEMBERED")'
             schemes: ['https']

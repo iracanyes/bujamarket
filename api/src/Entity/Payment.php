@@ -38,7 +38,7 @@ class Payment
      * @var \DateTime $dateCreated Date when this payment was made
      *
      * @ORM\Column(type="datetime")
-     * @Assert\DateTime()
+     * @Assert\Type("DateTime")
      * @Groups({"payment:output"})
      */
     private $dateCreated;

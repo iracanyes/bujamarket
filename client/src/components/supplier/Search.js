@@ -46,7 +46,7 @@ class Search extends Component {
     );
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentDidUpdate(nextProps) {
     let options = {method: "GET"};
 
     if(this.props.page !== nextProps.page)

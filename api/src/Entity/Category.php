@@ -53,7 +53,7 @@ class Category
      * @var \DateTime $dateCreated When the category was created
      *
      * @ORM\Column(type="datetime")
-     * @Assert\DateTime()
+     * @Assert\Type("DateTime")
      * @Groups({"category:output","product:output"})
      */
     private $dateCreated;

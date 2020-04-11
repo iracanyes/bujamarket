@@ -42,7 +42,7 @@ class DeliveryDetail
      * @var \DateTime $dateCreated Date when this delivery detail was created
      *
      * @ORM\Column(type="datetime")
-     * @Assert\DateTime()
+     * @Assert\Type("DateTime")
      */
     private $dateCreated;
 

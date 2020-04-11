@@ -43,6 +43,8 @@
   "app.page.product.title": "Produit",
   "app.page.shopping_card.shopping_card_validation": "Validation du panier de commande",
   "app.page.supplier_product.title.add_product": "Ajouter un produit",
+  "app.page.supplier_product.follow_us": "Suivez-nous",
+  "app.page.supplier_product.form.contact_supplier": "Contactez le fournisseur",
   "app.product.item.existingProducts": "Produits existants",
   "app.product.item.price_from": "À partir de",
   "app.page.user.login.title": "Connexion",

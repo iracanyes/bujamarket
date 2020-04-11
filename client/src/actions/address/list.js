@@ -31,8 +31,10 @@ export function list(history, prevRoute) {
     fetch('my_addresses', {headers: headers})
       .then(response => {
 
-        if (response.status === 401) {
-          history.push('login');
+        console.log(response);
+
+        if (response.code === 401) {
+          history.push({pathname: 'login', state: {from: window.location.pathname }});
         }
 
         return response
@@ -57,8 +59,10 @@ export function list(history, prevRoute) {
         dispatch(loading(false));
         dispatch(error(e.message));
 
+        console.log(e);
+
         /* Si une authentification est requise, redirection vers la page de connexion */
-        if(/Full authentication/.test(e))
+        if(/Full authentication/.test(e) || /Expired JWT Token/.test(e) || /Unauthorized/.test(e))
         {
           history.push({pathname: 'login', state: {from: window.location.pathname }});
         }

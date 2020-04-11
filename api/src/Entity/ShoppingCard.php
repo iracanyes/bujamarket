@@ -31,7 +31,7 @@ class ShoppingCard
     /**
      * @var \DateTime $dateCreated Date of creation of this shopping card
      * @ORM\Column(type="datetime")
-     * @Assert\DateTime()
+     * @Assert\Type("DateTime")
      * @Groups({"shopping_card:output"})
      */
     private $dateCreated;

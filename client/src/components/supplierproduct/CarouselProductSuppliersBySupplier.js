@@ -100,7 +100,7 @@ class CarouselProductSuppliers extends Component {
   showProductSuppliers()
   {
 
-    const { intl } = this.props;
+    //const { intl } = this.props;
 
     const productSuppliers = this.props.retrieved && this.props.retrieved['hydra:member'];
 

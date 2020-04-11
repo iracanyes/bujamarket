@@ -34,7 +34,7 @@ class Message
      * @var \DateTime $dateCreated Date when this message was written
      *
      * @ORM\Column(type="datetime")
-     * @Assert\DateTime()
+     * @Assert\Type("DateTime")
      */
     private $dateCreated;
 

@@ -28,7 +28,7 @@ class ButtonAddShoppingCard extends React.Component {
     this.deleteProduct = this.deleteProduct.bind(this);
   }
 
-  componentWillMount() {
+  componentDidMount() {
     const { modal, quantity} = this.state;
 
     this.setState({

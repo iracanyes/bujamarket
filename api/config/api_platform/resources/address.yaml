@@ -46,7 +46,7 @@ App\Entity\Address:
                 _format: 'json'
                 _api_receive: false
             schemes: ['https']
-            access_control: 'has_role("ROLE_MEMBER") and is_granted("IS_AUTHENTICATED_FULLY")'
+            access_control: 'is_granted("ROLE_MEMBER") and is_granted("IS_AUTHENTICATED_FULLY")'
             controller: App\Controller\Address\GetAddressesAction
         put:
             method: 'PUT'
@@ -60,5 +60,5 @@ App\Entity\Address:
             path: '/address/{id}'
             requirements:
                 id: '\d+'
-            access_control: "is_granted('IS_AUTHENTICATED_FULLY') and has_role('ROLE_CUSTOMER')"
+            access_control: "is_granted('IS_AUTHENTICATED_FULLY') and is_granted('ROLE_CUSTOMER')"
             schemes: ['https']

@@ -57,7 +57,7 @@ class Bill
      * @var \DateTime $dateCreated Creation's date of this bill
      *
      * @ORM\Column(type="datetime")
-     * @Assert\DateTime()
+     * @Assert\Type("DateTime")
      * @Groups({"bill_customer:output","bill_refund:output","bill_supplier:output","payment:output"})
      */
     private $dateCreated;
@@ -66,7 +66,7 @@ class Bill
      * @var \DateTime $datePayment Date of the payment:output of this bill
      *
      * @ORM\Column(type="datetime", nullable=true)
-     * @Assert\DateTime()
+     * @Assert\Type("DateTime")
      * @Groups({"bill_customer:output","bill_refund:output","bill_supplier:output","payment:output"})
      */
     private $datePayment;

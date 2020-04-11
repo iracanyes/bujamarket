@@ -12,7 +12,7 @@ App\Entity\BillCustomer:
                 _format: 'json'
             # host: 'localhost'
             schemes: ['https']
-            access_control: "has_role('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_FULLY')"
+            access_control: "is_granted('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_FULLY')"
             #options:
             #    my_option: 'my_option_value'
             status: 200 # customize the HTTP status code to send
@@ -27,7 +27,7 @@ App\Entity\BillCustomer:
                 _format: 'json'
             # host: 'localhost'
             schemes: ['https']
-            access_control: "is_granted('IS_AUTHENTICATED_FULLY') and has_role('ROLE_CUSTOMER')"
+            access_control: "is_granted('IS_AUTHENTICATED_FULLY') and is_granted('ROLE_CUSTOMER')"
             #options:
             #    my_option: 'my_option_value'
             status: 200 # customize the HTTP status code to send
@@ -37,12 +37,12 @@ App\Entity\BillCustomer:
             defaults:
                 _api_receive: false
             schemes: ['https']
-            access_control: "is_granted('IS_AUTHENTICATED_FULLY') and has_role('ROLE_CUSTOMER')"
+            access_control: "is_granted('IS_AUTHENTICATED_FULLY') and is_granted('ROLE_CUSTOMER')"
             controller: App\Controller\BillCustomer\DownloadPdfAction
         delete:
             method: 'DELETE'
             path: '/customer_bill/{id}'
             requirements:
                 id: '\d+'
-            access_control: "is_granted('IS_AUTHENTICATED_FULLY') and has_role('ROLE_ADMIN')"
+            access_control: "is_granted('IS_AUTHENTICATED_FULLY') and is_granted('ROLE_ADMIN')"
             schemes: ['https']

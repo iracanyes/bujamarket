@@ -31,7 +31,7 @@ class Withdrawal
      * @var \DateTime $dateCreated Date when this withdrawal was created
      *
      * @ORM\Column(type="datetime")
-     * @Assert\DateTime()
+     * @Assert\Type("DateTime")
      */
     private $dateCreated;
 
