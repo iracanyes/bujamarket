@@ -12,7 +12,7 @@ App\Entity\User:
                 _format: 'json'
             # host: 'localhost'
             schemes: ['https']
-            access_control: "has_role('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_FULLY')"
+            access_control: "is_granted('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_FULLY')"
             #options:
             #    my_option: 'my_option_value'
             status: 200 # customize the HTTP status code to send
@@ -34,7 +34,7 @@ App\Entity\User:
                 _format: 'json'
             # host: 'localhost'
             schemes: ['https']
-            access_control: "has_role('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_FULLY')"
+            access_control: "is_granted('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_FULLY')"
             #options:
             #    my_option: 'my_option_value'
             status: 200 # customize the HTTP status code to send
@@ -44,12 +44,12 @@ App\Entity\User:
             path: '/user/{id}'
             requirements:
                 id: '\d+'
-            access_control: 'has_role("ROLE_MEMBER") and is_granted("IS_AUTHENTICATED_FULLY")'
+            access_control: 'is_granted("ROLE_MEMBER") and is_granted("IS_AUTHENTICATED_FULLY")'
             schemes: ['https']
         delete:
             method: 'DELETE'
             path: '/user/{id}'
             requirements:
                 id: '\d+'
-            access_control: 'has_role("ROLE_ADMIN") and is_granted("IS_AUTHENTICATED_FULLY")'
+            access_control: 'is_granted("ROLE_ADMIN") and is_granted("IS_AUTHENTICATED_FULLY")'
             schemes: ['https']

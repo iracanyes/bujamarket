@@ -47,7 +47,7 @@ class PaymentSuccess extends Component {
     this.download = this.download.bind(this);
   }
 
-  componentWillMount() {
+  componentDidMount() {
     // Suppression du panier de commande
     localStorage.removeItem('shopping_card');
 

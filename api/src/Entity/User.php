@@ -117,7 +117,7 @@ class User implements UserInterface
      * @var \DateTime $dateRegistration Date of registration
      *
      * @ORM\Column(type="datetime")
-     * @Assert\DateTime()
+     * @Assert\Type("DateTime")
      * @Groups({"profile:output","user:output","admin:output","customer:output","supplier:output"})
      */
     private $dateRegistration;

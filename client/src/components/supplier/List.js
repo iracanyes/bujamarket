@@ -31,7 +31,7 @@ class List extends Component {
     );
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentDidUpdate(nextProps) {
     if (this.props.match.params.page !== nextProps.match.params.page)
       nextProps.list(
         nextProps.match.params.page &&

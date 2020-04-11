@@ -38,6 +38,7 @@ class FavoriteHandler
     public function getIds()
     {
         try{
+            // If an authenticated user exists, get the ids of supplier's product liked by this user the favorite
             if($this->security->getUser() !== null)
             {
                 $ids = $this->em->getRepository(Favorite::class)

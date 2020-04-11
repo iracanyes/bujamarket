@@ -1,4 +1,4 @@
-import { SubmissionError } from 'redux-form';
+//import { SubmissionError } from 'redux-form';
 import { fetch } from '../../utils/dataAccess';
 
 export function error(error) {

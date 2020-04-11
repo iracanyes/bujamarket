@@ -11,14 +11,14 @@ App\Entity\DeliverySet:
                 _format: 'json'
             # host: 'localhost'
             schemes: ['https']
-            access_control: "has_role('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_FULLY')"
+            access_control: "is_granted('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_FULLY')"
             #options:
             #    my_option: 'my_option_value'
             status: 200 # customize the HTTP status code to send
         post:
             method: 'POST'
             path: '/delivery_set/create'
-            access_control: "has_role('ROLE_CUSTOMER') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
+            access_control: "is_granted('ROLE_CUSTOMER') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
             schemes: ['https']
             controller: App\Controller\DeliverySet\CreateDeliverySet::class
     itemOperations:
@@ -32,7 +32,7 @@ App\Entity\DeliverySet:
                 _format: 'json'
             # host: 'localhost'
             schemes: ['https']
-            access_control: "has_role('ROLE_CUSTOMER') and is_granted('IS_AUTHENTICATED_FULLY')"
+            access_control: "is_granted('ROLE_CUSTOMER') and is_granted('IS_AUTHENTICATED_FULLY')"
             #options:
             #    my_option: 'my_option_value'
             status: 200 # customize the HTTP status code to send        
@@ -41,12 +41,12 @@ App\Entity\DeliverySet:
             path: '/delivery_set/{id}'
             requirements:
                 id: '\d+'
-            access_control: 'has_role("ROLE_CUSTOMER") and is_granted("IS_AUTHENTICATED_REMEMBERED")'
+            access_control: 'is_granted("ROLE_CUSTOMER") and is_granted("IS_AUTHENTICATED_REMEMBERED")'
             schemes: ['https']
         delete:
             method: 'DELETE'
             path: '/delivery_set/{id}'
             requirements:
                 id: '\d+'
-            access_control: 'has_role("ROLE_ADMIN") and is_granted("IS_AUTHENTICATED_FULLY")'
+            access_control: 'is_granted("ROLE_ADMIN") and is_granted("IS_AUTHENTICATED_FULLY")'
             schemes: ['https']

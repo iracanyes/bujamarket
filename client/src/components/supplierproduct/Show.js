@@ -17,9 +17,7 @@ class Show extends Component {
     retrieve: PropTypes.func.isRequired,
     reset: PropTypes.func.isRequired,
     deleteError: PropTypes.string,
-    deleteLoading: PropTypes.bool.isRequired,
     deleted: PropTypes.object,
-    del: PropTypes.func.isRequired
   };
 
   componentDidMount() {
@@ -126,14 +124,14 @@ class Show extends Component {
                         <div className="detail-gallery my-2">
                           <div className="detail-gallery-preview">
                             <a href="assets/img/tmp/gallery-1.jpg">
-                              <img src="https://picsum.photos/200/300" />
+                              <img src="https://picsum.photos/200/300" alt={item.product.title} />
                             </a>
                           </div>
 
                           <ul className="detail-gallery-index">
-                            {item.product.images.map(item => (
-                              <li className="detail-gallery-list-item active">
-                                <a data-target="assets/img/tmp/gallery-1.jpg">
+                            {item.product.images.map((item, index) => (
+                              <li className="detail-gallery-list-item active" key={index}>
+                                <a data-target="assets/img/tmp/gallery-1.jpg" >
                                   <img src="https://picsum.photos/200/300" alt="..." />
                                 </a>
                               </li>
@@ -812,6 +810,7 @@ const mapStateToProps = state => ({
   retrieved: state.supplierproduct.show.retrieved,
   error: state.supplierproduct.show.error,
   loading: state.supplierproduct.show.loading,
+  deleted: state.supplierproduct.show.deleted,
   eventSource: state.supplierproduct.show.eventSource,
 });
 

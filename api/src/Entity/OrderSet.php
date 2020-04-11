@@ -34,7 +34,7 @@ class OrderSet
     /**
      * @var \DateTime $dateCreated Creation's date of the order set
      * @ORM\Column(type="datetime")
-     * @Assert\DateTime()
+     * @Assert\Type("DateTime")
      * @Groups({"order_set:output"})
      */
     private $dateCreated;

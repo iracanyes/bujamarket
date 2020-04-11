@@ -11,14 +11,14 @@ App\Entity\DeliveryDetail:
                 _format: 'json'
             # host: 'localhost'
             schemes: ['https']
-            access_control: "has_role('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_FULLY')"
+            access_control: "is_granted('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_FULLY')"
             #options:
             #    my_option: 'my_option_value'
             status: 200 # customize the HTTP status code to send
         post:
             method: 'POST'
             path: '/delivery_detail/create'
-            access_control: "has_role('ROLE_CUSTOMER') and is_granted('IS_AUTHENTICATED_FULLY')"
+            access_control: "is_granted('ROLE_CUSTOMER') and is_granted('IS_AUTHENTICATED_FULLY')"
             schemes: ['https']
             controller: App\Controller\DeliveryDetail\CreateDeliveryDetail::class
     itemOperations:
@@ -32,7 +32,7 @@ App\Entity\DeliveryDetail:
                 _format: 'json'
             # host: 'localhost'
             schemes: ['https']
-            access_control: "has_role('ROLE_MEMBER') and is_granted('IS_AUTHENTICATED_FULLY')"
+            access_control: "is_granted('ROLE_MEMBER') and is_granted('IS_AUTHENTICATED_FULLY')"
             #options:
             #    my_option: 'my_option_value'
             status: 200 # customize the HTTP status code to send        
@@ -41,13 +41,13 @@ App\Entity\DeliveryDetail:
             path: '/delivery_detail/{id}'
             requirements:
                 id: '\d+'
-            access_control: 'has_role("ROLE_ADMIN") and is_granted("IS_AUTHENTICATED_FULLY")'
+            access_control: 'is_granted("ROLE_ADMIN") and is_granted("IS_AUTHENTICATED_FULLY")'
             schemes: ['https']
         delete:
             method: 'DELETE'
             path: '/delivery_detail/{id}'
             requirements:
                 id: '\d+'
-            access_control: 'has_role("ROLE_ADMIN") and is_granted("IS_AUTHENTICATED_FULLY")'
+            access_control: 'is_granted("ROLE_ADMIN") and is_granted("IS_AUTHENTICATED_FULLY")'
             schemes: ['https']
    

@@ -17,7 +17,7 @@ App\Entity\SupplierProduct:
         post:
             method: 'POST'
             path: '/supplier_product/create'
-            access_control: "has_role('ROLE_SUPPLIER') and is_granted('IS_AUTHENTICATED_FULLY')"
+            access_control: "is_granted('ROLE_SUPPLIER') and is_granted('IS_AUTHENTICATED_FULLY')"
             schemes: ['https']
             controller: App\Controller\SupplierProduct\CreateSupplierProductAction
             deserialize: false
@@ -59,14 +59,14 @@ App\Entity\SupplierProduct:
             path: '/supplier_product/{id}'
             requirements:
                 id: '\d+'
-            access_control: 'has_role("ROLE_SUPPLIER")  and is_granted("IS_AUTHENTICATED_FULLY")'
+            access_control: 'is_granted("ROLE_SUPPLIER")  and is_granted("IS_AUTHENTICATED_FULLY")'
             schemes: ['https']
         delete:
             method: 'DELETE'
             path: '/supplier_product/{id}'
             requirements:
                 id: '\d+'
-            access_control: 'has_role("ROLE_SUPPLIER")  and is_granted("IS_AUTHENTICATED_FULLY")'
+            access_control: 'is_granted("ROLE_SUPPLIER")  and is_granted("IS_AUTHENTICATED_FULLY")'
             schemes: ['https']
     subresourceOperations:
         supplier_get_subresource:

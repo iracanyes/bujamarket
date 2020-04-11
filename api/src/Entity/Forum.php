@@ -57,7 +57,7 @@ class Forum
      * @var \DateTime $dateCreated Date when this forum subject was created
      *
      * @ORM\Column(type="datetime")
-     * @Assert\DateTime()
+     * @Assert\Type("DateTime")
      */
     private $dateCreated;
 

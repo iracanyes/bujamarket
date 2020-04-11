@@ -57,6 +57,7 @@ export function retrieveIds(history) {
 
     /* Récupération de la clé JWT et ajout au header de la requête */
     const userToken = JSON.parse(localStorage.getItem('token'));
+
     /* Ajout du header */
     let headers = new Headers();
     if(userToken !== null)
@@ -103,8 +104,12 @@ export function retrieveIds(history) {
 
         if( /Unauthorized/.test(e))
         {
+          /* Création du message d'avertissement */
           sessionStorage.removeItem('flash-message-error');
           sessionStorage.setItem('flash-message-error', JSON.stringify({message: "Authentification nécessaire avant de continuer!"}));
+          /* Suppression du token de sécurité actuel  */
+          localStorage.removeItem("token");
+          /* Redirection vers la page de connexion */
           history.push({pathname: '../../login', state: { from: window.location.pathname}});
         }
 

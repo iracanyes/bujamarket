@@ -3,25 +3,25 @@
 # https://docs.docker.com/compose/compose-file/#target
 #
 # https://docs.docker.com/engine/reference/builder/#understand-how-arg-and-from-interact
-<<<<<<< HEAD
+
 ARG PHP_VERSION=7.4.2
 ARG NGINX_VERSION=1.17
-=======
-ARG PHP_VERSION=7.4
-ARG NGINX_VERSION=1.15
->>>>>>> origin/dev-2020
+
 ARG VARNISH_VERSION=6.2
 #
 # "php" stage
 FROM php:${PHP_VERSION}-fpm-alpine AS api_platform_php
-<<<<<<< HEAD
 
 # Update package manager
 RUN apk update
 
-=======
-#
->>>>>>> origin/dev-2020
+# Setting the timezone : Europe/Brussels
+RUN apk add tzdata; \
+	ls /usr/share/zoneinfo; \
+	cp /usr/share/zoneinfo/Europe/Brussels /etc/localtime
+RUN	echo "Europe/Brussels" > /etc/timezone; \
+	date
+
 # persistent / runtime deps
 
 RUN apk add --no-cache \

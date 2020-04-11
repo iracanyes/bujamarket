@@ -29,7 +29,7 @@ class Show extends React.Component {
     this.onSubmit = this.onSubmit.bind(this);
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.setState({update: false});
     if(localStorage.getItem('token'))
     {

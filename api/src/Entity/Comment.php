@@ -47,7 +47,7 @@ class Comment
      * @var \DateTime $dateCreated Date when the comment was created
      *
      * @ORM\Column(type="datetime")
-     * @Assert\DateTime()
+     * @Assert\Type("DateTime")
      */
     private $dateCreated;
 
