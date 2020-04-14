@@ -23,7 +23,8 @@ export function list(page = 'products') {
     dispatch(loading(true));
     dispatch(error(''));
 
-    fetch(page)
+
+    fetch(page !== 'products' && page !== null  ? 'products?page='+ page : "products")
       .then(response => {
 
         return response

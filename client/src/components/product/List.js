@@ -35,19 +35,16 @@ class List extends Component {
   componentDidMount() {
     this._isMounted = true;
 
-    /*
-    console.log(this.props.match.params.page &&
-      decodeURIComponent(this.props.match.params.page));
+    // Récupération des paramètres d'URL
+    const params = new URLSearchParams(this.props.location.search);
 
-    console.log("Products component did mount - retrieved",this.props.retrieved);
-    console.log("Products - retrieved typeof", typeof this.props.retrieved);
-    */
 
+    // Récupération des produits
     if(this.props.retrieved === null)
     {
       this.props.list(
-        this.props.match.params.page &&
-        decodeURIComponent(this.props.match.params.page)
+        params.get('page') &&  params.get('page') !== null &&
+        decodeURIComponent(params.get('page'))
       );
     }
 
@@ -74,8 +71,6 @@ class List extends Component {
     const products = this.props.retrieved && this.props.retrieved["hydra:member"];
 
 
-    console.log("Résultats produits", products);
-
     let rows = [];
 
     for(let i = 0; i < Math.ceil(products.length / 12 ); i++)
@@ -85,7 +80,7 @@ class List extends Component {
 
       for(let j = 0; j < 12; j++)
       {
-        console.log("Résultats produits " + j, products[i * 12 + j]);
+
 
         if(products[i * 12 + j])
         {
@@ -218,8 +213,7 @@ class List extends Component {
   }
 
   renderLinks = (type, items) => {
-    console.log("renderLinks - items",items);
-    console.log("renderLinks - type" + type);
+
     if(items === undefined) return;
 
     if (Array.isArray(items)) {

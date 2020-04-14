@@ -17,7 +17,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
        "normalization_context"={"groups"={"supplier:output"}},
  *     "denormalization_context"={"groups"={"supplier:input"}}
  * })
- * @ApiFilter(SearchFilter::class, properties={"socialReason":"partial"})
+ * @ApiFilter(SearchFilter::class, properties={"brandName":"partial"})
  * @ORM\Table(name="bjmkt_supplier")
  * @ORM\Entity(repositoryClass="App\Repository\SupplierRepository")
  */

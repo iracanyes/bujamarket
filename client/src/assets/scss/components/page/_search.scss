@@ -1,4 +1,4 @@
-/* Product & Supplier search component */
+ /* Product & Supplier search component */
 div#search-results-component{
     display: none;
 
@@ -15,7 +15,24 @@ div#search-results-component{
     }
     /* Body du composant d'affichage des résultats de recherche produits/fournisseurs */
     div#search-results{
+        div.card
+        {
+            margin: 0.5rem 0.2rem;
 
+            img.card-img-top{
+                height: 12rem;
+            }
+
+            div.card-title{
+                margin: 0.70rem auto;
+                font-weight: bold;
+            }
+
+            & > a{
+
+            }
+
+        }
 
         div#search-results-items{
             div.card

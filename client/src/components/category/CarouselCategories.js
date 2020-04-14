@@ -100,12 +100,15 @@ class CarouselCategories extends Component {
 
     let rows = [];
 
+
+
     for(let i = 0; i < Math.ceil(categories.length / 12 ); i++)
     {
 
       let resultsPer12 = [];
 
-      for(let j = 0; j < 12; j++)
+
+      for(let j = 0; (i !== 0 && j < 12) || j < 11; j++)
       {
         if(process.env.DEBUG === 1 )
         {
@@ -113,9 +116,9 @@ class CarouselCategories extends Component {
         }
 
 
-
         if(j === 0 && i === 0)
         {
+          // Ajout de tous les catégories de produit
           resultsPer12.push(
             <Col key={"categories" + (i * 12 + j)} xs={"12"} sm="6" md="4" lg="3">
               <Card body className={" text-white bg-dark"}>
@@ -150,13 +153,59 @@ class CarouselCategories extends Component {
               </Card>
             </Col>
           );
+
+          // Ajout de la première catégorie de produit
+          resultsPer12.push(
+            <Col key={"categories" + (i * 12 + j + 1)} xs={"12"} sm="6" md="4" lg="3">
+              <Card body className={" text-white bg-dark"}>
+                <Link
+
+                  to={`categories/show/${encodeURIComponent(categories[i * 12 + j]['id'])}`}
+                >
+                  <div className="card-img-custom">
+                    <img src={categories[i * 12 + j]["image"]['url']} alt={categories[i * 12 + j]["image"]["alt"]} className="image img-fluid" style={{ width:"100%"}} />
+                    <div className="middle">
+                      <div className="btn btn-outline-info text">
+                        <FormattedMessage  id={"app.page.customer.list.button.see_more"}
+                                           defaultMessage="Voir plus"
+                                           description="Customers list - button see more"
+                        />
+                      </div>
+
+                    </div>
+                    <CardTitle className={"image-bottom-left-title"}>
+
+                      <span className="font-weight-bold">
+
+                        {/* Permet d'injecter la traduction d'une valeur reçu par une entité
+                          intl.formatMessage({
+                            id: "app.category.item"+categories[i * 12 + j]["id"]+".name",
+                            description: "category item - name for item "+categories[i * 12 + j]["id"],
+                            defaultMessage: categories[i * 12 + j]["name"]
+                          })
+                        */}
+                        {categories[i * 12 + j]["name"]}
+                      </span>
+
+
+                    </CardTitle>
+                  </div>
+                </Link>
+
+
+
+
+              </Card>
+            </Col>
+          );
+
         }
 
-        if(j > 0 && categories[i * 12 + j])
+        if(j > 0 && categories[i * 12 + j + 2])
         {
 
           resultsPer12.push(
-            <Col key={"categories" + (i * 12 + j)} xs={"12"} sm="6" md="4" lg="3">
+            <Col key={"categories" + (i * 12 + j + 2)} xs={"12"} sm="6" md="4" lg="3">
               <Card body className={" text-white bg-dark"}>
                 <Link
 
@@ -209,7 +258,7 @@ class CarouselCategories extends Component {
           key={i}
         >
           <Row
-            key={"rows" + (i)}
+            key={"category_rows" + (i)}
           >
             {resultsPer12}
           </Row>

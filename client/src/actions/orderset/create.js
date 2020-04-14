@@ -37,7 +37,7 @@ export function create(values, history, locationState) {
 
         if (hubURL) dispatch(mercureSubscribe(hubURL, retrieved['@id']));
 
-        console.log('retrieved', retrieved);
+
         /* Redirection vers la page de paiement  */
         sessionStorage.removeItem('my_order');
         sessionStorage.setItem('my_order', JSON.stringify(retrieved));

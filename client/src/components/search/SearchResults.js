@@ -4,6 +4,8 @@
  * Description: Composant d'affichage des résultats de recherche
  */
 import React, { Component, Fragment } from "react";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
 import { Card, CardImg, CardText, CardTitle, Col, Row } from "reactstrap";
 import { Link } from "react-router-dom";
 import { FormattedMessage } from "react-intl";
@@ -13,6 +15,17 @@ import {
 } from 'reactstrap';
 
 class SearchResults extends  Component{
+  static propTypes = {
+    retrievedProducts : PropTypes.object,
+    loadingProducts: PropTypes.bool.isRequired,
+    errorProducts: PropTypes.string,
+    eventSourceProducts: PropTypes.instanceOf(EventSource),
+    retrievedSuppliers : PropTypes.object,
+    loadingSuppliers: PropTypes.bool.isRequired,
+    errorSuppliers: PropTypes.string,
+    eventSourceSuppliers: PropTypes.instanceOf(EventSource)
+  };
+
   constructor(props)
   {
     super(props);
@@ -23,6 +36,7 @@ class SearchResults extends  Component{
   }
 
   componentDidMount() {
+
     this.setState({results: this.props.results});
   }
 
@@ -30,129 +44,220 @@ class SearchResults extends  Component{
 
   showResultsProducts()
   {
+
     let items = [];
-
-    const products = this.props.results && this.props.results.searchResults;
-
     let rows = [];
+    let resultsPer4 = [];
 
-    for(let i = 0; i < Math.ceil(products.length / 12 ); i++)
+    // Récupération des données
+    const products = this.props.retrievedProducts && this.props.retrievedProducts['hydra:member'];
+
+    // key index pour les items
+    let index = 0;
+
+    if(this.props.loadingProducts)
     {
+      items.push(<Spinner id={'search-spinner-loading'} type={"grow"} color={'primary'} className={'mx-auto m-5'} key={index++}></Spinner>);
+    }else{
 
-      let resultsPer4 = [];
 
-      for(let j = 0; j < 12; j++)
+      if(!products || products.length === 0)
       {
+        resultsPer4.push(
+          <Col key={"products0"} xs={"12"} sm="6" md="4" lg="3">
+            <Card body>
 
-        if(products[i * 12 + j])
+              <CardImg top width="100%" src="https://picsum.photos/2000/3000" alt={"Aucun produit trouvé"} />
+              <CardTitle>Aucun produit trouvé</CardTitle>
+              <CardText>
+                <FormattedMessage  id={"app.search.product_notfound"}
+                                   defaultMessage="Aucun produit trouvé"
+                                   description="Products item - product not found"
+                /> &nbsp;: &nbsp;
+                0.00 &euro;
+              </CardText>
+              <Link
+                to={`../../products}`}
+                className={"btn btn-outline-primary"}
+              >
+                Voir la liste des produits
+              </Link>
+            </Card>
+          </Col>
+        );
+
+        rows.push(
+          <Row key={"row0"}>
+            {resultsPer4}
+          </Row>
+        );
+
+        console.log('rows', rows);
+
+        items.push(
+          <div id="search-results-items"
+               className={"list-card-by-4"}
+               key={index++}
+          >
+            {rows}
+          </div>
+        );
+
+
+      }else{
+
+
+        for(let i = 0; i < Math.ceil(products.length / 12 ); i++)
         {
 
-          resultsPer4.push(
-            <Col key={"products" + (i * 12 + j)} xs={"12"} sm="6" md="4" lg="3">
-              <Card body>
+          for(let j = 0; j < 12; j++)
+          {
 
-                <CardImg top width="100%" src="https://picsum.photos/2000/3000" alt={products[i * 12 + j].images[0].alt} />
-                <CardTitle>{products[i * 12 + j]["title"]}</CardTitle>
-                <CardText>
-                  <FormattedMessage  id={"app.product.item.price_from"}
-                                     defaultMessage="À partir de"
-                                     description="Products item - price from"
-                  /> &nbsp;: &nbsp;
-                  {products[i * 10 + j]["minimumPrice"].toFixed(2)} &euro;
-                </CardText>
-                <Link
-                  to={`../../products/show/${encodeURIComponent(products[i * 12 + j]['id'])}`}
-                  className={"btn btn-outline-primary"}
-                >
-                  Voir le détail
-                </Link>
-              </Card>
-            </Col>
+            if(products[i * 12 + j])
+            {
+
+              resultsPer4.push(
+                <Col key={"products" + (i * 12 + j)} xs={"12"} sm="6" md="4" lg="3">
+                  <Card body>
+
+                    <CardImg top width="100%" src="https://picsum.photos/2000/3000" alt={products[i * 12 + j].images[0].alt} />
+                    <CardTitle>{products[i * 12 + j]["title"]}</CardTitle>
+                    <CardText>
+                      <FormattedMessage  id={"app.product.item.price_from"}
+                                         defaultMessage="À partir de"
+                                         description="Products item - price from"
+                      /> &nbsp;: &nbsp;
+                      {products[i * 10 + j]["minimumPrice"].toFixed(2)} &euro;
+                    </CardText>
+                    <Link
+                      to={`../../products/show/${encodeURIComponent(products[i * 12 + j]['id'])}`}
+                      className={"btn btn-outline-primary"}
+                    >
+                      Voir le détail
+                    </Link>
+                  </Card>
+                </Col>
+              );
+            }
+
+          }
+
+          rows.push(
+            <Row key={"rows" + (i)}>
+              {resultsPer4}
+            </Row>
           );
         }
 
+        items.push(
+          <div id="search-results-items" className={"list-card-by-4"} key={index++}>
+            {rows}
+          </div>
+        );
       }
 
-      rows.push(
-        <Row key={"rows" + (i)}>
-          {resultsPer4}
-        </Row>
-      );
     }
 
-    let index = 0;
-    items.push(
-      <div id="search-results-items" className={"list-card-by-4"} key={index++}>
-        {rows}
-      </div>
-    );
 
     return items;
 
 
   }
+
 
   showResultsSuppliers()
   {
     let items = [];
-
-    const suppliers = this.props.results.searchResults && this.props.results.searchResults;
-
-
-
-
     let rows = [];
+    let index = 0;
 
-    for(let i = 0; i < Math.ceil(suppliers.length / 12 ); i++)
+    const suppliers = this.props.retrievedSuppliers && this.props.retrievedSuppliers['hydra:member'];
+
+    if(this.props.loadingSuppliers)
     {
-
-      let resultsPer4 = [];
-
-      for(let j = 0; j < 12; j++)
+      items.push(<Spinner id={'search-spinner-loading'} type={"grow"} color={'primary'} className={'mx-auto m-5'} key={index++}></Spinner>);
+    }else{
+      if(!suppliers || suppliers.length === 0)
       {
+        items.push(
+          <div id="search-results-items"
+               className={"list-card-by-4"}
+          >
+            <Row key={"row0"}>
+              <Col key={"products0"} xs={"12"} sm="6" md="4" lg="3">
+                <Card body>
 
-
-        if(suppliers[i * 12 + j])
+                  <CardImg top width="100%" src="https://picsum.photos/2000/3000" alt={"Aucun fournisseur trouvé"} />
+                  <CardTitle>Aucun fournisseur trouvé</CardTitle>
+                  <CardText>
+                    <FormattedMessage  id={"app.search.supplier_notfound"}
+                                       defaultMessage="Aucun fournisseur trouvé"
+                                       description="Supplier search - suppliers not found"
+                    /> &nbsp;: &nbsp;
+                    0.00 &euro;
+                  </CardText>
+                  <Link
+                    to={`../../products}`}
+                    className={"btn btn-outline-primary"}
+                  >
+                    Voir la liste des fournisseurs
+                  </Link>
+                </Card>
+              </Col>
+            </Row>
+          </div>
+        );
+      }else{
+        for(let i = 0; i < Math.ceil(suppliers.length / 12 ); i++)
         {
 
-          resultsPer4.push(
-            <Col key={"products" + (i * 10 + j)} xs={"12"} sm="6" md="4" lg="3">
-              <Card body>
-                {/*
-                <CardImg top width="100%" src={products[i * 10 + j].images[0].url} alt={products[i * 10 + j].images[0].alt} />
-                */}
-                <CardImg top width="100%" src="https://picsum.photos/2000/3000" alt={suppliers[i * 12 + j].image.alt} />
-                <CardTitle>{suppliers[i * 12 + j]["socialReason"]}</CardTitle>
-                <CardText>{suppliers[i * 12 + j]["contactPhoneNumber"]}</CardText>
-                <Link to={`../../suppliers/show/${encodeURIComponent(suppliers[i * 12 + j]['id'])}`}>
-                  Voir le détail
-                </Link>
-              </Card>
-            </Col>
+          let resultsPer4 = [];
+
+          for(let j = 0; j < 12; j++)
+          {
+
+
+            if(suppliers[i * 12 + j])
+            {
+
+              resultsPer4.push(
+                <Col key={"products" + (i * 10 + j)} xs={"12"} sm="6" md="4" lg="3">
+                  <Card body>
+                    {/*
+                    <CardImg top width="100%" src={products[i * 10 + j].images[0].url} alt={products[i * 10 + j].images[0].alt} />
+                    */}
+                    <CardImg top width="100%" src="https://picsum.photos/2000/3000" alt={suppliers[i * 12 + j].image.alt} />
+                    <CardTitle>{suppliers[i * 12 + j]["socialReason"]}</CardTitle>
+                    <CardText>{suppliers[i * 12 + j]["contactPhoneNumber"]}</CardText>
+                    <Link to={`../../suppliers/show/${encodeURIComponent(suppliers[i * 12 + j]['id'])}`}>
+                      Voir le détail
+                    </Link>
+                  </Card>
+                </Col>
+              );
+            }
+
+          }
+
+          rows.push(
+            <Row key={"rows" + (i * 10)}>
+              {resultsPer4}
+            </Row>
           );
         }
 
+        items.push(
+          <div id="search-results-items" key={index++}>
+            {rows}
+          </div>
+        );
       }
-
-      rows.push(
-        <Row key={"rows" + (i * 10)}>
-          {resultsPer4}
-        </Row>
-      );
     }
-
-    let index = 0;
-    items.push(
-      <div id="search-results-items" key={index++}>
-        {rows}
-      </div>
-    );
 
     return items;
 
 
   }
-
 
 
   pagination() {
@@ -228,15 +333,11 @@ class SearchResults extends  Component{
 
 
       <div id="search-results">
-        {
-          /* Affichage des résultats de produits */
-          results.searchType === "products" ? this.showResultsProducts() : ""
-        }
-        {
-          /* Affichage des résultats de fournisseurs */
-          results.searchType === "suppliers"
-            ? this.showResultsSuppliers() : ""
-        }
+
+        {results.searchType ==="products" ? this.showResultsProducts() : ""}
+
+        {results.searchType === "suppliers" ? this.showResultsSuppliers() : ""}
+
 
         {this.pagination()}
       </div>
@@ -245,4 +346,33 @@ class SearchResults extends  Component{
   }
 }
 
-export default SearchResults;
+const mapStateToProps = state => {
+  const {
+    retrieved: retrievedProducts,
+    loading: loadingProducts,
+    error: errorProducts,
+    eventSource: eventSourceProducts
+  } = state.product.search;
+
+  const {
+    retrieved: retrievedSuppliers,
+    loading: loadingSuppliers,
+    error: errorSuppliers,
+    eventSource: eventSourceSuppliers
+  } = state.supplier.search;
+
+  return {
+    retrievedProducts,
+    loadingProducts,
+    errorProducts,
+    eventSourceProducts,
+    retrievedSuppliers,
+    loadingSuppliers,
+    errorSuppliers,
+    eventSourceSuppliers
+  };
+};
+
+
+
+export default connect(mapStateToProps)(SearchResults);
