@@ -50,7 +50,7 @@ security:
         - { path: ^/admin/users, roles: ROLE_SUPER_ADMIN, requires_channel: https, ip: 127.0.0.1 }
         - { path: ^/admins, roles: ROLE_SUPER_ADMIN, requires_channel: https, host: localhost }
         - { path: ^/admin, roles: ROLE_ADMIN, requires_channel: https }
-        - { path: ^/suppliers, roles: ROLE_ADMIN, requires_channel: https, methods: [GET] }
+        - { path: ^/suppliers, roles: ROLE_MEMBER, requires_channel: https, methods: [GET] }
         - { path: ^/supplier_products, roles: IS_AUTHENTICATED_ANONYMOUSLY, methods: [GET]  }
         - { path: ^/supplier_product, roles: IS_AUTHENTICATED_ANONYMOUSLY, methods: [GET]  }
         - { path: ^/supplier_product, roles: ROLE_SUPPLIER, methods: [POST,PUT,DELETE] }

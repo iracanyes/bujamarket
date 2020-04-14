@@ -17,16 +17,34 @@ export function success(retrieved) {
   return { type: "PRODUCT_SEARCH_SUCCESS", retrieved };
 }
 
-export function search(page = "products", options) {
+export function search(searchParams = {}) {
   return dispatch => {
-    /**/
+
     dispatch(loading(true));
     dispatch(error(""));
 
+    let page = "products?";
 
+    if(searchParams.default)
+    {
+      page = page +"title="+ searchParams.default;
+    }
 
+    if(searchParams.resume)
+    {
+      if( page.charAt(page.length - 1 ) !== "?")
+        page += "&";
+      page = page + "resume="+ searchParams.resume
+    }
 
-    fetch( page, options )
+    if(searchParams.itemsPerPage)
+    {
+      if( page.charAt(page.length - 1 ) !== "?")
+        page += "&";
+      page = page + "itemsPerPage="+ searchParams.itemsPerPage
+    }
+
+    fetch( page )
       .then( response =>
         response.json().then( retrieved => {
 

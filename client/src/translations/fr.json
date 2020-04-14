@@ -52,6 +52,8 @@
   "app.page.user.subscribe.title": "Devenir membre",
   "app.form.delivery_address.existing_address": "Adresses enregistrées",
   "app.form.delivery_address.shipper": "Expéditeur",
+  "app.search.product_notfound": "Aucun produit trouvé",
+  "app.search.supplier_notfound": "Aucun fournisseur trouvé",
   "app.address.item.location_name": "Type d'adresse",
   "app.address.item.location_name.billing_address": "Adresse de facturation",
   "app.address.item.location_name.head_office": "Siège social",

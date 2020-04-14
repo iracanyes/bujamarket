@@ -42,18 +42,6 @@ class Search extends Component {
 
   componentDidMount() {
 
-    const MIME_TYPE =  "application/ld+json";
-    let headers = new Headers({
-      "Content-Type": MIME_TYPE,
-      "Accept": MIME_TYPE
-    }) ;
-
-
-    let options = {
-      method: "GET",
-      headers: headers,
-    };
-
     let urlParams = new URLSearchParams(window.location.search);
 
     //console.log(urlParams.get("title"));
@@ -61,8 +49,7 @@ class Search extends Component {
 
     urlParams.get("title") &&
       this.props.search(
-        "products?title=" + urlParams.get("title"),
-        options
+        "products?title=" + urlParams.get("title")
       );
 
   }
@@ -267,7 +254,7 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => ({
-  search: (page, options) => dispatch(search(page, options)),
+  search: (page) => dispatch(search(page)),
   reset: eventSource => dispatch(reset(eventSource))
 });
 

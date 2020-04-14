@@ -2,26 +2,28 @@
  * Author: iracanyes
  * Date: 29/07/2019
  * Description: Main Menu - Search Form V2
- * En utilisant la méthode HOC de React pour transmettre les données de la recherche vers le composant d'ordre supérieur "App" qui transmet ensuite les données au composant d'affichage "SearchResults"
+ * En utilisant la méthode HOC de React pour transmettre les paramètres de la recherche vers le composant d'ordre supérieur "App" qui transmet ensuite les paramètres au composant d'affichage "SearchResults".
+ * Les données DB seront acccessibles  via l'état de l'application
  */
 import React, { Component, Fragment} from "react";
 import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 import { Button, Form, FormGroup, Input } from "reactstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import PropTypes from "prop-types";
 import { FormattedMessage, injectIntl } from "react-intl";
-import { list as listProduct, reset as resetProduct } from "../../actions/product/list";
-import { list as listSupplier, reset as resetSupplier } from "../../actions/supplier/list";
+import { search as searchProduct, reset as resetProduct } from "../../actions/product/search";
+import { search as searchSupplier, reset as resetSupplier } from "../../actions/supplier/search";
 
 class MainMenuSearchForm extends Component
 {
   static propTypes = {
     retrievedProducts: PropTypes.object,
-    loadingProducts: PropTypes.bool.isRequired,
+    loadingProducts: PropTypes.bool,
     errorProducts: PropTypes.string,
     eventSourceProducts: PropTypes.instanceOf(EventSource),
     retrievedSuppliers: PropTypes.object,
-    loadingSuppliers: PropTypes.bool.isRequired,
+    loadingSuppliers: PropTypes.bool,
     errorSuppliers: PropTypes.string,
     eventSourceSuppliers: PropTypes.instanceOf(EventSource),
     searchProduct: PropTypes.func,
@@ -31,17 +33,15 @@ class MainMenuSearchForm extends Component
     onSearch: PropTypes.func
   };
 
-  /* Variable marquant le montage/démontage de l'application
-  * Permet d'éviter les memory leaks en transmettant les données alors que le composant est démonté
-  * */
-  _isMounted = false;
 
   constructor(props)
   {
     super(props);
     this.state = {
+      disabled: true,
       searchType: "products",
       searchValue: "",
+      searchParams: {},
       searchResults: []
     };
 
@@ -54,144 +54,27 @@ class MainMenuSearchForm extends Component
   }
 
   componentDidMount() {
-    this._isMounted = true;
-    this.state.searchType && this.props.listProduct( );
 
-
-
-
-    /* Fonction à exécuter par intervalle de temps (1sec) pour vérifier que les valeurs ont été reçus par le composant avant leur transmission au composant d'ordre supérieur */
-    /* ATTENTION: le nom de variable contenant l'intervalle doit être "intervalForRetrieved" */
-    let waitForRetrieved = (interval) =>
-    {
-
-      const items = this.props.retrievedProducts;
-
-      /* Si les valeurs sont acquis par le composant, on les transmet au composant d'ordre supérieur via la fonction (onSearch) reçu comme propriété du composant */
-
-
-      if( typeof items !== "undefined"  && items !== null && this._isMounted)
-      {
-        let results = {
-          searchType: "products",
-          searchValue: "",
-          searchResults: items["hydra:member"]
-        };
-        this.props.onSearch(results);
-        clearInterval(interval);
-
-      }
-    };
-
-    /* Interval d'exécution d'une fonction d'attente des valeurs (1sec) */
-    let intervalForRetrieved = setInterval(() => {waitForRetrieved(intervalForRetrieved)}, 2000);
-
-    /*
-    setTimeout(() => {
-      let results = {
-        searchType: "products",
-        searchValue: "",
-        searchResults: this.props.retrievedProducts["hydra:member"]
-      };
-      this.props.onSearch(results);
-    }, 3000);
-    */
   }
 
   componentWillUnmount() {
-    /* Marque le composant comme démonté */
-    this._isMounted = false;
 
-    /*
-    if(this.state.searchType === "products")
-      this.props.resetProduct();
-    else
-      this.props.resetSupplier();
-    */
-    /* On supprime l'interval d'exécution s'il y en a  */
-    clearInterval();
+    this.props.resetProduct();
+    this.props.resetSupplier();
   }
 
   handleSearchTypeChange(e)
   {
-    /*  */
+    // Mettre à jour l'état du composant
     this.setState({"searchType": e.target.value});
-
-    /* Affichage du composant de résultat */
-    this.showSearchResults();
-
-    let searchTypeValue = e.target.value;
-
-
-
-    if(searchTypeValue === "suppliers")
-    {
-      this.props.listSupplier();
-
-      setTimeout(() => {
-        this.props.onSearch({
-          searchType: this.state.searchType,
-          searchValue: "",
-          searchResults: this.props.retrievedSuppliers["hydra:member"]
-        });
-      }, 3000);
-
-    }else
-    {
-      this.props.listProduct();
-
-      setTimeout(() => {
-        this.props.onSearch({
-          searchType: this.state.searchType,
-          searchValue: "",
-          searchResults: this.props.retrievedProducts["hydra:member"]
-        });
-      }, 3000);
-
-
-    }
-
-
-
 
   }
 
   handleSearchValueChange(e)
   {
-    /* Traitement de l'input */
+    // Traitement de l'input
+    this.setState({searchParams: {default: e.target.value } });
 
-    this.setState({searchValue: e.target.value});
-
-    /* Affichage du composant de résultat */
-    this.showSearchResults();
-
-    if(this.state.searchType === "products")
-    {
-
-
-      const results = this.props.retrievedProducts["hydra:member"].filter(item => item.title.toLowerCase().indexOf(e.target.value.toLowerCase()) > -1 );
-
-
-
-      this.props.onSearch({
-        searchType: this.state.searchType,
-        searchValue: this.state.searchValue,
-        searchResults: results
-      });
-    }else
-    {
-
-
-      const results = this.props.retrievedSuppliers["hydra:member"].filter(item => item["socialReason"].toLowerCase().indexOf(e.target.value.toLowerCase()) > -1);
-
-
-
-      this.props.onSearch({
-        searchType: this.state.searchType,
-        searchValue: this.state.searchValue,
-        searchResults: results
-      });
-    }
 
   }
 
@@ -200,7 +83,31 @@ class MainMenuSearchForm extends Component
     /* Eviter l'envoi du formulaire */
     e.preventDefault();
 
-    document.getElementById("search-results-component").style.display= 'block';
+    // Affichage du composant de résultat
+    this.showSearchResults();
+
+    if(this.state.searchType === "products")
+    {
+
+      this.props.searchProduct(this.state.searchParams);
+
+    }
+    else{
+      // Données de localisation au sein de l'application
+      let prevRoute = this.props.location.search ? this.props.location.pathname + this.props.location.search :  this.props.location.pathname;
+
+
+      this.props.searchSupplier(this.state.searchParams, this.props.history, {from : prevRoute, params: this.state} );
+
+    }
+
+    // Transmission des valeurs de recherche au composant de résultat par HOC
+    this.props.onSearch({
+      searchType: this.state.searchType,
+      searchValue: this.state.searchValue,
+      searchParams: this.state.searchParams
+    });
+
   }
 
   handleToggleAdvancedSearchButton()
@@ -231,6 +138,7 @@ class MainMenuSearchForm extends Component
   {
     const { intl } = this.props;
 
+
     return (
       <Fragment>
         <Form inline className="col-lg-12 px-0" onSubmit={this.handleSubmit}>
@@ -241,6 +149,7 @@ class MainMenuSearchForm extends Component
                    className="custom-select"
                    value={this.state.searchType}
                    onChange={this.handleSearchTypeChange}
+                   disabled={localStorage.getItem('token') === null ? 'disabled' : ""}
             >
               <option value="products">
                 { intl.formatMessage({
@@ -266,7 +175,7 @@ class MainMenuSearchForm extends Component
                    defaultMessage: "Recherche",
                    description: "Header search form search input placeholder"
                  })}
-                 value={this.state.searchValue}
+                 value={this.state.searchParams.title}
                  onChange={this.handleSearchValueChange}
                  onClick={this.reset}
           />
@@ -288,14 +197,14 @@ class MainMenuSearchForm extends Component
 
 
 }
-
+/*
 const mapStateToProps = state => {
   const {
     retrieved: retrievedProducts,
     loading: loadingProducts,
     error: errorProducts,
     eventSource: eventSourceProducts
-  } = state.product.list;
+  } = state.product.search;
 
   const {
     retrieved: retrievedSuppliers,
@@ -306,12 +215,13 @@ const mapStateToProps = state => {
 
   return { retrievedProducts, loadingProducts, errorProducts, eventSourceProducts,retrievedSuppliers,loadingSuppliers, errorSuppliers,  eventSourceSuppliers, };
 };
+*/
 
 const mapDispatchToProps = dispatch => ({
-  listProduct: page => dispatch(listProduct(page)),
+  searchProduct: searchParams => dispatch(searchProduct(searchParams)),
   resetProduct: eventSource => dispatch(resetProduct(eventSource)),
-  listSupplier: page => dispatch(listSupplier(page)),
+  searchSupplier: (searchParams, history, locationState) => dispatch(searchSupplier(searchParams,history, locationState)),
   resetSupplier: eventSource => dispatch(resetSupplier(eventSource))
 });
 
-export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(MainMenuSearchForm));
+export default withRouter(injectIntl(connect(null, mapDispatchToProps)(MainMenuSearchForm)));
