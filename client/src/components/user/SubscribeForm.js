@@ -10,6 +10,7 @@ import { Field, reduxForm } from 'redux-form';
 import { Col, Row } from "reactstrap";
 import { FormattedMessage, injectIntl } from "react-intl";
 import { subscribe, retrieve, reset } from "../../actions/user/subscribe";
+import DropzoneWithPreviews from "../image/dropzone/DropzoneWithPreviews";
 import PropTypes from 'prop-types';
 import FlashInfo from "../../layout/FlashInfo";
 
@@ -40,8 +41,9 @@ class SubscribeForm extends React.Component {
       submitted: false
     };
 
-    this.handleChange = this.handleChange.bind(this);
+
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.onChangeInputImage = this.onChangeInputImage.bind(this);
   }
 
   componentDidMount() {
@@ -56,6 +58,12 @@ class SubscribeForm extends React.Component {
     this.props.reset(this.props.eventSource);
   }
 
+  onChangeInputImage(e)
+  {
+    const { input : { onChangeInputImage }} = this.props;
+
+    onChangeInputImage(e.target.files[0]);
+  }
 
   handleSubmit(e)
   {
@@ -67,7 +75,7 @@ class SubscribeForm extends React.Component {
     const data = new FormData(document.getElementById('subscribe-form'));
 
 
-
+    /*
     const user = {
       email: data.get('email'),
       lastname: data.get('lastname'),
@@ -76,10 +84,11 @@ class SubscribeForm extends React.Component {
       language: data.get('language'),
       currency: data.get('currency'),
       token: this.props.match.params.token,
+      images: data.get("images"),
       address: {}
     };
 
-    /* Ajout des données fournisseurs  */
+    // Ajout des données fournisseurs
     if(this.props.retrieved.userType === 'supplier')
     {
       // Données fournisseur
@@ -107,6 +116,15 @@ class SubscribeForm extends React.Component {
     {
       this.props.subscribe(user, this.props.history);
     }
+
+     */
+
+    data.append("userType", this.props.retrieved.userType);
+    data.append("token", this.props.match.params.token);
+    // Ajout des images du formulaire
+    data.append("images", document.getElementsByName('images')[0].files);
+
+    this.props.subscribe(data, this.props.history);
 
   }
 
@@ -183,7 +201,6 @@ class SubscribeForm extends React.Component {
     const { intl  } = this.props;
 
 
-
     return (
       <Fragment>
         <div className={"user-authentication-form my-3"}>
@@ -219,7 +236,7 @@ class SubscribeForm extends React.Component {
               className={"col-lg-6 mx-auto px-3"}
               onSubmit={this.handleSubmit}
               /* Si la clé change un réaffichage du composant est lancé */
-              key={this.props.retrieved['hydra:member'].id}
+              key={this.props.retrieved.id}
               autoComplete={"on"}
             >
               <fieldset>
@@ -423,6 +440,7 @@ class SubscribeForm extends React.Component {
                             defaultMessage: "Raison sociale",
                             description: "Supplier item - social reason"
                           })}
+                          autoComplete={'on'}
                         />
                       </Col>
                       <Col>
@@ -516,8 +534,6 @@ class SubscribeForm extends React.Component {
                           })}
                         />
                       </Col>
-                    </Row>
-                    <Row>
                       <Col>
                         <Field
                           component={this.renderField}
@@ -531,6 +547,9 @@ class SubscribeForm extends React.Component {
                           })}
                         />
                       </Col>
+                    </Row>
+                    <Row>
+                      <DropzoneWithPreviews/>
                     </Row>
                   </fieldset>
                   <fieldset>
@@ -555,7 +574,7 @@ class SubscribeForm extends React.Component {
                           className={'custom-select ml-2 col-2'}
                           disabled={'disabled'}
                         >
-                          <option value="Head office">
+                          <option value="Head office" selected>
                             { intl.formatMessage({
                               id: "app.address.item.location_name.head_office",
                               description: "Address item - location name : head office",

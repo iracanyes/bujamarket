@@ -1,7 +1,19 @@
 vich_uploader:
     db_driver: orm
 
-    #mappings:
-    #    products:
-    #        uri_prefix: /images/products
-    #        upload_destination: '%kernel.project_dir%/public/images/products'
+    mappings:
+        image_category:
+            uri_prefix: /images/category/create
+            upload_destination: '%kernel.project_dir%/public/assets/uploads/img/category'
+        image_products:
+            uri_prefix: /images/product/create
+            upload_destination: '%kernel.project_dir%/public/assets/uploads/img/products'
+        image_admin:
+            uri_prefix: /images/admin/create
+            upload_destination: '%kernel.project_dir%/public/assets/uploads/img/admins'
+        image_customer:
+            uri_prefix: /images/customer/create
+            upload_destination: '%kernel.project_dir%/public/assets/uploads/img/customers'
+        image_supplier:
+            uri_prefix: /images/supplier/create
+            upload_destination: '%kernel.project_dir%/public/assets/uploads/img/suppliers'

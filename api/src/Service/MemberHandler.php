@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Service;
-
 
 use App\Entity\Address;
 use App\Entity\Customer;
@@ -56,6 +54,8 @@ class MemberHandler
      */
     private $security;
 
+    private $imageHandler;
+
     /**
      * MemberHandler constructor.
      * @param EntityManagerInterface $em
@@ -64,7 +64,14 @@ class MemberHandler
      * @param SerializerInterface $serializer
      * @param LoggerInterface $logger
      */
-    public function __construct(EntityManagerInterface $em, RequestStack $request, UserPasswordEncoderInterface $encoder,SerializerInterface $serializer, LoggerInterface $logger, Security $security)
+    public function __construct(EntityManagerInterface $em,
+                                RequestStack $request,
+                                UserPasswordEncoderInterface $encoder,
+                                SerializerInterface $serializer,
+                                LoggerInterface $logger,
+                                Security $security,
+                                ImageHandler $imageHandler
+    )
     {
         $this->em = $em;
         $this->request = $request->getCurrentRequest();
@@ -72,6 +79,7 @@ class MemberHandler
         $this->serializer = $serializer;
         $this->logger = $logger;
         $this->security = $security;
+        $this->imageHandler = $imageHandler;
     }
 
     /**
@@ -80,20 +88,15 @@ class MemberHandler
      */
     public function create(): UserTemp
     {
+
         /* Récupération des données de la requête */
         $data = $this->request->getContent();
-
-
-        dump($data);
-
 
         /* Deserialisation
         *  comme objet : json_decode( $data)
          * comme tableau : json_decode( $data, true)
         */
         $data = json_decode($data);
-        dump($data);
-
 
         $user = new UserTemp();
         $user->setFirstname($data->firstname);
@@ -138,16 +141,9 @@ class MemberHandler
 
     public function subscribe(): User
     {
-        $data = $this->request->getContent();
 
-        dump($data);
-
-        $data = json_decode($data);
-
-        dump($data);
-
-        /* Création du nouveau membre */
-        $user = $this->createMember($data);
+        /* Création du nouveau objet User (member) */
+        $user = $this->createMember();
 
         dump($user);
 
@@ -159,7 +155,7 @@ class MemberHandler
 
         /* Données fournisseur */
         if($user instanceof Supplier){
-            $this->setSupplierData($user, $data);
+            $this->setSupplierData($user);
         }
 
         /* Persistence de l'entité en DB */
@@ -189,14 +185,14 @@ class MemberHandler
     }
 
     /**
-     * @param $data
+     *
      * @return User
      * @throws \Exception
      */
-    public function createMember($data): User
+    public function createMember(): User
     {
 
-        switch($data->userType)
+        switch($this->request->request->get('userType'))
         {
             case 'customer':
                 $user = new Customer();
@@ -209,12 +205,12 @@ class MemberHandler
                 break;
         }
 
-        $user->setFirstname($data->firstname);
-        $user->setLastname($data->lastname);
-        $user->setEmail($data->email);
-        $user->setDateRegistration(new \DateTime());
-        $user->setLanguage($data->language);
-        $user->setCurrency($data->currency);
+        $user->setFirstname($this->request->request->get('firstname'));
+        $user->setLastname($this->request->request->get('lastname'));
+        $user->setEmail($this->request->request->get('email'));
+        $user->setDateRegistration(new \DateTimeImmutable());
+        $user->setLanguage($this->request->request->get('language'));
+        $user->setCurrency($this->request->request->get('currency'));
 
         /* Création d'un token de sécurité pour communication externe pour le nouveau membre */
         $user->setToken(bin2hex(random_bytes(64)));
@@ -222,7 +218,7 @@ class MemberHandler
         try{
             /* Récupération du mot de passe originale  */
             $userTemp = $this->em->getRepository(UserTemp::class)
-                ->findOneBy(['token' => $data->token]);
+                ->findOneBy(['token' => $this->request->request->get('token')]);
 
             if($userTemp !== null)
             {
@@ -234,7 +230,7 @@ class MemberHandler
 
 
             }else{
-                $message = sprintf("Confirmation d'inscription du nouveau membre impossible! \nLe nouveau membre n'existe pas.\nToken: %s", $data->token);
+                $message = sprintf("Confirmation d'inscription du nouveau membre impossible! \nLe nouveau membre n'existe pas.\nToken: %s", $this->request->request->get('token'));
 
                 /* Log du message d'erreur */
                 $this->logger->error($message);
@@ -265,6 +261,9 @@ class MemberHandler
         // REMARQUE: mettre dans la méthode eraseCredentials
         $userTemp->setToken(bin2hex(random_bytes(64)));
 
+        // Sauvegarde de l'image de profil
+        $user = $this->imageHandler->uploadProfilImage($user);
+
         /* Persistence de l'utilisateur temporaire */
         $this->em->persist($userTemp);
 
@@ -279,27 +278,27 @@ class MemberHandler
         $user->setSigninConfirmed(true);
     }
 
-    public function setSupplierData(Supplier $user, $data): void
+    public function setSupplierData(Supplier $user):void
     {
         /* Données fournisseurs */
-        $user->setSocialReason($data->socialReason);
-        $user->setBrandName($data->brandName);
-        $user->setTradeRegistryNumber($data->tradeRegistryNumber);
-        $user->setVatNumber($data->vatNumber);
-        $user->setContactFullname($data->contactFullname);
-        $user->setContactPhoneNumber($data->contactPhoneNumber);
-        $user->setContactEmail($data->contactEmail);
-        $user->setWebsite($data->website ?? '');
+        $user->setSocialReason($this->request->request->get('socialReason'));
+        $user->setBrandName($this->request->request->get('brandName'));
+        $user->setTradeRegistryNumber($this->request->request->get('tradeRegistryNumber'));
+        $user->setVatNumber($this->request->request->get('vatNumber'));
+        $user->setContactFullname($this->request->request->get('contactFullname'));
+        $user->setContactPhoneNumber($this->request->request->get('contactPhoneNumber'));
+        $user->setContactEmail($this->request->request->get('contactEmail'));
+        $user->setWebsite($this->request->request->get('website ') ?? '');
 
         /* Siége social */
         $address = new Address();
-        $address->setLocationName($data->address->locationName);
-        $address->setStreet($data->address->street);
-        $address->setNumber($data->address->number);
-        $address->setTown($data->address->town);
-        $address->setState($data->address->state);
-        $address->setZipCode($data->address->zipCode);
-        $address->setCountry($data->address->country);
+        $address->setLocationName("Head office");
+        $address->setStreet($this->request->request->get('address')['street']);
+        $address->setNumber($this->request->request->get('address')['number']);
+        $address->setTown($this->request->request->get('address')['town']);
+        $address->setState($this->request->request->get('address')['state']);
+        $address->setZipCode($this->request->request->get('address')['zipCode']);
+        $address->setCountry($this->request->request->get('address')['country']);
         $user->addAddress($address);
 
         /* Création d'une clé supplier */

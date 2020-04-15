@@ -229,19 +229,21 @@ class RegisterForm extends React.Component {
               <Col>
                 <label
                   htmlFor={'userType'}
-                  className="form-control-label"
+                  className="form-control-label col-2"
                 >
                   <FormattedMessage  id={"app.user.item.user_type"}
                                      defaultMessage="Type d'utilisateur"
                                      description="User item - user type"
 
-                  />
+                  />&nbsp;:&nbsp;
+
                 </label>
-                &nbsp;:&nbsp;
+
                 <Field
                   component={"select"}
                   name="userType"
                   type="select"
+                  className={"form-control col-3"}
                   placeholder=""
                   onChange={this.handleChange}
                   value={this.state.user.userType}

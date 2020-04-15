@@ -16,12 +16,12 @@ App\Entity\Image:
             #options:
             #    my_option: 'my_option_value'
             status: 200 # customize the HTTP status code to send
-        #post:
-        #    method: 'POST'
-        #    path: '/image/create'
-        #    access_control: "is_granted('ROLE_MEMBER') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
-        #    schemes: ['https']
-        #    controller: App\Controller\Image\CreateImage::class
+        post:
+            method: 'POST'
+            path: '/image/create'
+            access_control: "is_granted('ROLE_MEMBER') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
+            schemes: ['https']
+            controller: App\Controller\Image\CreateImageAction::class
     itemOperations:
         get:
             method: 'GET'
