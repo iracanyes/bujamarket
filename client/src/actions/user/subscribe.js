@@ -63,10 +63,10 @@ export function subscribe(values, history) {
     dispatch(request(values));
 
     const headers = new Headers({
-      'Content-Type': 'application/json',
+      'Content-Type': 'multipart/form-data',
     });
 
-    return fetch('subscribe/'+values.token, { method: 'POST', headers: headers, body: JSON.stringify(values) })
+    return fetch('subscribe/'+values.get("token"), { method: 'POST', body: values })
       .then(response => {
         dispatch(loading(false));
 
@@ -78,14 +78,14 @@ export function subscribe(values, history) {
 
         sessionStorage.removeItem("flash-message");
 
-        if(retrieved['hydra:member'].userType === 'customer')
+        if(/Customer/.test(retrieved['@context']))
         {
           sessionStorage.setItem('flash-message', JSON.stringify({message: 'Inscription terminée!\nConnectez vous à la plateforme et visitez votre profil pour ajouter les informations de livraison pour vos achats.\nAu plaisir!'}));
         }else{
           sessionStorage.setItem(
             'flash-message',
             JSON.stringify({
-              message: 'Inscription terminée!\nConnectez vous à la plateforme et visitez votre profil pour ajouter les informations de vos produits.\nAu plaisir!'
+              message: 'Inscription terminée!\nConnectez vous à la plateforme et visitez votre profil pour ajouter vos produits.\nAu plaisir!'
             })
           );
         }

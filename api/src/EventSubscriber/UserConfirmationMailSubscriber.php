@@ -37,7 +37,7 @@ class UserConfirmationMailSubscriber implements EventSubscriberInterface
         $request = $event->getRequest();
         $method= $request->getMethod();
 
-        if(!$user instanceof UserTemp || Request::METHOD_POST !== $method)
+        if(!$user instanceof UserTemp || Request::METHOD_POST !== $method || $request->getPathInfo() !== "/register")
         {
             return;
         }
