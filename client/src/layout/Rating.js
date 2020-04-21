@@ -32,13 +32,13 @@ export default function Rating(props) {
 
           for(let i= 0; i < 5 - n_entier - 1 ; i++)
           {
-            retour.push(<FontAwesomeIcon key={++key} icon={faStar} style={{color: 'white'}}/>)
+            retour.push(<FontAwesomeIcon key={++key} icon={faStar} style={{color: '#FFD700'}}/>)
           }
 
         }else{
           for(let i= 0; i < 5 - n_entier ; i++)
           {
-            retour.push(<FontAwesomeIcon key={++key} icon={faStar} style={{color: 'white'}}/>)
+            retour.push(<FontAwesomeIcon key={++key} icon={faStar} style={{color: '#FFD700'}}/>)
           }
         }
 

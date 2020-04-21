@@ -38,10 +38,8 @@ class Show extends Component {
 
     const item = this.props.retrieved;
 
-    console.log("category item", item);
-
     return (
-      <div id={"category-show"}>
+      <div id={"category-show"} className={'col-lg-8 mx-auto'}>
         <h1>
           <FormattedMessage  id={"app.page.category.title"}
                              defaultMessage="Catégorie"
@@ -99,7 +97,7 @@ class Show extends Component {
 
         </div>
         <div className="category-detail-products">
-          { item && <CarouselCategoryProducts products={item["products"]}/>}
+          { item && <CarouselCategoryProducts id={item["id"]}/>}
         </div>
 
 

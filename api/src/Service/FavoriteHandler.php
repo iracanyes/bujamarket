@@ -60,6 +60,8 @@ class FavoriteHandler
     public function create()
     {
         $supplierProductId = json_decode($this->request->getContent());
+        dump($this->request->getContent());
+        dump(json_decode($this->request->getContent()));
 
         try{
             $customer = $this->em->getRepository(Customer::class)

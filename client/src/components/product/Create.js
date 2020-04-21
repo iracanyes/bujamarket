@@ -14,6 +14,13 @@ class Create extends Component {
     reset: PropTypes.func.isRequired
   };
 
+  componentDidMount() {
+    if(localStorage.getItem('token')  === null)
+      this.props.history.push('login');
+
+
+  }
+
   componentWillUnmount() {
     this.props.reset();
   }

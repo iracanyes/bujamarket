@@ -21,7 +21,7 @@ import {
 } from "reactstrap";
 import { retrieveBySupplierId, reset  } from "../../actions/supplierproduct/listBySupplierId";
 import Rating from "../../layout/Rating";
-import ButtonAddShoppingCard from "./ButtonAddShoppingCard";
+import ButtonAddToShoppingCart from "./ButtonAddToShoppingCart";
 import ButtonAddToFavorite from "../favorite/ButtonAddToFavorite";
 
 class CarouselProductSuppliers extends Component {
@@ -174,7 +174,7 @@ class CarouselProductSuppliers extends Component {
                         <p>
                           Prix : {productSuppliers[0]["finalPrice"].toFixed(2)} &euro;
                         </p>
-                        <ButtonAddShoppingCard buttonLabel={"Ajouter au panier"} product={productSuppliers[i * 12 + j]} history={this.props.history}/>
+                        <ButtonAddToShoppingCart buttonLabel={"Ajouter au panier"} product={productSuppliers[i * 12 + j]} history={this.props.history}/>
                       </Col>
                     </Row>
 
@@ -257,7 +257,7 @@ class CarouselProductSuppliers extends Component {
                       <p>
                         Prix : {productSuppliers[0]["finalPrice"].toFixed(2)} &euro;
                       </p>
-                      <ButtonAddShoppingCard buttonLabel={"Ajouter au panier"} product={productSuppliers[0]} history={this.props.history}/>
+                      <ButtonAddToShoppingCart buttonLabel={"Ajouter au panier"} product={productSuppliers[0]} history={this.props.history}/>
                     </Col>
                   </Row>
 

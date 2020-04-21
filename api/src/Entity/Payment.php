@@ -123,7 +123,7 @@ class Payment
     /**
      * @var Bill $bill Bill registered for this payment
      *
-     * @ORM\OneToOne(targetEntity="App\Entity\Bill", inversedBy="payment", cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\Bill", inversedBy="payments", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      * @Assert\Type("App\Entity\Bill")
      * @Assert\NotNull()

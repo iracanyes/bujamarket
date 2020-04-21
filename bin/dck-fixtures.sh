@@ -6,7 +6,7 @@
 # Boucle sans administrateur système
 for i in `seq 1 20`;
 do
-	if docker-compose exec php bin/console doctrine:fixtures:load --append --group=group2
+	if docker-compose exec php bin/console doctrine:fixtures:load --append --group=group2 -vvv
 	then
 		echo Doctrine fixtures load successful!
 	else

@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -14,17 +16,15 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ORM\Table(name="bjmkt_bill")
  * @ORM\Entity(repositoryClass="App\Repository\BillRepository")
  *
- * Héritage de cette classe : "Bill customer", "Bill supplier" et "Bill refund" hériteront des attributs de cette classe
+ * Héritage de cette classe : "Bill customer" et "Bill refund" hériteront des attributs de cette classe
  *
  * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="billType", type="string", length=30)
- * @ORM\DiscriminatorMap({"bill"="Bill", "customer"="BillCustomer", "supplier"="BillSupplier", "refund"="BillRefund"})
+ * @ORM\DiscriminatorMap({"bill"="Bill", "customer"="BillCustomer", "refund"="BillRefund"})
  */
 class Bill
 {
     public const TYPE_CUSTOMER_BILL = 'customer';
-
-    public const TYPE_SUPPLIER_BILL = 'supplier';
 
     public const TYPE_REFUND_BILL = 'refund';
 
@@ -40,7 +40,7 @@ class Bill
      *
      * @ORM\Column(type="string", length=100)
      * @Assert\Choice({"completed","paid","pending","failed","withdrawn"})
-     * @Groups({"bill_customer:output","bill_refund:output","bill_supplier:output","payment:output"})
+     * @Groups({"bill_customer:output","bill_refund:output","payment:output"})
      */
     private $status;
 
@@ -49,7 +49,7 @@ class Bill
      *
      * @ORM\Column(type="string", length=30, unique=true)
      * @Assert\NotBlank()
-     * @Groups({"bill_customer:output","bill_refund:output","bill_supplier:output","payment:output"})
+     * @Groups({"bill_customer:output","bill_refund:output","payment:output"})
      */
     private $reference;
 
@@ -58,7 +58,7 @@ class Bill
      *
      * @ORM\Column(type="datetime")
      * @Assert\Type("DateTime")
-     * @Groups({"bill_customer:output","bill_refund:output","bill_supplier:output","payment:output"})
+     * @Groups({"bill_customer:output","bill_refund:output","payment:output"})
      */
     private $dateCreated;
 
@@ -67,7 +67,7 @@ class Bill
      *
      * @ORM\Column(type="datetime", nullable=true)
      * @Assert\Type("DateTime")
-     * @Groups({"bill_customer:output","bill_refund:output","bill_supplier:output","payment:output"})
+     * @Groups({"bill_customer:output","bill_refund:output","payment:output"})
      */
     private $datePayment;
 
@@ -76,7 +76,7 @@ class Bill
      *
      * @ORM\Column(type="string", length=3)
      * @Assert\Currency()
-     * @Groups({"bill_customer:output","bill_refund:output","bill_supplier:output","payment:output"})
+     * @Groups({"bill_customer:output","bill_refund:output","payment:output"})
      */
     private $currencyUsed;
 
@@ -85,7 +85,7 @@ class Bill
      *
      * @ORM\Column(type="float")
      * @Assert\Type("float")
-     * @Groups({"bill_customer:output","bill_refund:output","bill_supplier:output","payment:output"})
+     * @Groups({"bill_customer:output","bill_refund:output","payment:output"})
      */
     private $vatRateUsed;
 
@@ -94,7 +94,7 @@ class Bill
      *
      * @ORM\Column(type="float")
      * @Assert\Type("float")
-     * @Groups({"bill_customer:output","bill_refund:output","bill_supplier:output","payment:output"})
+     * @Groups({"bill_customer:output","bill_refund:output","payment:output"})
      */
     private $totalExclTax;
 
@@ -103,7 +103,7 @@ class Bill
      *
      * @ORM\Column(type="float")
      * @Assert\Type("float")
-     * @Groups({"bill_customer:output","bill_refund:output","bill_supplier:output","payment:output"})
+     * @Groups({"bill_customer:output","bill_refund:output","payment:output"})
      */
     private $totalInclTax;
 
@@ -112,24 +112,25 @@ class Bill
      *
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank()
-     * @Groups({"bill_customer:output","bill_refund:output","bill_supplier:output","payment:output"})
+     * @Groups({"bill_customer:output","bill_refund:output","payment:output"})
      */
     private $url;
 
     /**
      * @var Payment $payment Payment associated to this bill
      *
-     * @ORM\OneToOne(targetEntity="App\Entity\Payment", mappedBy="bill", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="App\Entity\Payment", mappedBy="bill", cascade={"persist", "remove"})
      * @Assert\NotNull()
-     * @Groups({"bill_customer:output","bill_refund:output","bill_supplier:output"})
+     * @Groups({"bill_customer:output","bill_refund:output"})
      */
-    private $payment;
+    private $payments;
 
     public function __construct()
     {
         $this->vatRateUsed = 0;
         $this->totalInclTax = 0;
         $this->totalExclTax = 0;
+        $this->payments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -262,20 +263,36 @@ class Bill
         return $this;
     }
 
-    public function getPayment(): ?Payment
+    public function getPayments(): Collection
     {
-        return $this->payment;
+        return $this->payments;
     }
 
-    public function setPayment(Payment $payment): self
+    public function addPayment(Payment $payment): self
     {
-        $this->payment = $payment;
-
-        // set the owning side of the relation if necessary
-        if ($this !== $payment->getBill()) {
+        if(!$this->payments->contains($payment))
+        {
+            $this->payment[] = $payment;
             $payment->setBill($this);
         }
 
         return $this;
     }
+
+    public function removePayment(Payment $payment): self
+    {
+        if($this->payments->contains($payment))
+        {
+            $this->payments->removeElement($payment);
+
+            if($payment->getBill() === $this)
+            {
+                $payment->setBill(null);
+            }
+
+        }
+
+        return $this;
+    }
+
 }

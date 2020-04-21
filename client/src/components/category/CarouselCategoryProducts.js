@@ -1,4 +1,6 @@
 import React, { Component, Fragment } from 'react';
+import { connect } from 'react-redux';
+import { list, reset } from '../../actions/product/list';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { injectIntl } from "react-intl";
@@ -34,6 +36,13 @@ class CarouselCategoryProducts extends Component {
 
   }
 
+  componentDidMount() {
+
+    this.props.id && this.props.list({'category': this.props.id});
+
+
+  }
+
 
   onExiting()
   {
@@ -49,7 +58,7 @@ class CarouselCategoryProducts extends Component {
   {
     if(this.animating) return;
 
-    const nextIndex = this.state.activeIndex === (Math.ceil(this.props.products.length / 12) - 1) ? 0 : this.state.activeIndex + 1;
+    const nextIndex = this.state.activeIndex === (Math.ceil(this.props.retrieved.length / 12) - 1) ? 0 : this.state.activeIndex + 1;
     this.setState({activeIndex: nextIndex});
 
   }
@@ -58,7 +67,7 @@ class CarouselCategoryProducts extends Component {
   {
     if(this.animating) return;
 
-    const nextIndex = this.state.activeIndex === 0 ? (Math.ceil(this.props.products.length / 12) - 1) : this.state.activeIndex -1;
+    const nextIndex = this.state.activeIndex === 0 ? (Math.ceil(this.props.retrieved.length / 12) - 1) : this.state.activeIndex -1;
     this.setState({activeIndex: nextIndex});
   }
 
@@ -74,10 +83,12 @@ class CarouselCategoryProducts extends Component {
 
     //const { intl } = this.props;
 
-    const products = this.props.products && this.props.products;
+    const products = this.props.retrieved && this.props.retrieved.products;
 
 
-    //console.log("Résultats produits", products);
+    console.log("Résultats produits", products);
+    console.log("Résultats produits taille", products.length);
+    console.log("Math.ceil(products.length / 12 )", Math.ceil(products.length / 12 ));
 
     let rows = [];
 
@@ -97,7 +108,7 @@ class CarouselCategoryProducts extends Component {
 
 
 
-          if(j > 0 && products[i * 12 + j])
+          if(j >= 0 && products[i * 12 + j])
           {
 
             resultsPer12.push(
@@ -108,9 +119,9 @@ class CarouselCategoryProducts extends Component {
                     to={`/products/show/${encodeURIComponent(products[i * 12 + j]['id'])}`}
                   >
                     <div className="card-img-custom">
-                      <img src={products[i * 12 + j]["images"][0]['url']} alt={products[i * 12 + j]["images"][0]["alt"]} className="image img-fluid" style={{ width:"100%"}} />
+                      <img src={products[i * 12 + j]['url']} alt={products[i * 12 + j]["alt"]} className="image img-fluid" style={{ width:"100%"}} />
 
-                      <CardTitle className={"image-bottom-left-title"}>
+                      <CardTitle>
 
                         <span className="font-weight-bold">
 
@@ -131,7 +142,7 @@ class CarouselCategoryProducts extends Component {
 
                   <CardFooter>
                     <p>
-                      À partir de : {products[i*12+j]["minimumPrice"]}
+                      À partir de : {products[i*12+j]["minimumPrice"].toFixed(2)} &euro;
                     </p>
                   </CardFooter>
                 </Card>
@@ -173,10 +184,10 @@ class CarouselCategoryProducts extends Component {
                   to={`/products/show/${encodeURIComponent(products[0]['id'])}`}
                 >
                   <div className="card-img-custom">
-                    <img src={products[0]["images"][0]['url']} alt={products[0]["images"][0]["alt"]} className="image img-fluid" style={{ width:"100%"}} />
+                    <img src={products[0]['url']} alt={products[0]["alt"]} className="image img-fluid" style={{ width:"100%"}} />
 
 
-                    <CardTitle className={"image-bottom-left-title"}>
+                    <CardTitle>
 
                         <span className="font-weight-bold">
 
@@ -216,7 +227,9 @@ class CarouselCategoryProducts extends Component {
   render() {
     const { activeIndex } = this.state;
 
-    const items = this.props.products  !== null ? this.showProducts() : {};
+    const items = this.props.retrieved  !== null ? this.showProducts() : {};
+
+
 
     const styleCarouselInner = {
         margin: "0 40px"
@@ -232,7 +245,7 @@ class CarouselCategoryProducts extends Component {
 
 
 
-            {this.props.products &&
+            {this.props.retrieved &&
               <Carousel
                   activeIndex={activeIndex}
                   next={this.next}
@@ -242,9 +255,9 @@ class CarouselCategoryProducts extends Component {
               >
 
 
-                  {this.props.products && items}
+                  {this.props.retrieved && items}
 
-                  <CarouselIndicators items={this.props.products && items} activeIndex={activeIndex} onClickHandler={this.goToIndex}/>
+                  <CarouselIndicators items={this.props.retrieved && items} activeIndex={activeIndex} onClickHandler={this.goToIndex}/>
                   <CarouselControl direction={"prev"} directionText={"Précédent"} onClickHandler={this.previous} className={"col-lg-1"}/>
                   <CarouselControl direction={"next"} directionText={"Suivant"} onClickHandler={this.next}/>
               </Carousel>
@@ -271,4 +284,17 @@ class CarouselCategoryProducts extends Component {
 }
 
 
-export default injectIntl(CarouselCategoryProducts);
+const mapStateToProps = state => ({
+  retrieved : state.product.list.retrieved,
+  error : state.product.list.error,
+  loading : state.product.list.loading,
+  eventSource : state.product.list.eventSource,
+});
+
+const mapDispatchToProps = dispatch => ({
+  list: options => dispatch(list(options)),
+  reset: eventSource => dispatch(reset(eventSource))
+});
+
+
+export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(CarouselCategoryProducts));

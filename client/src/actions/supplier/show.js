@@ -48,8 +48,7 @@ export function retrieve(id, history) {
         {
           sessionStorage.removeItem('flash-message-error');
           sessionStorage.setItem('flash-message-error', JSON.stringify({message: "Authentification nécessaire avant de continuer!"}));
-          history.push('');
-          history.push({pathname: '../login', state: { from: window.location.pathname}});
+          history.push({pathname: '../../login', state: { from: window.location.pathname}});
         }
 
       });

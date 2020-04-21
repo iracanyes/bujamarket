@@ -47,13 +47,7 @@ class Admin extends User
      */
     private $adminKey;
 
-    /**
-     * @var Collection $respondedForums Forums in which the admin responded
-     *
-     * @ORM\OneToMany(targetEntity="App\Entity\Forum", mappedBy="responder")
-     * @Assert\Type("Doctrine\Common\Collections\Collection")
-     */
-    private $respondedForums;
+
 
 
 
@@ -65,7 +59,7 @@ class Admin extends User
     public function __construct()
     {
         parent::__construct();
-        $this->respondedForums = new ArrayCollection();
+
         $this->billRefunds = new ArrayCollection();
     }
 
@@ -98,36 +92,7 @@ class Admin extends User
         return $this;
     }
 
-    /**
-     * @return Collection|Forum[]
-     */
-    public function getRespondedForums(): Collection
-    {
-        return $this->respondedForums;
-    }
 
-    public function addRespondedForum(Forum $forum): Admin
-    {
-        if (!$this->respondedForums->contains($forum)) {
-            $this->respondedForums[] = $forum;
-            $forum->setResponder($this);
-        }
-
-        return $this;
-    }
-
-    public function removeRespondedForum(Forum $forum): self
-    {
-        if ($this->respondedForums->contains($forum)) {
-            $this->respondedForums->removeElement($forum);
-            // set the owning side to null (unless already changed)
-            if ($forum->getResponder() === $this) {
-                $forum->setResponder(null);
-            }
-        }
-
-        return $this;
-    }
 
     public function getAdminKey(): ?string
     {

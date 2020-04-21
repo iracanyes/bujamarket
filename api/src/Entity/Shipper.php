@@ -89,10 +89,10 @@ class Shipper
     private $contactNumber;
 
     /**
-     * @var Collection $addresses Addresses of this shipper
-     * @ORM\OneToMany(targetEntity="App\Entity\Address", mappedBy="shipper")
+     * @var Address $address Address of this shipper
+     * @ORM\OneToOne(targetEntity="App\Entity\Address", mappedBy="shipper")
      */
-    private $addresses;
+    private $address;
 
     /**
      * @var Collection $setDeliveries Set deliveries made by this shipper
@@ -103,7 +103,6 @@ class Shipper
 
     public function __construct()
     {
-        $this->addresses = new ArrayCollection();
         $this->setDeliveries = new ArrayCollection();
     }
 
@@ -209,31 +208,20 @@ class Shipper
     }
 
     /**
-     * @return Collection|Address[]
+     * @return Address|null
      */
-    public function getAddresses(): Collection
+    public function getAddress(): ?Address
     {
-        return $this->addresses;
+        return $this->address;
     }
 
-    public function addAddress(Address $address): self
+    public function setAddress(?Address $address): self
     {
-        if (!$this->addresses->contains($address)) {
-            $this->addresses[] = $address;
+        $this->address = $address;
+
+        if($address->getShipper() !== this)
+        {
             $address->setShipper($this);
-        }
-
-        return $this;
-    }
-
-    public function removeAddress(Address $address): self
-    {
-        if ($this->addresses->contains($address)) {
-            $this->addresses->removeElement($address);
-            // set the owning side to null (unless already changed)
-            if ($address->getShipper() === $this) {
-                $address->setShipper(null);
-            }
         }
 
         return $this;

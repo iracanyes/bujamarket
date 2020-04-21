@@ -421,7 +421,12 @@ class SubscribeForm extends React.Component {
                   </Row>
                 </fieldset>
 
-
+              <fieldset>
+                <legend>Image du {this.props.retrieved.userType === "customer" ? "client" : "fournisseur"}</legend>
+                <Row>
+                  <DropzoneWithPreviews label={this.props.retrieved.userType === "customer" ? "Image de profil" : "Logo"}/>
+                </Row>
+              </fieldset>
 
               {this.props.retrieved.userType === 'supplier' && (
                 <fieldset>
@@ -548,9 +553,7 @@ class SubscribeForm extends React.Component {
                         />
                       </Col>
                     </Row>
-                    <Row>
-                      <DropzoneWithPreviews/>
-                    </Row>
+
                   </fieldset>
                   <fieldset>
                     <legend>Siége social</legend>

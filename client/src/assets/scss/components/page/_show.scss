@@ -133,12 +133,61 @@ div.detail-gallery-preview{
         max-width: 6rem;
         margin-right: 0;
     }
+
+    .detail-gallery-index
+    {
+        display: flex;
+    }
+
+    .active{
+        display: unset;
+    }
 }
 
-.review-image img{
-    height: 5rem;
+div#toast-shopping-cart{
+    position: absolute;
+    left: 0;
+    bottom: -14rem;
+    background-color: rgba(255, 255, 255, 0.90);
+
+    button.btn, a.btn{
+        background-color: #1b1b1b;
+    }
+}
+
+.review-image {
+
+    img {
+        height: 5rem;
+    }
+}
+
+#review-comments
+{
+    margin: 0.5rem;
 }
 
 .detail-overview-rating svg{
     color: #ffd700
 }
+
+#comment-icon
+{
+    background-color: $color-primary;
+    border-radius: 2px;
+    color: #fff;
+    -webkit-font-smoothing: antialiased;
+    height: 21px;
+    left: 20px;
+    margin-top: 3px;
+    position: absolute;
+    padding-left: 1px;
+    padding-top: 2px;
+    text-align: center;
+    width: 21px;
+}
+
+
+/* End Page: show Supplier product */
+
+

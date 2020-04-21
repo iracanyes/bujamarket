@@ -11,7 +11,7 @@ import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, Label, Form,
 import { FormattedMessage } from "react-intl";
 import { Link, withRouter } from 'react-router-dom';
 
-class ButtonAddShoppingCard extends React.Component {
+class ButtonAddToShoppingCart extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -40,7 +40,8 @@ class ButtonAddShoppingCard extends React.Component {
 
   orderNow()
   {
-    console.log(this.props.history);
+
+    // Redirection vers le panier de commande pour validation
     this.props.history.push('/shopping_card');
   }
 
@@ -58,8 +59,6 @@ class ButtonAddShoppingCard extends React.Component {
     /* Ajout au  panier de commande dans LocalStorage  */
     let shopping_card = localStorage.getItem("shopping_card") !== null ? JSON.parse(localStorage.getItem("shopping_card")) : [];
 
-    console.log("shopping_card", shopping_card);
-    console.log("product", this.props.product);
 
     /* Si le panier de commande existe */
     if( shopping_card.length > 0 )
@@ -115,6 +114,8 @@ class ButtonAddShoppingCard extends React.Component {
       this.toggle();
     }
 
+
+
   }
 
 
@@ -135,6 +136,8 @@ class ButtonAddShoppingCard extends React.Component {
     /* Mise à jour du panier de commande dans LocalStorage */
     localStorage.removeItem('shopping_card');
     localStorage.setItem('shopping_card', JSON.stringify(shopping_card));
+
+    this.props.toggle();
 
   }
 
@@ -171,7 +174,7 @@ class ButtonAddShoppingCard extends React.Component {
           </Button>
           <Link to={'/shopping_card'} className={"btn btn-outline-danger w-100"} onClick={this.addToShoppingCard}>
             <FormattedMessage  id={"app.button.order_now"}
-                               defaultMessage="Commande immédiat"
+                               defaultMessage="Commande immédiate"
                                description=" Button - Order now"
             />
           </Link>
@@ -230,5 +233,5 @@ class ButtonAddShoppingCard extends React.Component {
   }
 }
 
-export default withRouter(ButtonAddShoppingCard);
+export default withRouter(ButtonAddToShoppingCart);
 

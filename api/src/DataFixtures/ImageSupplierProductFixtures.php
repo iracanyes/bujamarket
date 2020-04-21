@@ -9,11 +9,11 @@ use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
-class ImageProductFixtures extends Fixture implements DependentFixtureInterface, FixtureGroupInterface
+class ImageSupplierProductFixtures extends Fixture implements DependentFixtureInterface, FixtureGroupInterface
 {
     private $faker;
 
-    public const IMAGE_PRODUCT_REFERENCE = 'imageProduct';
+    public const IMAGE_SUPPLIER_PRODUCT_REFERENCE = 'imageSupplierProduct';
 
     public function __construct()
     {
@@ -30,20 +30,20 @@ class ImageProductFixtures extends Fixture implements DependentFixtureInterface,
         $image->setUrl('https://picsum.photos/1600/900');
         $image->setSize($this->faker->randomNumber(6, false));
 
-        $image->setProduct($this->getReference(ProductFixtures::PRODUCT_REFERENCE));
+        $image->setSupplierProduct($this->getReference(SupplierProductFixtures::SUPPLIER_PRODUCT_REFERENCE));
 
 
         $manager->persist($image);
 
         $manager->flush();
 
-        $this->addReference(self::IMAGE_PRODUCT_REFERENCE, $image);
+        $this->addReference(self::IMAGE_SUPPLIER_PRODUCT_REFERENCE, $image);
     }
 
     public function getDependencies()
     {
         return array(
-            ProductFixtures::class,
+            SupplierProductFixtures::class,
         );
     }
 

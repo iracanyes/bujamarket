@@ -103,9 +103,10 @@ class SupplierProduct
      * @Assert\Type("App\Entity\Supplier")
      * @Assert\NotNull()
      * @Groups({"supplier_product:output"})
-     * @ApiSubresource()
+     * @ ApiSubresource()
      */
     private $supplier;
+
 
     /**
      * @var Product $product Product made available by the supplier
@@ -117,6 +118,15 @@ class SupplierProduct
      *
      */
     private $product;
+
+    /**
+     * @var Collection $images Images of the product
+     * @ORM\OneToMany(targetEntity="App\Entity\Image", mappedBy="supplierProduct", cascade={"persist","remove"})
+     * @ApiSubresource()
+     * @Groups({"supplier_product:output","favorite:output","order_set:output"})
+     * @MaxDepth(1)
+     */
+    private $images;
 
     /**
      * @var Collection $comments Comments made on this supplier product
@@ -157,9 +167,9 @@ class SupplierProduct
     private $rating;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\ShoppingCardSupplierProduct", mappedBy="supplierProduct", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="ShoppingCartDetail", mappedBy="supplierProduct", orphanRemoval=true)
      */
-    private $shoppingCardSupplierProducts;
+    private $shoppingCartDetails;
 
     /**
      * @ORM\Column(type="float")
@@ -171,10 +181,11 @@ class SupplierProduct
     {
         $this->initialPrice = 0;
         $this->rating = 5;
+        $this->images = new ArrayCollection();
         $this->comments = new ArrayCollection();
         $this->favorites = new ArrayCollection();
         $this->orderDetails = new ArrayCollection();
-        $this->shoppingCardSupplierProducts = new ArrayCollection();
+        $this->shoppingCartDetails = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -274,6 +285,37 @@ class SupplierProduct
     public function setProduct(?Product $product): self
     {
         $this->product = $product;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Image[]
+     */
+    public function getImages(): Collection
+    {
+        return $this->images;
+    }
+
+    public function addImage(Image $image): self
+    {
+        if (!$this->images->contains($image)) {
+            $this->images[] = $image;
+            $image->setSupplierProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeImage(Image $image): self
+    {
+        if ($this->images->contains($image)) {
+            $this->images->removeElement($image);
+            // set the owning side to null (unless already changed)
+            if ($image->getSupplierProduct() === $this) {
+                $image->setSupplierProduct(null);
+            }
+        }
 
         return $this;
     }
@@ -393,30 +435,30 @@ class SupplierProduct
     }
 
     /**
-     * @return Collection|ShoppingCardSupplierProduct[]
+     * @return Collection|ShoppingCartDetail[]
      */
-    public function getShoppingCardSupplierProducts(): Collection
+    public function getShoppingCartDetails(): Collection
     {
-        return $this->shoppingCardSupplierProducts;
+        return $this->shoppingCartDetails;
     }
 
-    public function addShoppingCardSupplierProduct(ShoppingCardSupplierProduct $shoppingCardSupplierProduct): self
+    public function addShoppingCartDetail(ShoppingCartDetail $shoppingCartDetail): self
     {
-        if (!$this->shoppingCardSupplierProducts->contains($shoppingCardSupplierProduct)) {
-            $this->shoppingCardSupplierProducts[] = $shoppingCardSupplierProduct;
-            $shoppingCardSupplierProduct->setSupplierProduct($this);
+        if (!$this->shoppingCartDetails->contains($shoppingCartDetail)) {
+            $this->shoppingCartDetails[] = $shoppingCartDetail;
+            $shoppingCartDetail->setSupplierProduct($this);
         }
 
         return $this;
     }
 
-    public function removeShoppingCardSupplierProduct(ShoppingCardSupplierProduct $shoppingCardSupplierProduct): self
+    public function removeShoppingCartDetail(ShoppingCartDetail $shoppingCartDetail): self
     {
-        if ($this->shoppingCardSupplierProducts->contains($shoppingCardSupplierProduct)) {
-            $this->shoppingCardSupplierProducts->removeElement($shoppingCardSupplierProduct);
+        if ($this->shoppingCartDetails->contains($shoppingCartDetail)) {
+            $this->shoppingCartDetails->removeElement($shoppingCartDetail);
             // set the owning side to null (unless already changed)
-            if ($shoppingCardSupplierProduct->getSupplierProduct() === $this) {
-                $shoppingCardSupplierProduct->setSupplierProduct(null);
+            if ($shoppingCartDetail->getSupplierProduct() === $this) {
+                $shoppingCartDetail->setSupplierProduct(null);
             }
         }
 

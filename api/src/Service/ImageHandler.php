@@ -43,13 +43,14 @@ class ImageHandler
 
         $uploadedFile = $this->request->files->get("images");
         dump($uploadedFile);
-        dump(getenv("UPLOAD_CUSTOMER_IMAGE_DIRECTORY"));
-        dump(getenv("UPLOAD_SUPPLIER_IMAGE_DIRECTORY"));
+
 
 
         $image->setPlace(1);
         $image->setSize($uploadedFile->getSize());
 
+        // Définitions Informations spécifiques aux utilisateurs
+        // Déplacement de fichiers dans le répertoire correspondant
         try{
             switch($user->getUserType())
             {

@@ -65,7 +65,7 @@ export function retrieveIds(history) {
 
       headers.set('Authorization', 'Bearer ' + userToken.token);
     }else{
-      history.push({pathname:"../login", state: { from: window.location.pathname }})
+      history.push({pathname:"../../login", state: { from: window.location.pathname }})
     }
 
 

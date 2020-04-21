@@ -85,3 +85,11 @@ App\Entity\SupplierProduct:
             requirements:
                 id: '\d+'
                 _format: 'json\jsonld\html'
+        images_get_subresource:
+            method: 'GET'
+            path: '/supplier_product/{id}/images.{_format}'
+            defaults:
+                _format: 'jsonld'
+            requirements:
+                id: '\d+'
+                _format: 'json\jsonld\html'

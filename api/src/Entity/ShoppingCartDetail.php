@@ -6,17 +6,18 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Repository\ShoppingCartDetailRepository;
 
 /**
  *
  * @ApiResource(attributes={
- *     "normalization_context"={"shopping_card:output"},
- *     "denormalization_context"={{"shopping_card:input"}}
+ *     "normalization_context"={"shopping_cart_detail:output"},
+ *     "denormalization_context"={{"shopping_cart_detail:input"}}
  * })
- * @ORM\Table(name="bjmkt_shopping_card_supplier_product")
- * @ORM\Entity(repositoryClass="App\Repository\ShoppingCardSupplierProductRepository")
+ * @ORM\Table(name="bjmkt_shopping_cart_detail")
+ * @ORM\Entity(repositoryClass="App\Repository\ShoppingCartDetailRepository")
  */
-class ShoppingCardSupplierProduct
+class ShoppingCartDetail
 {
     /**
      * @ORM\Id()
@@ -27,25 +28,30 @@ class ShoppingCardSupplierProduct
 
     /**
      * @ORM\Column(type="integer")
-     * @Groups({"shopping_card:output"})
+     * @Groups({"shopping_cart_detail:output"})
      * @Assert\Type("integer")
      */
     private $quantity;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\ShoppingCard", inversedBy="shoppingCardSupplierProducts", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\Customer", inversedBy="shoppingCartDetails", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
-     * @Assert\Type("App\Entity\ShoppingCard")
+     * @Assert\Type("App\Entity\Customer")
      */
-    private $shoppingCard;
+    private $customer;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\SupplierProduct", inversedBy="shoppingCardSupplierProducts", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\SupplierProduct", inversedBy="shoppingCartDetails", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"shopping_card:output"})
+     * @Groups({"shopping_cart_detail:output"})
      * @Assert\Type("App\Entity\SupplierProduct")
      */
     private $supplierProduct;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $dateCreated;
 
     public function getId(): ?int
     {
@@ -64,14 +70,14 @@ class ShoppingCardSupplierProduct
         return $this;
     }
 
-    public function getShoppingCard(): ?ShoppingCard
+    public function getCustomer(): ?Customer
     {
-        return $this->shoppingCard;
+        return $this->customer;
     }
 
-    public function setShoppingCard(?ShoppingCard $shoppingCard): self
+    public function setCustomer(?Customer $customer): self
     {
-        $this->shoppingCard = $shoppingCard;
+        $this->customer = $customer;
 
         return $this;
     }
@@ -84,6 +90,18 @@ class ShoppingCardSupplierProduct
     public function setSupplierProduct(?SupplierProduct $supplierProduct): self
     {
         $this->supplierProduct = $supplierProduct;
+
+        return $this;
+    }
+
+    public function getDateCreated(): ?\DateTimeInterface
+    {
+        return $this->dateCreated;
+    }
+
+    public function setDateCreated(\DateTimeInterface $dateCreated): self
+    {
+        $this->dateCreated = $dateCreated;
 
         return $this;
     }

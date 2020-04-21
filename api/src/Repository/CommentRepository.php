@@ -19,6 +19,25 @@ class CommentRepository extends ServiceEntityRepository
         parent::__construct($registry, Comment::class);
     }
 
+    public function getCommentsBySupplierProduct(int $id = null)
+    {
+        $qb = $this->createQueryBuilder('c')
+            ->select('c.rating', 'c.content')
+            ->leftJoin('c.supplierProduct', 'sp')
+            ->leftJoin('c.customer', 'cu')
+            ->addSelect('cu.lastname')
+            ->leftJoin('cu.image', 'i')
+            ->addSelect('i.url','i.title','i.alt');
+
+        if($id !== null)
+        {
+            $qb->andWhere('sp.id = :id')
+                ->setParameter('id', $id);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
     // /**
     //  * @return Comment[] Returns an array of Comment objects
     //  */

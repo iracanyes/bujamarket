@@ -8,7 +8,9 @@ import 'bootstrap/dist/css/bootstrap.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ButtonAddToFavorite from '../favorite/ButtonAddToFavorite';
 import { retrieveIds } from '../../actions/favorite/list';
-
+import { retrieveByProductId, reset  } from "../../actions/supplierproduct/listByProductId";
+import Rating from "../../layout/Rating";
+import ButtonAddToShoppingCart from "./ButtonAddToShoppingCart";
 /* Carousel */
 import {
   Col,
@@ -21,9 +23,7 @@ import {
   CarouselControl,
   CarouselIndicators,
 } from "reactstrap";
-import { retrieveByProductId, reset  } from "../../actions/supplierproduct/listByProductId";
-import Rating from "../../layout/Rating";
-import ButtonAddShoppingCard from "./ButtonAddShoppingCard";
+
 
 class CarouselProductSuppliers extends Component {
   static propTypes = {
@@ -52,15 +52,15 @@ class CarouselProductSuppliers extends Component {
   }
 
   componentDidMount() {
-    if(localStorage.getItem('token') === null)
-    {
-      this.props.history.push({pathname: '../../login', state: { from : window.location.pathname}});
-    }
 
     this.props.retrieveByProductId(this.props.productId);
 
     /* Récupération des ID des favoris afin d'indiquer quel produit */
-    this.props.retrieveIds(this.props.history);
+    if(localStorage.getItem('token'))
+    {
+      this.props.retrieveIds(this.props.history);
+    }
+
   }
 
   componentWillUnmount() {
@@ -110,9 +110,6 @@ class CarouselProductSuppliers extends Component {
 
     const productSuppliers = this.props.retrieved && this.props.retrieved['hydra:member'];
 
-
-    console.log("Résultats produit-suppliers", productSuppliers);
-
     let rows = [];
 
     if(productSuppliers && productSuppliers.length > 1)
@@ -124,12 +121,6 @@ class CarouselProductSuppliers extends Component {
 
         for(let j = 0; j < 12 && productSuppliers[j]; j++)
         {
-          if(process.env.DEBUG === 1 )
-          {
-            console.log("Résultats produit" + j, productSuppliers[i * 12 + j]);
-          }
-
-
 
           if(j > 0 && productSuppliers[i * 12 + j])
           {
@@ -142,9 +133,9 @@ class CarouselProductSuppliers extends Component {
                     to={`/product/show/${encodeURIComponent(productSuppliers[i * 12 + j]['id'])}`}
                   >
                     <div className="card-img-custom">
-                      <img src="https://picsum.photos/2000/3000" alt={productSuppliers[i * 12 + j]["images"][0]["alt"]} className="image img-fluid" style={{ width:"100%"}} />
+                      <img src={productSuppliers[i * 12 + j]["images"][0]["url"]} alt={productSuppliers[i * 12 + j]["images"][0]["alt"]} className="image img-fluid" style={{ width:"100%"}} />
 
-                      <CardTitle className={"image-bottom-left-title"}>
+                      <CardTitle className={"carousel-card-title"}>
 
                         <span className="font-weight-bold">
 
@@ -169,7 +160,12 @@ class CarouselProductSuppliers extends Component {
                         <Rating rating={productSuppliers[i * 12 + j]["rating"]} />
                       </Col>
                       <Col className={'text-right'}>
-                        <ButtonAddToFavorite supplierProductId={productSuppliers[i * 12 + j].id}/>
+                        {
+                          localStorage.getItem('token')
+                            ? <ButtonAddToFavorite supplierProductId={productSuppliers[i * 12 + j].id}/>
+                            : ""
+                        }
+
                       </Col>
                     </Row>
                     <Row>
@@ -180,7 +176,7 @@ class CarouselProductSuppliers extends Component {
                         <p>
                           Prix : {productSuppliers[i * 12 + j]["finalPrice"].toFixed(2)} &euro;
                         </p>
-                        <ButtonAddShoppingCard buttonLabel={"Ajouter au panier"} product={productSuppliers[i * 12 + j]} history={this.props.history}/>
+                        <ButtonAddToShoppingCart buttonLabel={"Ajouter au panier"} product={productSuppliers[i * 12 + j]} history={this.props.history}/>
                       </Col>
 
                     </Row>
@@ -226,10 +222,10 @@ class CarouselProductSuppliers extends Component {
                   to={`/supplier_product/show/${encodeURIComponent(productSuppliers[0]['id'])}`}
                 >
                   <div className="card-img-custom">
-                    <img src="https://picsum.photos/2000/3000" alt={productSuppliers[0]['product']["images"][0]["alt"]} className="image img-fluid" style={{ width:"100%"}} />
+                    <img src={productSuppliers[0]["images"][0]["url"]} alt={productSuppliers[0]["images"][0]["alt"]} className="image img-fluid" style={{ width:"100%"}} />
 
 
-                    <CardTitle className={"image-bottom-left-title"}>
+                    <CardTitle className={"carousel-card-title"}>
 
                         <span className="font-weight-bold">
 
@@ -265,7 +261,7 @@ class CarouselProductSuppliers extends Component {
                       <p>
                         Prix : {productSuppliers[0]["finalPrice"].toFixed(2)} &euro;
                       </p>
-                      <ButtonAddShoppingCard buttonLabel={"Ajouter au panier"} product={productSuppliers[0]} history={this.props.history}/>
+                      <ButtonAddToShoppingCart buttonLabel={"Ajouter au panier"} product={productSuppliers[0]} history={this.props.history}/>
                     </Col>
 
                   </Row>
@@ -290,7 +286,7 @@ class CarouselProductSuppliers extends Component {
 
     const items = this.props.retrieved  !== null ? this.showProductSuppliers() : {};
 
-    (process.env.DEBUG === 1) && console.log('Product suppliers', items);
+
 
     const styleCarouselInner = {
         margin: "0 40px"
