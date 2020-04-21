@@ -39,7 +39,7 @@ class OrderSetHandler
     private $addressHandler;
 
     /**
-     * @var ShoppingCardHandler $shoppingCardHandler
+     * @var ShoppingCartHandler $shoppingCardHandler
      */
     private $shoppingCardHandler;
 
@@ -48,7 +48,7 @@ class OrderSetHandler
      */
     private $shipperHandler;
 
-    public function __construct(Security $security, RequestStack $requestStack, EntityManagerInterface $em, AddressHandler $addressHandler, ShoppingCardHandler $shoppingCardHandler, ShipperHandler $shipperHandler)
+    public function __construct(Security $security, RequestStack $requestStack, EntityManagerInterface $em, AddressHandler $addressHandler, ShoppingCartHandler $shoppingCardHandler, ShipperHandler $shipperHandler)
     {
         $this->security = $security;
         $this->request = $requestStack->getCurrentRequest();

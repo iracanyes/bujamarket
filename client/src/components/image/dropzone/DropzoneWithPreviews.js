@@ -123,7 +123,7 @@ class DropzoneWithPreviews extends React.Component
       <Dropzone onDrop={this.onDrop} accept={'image/*'}>
         {({ getRootProps, getInputProps }) => (
           <Col className={"container"}>
-            <legend htmlFor="">Image du fournisseur</legend>
+            <label htmlFor="">{this.props.label}</label>
             <div {...getRootProps({className:"dropzone"})}>
               <input {...getInputProps()} name={'images'}/>
               <p>Glisser et Déposer vos images ici, ou Cliquer pour choisir vos images</p>

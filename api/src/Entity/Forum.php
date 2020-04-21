@@ -62,20 +62,20 @@ class Forum
     private $dateCreated;
 
     /**
-     * @var User $user User who created this forum subject
+     * @var User $author User who created this forum subject
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="forums")
      * @ORM\JoinColumn(nullable=false)
      * @Assert\Type("App\Entity\User")
      * @Assert\NotNull()
      */
-    private $user;
+    private $author;
 
     /**
-     * @var Admin $responder Admin who responded this forum's subject
+     * @var User $responder User who responded this forum's subject
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Admin", inversedBy="respondedForums")
-     * @Assert\Type("App\Entity\Admin")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="respondedForums")
+     * @Assert\Type("App\Entity\User")
      */
     private $responder;
 
@@ -155,24 +155,24 @@ class Forum
         return $this;
     }
 
-    public function getUser(): ?User
+    public function getAuthor(): ?User
     {
-        return $this->user;
+        return $this->author;
     }
 
-    public function setUser(?User $user): self
+    public function setAuthor(?User $user): self
     {
-        $this->user = $user;
+        $this->author = $user;
 
         return $this;
     }
 
-    public function getResponder(): ?Admin
+    public function getResponder(): ?User
     {
         return $this->responder;
     }
 
-    public function setResponder(?Admin $responder): self
+    public function setResponder(?User $responder): self
     {
         $this->responder = $responder;
 

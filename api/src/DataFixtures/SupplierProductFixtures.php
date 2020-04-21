@@ -8,7 +8,7 @@ use \Faker\Factory;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
-ini_set('memory_limit', '2500M');
+ini_set('memory_limit', '3000M');
 
 class SupplierProductFixtures extends Fixture implements DependentFixtureInterface, FixtureGroupInterface
 {
@@ -41,6 +41,7 @@ class SupplierProductFixtures extends Fixture implements DependentFixtureInterfa
         /* Relations */
         $supplierProduct->setProduct($this->getReference(ProductFixtures::PRODUCT_REFERENCE));
         $supplierProduct->setSupplier($this->getReference(SupplierFixtures::SUPPLIER_REFERENCE));
+        $supplierProduct->addImage($this->getReference(ImageFixtures::IMAGE_REFERENCE));
 
 
         $manager->persist($supplierProduct);
@@ -57,6 +58,7 @@ class SupplierProductFixtures extends Fixture implements DependentFixtureInterfa
             SupplierFixtures::class,
             ProductFixtures::class,
             CategoryFixtures::class,
+            ImageFixtures::class
         );
 
     }

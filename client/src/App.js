@@ -19,7 +19,6 @@ import { StripeProvider } from 'react-stripe-elements';
 
 /* Stylesheets */
 import 'bootstrap/dist/css/bootstrap.css';
-
 import './assets/scss/index.scss';
 import {
   Navbar,
@@ -89,14 +88,15 @@ import supplierRoutes from './routes/supplier';
 import supplierProductRoutes from './routes/supplierproduct';
 import userRoutes from './routes/user';
 import withdrawalRoutes from './routes/withdrawal';
+import pageRoutes from './routes/page';
 
 /* Layout */
 import Welcome from './Welcome';
-import Homepage from './layout/Homepage';
+import Homepage from './page/Homepage';
 import MainMenuSearchForm from "./components/search/MainMenuSearchForm";
 import MainMenu from "./layout/MainMenu";
 import SearchResults from "./components/search/SearchResults";
-import Error404Cat from "./layout/Error404Cat";
+import Error404Cat from "./page/Error404Cat";
 
 /* Internationalisation : FormatJS/React-Intl */
 import { IntlProvider} from "react-intl";
@@ -227,11 +227,8 @@ export class App extends Component
                           { messageRoutes }
                           { orderDetailRoutes }
                           { orderReturnedRoutes }
-
                           { paymentRoutes }
                           { orderSetRoutes }
-
-
                           { productRoutes }
                           { shipperRoutes }
                           { shoppingCardRoutes }
@@ -239,12 +236,8 @@ export class App extends Component
                           { supplierProductRoutes }
                           { userRoutes }
                           { withdrawalRoutes }
-                          <Route render={() => (
-                            <Fragment>
-                              <Error404Cat/>
-                            </Fragment>
+                          {pageRoutes}
 
-                          )} />
                         </Switch>
 
 

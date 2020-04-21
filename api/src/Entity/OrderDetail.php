@@ -87,13 +87,6 @@ class OrderDetail
      */
     private $withdrawal;
 
-    /**
-     * @var BillSupplier $supplierBill Supplier bill for this order detail
-     *
-     * @ORM\OneToOne(targetEntity="App\Entity\BillSupplier", mappedBy="orderDetail", cascade={"persist", "remove"})
-     * @Assert\Type("App\Entity\BillSupplier")
-     */
-    private $supplierBill;
 
     /**
      * @var DeliveryDetail $deliveryDetail Delivery detail for this order detail
@@ -214,22 +207,6 @@ class OrderDetail
         return $this;
     }
 
-    public function getSupplierBill(): ?BillSupplier
-    {
-        return $this->supplierBill;
-    }
-
-    public function setSupplierBill(BillSupplier $supplierBill): self
-    {
-        $this->supplierBill = $supplierBill;
-
-        // set the owning side of the relation if necessary
-        if ($this !== $supplierBill->getOrderDetail()) {
-            $supplierBill->setOrderDetail($this);
-        }
-
-        return $this;
-    }
 
     public function getDeliveryDetail(): ?DeliveryDetail
     {

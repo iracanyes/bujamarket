@@ -42,9 +42,9 @@ class List extends Component {
     // Récupération des produits
     if(this.props.retrieved === null)
     {
-      this.props.list(
+      this.props.list({'page':
         params.get('page') &&  params.get('page') !== null &&
-        decodeURIComponent(params.get('page'))
+        decodeURIComponent(params.get('page'))}
       );
     }
 
@@ -68,7 +68,9 @@ class List extends Component {
   {
     let items = [];
 
-    const products = this.props.retrieved && this.props.retrieved["hydra:member"];
+    const products = this.props.retrieved && this.props.retrieved.products;
+
+    console.log('products', products);
 
 
     let rows = [];
@@ -89,7 +91,7 @@ class List extends Component {
             <Col key={"products" + (i * 10 + j)} xs={"12"} sm="6" md="4" lg="3">
               <Card body>
                 <div className="card-img-custom">
-                  <img src={products[i * 10 + j]["images"][0]['url']} alt={products[i * 10 + j]["images"][0]["alt"]} className="image img-fluid" style={{ width:"100%"}} />
+                  <img src={products[i * 10 + j]['url']} alt={products[i * 10 + j]["alt"]} className="image img-fluid" style={{ width:"100%"}} />
                     <div className="middle">
 
                       <Link
@@ -141,8 +143,9 @@ class List extends Component {
   }
 
   render() {
+
     return (
-      <div className={"col-lg-9 mx-auto"}>
+      <div className={"col-lg-8 mx-auto"}>
         <h1>
           Nos produits
         </h1>

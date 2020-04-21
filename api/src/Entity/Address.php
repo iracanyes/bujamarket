@@ -86,7 +86,7 @@ class Address
     /**
      * @var Shipper $shipper Shipper located at this address
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Shipper", inversedBy="addresses")
+     * @ORM\OneToOne(targetEntity="App\Entity\Shipper", inversedBy="address")
      */
     private $shipper;
 

@@ -73,7 +73,7 @@ export class ButtonAddToFavorite extends React.Component
       <div>
         {(item.length > 0 || added) && (
           <div>
-            <span style={{textDecoration: "underline", color:"blue"}} href="#" id="TooltipFavorite">
+            <span href="#" id="TooltipFavorite">
               <FontAwesomeIcon icon="heart" className="menu-top-l1" style={{color: 'red'}} onClick={this.deleteFavorite}/>
             </span>
             <Tooltip placement="right" isOpen={tooltipOpen} target="TooltipFavorite" toggle={this.toggle}>
@@ -84,7 +84,7 @@ export class ButtonAddToFavorite extends React.Component
         )}
         {item.length === 0 && !added && (
           <div>
-            <span style={{textDecoration: "underline", color:"blue"}} href="#" id="TooltipFavorite">
+            <span href="#" id="TooltipFavorite">
               <FontAwesomeIcon icon="heart" className="menu-top-l1" style={{color: 'white'}} onClick={this.addToFavorite}/>
             </span>
             <Tooltip placement="right" isOpen={tooltipOpen} target="TooltipFavorite" toggle={this.toggle}>

@@ -10,7 +10,7 @@ use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
-class ForumCustomerFixtures extends Fixture implements DependentFixtureInterface, FixtureGroupInterface
+class ForumCustomerFixtures extends Fixture implements FixtureGroupInterface, DependentFixtureInterface
 {
     private $faker;
 
@@ -34,7 +34,7 @@ class ForumCustomerFixtures extends Fixture implements DependentFixtureInterface
 
 
         /* Relation */
-        $forum->setUser($this->getReference(CustomerFixtures::CUSTOMER_REFERENCE));
+        $forum->setAuthor($this->getReference(CustomerFixtures::CUSTOMER_REFERENCE));
         $forum->setResponder($this->getReference(AdminFixtures::ADMIN_REFERENCE));
 
         $manager->persist($forum);

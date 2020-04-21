@@ -28,6 +28,63 @@ class ProductRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function getProductsWithImages($options = [])
+    {
+         $qb = $this->createQueryBuilder('p')
+            ->select('p.id','p.title','p.resume','p.minimumPrice')
+            ->leftJoin('p.productSuppliers', 'sp')
+            ->leftJoin('p.category', 'c')
+            ->addSelect(array('c.name as category_name'))
+            ->leftJoin('sp.images', 'i')
+            ->addSelect(array('i.title as image_title','i.alt','i.url'))
+            ->groupBy('p.id');
+
+
+
+         if($options['category'] !== null)
+         {
+             $qb->andWhere('c.id LIKE :category')
+                 ->setParameter('category',$options['category']);
+         }
+
+         if($options['itemsPerPage'] !== null)
+         {
+             $qb->setMaxResults($options["itemsPerPage"]);
+         }
+
+
+         return $qb->getQuery()
+             ->getResult();
+    }
+
+    public function getProductWithImage($options = [])
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->select('p.id','p.title','p.resume','p.description','p.minimumPrice')
+            ->leftJoin('p.productSuppliers', 'sp')
+            ->leftJoin('p.category', 'c')
+            ->addSelect(array('c.name as category_name'))
+            ->leftJoin('sp.images', 'i')
+            ->addSelect(array('i.title as image_title','i.alt','i.url'));
+
+        if($options['id'] !== null)
+        {
+            $qb->andWhere('p.id = :product_id')
+                ->setParameter('product_id', $options['id']);
+        }
+
+
+        if($options['category'] !== null)
+        {
+            $qb->andWhere('c.id LIKE :category')
+                ->setParameter('category',$options['category']);
+        }
+
+
+        return $qb->getQuery()
+            ->getResult();
+    }
+
     // /**
     //  * @return Product[] Returns an array of Product objects
     //  */

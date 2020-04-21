@@ -5,8 +5,7 @@ namespace App\Service;
 
 
 use App\Entity\Customer;
-use App\Entity\ShoppingCard;
-use App\Entity\ShoppingCardSupplierProduct;
+use App\Entity\ShoppingCartDetail;
 use App\Entity\SupplierProduct;
 use App\Entity\User;
 use Doctrine\DBAL\Driver\PDOException;
@@ -16,7 +15,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Exception\UserNotFoundException;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Security;
 
-class ShoppingCardHandler
+class ShoppingCartHandler
 {
     /**
      * @var EntityManagerInterface $em
@@ -63,16 +62,18 @@ class ShoppingCardHandler
 
                 dump($customer);
 
-                /* Ajout du produit en tant que nouvel élément du panier de commande */
-                $shopping_card_supplier_product = new ShoppingCardSupplierProduct();
-                $shopping_card_supplier_product->setSupplierProduct($supplier_product);
-                $shopping_card_supplier_product->setQuantity($item->quantity);
+
 
                 if($supplier_product !== null )
                 {
+                    /* Ajout du produit en tant que nouvel élément du panier de commande */
+                    $shopping_cart_supplier_product = new ShoppingCartDetail();
+                    $shopping_cart_supplier_product->setSupplierProduct($supplier_product);
+                    $shopping_cart_supplier_product->setQuantity($item->quantity);
+
                     if($customer !== null)
                     {
-                        $customer->getShoppingCard()->addShoppingCardSupplierProduct($shopping_card_supplier_product);
+                        $customer->addShoppingCartDetail($shopping_cart_supplier_product);
                         $this->em->persist($customer);
                     }else{
                         throw new UserNotFoundException(`Customer (username=${$this->security->getUser()->getUsername()}) doesn't exist.`, 404);
@@ -91,11 +92,11 @@ class ShoppingCardHandler
         }
 
 
-        return $customer->getShoppingCard();
+        return $customer->getShoppingCart();
 
     }
 
-    public function getShoppingCard()
+    public function getShoppingCart()
     {
         try{
             $customer = $this->em->getRepository(Customer::class)
@@ -105,7 +106,7 @@ class ShoppingCardHandler
         }
 
 
-        return $customer->getShoppingCard();
+        return $customer->getShoppingCartDetails();
     }
 
 }

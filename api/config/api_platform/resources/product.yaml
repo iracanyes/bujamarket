@@ -16,9 +16,17 @@ App\Entity\Product:
             #options:
             #    my_option: 'my_option_value'
             status: 200 # customize the HTTP status code to send
+        getProductsWithImage:
+            method: 'GET'
+            path: '/products_with_images'
+            defaults:
+                _api_receive: false
+                _api_respond: false
+            schemes: ['https','http']
+            controller: App\Controller\Product\GetProductsWithImageAction            
         getNames:
             method: 'GET'
-            path: '/products_names'
+            path: '/products_names.{_format}'
             schemes: ['https','http']  
             controller: App\Controller\Product\GetNamesAction
         post:
@@ -40,7 +48,8 @@ App\Entity\Product:
                 _format: 'json'
             # host: 'localhost'
             schemes: ['https']
-            status: 200 # customize the HTTP status code to send        
+            status: 200 # customize the HTTP status code to send
+            controller: App\Controller\Product\GetProductWithImageAction
         put:
             method: 'PUT'
             path: '/product/{id}'
@@ -55,13 +64,5 @@ App\Entity\Product:
                 id: '\d+'
             access_control: 'is_granted("ROLE_ADMIN") and is_granted("IS_AUTHENTICATED_FULLY")'
             schemes: ['https']
-    subresourceOperations:
-        images_get_subresource:
-            method: 'GET'
-            path: '/product/{id}/images.{_format}'
-            defaults:
-                _format: 'jsonld'
-            requirements:
-                id: '\d+'
-                _format: 'json\jsonld\html'
+        
         

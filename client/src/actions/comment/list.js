@@ -50,6 +50,58 @@ export function list(page = 'comments') {
   };
 }
 
+export function listBySupplierProductId(options={}, page = 'comments/supplier_product/', history) {
+  return dispatch => {
+    dispatch(loading(true));
+    dispatch(error(''));
+
+    /* Récupération de la clé JWT et ajout au header de la requête */
+    const userToken = JSON.parse(localStorage.getItem('token'));
+
+    /* Ajout du header Authorization */
+    let headers = new Headers();
+    if(userToken !== null)
+    {
+      headers.set('Authorization', 'Bearer ' + userToken.token);
+    }else{
+      history.push({pathname:"../../login", state: { from: window.location.pathname }})
+    }
+
+    if(options.supplier_product)
+    {
+      if(page.charAt(page.length - 1 ) !== '/')
+        page += '/';
+      page +=  options.supplier_product;
+    }
+
+
+    fetch(page, {method: 'GET', headers: headers})
+      .then(response =>
+        response
+          .json()
+          .then(retrieved => ({ retrieved, hubURL: extractHubURL(response) }))
+      )
+      .then(({ retrieved, hubURL }) => {
+        retrieved = normalize(retrieved);
+
+        dispatch(loading(false));
+        dispatch(success(retrieved));
+
+        if (hubURL && retrieved['hydra:member'].length)
+          dispatch(
+            mercureSubscribe(
+              hubURL,
+              retrieved['hydra:member'].map(i => i['@id'])
+            )
+          );
+      })
+      .catch(e => {
+        dispatch(loading(false));
+        dispatch(error(e.message));
+      });
+  };
+}
+
 export function reset(eventSource) {
   return dispatch => {
     if (eventSource) eventSource.close();

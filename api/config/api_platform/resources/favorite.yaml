@@ -29,8 +29,8 @@ App\Entity\Favorite:
         post:
             method: 'POST'
             path: '/favorite/create'
-            requirements:
-                favorite: App\Entity\Favorite
+            defaults:
+                _api_receive: false
             access_control: "is_granted('ROLE_CUSTOMER') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
             schemes: ['https']
             controller: App\Controller\Favorite\CreateFavoriteAction

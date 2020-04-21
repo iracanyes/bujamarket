@@ -141,23 +141,17 @@ class Product
     /**
      * @var Collection $productSuppliers Product's supplier
      *
-     * @ORM\OneToMany(targetEntity="App\Entity\SupplierProduct", mappedBy="product", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\SupplierProduct", mappedBy="product", orphanRemoval=true)     *
      * @ApiSubresource()
+     * @ Groups({"product:output"})
+     * @MaxDepth(2)
      */
     private $productSuppliers;
 
-    /**
-     * @var Collection $images Images of the product
-     * @ORM\OneToMany(targetEntity="App\Entity\Image", mappedBy="product", cascade={"persist","remove"})
-     * @ApiSubresource()
-     * @Groups({"product:output","category:output","supplier_product:output","favorite:output","order_set:output"})
-     */
-    private $images;
 
     public function __construct()
     {
         $this->productSuppliers = new ArrayCollection();
-        $this->images = new ArrayCollection();
         $this->minimumPrice = 0;
     }
 
@@ -340,34 +334,5 @@ class Product
         return $this;
     }
 
-    /**
-     * @return Collection|Image[]
-     */
-    public function getImages(): Collection
-    {
-        return $this->images;
-    }
 
-    public function addImage(Image $image): self
-    {
-        if (!$this->images->contains($image)) {
-            $this->images[] = $image;
-            $image->setProduct($this);
-        }
-
-        return $this;
-    }
-
-    public function removeImage(Image $image): self
-    {
-        if ($this->images->contains($image)) {
-            $this->images->removeElement($image);
-            // set the owning side to null (unless already changed)
-            if ($image->getProduct() === $this) {
-                $image->setProduct(null);
-            }
-        }
-
-        return $this;
-    }
 }

@@ -36,13 +36,13 @@ class Show extends Component {
   render() {
     if (this.props.deleted) return <Redirect to=".." />;
 
-    const item = this.props.retrieved;
+    const item = this.props.retrieved ? this.props.retrieved['hydra:member'][0] : null;
 
-    console.log("Product retrieved", item);
+    item && console.log("Product retrieved", item);
 
     return (
       <Fragment>
-        <div id={"category-show"}>
+        <div id={"category-show"} className={"col-lg-9 mx-auto"}>
           <h1>
             <FormattedMessage  id={"app.page.product.title"}
                                defaultMessage="Produit"
@@ -82,7 +82,7 @@ class Show extends Component {
             {item && (
               <Row>
                 <Col lg={"6"}>
-                  <img className={"img-fluid"}  src={item['images'][0]['url']} alt={item["title"]}/>
+                  <img className={"img-fluid"}  src={item['url']} alt={item["title"]}/>
                 </Col>
                 <Col lg={"6"}>
                   <Card>
@@ -126,6 +126,7 @@ class Show extends Component {
 
           </div>
           <div className="category-detail-products">
+              {item && console.log('productID', item["id"])}
               { item  && <CarouselProductSuppliers productId={item["id"]}/>}
           </div>
 

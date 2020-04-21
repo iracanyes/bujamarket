@@ -60,7 +60,6 @@ class SupplierFixtures extends Fixture implements DependentFixtureInterface, Fix
         $supplier->setImage($this->getReference(ImageSupplierFixtures::IMAGE_SUPPLIER_REFERENCE));
 
 
-
         $manager->persist($supplier);
         $manager->flush();
 
@@ -102,7 +101,7 @@ class SupplierFixtures extends Fixture implements DependentFixtureInterface, Fix
     public function getDependencies()
     {
         return array(
-            ImageSupplierFixtures::class,
+            ImageSupplierFixtures::class
         );
     }
 

@@ -44,7 +44,7 @@ class Image
      * @var string $title Title of this image
      *
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"category:output","product:output","supplier:output","favorite:output"})
+     * @Groups({"category:output","supplier_product:output","supplier:output","favorite:output"})
      */
     private $title;
 
@@ -52,7 +52,7 @@ class Image
      * @var string $alt Alternative title of this image
      *
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"category:output","product:output","supplier:output","favorite:output"})
+     * @Groups({"category:output","supplier_product:output","supplier:output","favorite:output"})
      */
     private $alt;
 
@@ -62,7 +62,7 @@ class Image
      * @ORM\Column(type="string", length=255)
      * @Assert\NotNull()
      * @Assert\Url()
-     * @Groups({"category:output", "product:output","supplier:output","favorite:output","order_set:output"})
+     * @Groups({"category:output", "supplier_product:output","supplier:output","favorite:output","order_set:output"})
      */
     private $url;
 
@@ -83,10 +83,10 @@ class Image
     private $user;
 
     /**
-     * @var Product $product Product represented by this image
-     * @ORM\ManyToOne(targetEntity="App\Entity\Product", inversedBy="images")
+     * @var SupplierProduct $supplierProduct Supplier's product represented by this image
+     * @ORM\ManyToOne(targetEntity="App\Entity\SupplierProduct", inversedBy="images")
      */
-    private $product;
+    private $supplierProduct;
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\Category", mappedBy="image", cascade={"persist", "remove"})
@@ -176,14 +176,14 @@ class Image
         return $this;
     }
 
-    public function getProduct(): ?Product
+    public function getSupplierProduct(): ?SupplierProduct
     {
-        return $this->product;
+        return $this->supplierProduct;
     }
 
-    public function setProduct(?Product $product): self
+    public function setSupplierProduct(?SupplierProduct $supplierProduct): self
     {
-        $this->product = $product;
+        $this->supplierProduct = $supplierProduct;
 
         return $this;
     }

@@ -151,13 +151,13 @@
     .review-pros {
         margin-bottom: 10px;
         padding-bottom: 10px;
-
+        /*
         &:before {
             background-color: $color-primary;
             border-radius: 2px;
             color: #fff;
-            content: "\f067";
-            font-family: fontawesome;
+            content: "\f4ad";
+            //font-family: fontawesome;
             -webkit-font-smoothing: antialiased;
             height: 21px;
             left: 20px;
@@ -168,6 +168,7 @@
             text-align: center;
             width: 21px;
         }
+         */
     }
 
     .review-cons {

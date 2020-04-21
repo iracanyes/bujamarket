@@ -109,7 +109,7 @@ class User implements UserInterface
      *
      * @ORM\Column(type="boolean")
      * @Assert\Type("boolean")
-     * @Groups({"profile:output","user:output","admin:output","customer:output","supplier:output"})
+     * @Groups({"profile:output","user:output","admin:output","customer:output"})
      */
     private $signinConfirmed;
 
@@ -118,7 +118,7 @@ class User implements UserInterface
      *
      * @ORM\Column(type="datetime")
      * @Assert\Type("DateTime")
-     * @Groups({"profile:output","user:output","admin:output","customer:output","supplier:output"})
+     * @Groups({"profile:output","user:output","admin:output","customer:output"})
      */
     private $dateRegistration;
 
@@ -177,9 +177,17 @@ class User implements UserInterface
 
     /**
      * @var Collection $forums Forum's subjects created by this user
-     * @ORM\OneToMany(targetEntity="App\Entity\Forum", mappedBy="user", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Forum", mappedBy="author", orphanRemoval=true)
      */
     private $forums;
+
+    /**
+     * @var Collection $respondedForums Forums in which the admin responded
+     *
+     * @ORM\OneToMany(targetEntity="App\Entity\Forum", mappedBy="responder")
+     * @Assert\Type("Doctrine\Common\Collections\Collection")
+     */
+    private $respondedForums;
 
     /**
      * @var Collection $messages Messages written by this user
@@ -193,6 +201,7 @@ class User implements UserInterface
         $this->bankAccounts = new ArrayCollection();
         $this->forums = new ArrayCollection();
         $this->messages = new ArrayCollection();
+        $this->respondedForums = new ArrayCollection();
         $this->nbErrorConnection = 0;
         $this->banned = false;
         $this->signinConfirmed = false;
@@ -539,6 +548,37 @@ class User implements UserInterface
             // set the owning side to null (unless already changed)
             if ($forum->getUser() === $this) {
                 $forum->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Forum[]
+     */
+    public function getRespondedForums(): Collection
+    {
+        return $this->respondedForums;
+    }
+
+    public function addRespondedForum(Forum $forum): Admin
+    {
+        if (!$this->respondedForums->contains($forum)) {
+            $this->respondedForums[] = $forum;
+            $forum->setResponder($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRespondedForum(Forum $forum): self
+    {
+        if ($this->respondedForums->contains($forum)) {
+            $this->respondedForums->removeElement($forum);
+            // set the owning side to null (unless already changed)
+            if ($forum->getResponder() === $this) {
+                $forum->setResponder(null);
             }
         }
 

@@ -36,7 +36,7 @@ class Category
      *
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank()
-     * @Groups({"category:output","product:output","supplier_product:output"})
+     * @Groups({"category:output","supplier_product:output"})
      */
     private $name;
 
@@ -45,7 +45,7 @@ class Category
      *
      * @ORM\Column(type="text")
      * @Assert\NotBlank()
-     * @Groups({"category:output","product:output","supplier_product:output"})
+     * @Groups({"category:output","supplier_product:output"})
      */
     private $description;
 
@@ -54,7 +54,7 @@ class Category
      *
      * @ORM\Column(type="datetime")
      * @Assert\Type("DateTime")
-     * @Groups({"category:output","product:output"})
+     * @Groups({"category:output"})
      */
     private $dateCreated;
 
@@ -63,7 +63,7 @@ class Category
      *
      * @ORM\Column(type="boolean")
      * @Assert\Type("boolean")
-     * @Groups({"supplier_product:output"})
+     * @ Groups("category:output")
      */
     private $isValid;
 
@@ -77,7 +77,7 @@ class Category
      *     minMessage="The minimum value is {{ limit }}. Your value is {{ value }}",
      *     maxMessage="The maximum value is {{ limit }}. Your value is {{ value }}"
      * )
-     * @Groups({"category:output","product:output"})
+     * @Groups({"category:output"})
      *
      *
      */

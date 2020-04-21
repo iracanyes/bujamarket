@@ -4,13 +4,12 @@ namespace App\DataFixtures;
 
 use App\Entity\Forum;
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
-use Doctrine\Tests\Common\DataFixtures\TestFixtures\UserFixture;
 use \Faker\Factory;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
-class ForumSupplierFixtures extends Fixture implements DependentFixtureInterface, FixtureGroupInterface
+class ForumSupplierFixtures extends Fixture implements FixtureGroupInterface, DependentFixtureInterface
 {
     private $faker;
 
@@ -33,8 +32,8 @@ class ForumSupplierFixtures extends Fixture implements DependentFixtureInterface
         $forum->setDateCreated($this->faker->dateTimeBetween('-2 years', 'now'));
 
 
-        /* Relation */
-        $forum->setUser($this->getReference(SupplierFixtures::SUPPLIER_REFERENCE));
+        // Relation
+        $forum->setAuthor($this->getReference(SupplierFixtures::SUPPLIER_REFERENCE));
         $forum->setResponder($this->getReference(AdminFixtures::ADMIN_REFERENCE));
 
         $manager->persist($forum);
@@ -44,6 +43,7 @@ class ForumSupplierFixtures extends Fixture implements DependentFixtureInterface
         $this->addReference(self::FORUM_SUPPLIER_REFERENCE, $forum);
     }
 
+
     public function getDependencies()
     {
         return array(
@@ -51,6 +51,7 @@ class ForumSupplierFixtures extends Fixture implements DependentFixtureInterface
             AdminFixtures::class,
         );
     }
+
 
     public static function getGroups(): array
     {

@@ -28,11 +28,45 @@ class ProductHandler
         $this->em = $em;
     }
 
-    public function getNames()
+    public function getNames(): JsonResponse
     {
         $names = $this->em->getRepository(Product::class)
             ->getNames();
 
         return new JsonResponse(["names" =>$names]);
     }
+
+    public function getProductsWithImages()
+    {
+        $options = [
+            "category" => $this->request->query->get('category') ?? null,
+            "page" => $this->request->query->get('page') ?? null,
+            "itemsPerPage" => $this->request->query->get('itemsPerPage') ?? null
+        ];
+
+
+        $products = $this->em->getRepository(Product::class)
+            ->getProductsWithImages($options);
+
+
+        return new JsonResponse(["products" => $products]);
+    }
+
+    public function getProductWithImage()
+    {
+        $options = [
+            "id" => intval($this->request->attributes->get('id')) ?? null,
+            "category" => $this->request->query->get('category') ?? null
+        ];
+
+        dump($this->request->attributes->get('id'));
+        dump(intval($this->request->attributes->get('id')));
+        dump($this->request->query->get('id'));
+
+        $product = $this->em->getRepository(Product::class)
+            ->getProductWithImage($options);
+
+        return $product;
+    }
+
 }

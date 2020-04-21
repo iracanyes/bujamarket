@@ -119,20 +119,11 @@ class Supplier extends User
      */
     private $supplierProducts;
 
-    /**
-     * @var Collection $supplierBills Supplier bills received for product purchased
-     *
-     * @ORM\OneToMany(targetEntity="App\Entity\BillSupplier", mappedBy="supplier", orphanRemoval=true)
-     */
-    private $supplierBills;
-
-
 
     public function __construct()
     {
         parent::__construct();
         $this->supplierProducts = new ArrayCollection();
-        $this->supplierBills = new ArrayCollection();
     }
 
     public function getUserType(): string
@@ -273,36 +264,6 @@ class Supplier extends User
         return $this;
     }
 
-    /**
-     * @return Collection|BillSupplier[]
-     */
-    public function getSupplierBills(): Collection
-    {
-        return $this->supplierBills;
-    }
-
-    public function addSupplierBill(BillSupplier $supplierBill): self
-    {
-        if (!$this->supplierBills->contains($supplierBill)) {
-            $this->supplierBills[] = $supplierBill;
-            $supplierBill->setSupplier($this);
-        }
-
-        return $this;
-    }
-
-    public function removeSupplierBill(BillSupplier $supplierBill): self
-    {
-        if ($this->supplierBills->contains($supplierBill)) {
-            $this->supplierBills->removeElement($supplierBill);
-            // set the owning side to null (unless already changed)
-            if ($supplierBill->getSupplier() === $this) {
-                $supplierBill->setSupplier(null);
-            }
-        }
-
-        return $this;
-    }
 
     public function getSupplierKey(): ?string
     {

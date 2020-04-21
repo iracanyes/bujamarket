@@ -92,7 +92,7 @@ class AdminFixtures extends Fixture implements DependentFixtureInterface, Fixtur
     public function getDependencies()
     {
         return array(
-            ImageAdminFixtures::class,
+            ImageAdminFixtures::class
         );
     }
 

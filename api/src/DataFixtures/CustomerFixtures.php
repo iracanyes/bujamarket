@@ -52,7 +52,6 @@ class CustomerFixtures extends Fixture implements DependentFixtureInterface, Fix
         $customer->setNbOrderCompleted(count($customer->getOrderSets()));
         $customer->setNbOrderWithdrawn(0);
 
-
         $manager->persist($customer);
         $manager->flush();
 
@@ -80,7 +79,6 @@ class CustomerFixtures extends Fixture implements DependentFixtureInterface, Fix
         /* Relations */
 
         $user->setImage($this->getReference(ImageCustomerFixtures::IMAGE_CUSTOMER_REFERENCE));
-        //$user->addAddress(AddressUserFixtures::ADDRESSUSER);
 
     }
 

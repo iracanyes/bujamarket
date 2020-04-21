@@ -24,3 +24,17 @@ input[type='file']
 {
     padding: 0.375rem 0.75rem !important;
 }
+
+// Bouton Ajouter au panier et commande immédiat
+form#add-shopping-card
+{
+    button.btn-outline-success{
+        color: #F5A54C;
+        border-color: #F5A54C;
+    }
+
+    a.btn-outline-danger{
+        color: #F5A54C;
+        border-color: #F5A54C;
+    }
+}

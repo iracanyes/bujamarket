@@ -36,7 +36,7 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface, Fixt
 
         /* Relations */
         $product->setCategory($this->getReference(CategoryFixtures::CATEGORY_REFERENCE));
-        $product->addImage($this->getReference(ImageFixtures::IMAGE_REFERENCE));
+
 
         $manager->persist($product);
 
@@ -50,7 +50,6 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface, Fixt
 
         return array(
             CategoryFixtures::class,
-            ImageFixtures::class,
         );
 
     }

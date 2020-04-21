@@ -119,9 +119,9 @@ class Customer extends User
     private $favorites;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\ShoppingCard", mappedBy="customer", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="ShoppingCartDetail", mappedBy="customer")
      */
-    private $shoppingCard;
+    private $shoppingCartDetails;
 
 
 
@@ -133,6 +133,7 @@ class Customer extends User
         $this->refundBills = new ArrayCollection();
         $this->comments = new ArrayCollection();
         $this->favorites = new ArrayCollection();
+        $this->shoppingCartDetails = new ArrayCollection();
         $this->nbAbuseIdentified = 0;
         $this->nbOrderCompleted = 0;
         $this->nbOrderWithdrawn = 0;
@@ -360,18 +361,32 @@ class Customer extends User
         return $this;
     }
 
-    public function getShoppingCard(): ?ShoppingCard
+    public function getShoppingCartDetails(): Collection
     {
-        return $this->shoppingCard;
+        return $this->shoppingCartDetails;
     }
 
-    public function setShoppingCard(ShoppingCard $shoppingCard): self
+    public function addShoppingCartDetail(ShoppingCartDetail $shoppingCartDetail): self
     {
-        $this->shoppingCard = $shoppingCard;
+        if(!$this->shoppingCartDetails->contains($shoppingCartDetail))
+        {
+            $this->shoppingCartDetails[] = $shoppingCartDetail;
+            $shoppingCartDetail->setCustomer($this);
+        }
 
-        // set the owning side of the relation if necessary
-        if ($this !== $shoppingCard->getCustomer()) {
-            $shoppingCard->setCustomer($this);
+        return $this;
+    }
+
+    public function removeShoppingCartDetail(ShoppingCartDetail $shoppingCartDetail): self
+    {
+        if($this->shoppingCartDetails->contains($shoppingCartDetail))
+        {
+            $this->shoppingCartDetails->removeElement($shoppingCartDetail);
+
+            if($shoppingCartDetail->getCustomer() === $this)
+            {
+                $shoppingCartDetail->setCustomer(null);
+            }
         }
 
         return $this;

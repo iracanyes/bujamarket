@@ -8,11 +8,10 @@ $screen-xs-max: 460px;
 @import "variables";
 
 
-
 /* Composants */
 @import "components/layout/header";
 @import "components/layout/sidebar-left";
-
+@import "components/layout/footer";
 
 
 /* Superlist styles */

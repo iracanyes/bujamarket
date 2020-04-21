@@ -18,13 +18,40 @@ export function success(retrieved) {
   return { type: 'PRODUCT_LIST_SUCCESS', retrieved };
 }
 
-export function list(page = 'products') {
+export function list(options={}, page = 'products_with_images') {
   return dispatch => {
     dispatch(loading(true));
     dispatch(error(''));
 
+    if(options.category)
+    {
+      page += ('?category='+encodeURIComponent(options.category));
+    }
 
-    fetch(page !== 'products' && page !== null  ? 'products?page='+ page : "products")
+    if(options.page)
+    {
+      if(page.charAt(page.length - 1) !== '?')
+      {
+        page += '&'
+      }
+
+      page += ('page='+encodeURIComponent(options.page));
+    }
+
+    if(options.itemsPerPage)
+    {
+      if(page.charAt(page.length - 1) !== '?')
+      {
+        page += '&'
+      }
+
+      page += ('page='+encodeURIComponent(options.itemsPerPage));
+    }
+
+
+
+
+    fetch(page)
       .then(response => {
 
         return response

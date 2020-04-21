@@ -5,7 +5,7 @@
  */
 import React from 'react';
 import { Route } from "react-router-dom";
-import { Show } from '../components/shoppingcard/';
+import { Show } from '../components/shoppingcart/';
 
 export default [
   <Route path={"/shopping_card"} component={Show} exact key={"show"} />

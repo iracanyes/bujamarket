@@ -15,6 +15,16 @@ App\Entity\Comment:
             #options:
             #    my_option: 'my_option_value'
             status: 200 # customize the HTTP status code to send
+        getCommentsSupplierProduct:
+            method: 'GET'
+            path: '/comments/supplier_product/{id}'
+            requirements: 
+                id: '\d+'
+            default: 
+                _api_receive: false
+            schemes: ['https']
+            accessControl: "is_granted('ROLE_MEMBER') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
+            controller: App\Controller\Comment\GetCommentsSupplierProductAction
         post:
             method: 'POST'
             path: '/comment/create'
