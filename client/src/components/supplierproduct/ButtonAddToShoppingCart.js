@@ -1,7 +1,7 @@
 /**
  * Author: iracanyes
  * Date: 9/21/19
- * Description: Button - Add to shopping card
+ * Description: Button - Add to shopping cart
  */
 /* eslint react/no-multi-comp: 0, react/prop-types: 0 */
 
@@ -20,7 +20,7 @@ class ButtonAddToShoppingCart extends React.Component {
       update: false
     };
 
-    this.addToShoppingCard = this.addToShoppingCard.bind(this);
+    this.addToShoppingCart = this.addToShoppingCart.bind(this);
     this.toggle = this.toggle.bind(this);
     this.cancel = this.cancel.bind(this);
     this.changeQuantity = this.changeQuantity.bind(this);
@@ -42,7 +42,7 @@ class ButtonAddToShoppingCart extends React.Component {
   {
 
     // Redirection vers le panier de commande pour validation
-    this.props.history.push('/shopping_card');
+    this.props.history.push('/shopping_cart');
   }
 
   toggle() {
@@ -50,28 +50,28 @@ class ButtonAddToShoppingCart extends React.Component {
       modal: !prevState.modal
     }));
 
-    this.addToShoppingCard();
+    this.addToShoppingCart();
 
   }
 
-  addToShoppingCard()
+  addToShoppingCart()
   {
     /* Ajout au  panier de commande dans LocalStorage  */
-    let shopping_card = localStorage.getItem("shopping_card") !== null ? JSON.parse(localStorage.getItem("shopping_card")) : [];
+    let shopping_cart = localStorage.getItem("shopping_cart") !== null ? JSON.parse(localStorage.getItem("shopping_cart")) : [];
 
 
     /* Si le panier de commande existe */
-    if( shopping_card.length > 0 )
+    if( shopping_cart.length > 0 )
     {
       /* mise à jour de la quantité pour le produit */
-      let index  = shopping_card.findIndex( value => value.productId === this.props.product.id);
+      let index  = shopping_cart.findIndex( value => value.productId === this.props.product.id);
       /* Si le produit exite, on met à jour la quantité */
       if( index !== -1 )
       {
-        shopping_card[index].quantity = this.state.quantity;
+        shopping_cart[index].quantity = this.state.quantity;
       }else{
         /* Sinon, on ajoute un nouveau produit au panier de commande */
-        shopping_card.push({
+        shopping_cart.push({
           'productId': this.props.product.id,
           'title': this.props.product.product.title,
           'description': this.props.product.product.resume,
@@ -82,7 +82,7 @@ class ButtonAddToShoppingCart extends React.Component {
       }
     }else{
       /* Si le panier est vide, on ajoute un nouveau produit */
-      shopping_card.push({
+      shopping_cart.push({
         'productId': this.props.product.id,
         'title': this.props.product.product.title,
         'description': this.props.product.product.resume,
@@ -93,22 +93,22 @@ class ButtonAddToShoppingCart extends React.Component {
     }
 
     /* Enregistrement du panier de commande */
-    localStorage.removeItem('shopping_card');
-    localStorage.setItem('shopping_card', JSON.stringify(shopping_card));
+    localStorage.removeItem('shopping_cart');
+    localStorage.setItem('shopping_cart', JSON.stringify(shopping_cart));
   }
 
   deleteProduct(id)
   {
-    let shopping_card = localStorage.getItem("shopping_card") ? JSON.parse(localStorage.getItem("shopping_card")) : [];
+    let shopping_cart = localStorage.getItem("shopping_cart") ? JSON.parse(localStorage.getItem("shopping_cart")) : [];
 
-    let index = shopping_card.findIndex(value => value.id === id);
+    let index = shopping_cart.findIndex(value => value.id === id);
     // Suppression du produit dans le panier de commande
-    shopping_card.splice(index, 1);
+    shopping_cart.splice(index, 1);
     // Mise à jour du panier de commade
-    if(shopping_card.length > 0)
+    if(shopping_cart.length > 0)
     {
-      localStorage.removeItem('shopping_card');
-      localStorage.setItem('shopping_card', JSON.stringify(shopping_card));
+      localStorage.removeItem('shopping_cart');
+      localStorage.setItem('shopping_cart', JSON.stringify(shopping_cart));
       this.setState({update: true});
     }else{
       this.toggle();
@@ -120,24 +120,25 @@ class ButtonAddToShoppingCart extends React.Component {
 
 
   cancel(){
+
+
+    /* Annuler l'ajout au  panier de commande dans LocalStorage  */
+    let shopping_cart = localStorage.getItem("shopping_cart") !== null ? JSON.parse(localStorage.getItem("shopping_cart")) : [];
+
+    /* Index du dernier produit ajouté */
+    let index  = shopping_cart.findIndex( value => value.productId === this.props.product.id);
+
+    /* Suppression de l'élément */
+    shopping_cart.splice(index, 1);
+
+    /* Mise à jour du panier de commande dans LocalStorage */
+    localStorage.removeItem('shopping_cart');
+    localStorage.setItem('shopping_cart', JSON.stringify(shopping_cart));
+
+
     this.setState(prevState => ({
       modal: !prevState.modal
     }));
-
-    /* Annuler l'ajout au  panier de commande dans LocalStorage  */
-    let shopping_card = localStorage.getItem("shopping_card") !== null ? JSON.parse(localStorage.getItem("shopping_card")) : [];
-
-    /* Index du dernier produit ajouté */
-    let index  = shopping_card.findIndex( value => value.productId === this.props.product.id);
-
-    /* Suppression de l'élément */
-    shopping_card.splice(index, 1);
-
-    /* Mise à jour du panier de commande dans LocalStorage */
-    localStorage.removeItem('shopping_card');
-    localStorage.setItem('shopping_card', JSON.stringify(shopping_card));
-
-    this.props.toggle();
 
   }
 
@@ -147,19 +148,19 @@ class ButtonAddToShoppingCart extends React.Component {
   }
 
   render() {
-    let shopping_card = localStorage.getItem("shopping_card") ? JSON.parse(localStorage.getItem("shopping_card")) : [];
+    let shopping_cart = localStorage.getItem("shopping_cart") ? JSON.parse(localStorage.getItem("shopping_cart")) : [];
 
     let sum = 0;
-    shopping_card.forEach( item => sum += parseFloat(item.price) * item.quantity );
+    shopping_cart.forEach( item => sum += parseFloat(item.price) * item.quantity );
 
     return (
       <div>
-        <Form inline id={"add-shopping-card"} onSubmit={(e) => e.preventDefault()}>
+        <Form inline id={"add-shopping-cart"} onSubmit={(e) => e.preventDefault()}>
           <FormGroup className={'w-100'}>
             <Label for="quantity" className={"mr-2"}>
               <FormattedMessage  id={"app.form.quantity"}
                                  defaultMessage="Quantité"
-                                 description=" Shopping card - quantity"
+                                 description=" Shopping cart - quantity"
               />
             </Label>{' '}
             <Input type="number" min={1} name="quantity" id="quantity" className={"w-100"} onChange={this.changeQuantity} value={this.state.quantity} />
@@ -167,12 +168,12 @@ class ButtonAddToShoppingCart extends React.Component {
           </FormGroup>
           {' '}
           <Button outline color="success" className={"w-100 my-2"} onClick={this.toggle}>
-            <FormattedMessage  id={"app.button.add_shopping_card"}
+            <FormattedMessage  id={"app.button.add_shopping_cart"}
                                defaultMessage="Ajouter au panier"
                                description=" Button - Order now"
             />
           </Button>
-          <Link to={'/shopping_card'} className={"btn btn-outline-danger w-100"} onClick={this.addToShoppingCard}>
+          <Link to={'/shopping_cart'} className={"btn btn-outline-danger w-100"} onClick={this.addToShoppingCart}>
             <FormattedMessage  id={"app.button.order_now"}
                                defaultMessage="Commande immédiate"
                                description=" Button - Order now"
@@ -185,11 +186,11 @@ class ButtonAddToShoppingCart extends React.Component {
             <h4 className="d-flex justify-content-between align-items-center mb-3">
               <span className="text-muted">Vos choix</span>
               <span className="badge badge-secondary badge-pill">
-                {shopping_card.length}
+                {shopping_cart.length}
               </span>
             </h4>
             <ul className="list-group mb-3">
-              {shopping_card.map( (item, index) => (
+              {shopping_cart.map( (item, index) => (
                 <li key={index} className="list-group-item d-flex justify-content-between lh-condensed">
                   <div className={'col-9'}>
                     <h6 className="my-0">{item.title}</h6>

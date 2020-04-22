@@ -18,12 +18,24 @@ export function success(retrieved) {
   return { type: 'FAVORITE_LIST_SUCCESS', retrieved };
 }
 
-export function list(page = 'favorites') {
+export function list(page = 'my_favorites', history) {
   return dispatch => {
     dispatch(loading(true));
     dispatch(error(''));
 
-    fetch(page)
+    /* Récupération de la clé JWT et ajout au header de la requête */
+    const userToken = JSON.parse(localStorage.getItem('token'));
+    let headers = new Headers();
+    if(userToken === null)
+    {
+      history.push({pathname: '../../login', state: { from : window.location.pathname }});
+    }else{
+      /* Création du header de la requête */
+      headers.set('Authorization', 'Bearer ' + userToken.token);
+
+    }
+
+    fetch(page, {method: 'GET', headers: headers})
       .then(response =>
         response
           .json()
@@ -46,6 +58,26 @@ export function list(page = 'favorites') {
       .catch(e => {
         dispatch(loading(false));
         dispatch(error(e.message));
+
+        if(/Access Denied/.test(e.message))
+        {
+          if(sessionStorage.getItem('flash-message-error') !== null)
+          {
+            sessionStorage.removeItem('flash-message-error');
+          }
+          sessionStorage.setItem('flash-message-error', JSON.stringify({message: "Accès refusé!"}));
+          history.push({pathname: '../../', state: {from : window.location.pathname}});
+        }
+
+        if(/Unauthorized/.test(e.message))
+        {
+          if(sessionStorage.getItem('flash-message-error') !== null)
+          {
+            sessionStorage.removeItem('flash-message-error');
+          }
+          sessionStorage.setItem('flash-message-error', JSON.stringify({message: "Connexion nécessaire!"}));
+          history.push({ pathname: '../../login', state: { from: window.location.pathname }})
+        }
       });
   };
 }

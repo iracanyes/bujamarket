@@ -194,5 +194,25 @@ div.list-categories{
     }
 
 }
+/* End Page - Liste categories */
 
+/* Page - Liste favoris */
+#my-favorites-buttons
+{
+    button{
+        border-color: #F5A54C;
+        color: #F5A54C;
+        margin: 0.2rem;
+        width: 9rem;
+    }
 
+    button:hover{
+        color: white;
+    }
+
+    #toast-shopping-cart
+    {
+        width: 10rem;
+        z-index: 1;
+    }
+}

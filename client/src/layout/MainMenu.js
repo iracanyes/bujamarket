@@ -34,10 +34,7 @@ class MainMenu extends Component
       isOpen: true
     };
 
-
   }
-
-
 
   toggle()
   {
@@ -80,7 +77,7 @@ class MainMenu extends Component
               { user ===  null && (
                 <div className={'d-flex'}>
                   <DropdownItem>
-                    <NavLink tag={RRDNavLink} to={{pathname:"/login", state: { from : this.props.location.pathname }}}>
+                    <NavLink tag={RRDNavLink} to={{pathname:"/login", state: { from : window.location.pathname }}}>
                       <FontAwesomeIcon icon="user-check" className={"float-left"} />
                       <FormattedMessage  id={"app.header.main_menu.profile.sub_menu.sign_in.link"}
                                          defaultMessage="Connexion"
@@ -156,11 +153,11 @@ class MainMenu extends Component
               </NavItem>
 
               <NavItem>
-                <NavLink tag={RRDNavLink} to={"/shopping_card"}>
+                <NavLink tag={RRDNavLink} to={"/shopping_cart"}>
                   <FontAwesomeIcon icon="shopping-cart" className="menu-top-l1" />
-                  <FormattedMessage  id={"app.header.main_menu.shopping_card.link"}
+                  <FormattedMessage  id={"app.header.main_menu.shopping_cart.link"}
                                      defaultMessage={"Panier de commande"}
-                                     description="Main menu shopping card navigation link"
+                                     description="Main menu shopping cart navigation link"
                                      className="main-menu-top-level-text"
                   />
                 </NavLink>

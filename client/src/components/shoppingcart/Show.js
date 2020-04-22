@@ -1,7 +1,7 @@
 /**
  * Author: iracanyes
  * Date: 9/22/19
- * Description: Shopping card of the customer
+ * Description: Shopping cart of the customer
  */
 import React from 'react';
 import { connect } from 'react-redux';
@@ -14,7 +14,7 @@ import {
 } from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FormattedMessage } from 'react-intl';
-import { create } from '../../actions/shoppingcard/create';
+import { create } from '../../actions/shoppingcart/create';
 
 class Show extends React.Component {
   constructor(props)
@@ -41,30 +41,30 @@ class Show extends React.Component {
 
   deleteProduct(id)
   {
-    let shopping_card = localStorage.getItem("shopping_card") ? JSON.parse(localStorage.getItem("shopping_card")) : [];
+    let shopping_cart = localStorage.getItem("shopping_cart") ? JSON.parse(localStorage.getItem("shopping_cart")) : [];
 
-    let index = shopping_card.findIndex(value => value.id === id);
+    let index = shopping_cart.findIndex(value => value.id === id);
     // Suppression du produit dans le panier de commande
-    shopping_card.splice(index, 1);
+    shopping_cart.splice(index, 1);
     // Mise à jour du panier de commade
-    localStorage.removeItem('shopping_card');
-    localStorage.setItem('shopping_card', JSON.stringify(shopping_card));
-    this.props.history.push('shopping_card');
+    localStorage.removeItem('shopping_cart');
+    localStorage.setItem('shopping_cart', JSON.stringify(shopping_cart));
+    this.props.history.push('shopping_cart');
 
   }
 
   onSubmit()
   {
     let locationState = { from : this.props.location.pathname};
-    this.props.create(JSON.parse(localStorage.getItem('shopping_card')), this.props.history, locationState);
+    this.props.create(JSON.parse(localStorage.getItem('shopping_cart')), this.props.history, locationState);
 
   }
 
   render() {
-    let shopping_card = localStorage.getItem("shopping_card") ? JSON.parse(localStorage.getItem("shopping_card")) : [];
+    let shopping_cart = localStorage.getItem("shopping_cart") ? JSON.parse(localStorage.getItem("shopping_cart")) : [];
 
     let sum = 0;
-    shopping_card.forEach( item => sum += parseFloat(item.price) * item.quantity );
+    shopping_cart.forEach( item => sum += parseFloat(item.price) * item.quantity );
 
     return (
       <div className={"col-6 mx-auto"}>
@@ -79,7 +79,7 @@ class Show extends React.Component {
                   <ol className="breadcrumb clearfix d-none d-md-inline-flex p-0 w-100 mb-0 bg-primary">
                     <li className="">
                         <b>
-                          <FormattedMessage  id={"app.page.shopping_card.shopping_card_validation"}
+                          <FormattedMessage  id={"app.page.shopping_cart.shopping_cart_validation"}
                                              defaultMessage="Validation du panier de commande"
                                              description="App - Delivery address"
                           />
@@ -130,10 +130,10 @@ class Show extends React.Component {
         <div className={"order-md-4 my-4"}>
           <h4 className="d-flex justify-content-between align-items-center mb-3">
             <span className="text-muted">Vos choix</span>
-            <span className="badge badge-secondary badge-pill">{shopping_card.length}</span>
+            <span className="badge badge-secondary badge-pill">{shopping_cart.length}</span>
           </h4>
           <ListGroup>
-            {shopping_card.map((item, index) => (
+            {shopping_cart.map((item, index) => (
               <ListGroupItem className={'d-flex'} key={index}>
                 <div className="col-9">
                   <ListGroupItemHeading>{item.title}</ListGroupItemHeading>
@@ -164,7 +164,7 @@ class Show extends React.Component {
             ))}
           </ListGroup>
           <div className="col-4 d-flex mx-auto mt-3">
-            {shopping_card.length > 0 && (
+            {shopping_cart.length > 0 && (
               <Button outline color={"success"} className={'mr-3'} onClick={this.onSubmit}>
                 <FormattedMessage  id={"app.button.validate"}
                                    defaultMessage="Valider"

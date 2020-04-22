@@ -13,7 +13,7 @@ form#delivery-address-form
     }
 }
 
-div#delivery-address-shopping-card
+div#delivery-address-shopping-cart
 {
     position : absolute;
     right: 9rem;
@@ -26,7 +26,7 @@ input[type='file']
 }
 
 // Bouton Ajouter au panier et commande immédiat
-form#add-shopping-card
+form#add-shopping-cart
 {
     button.btn-outline-success{
         color: #F5A54C;

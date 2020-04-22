@@ -64,13 +64,13 @@ export function login(email, password, history, locationState) {
 
         /* En passant l'objet this.props.history du composant vers son action creator cela permet de transmettre le changement d'URL au store
         */
-        if(locationState.state && locationState.params && locationState.state.from)
+        if(locationState.state && locationState.state.params && locationState.state.from)
         {
-          history.push({ pathname: locationState.state.from, state: { params: locationState.params } });
+          history.push({ pathname: locationState.state.from, state: { params: locationState.state.params } });
         }else{
-          if(locationState.from && locationState.params )
+          if(locationState.state.from && !/login/.test(locationState.state.from) )
           {
-            history.push({ pathname: locationState.from, state: { params: locationState.params } });
+            history.push({ pathname: locationState.state.from });
           }else{
             history.push('/');
           }

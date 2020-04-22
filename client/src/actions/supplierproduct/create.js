@@ -52,7 +52,7 @@ export function create(values, history) {
           throw e;
         }
 
-        console.log(e);
+
         if(/Access Denied/.test(e.message))
         {
           history.push({pathname: '../../', state: {from : window.location.pathname}});

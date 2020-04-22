@@ -23,16 +23,20 @@ export function search(searchParams = {}) {
     dispatch(loading(true));
     dispatch(error(""));
 
-    let page = "products?";
+    let page = "products_with_images";
 
     if(searchParams.default)
     {
+       if(page.charAt(page.length - 1 ) !== "?")
+         page += "?";
       page = page +"title="+ searchParams.default;
     }
 
     if(searchParams.resume)
     {
-      if( page.charAt(page.length - 1 ) !== "?")
+      if( !/\?/.test(page))
+        page += "?";
+      else
         page += "&";
       page = page + "resume="+ searchParams.resume
     }
