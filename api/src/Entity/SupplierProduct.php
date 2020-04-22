@@ -173,7 +173,7 @@ class SupplierProduct
 
     /**
      * @ORM\Column(type="float")
-     * @Groups({"supplier_product:output","order_set:output"})
+     * @Groups({"supplier_product:output","order_set:output","favorite:output"})
      */
     private $finalPrice;
 

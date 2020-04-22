@@ -39,6 +39,8 @@ class ProductHandler
     public function getProductsWithImages()
     {
         $options = [
+            "title" => $this->request->query->get("title") ?? null,
+            "resume" => $this->request->query->get("resume") ?? null,
             "category" => $this->request->query->get('category') ?? null,
             "page" => $this->request->query->get('page') ?? null,
             "itemsPerPage" => $this->request->query->get('itemsPerPage') ?? null

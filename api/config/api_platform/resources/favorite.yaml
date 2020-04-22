@@ -15,6 +15,20 @@ App\Entity\Favorite:
             #options:
             #    my_option: 'my_option_value'
             status: 200 # customize the HTTP status code to send
+        getMyFavorites:
+            method: 'GET'
+            path: '/my_favorites.{_format}'
+            requirements:
+                _format: 'json\jsonld\html'
+            defaults:
+                _format: 'json'
+            # host: 'localhost'
+            schemes: ['https']
+            access_control: "is_granted('ROLE_CUSTOMER') and is_granted('IS_AUTHENTICATED_FULLY')"
+            #options:
+            #    my_option: 'my_option_value'
+            status: 200 # customize the HTTP status code to send
+            controller: App\Controller\Favorite\GetMyFavoritesAction
         getIds:
             method: 'GET'
             path: '/favorites/ids'
