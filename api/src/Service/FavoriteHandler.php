@@ -8,7 +8,9 @@ use App\Entity\Favorite;
 use App\Entity\SupplierProduct;
 use App\Exception\Favorite\DeleteOperationException;
 use App\Exception\Favorite\FavoriteNotFoundException;
+use App\Exception\Favorite\FavoritesNotFoundException;
 use App\Exception\SupplierProduct\SupplierProductNotFoundException;
+use App\Exception\User\MemberNotFoundException;
 use Doctrine\DBAL\Driver\PDOException;
 use Doctrine\ORM\EntityManagerInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\UserNotFoundException;
@@ -95,7 +97,7 @@ class FavoriteHandler
     public function deleteFavorite()
     {
         $id =( int ) $this->request->attributes->get('id');
-        dump($id);
+
 
 
         try{
@@ -105,15 +107,16 @@ class FavoriteHandler
             throw new UserNotFoundException(self::SECURITY_EMAIL_PROPERTY, $this->security->getUser()->getUsername());
         }
 
-        dump($id);
-        dump($customer->getId());
+
 
         try{
             $favorite = $this->em->getRepository(Favorite::class)
-                ->findOneBy(['supplierProduct' => $id, 'customer' => $customer->getId() ]);
+                ->findOneBy(['id' => $id, 'customer' => $customer ]);
         }catch (PDOException $exception){
             throw new FavoriteNotFoundException(sprintf("Favorite ID %d not found", $id),404);
         }
+
+        dump($favorite);
 
         try{
             $this->em->remove($favorite);
@@ -124,8 +127,27 @@ class FavoriteHandler
 
         return new JsonResponse(['id'=> $id, 'message' => 'OK'], 200);
 
+    }
 
+    public function getMyFavorites()
+    {
+        try{
+            $customer = $this->em->getRepository(Customer::class)
+                ->findOneBy(["email" => $this->security->getUser()->getUsername()]);
 
+        }catch (\PDOException $exception){
+            throw new MemberNotFoundException($exception->getMessage());
+        }
+
+        try {
+            $favorites = $this->em->getRepository(Favorite::class)
+                ->findBy(["customer" => $customer]);
+        }catch(\PDOException $exception)
+        {
+            throw new FavoritesNotFoundException($exception->getMessage());
+        }
+
+        return $favorites;
     }
 
 

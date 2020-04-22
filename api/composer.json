@@ -21,10 +21,13 @@
         "symfony/error-handler": "^5.0",
         "symfony/flex": "^1.1",
         "symfony/framework-bundle": "^5.0",
+        "symfony/http-foundation": "5.0.7",
         "symfony/http-kernel": "^5.0",
         "symfony/mercure-bundle": "^0.2",
         "symfony/monolog-bundle": "^3.4",
         "symfony/orm-pack": "^1.0",
+        "symfony/security-core": "5.0.7",
+        "symfony/security-http": "5.0.7",
         "symfony/swiftmailer-bundle": "3.4.0",
         "symfony/yaml": "^5.0",
         "vich/uploader-bundle": "^1.10"
