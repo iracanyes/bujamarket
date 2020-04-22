@@ -49,7 +49,7 @@ class PaymentSuccess extends Component {
 
   componentDidMount() {
     // Suppression du panier de commande
-    localStorage.removeItem('shopping_card');
+    localStorage.removeItem('shopping_cart');
 
     // Vérification authentification
     if(localStorage.getItem('token') === null)

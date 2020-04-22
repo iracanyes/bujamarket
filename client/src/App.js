@@ -83,7 +83,7 @@ import orderReturnedRoutes from './routes/orderreturned';
 import paymentRoutes from './routes/payment';
 import productRoutes from './routes/product';
 import shipperRoutes from './routes/shipper';
-import shoppingCardRoutes from './routes/shoppingcard';
+import shoppingCartRoutes from './routes/shoppingcart';
 import supplierRoutes from './routes/supplier';
 import supplierProductRoutes from './routes/supplierproduct';
 import userRoutes from './routes/user';
@@ -231,7 +231,7 @@ export class App extends Component
                           { orderSetRoutes }
                           { productRoutes }
                           { shipperRoutes }
-                          { shoppingCardRoutes }
+                          { shoppingCartRoutes }
                           { supplierRoutes }
                           { supplierProductRoutes }
                           { userRoutes }

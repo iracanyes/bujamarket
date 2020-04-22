@@ -1,7 +1,7 @@
 /**
  * Author: iracanyes
  * Date: 21/02/2020
- * Description: Button - Add to shopping card
+ * Description: Button - Add to shopping cart
  */
 import React, { Component } from 'react';
 import { Button, Toast, ToastBody, ToastHeader } from 'reactstrap';
@@ -28,12 +28,12 @@ class ButtonAddToShoppingCart2 extends Component{
     return (
       <div>
 
-        <div  onClick={this.toggle}>
+        <Button  onClick={this.toggle}>
           <FontAwesomeIcon icon="shopping-cart" className="menu-top-l1" />
           <span data-toggle="Bookmarked" className={'ml-1'}>Ajouter au panier</span>
-        </div>
+        </Button>
         <Toast isOpen={this.state.show} id={"toast-shopping-cart"}>
-          <ToastHeader toggle={this.toggle}>Toast title</ToastHeader>
+          <ToastHeader toggle={this.toggle}>Panier de commande</ToastHeader>
           <ToastBody>
             <ButtonAddToShoppingCart toggle={this.toggle} product={this.props.product}/>
           </ToastBody>

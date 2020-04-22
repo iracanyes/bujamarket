@@ -27,7 +27,23 @@ export function del(item, history) {
         dispatch(success(item));
 
         /* On supprime l'élément des favorites */
-        
+        let shopping_cart = localStorage.getItem("shopping_cart") ? JSON.parse(localStorage.getItem("shopping_cart")) : [];
+
+        let index = shopping_cart.findIndex(value => value.id === item);
+        // Suppression du produit dans le panier de commande
+        shopping_cart.splice(index, 1);
+        // Mise à jour du panier de commade
+        localStorage.removeItem('shopping_cart');
+        if(shopping_cart.length > 0)
+        {
+          localStorage.setItem('shopping_cart', JSON.stringify(shopping_cart));
+        }
+
+        sessionStorage.removeItem("flash-message-success");
+        sessionStorage.setItem("flash-message-success", `L'élément ID ${item} a été supprimé de vos favoris`);
+
+        window.location.reload();
+
       })
       .catch(e => {
         dispatch(loading(false));
