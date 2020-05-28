@@ -2,7 +2,9 @@
 
 namespace App\Repository;
 
+use ApiPlatform\Core\DataProvider\PaginatorInterface;
 use App\Entity\Product;
+use App\Exception\Product\SearchParameterNotFoundException;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
@@ -39,6 +41,14 @@ class ProductRepository extends ServiceEntityRepository
             ->addSelect(array('i.title as image_title','i.alt','i.url'))
             ->groupBy('p.id');
 
+         /* Recherche dans le titre, le résumé ou la description du produit */
+         if($options['title'] !== null)
+             $qb->andWhere("p.title LIKE :title OR p.resume LIKE :title OR p.description LIKE :title")
+                 ->setParameter("title", "%".$options['title']."%");
+
+         if($options['resume'] !== null)
+             $qb->andWhere("p.resume")
+                 ->setParameter("resume", $options['resume']);
 
 
          if($options['category'] !== null)
@@ -83,6 +93,31 @@ class ProductRepository extends ServiceEntityRepository
 
         return $qb->getQuery()
             ->getResult();
+    }
+
+    public function searchProducts($options = [])
+    {
+        if($options['title'] == null)
+            throw new SearchParameterNotFoundException("Missing parameter 'title' for searching products!");
+
+        $qb = $this->createQueryBuilder('p')
+            ->select("p.title, p.resume, p.description, p.minimumPrice")
+            ->leftJoin('p.productSuppliers', 'sp')
+            ->leftJoin('p.category', 'c')
+            ->addSelect(array('c.name as category_name'))
+            ->leftJoin('sp.images', 'i')
+            ->addSelect(array('i.title as image_title','i.alt','i.url'))
+            ->addSelect("MATCH_AGAINST (p.title, p.resume, p.description) AGAINST (:searchterm ) AS score")
+            ->where("MATCH_AGAINST(p.title, p.resume, p.description) AGAINST (:searchterm ) > 0")
+            ->setParameter("searchterm", $options['title'])
+            ->groupBy("p.id")
+            ->orderBy("score", "DESC");
+
+        dump($qb->getQuery());
+
+        return $qb->getQuery()
+            ->getResult();
+
     }
 
     // /**
