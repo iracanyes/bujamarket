@@ -74,8 +74,6 @@ class MainMenuSearchForm extends Component
   {
     // Traitement de l'input
     this.setState({searchParams: {default: e.target.value } });
-
-
   }
 
   handleSubmit(e)

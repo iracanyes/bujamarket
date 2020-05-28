@@ -37,7 +37,7 @@ class SearchResults extends  Component{
 
   componentDidMount() {
 
-    this.setState({results: this.props.results});
+    this.setState({products: this.state.retrievedProducts, suppliers: this.state.retrievedSuppliers});
   }
 
 
@@ -50,7 +50,7 @@ class SearchResults extends  Component{
     let resultsPer4 = [];
 
     // Récupération des données
-    const products = this.props.retrievedProducts && this.props.retrievedProducts['hydra:member'];
+    const products = this.props.retrievedProducts && this.props.retrievedProducts.products;
 
     // key index pour les items
     let index = 0;
@@ -120,7 +120,7 @@ class SearchResults extends  Component{
                 <Col key={"products" + (i * 12 + j)} xs={"12"} sm="6" md="4" lg="3">
                   <Card body>
 
-                    <CardImg top width="100%" src="https://picsum.photos/2000/3000" alt={products[i * 12 + j].images[0].alt} />
+                    <CardImg top width="100%" src={products[i * 12 + j].url} alt={products[i * 12 + j].alt} />
                     <CardTitle>{products[i * 12 + j]["title"]}</CardTitle>
                     <CardText>
                       <FormattedMessage  id={"app.product.item.price_from"}
@@ -223,10 +223,7 @@ class SearchResults extends  Component{
               resultsPer4.push(
                 <Col key={"products" + (i * 10 + j)} xs={"12"} sm="6" md="4" lg="3">
                   <Card body>
-                    {/*
-                    <CardImg top width="100%" src={products[i * 10 + j].images[0].url} alt={products[i * 10 + j].images[0].alt} />
-                    */}
-                    <CardImg top width="100%" src="https://picsum.photos/2000/3000" alt={suppliers[i * 12 + j].image.alt} />
+                    <CardImg top width="100%" src={suppliers[i * 12 + j].url} alt={suppliers[i * 12 + j].image.alt} />
                     <CardTitle>{suppliers[i * 12 + j]["socialReason"]}</CardTitle>
                     <CardText>{suppliers[i * 12 + j]["contactPhoneNumber"]}</CardText>
                     <Link to={`../../suppliers/show/${encodeURIComponent(suppliers[i * 12 + j]['id'])}`}>
@@ -323,7 +320,10 @@ class SearchResults extends  Component{
 
   render()
   {
-    const { results } = this.props;
+    const { results, retrievedProducts } = this.props;
+
+    console.log("HOC results",results);
+    console.log("State retrieved product", retrievedProducts);
 
     return (<Fragment>
       <div id="search-results-header">
@@ -334,9 +334,9 @@ class SearchResults extends  Component{
 
       <div id="search-results">
 
-        {results.searchType ==="products" ? this.showResultsProducts() : ""}
+        {results.searchType ==="products" && this.props.retrievedProducts ? this.showResultsProducts() : ""}
 
-        {results.searchType === "suppliers" ? this.showResultsSuppliers() : ""}
+        {results.searchType === "suppliers" && this.props.retrievedSuppliers ? this.showResultsSuppliers() : ""}
 
 
         {this.pagination()}

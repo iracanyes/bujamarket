@@ -424,7 +424,7 @@ class SubscribeForm extends React.Component {
               <fieldset>
                 <legend>Image du {this.props.retrieved.userType === "customer" ? "client" : "fournisseur"}</legend>
                 <Row>
-                  <DropzoneWithPreviews label={this.props.retrieved.userType === "customer" ? "Image de profil" : "Logo"}/>
+                  <DropzoneWithPreviews label={this.props.retrieved.userType === "customer" ? "Image de profil" : "Logo de l'entreprise"}/>
                 </Row>
               </fieldset>
 

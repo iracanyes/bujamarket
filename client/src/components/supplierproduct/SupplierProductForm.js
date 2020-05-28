@@ -21,6 +21,7 @@ import { getNames } from '../../actions/product/getNames';
 import PropTypes from 'prop-types';
 import SupplierProductImageInput from "./SupplierProductImageInput";
 import SupplierProductCategoryImageInput from "./SupplierProductCategoryImageInput";
+import DropzoneWithPreviews from "../image/dropzone/DropzoneWithPreviews";
 
 class SupplierProductForm extends React.Component {
   static propTypes = {
@@ -667,6 +668,12 @@ class SupplierProductForm extends React.Component {
                 </fieldset>
               </div>
 
+            </fieldset>
+            <fieldset>
+              <legend>Images du produit</legend>
+              <Row>
+                <DropzoneWithPreviews label={"Images du produit"} multiple={true}/>
+              </Row>
             </fieldset>
             <fieldset className={"mb-2"}>
               <legend>Information de vente</legend>

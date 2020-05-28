@@ -14,6 +14,8 @@ shared
 **/*.*.save
 *.*.save
 *.save
+# Fichiers uploadés
+api/public/assets/uploads/*
 ###< Custom ###
 
 ###> Security ###

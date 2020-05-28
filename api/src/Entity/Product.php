@@ -13,14 +13,18 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Annotation\MaxDepth;
 
+
 /**
  * @ApiResource(attributes={
  *     "normalization_context"={"groups"={"favorite:output","product:output"}},
  *     "denormalization_context"={"groups"={"product:input"}}
 
  * })
- * @ApiFilter(SearchFilter::class, properties={"title":"partial", "resume":"partial"})
- * @ORM\Table(name="bjmkt_product")
+ * @ApiFilter(SearchFilter::class, properties={"title":"ipartial", "resume":"ipartial", "description":"ipartial"})
+ * @ORM\Table(
+ *     name="bjmkt_product",
+ *     indexes={@ORM\Index(name="search_index",columns={"title","resume","description"}, flags={"fulltext"})}
+ * )
  * @ORM\Entity(repositoryClass="App\Repository\ProductRepository")
  */
 class Product

@@ -29,6 +29,14 @@ App\Entity\Product:
             path: '/products_names.{_format}'
             schemes: ['https','http']  
             controller: App\Controller\Product\GetNamesAction
+        search:
+            method: 'GET'
+            path: '/products/search'
+            defaults:
+                _api_receive: false
+                #_api_respond: false
+            schemes: ['https']
+            controller: App\Controller\Product\SearchProductsAction
         post:
             method: 'POST'
             path: '/product/create'

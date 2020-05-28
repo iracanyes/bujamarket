@@ -46,6 +46,8 @@ class ProductHandler
             "itemsPerPage" => $this->request->query->get('itemsPerPage') ?? null
         ];
 
+        dump($options);
+
 
         $products = $this->em->getRepository(Product::class)
             ->getProductsWithImages($options);
@@ -69,6 +71,21 @@ class ProductHandler
             ->getProductWithImage($options);
 
         return $product;
+    }
+
+    public function searchProducts()
+    {
+        $options = [
+            "title" => $this->request->query->get("title") ?? null,
+            "category" => $this->request->query->get('category') ?? null,
+            "page" => $this->request->query->get('page') ?? null,
+            "itemsPerPage" => $this->request->query->get('itemsPerPage') ?? null
+        ];
+
+        $products = $this->em->getRepository(Product::class)
+            ->searchProducts($options);
+
+        return $products;
     }
 
 }
