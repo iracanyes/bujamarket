@@ -34,7 +34,6 @@ App\Entity\Product:
             path: '/products/search'
             defaults:
                 _api_receive: false
-                #_api_respond: false
             schemes: ['https']
             controller: App\Controller\Product\SearchProductsAction
         post:

@@ -79,6 +79,7 @@
   "app.product.item.width": "Largueur",
   "app.product.item.height": "Hauteur",
   "app.product.item.category": "Catégorie du produit",
+  "app.product.item.country_origin": "Origine du produit",
   "app.user.item.email.required": "Email requis",
   "app.user.item.password": "Mot de passe",
   "app.user.item.password.required": "Mot de passe requis",
@@ -105,5 +106,5 @@
   "app.supplier.item.contact_email": "E-mail personne de contact",
   "app.supplier.item.website": "Site web",
   "app.supplier_product.item.initial_price": "Prix initial",
-  "app.supplier_product.item.additional_fee": "Taxes additionnels"
+  "app.supplier_product.item.additional_fee": "Taxes additionnelles (en %)"
 }

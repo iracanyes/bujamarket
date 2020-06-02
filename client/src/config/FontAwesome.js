@@ -42,6 +42,9 @@ import {
   faShareAlt,
   faHandshake,
   faPaperPlane,
+  faExclamationTriangle,
+  faThumbsUp,
+  faGrinWink
 } from "@fortawesome/free-solid-svg-icons";
 
 import {
@@ -55,7 +58,9 @@ library.add([
   faAngleDoubleRight,
   faBars,
   faComments,
+  faExclamationTriangle,
   faGoogle,
+  faGrinWink,
   faHeart,
   faSearch,
   faShoppingCart,
@@ -75,6 +80,7 @@ library.add([
   faCcStripe,
   faCcVisa,
   faFacebook,
+  faThumbsUp,
   faTwitter,
   faGooglePlus,
   faPinterest,

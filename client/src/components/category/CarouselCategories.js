@@ -274,7 +274,7 @@ class CarouselCategories extends Component {
   render() {
     const { activeIndex } = this.state;
 
-    const items = this.props.retrieved  !== null ? this.showCategories() : {};
+    const items = this.props.retrieved && this.props.retrieved["hydra:member"] ? this.showCategories() : {};
 
     const styleCarouselInner = {
         margin: "0 40px"

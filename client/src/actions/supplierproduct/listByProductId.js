@@ -5,6 +5,9 @@ import {
   mercureSubscribe as subscribe
 } from '../../utils/dataAccess';
 import { success as deleteSuccess } from './delete';
+import {toast} from "react-toastify";
+import {ToastError} from "../../layout/ToastMessage";
+import React from "react";
 
 export function error(error) {
   return { type: 'SUPPLIERPRODUCT_LIST_BY_PROD_ID_ERROR', error };
@@ -45,6 +48,11 @@ export function retrieveByProductId(productId) {
       })
       .catch(e => {
         dispatch(loading(false));
+
+        toast(
+          <ToastError message={"Impossible de trouver les offres associées à ce produit !"} />,
+          { type: "default" }
+        );
         dispatch(error(e.message));
       });
   };

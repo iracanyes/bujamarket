@@ -1,5 +1,8 @@
 //import { SubmissionError } from 'redux-form';
 import { fetch } from '../../utils/dataAccess';
+import React from "react";
+import { toast } from "react-toastify";
+import { ToastSuccess, ToastError, ToastWelcome } from "../../layout/ToastMessage";
 
 export function error(error) {
   return { type: 'USER_LOGIN_ERROR', error };
@@ -62,16 +65,25 @@ export function login(email, password, history, locationState) {
       .then(retrieved => {
         dispatch(success(retrieved));
 
-        /* En passant l'objet this.props.history du composant vers son action creator cela permet de transmettre le changement d'URL au store
-        */
+        const user = JSON.parse(atob(retrieved["token"].split(".")[1]));
+
+        //
         if(locationState.state && locationState.state.params && locationState.state.from)
         {
+          // Redirection vers la page précédent l'identification avec les données
           history.push({ pathname: locationState.state.from, state: { params: locationState.state.params } });
         }else{
+
           if(locationState.state.from && !/login/.test(locationState.state.from) )
           {
+
+            // Redirection page précédente sans données
             history.push({ pathname: locationState.state.from });
           }else{
+
+            // Redirection page d'accueil
+            toast(<ToastWelcome message={"Bienvenue " + user.name} />);
+
             history.push('/');
           }
 
@@ -81,8 +93,6 @@ export function login(email, password, history, locationState) {
       })
       .catch(e => {
         dispatch(loading(false));
-
-        console.log("login action login catch error " , e );
 
         /* Déconnexion et forcer le rechargement de la page si erreur 401 */
         if(e.code === 401)
@@ -97,17 +107,15 @@ export function login(email, password, history, locationState) {
           dispatch(logout());
           /* Redirection vers la page de connexion + message d'erreur */
           history.push('login');
-          sessionStorage.removeItem('flash-message-error');
-          sessionStorage.setItem('flash-message-error', JSON.stringify({message: "Connexion non-autorisé! identifiant et/ou mot de passe incorrect."}));
+          //sessionStorage.removeItem('flash-message-error');
+          //sessionStorage.setItem('flash-message-error', JSON.stringify({message: "Connexion non-autorisé! identifiant et/ou mot de passe incorrect."}));
+          toast(
+            <ToastError message={"Connexion non-autorisé! Identifiant et/ou mot de passe incorrect."} />
+            );
           history.push({pathname: 'login', state: locationState });
         }
 
-        /*
-        if (e instanceof SubmissionError) {
-          dispatch(error(e.errors._error));
-          throw e;
-        }
-        */
+
         dispatch(error(e));
         //dispatch(error(e.message));
       });

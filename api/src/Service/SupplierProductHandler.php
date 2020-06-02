@@ -112,45 +112,6 @@ class SupplierProductHandler
             $product->setWidth((float) $data['product']['width']);
             $product->setCountryOrigin($data['product']['countryOrigin']);
 
-            // Images du produits
-            foreach($files['product']['images'] as $key => $imageFile)
-            {
-                // Image de la catégorie
-                $image = new Image();
-                $image->setTitle($data['product']['images'][$key]['title']);
-                $image->setAlt($data['product']['images'][$key]['title']);
-                $image->setPlace($data['product']['images'][$key]['place']);
-                $image->setSize($files['product']['images'][$key]['src']->getSize());
-
-                $imageFile = $files['product']['images'][$key]['src'];
-
-                if($imageFile)
-                {
-                    $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
-                    $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $originalFilename);
-                    $newFilename = $safeFilename.uniqid("_", true).'.'.$imageFile->guessExtension();
-
-                    try{
-                        /* Déplacement du fichier image dans le répertoire public des images de produits */
-                        $imageFile->move($this->container->getParameter('products_image_directory'), $newFilename);
-                    }catch (FileException $exception){
-                        return new UploadImageException(sprintf("Code: %d.\nMessage: %s", $exception->getCode(), $exception->getMessage()));
-                    }
-
-                    $image->setUrl($newFilename);
-
-
-                }
-
-                try{
-                    $this->em->persist($image);
-                }catch (PDOException $exception){
-                    $this->em->rollback();
-                    throw new ImagePersistException(sprintf("Product's images '%s' can't be persisted!", $image->getTitle()));
-                }
-
-                $product->addImage($image);
-            }
 
             // Category du produit
             if(isset($data["product"]["category"]["id"]) && $data["product"]["category"]["id"] !== "")
@@ -218,6 +179,49 @@ class SupplierProductHandler
 
             $product->setCategory($category);
         }
+
+        // Images du produits
+        foreach($files['product']['images'] as $key => $imageFile)
+        {
+            // Image de la catégorie
+            $image = new Image();
+
+            $image->setTitle($product->getTitle());
+            $image->setAlt($product->getTitle());
+            $image->setPlace($data['product']['images'][$key]['place'] ?? $key);
+            $image->setSize($files['product']['images'][$key]->getSize());
+
+            $imageFile = $files['product']['images'][$key];
+
+            if($imageFile)
+            {
+                $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $originalFilename);
+                $newFilename = $safeFilename.uniqid("_", true).'.'.$imageFile->guessExtension();
+
+                try{
+                    /* Déplacement du fichier image dans le répertoire public des images de produits */
+                    $imageFile->move(getenv('UPLOAD_SUPPLIER_PRODUCT_IMAGE_DIRECTORY'), $newFilename);
+                }catch (FileException $exception){
+                    return new UploadImageException(sprintf("Code: %d.\nMessage: %s", $exception->getCode(), $exception->getMessage()));
+                }
+
+                $image->setUrl($newFilename);
+
+
+            }
+
+            try{
+                $this->em->persist($image);
+            }catch (PDOException $exception){
+                $this->em->rollback();
+                throw new ImagePersistException(sprintf("Product's images '%s' can't be persisted!", $image->getTitle()));
+            }
+
+
+            $supplierProduct->addImage($image);
+        }
+
 
         $supplierProduct->setProduct($product);
 

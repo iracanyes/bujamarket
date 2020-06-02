@@ -1,3 +1,6 @@
+import React from "react";
+import { toast } from "react-toastify";
+import { ToastSuccess, ToastError } from "../../layout/ToastMessage";
 import { SubmissionError } from 'redux-form';
 import { fetch } from '../../utils/dataAccess';
 
@@ -31,6 +34,11 @@ export function create(values) {
           dispatch(error(e.errors._error));
           throw e;
         }
+
+        toast(
+          <ToastError message={e.message} />,
+          {type: "default"}
+        );
 
         dispatch(error(e.message));
       });

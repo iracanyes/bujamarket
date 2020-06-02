@@ -1,3 +1,6 @@
+import React from "react";
+import { toast } from "react-toastify";
+import { ToastSuccess, ToastError } from "../../layout/ToastMessage";
 import { SubmissionError } from 'redux-form';
 import { fetch } from '../../utils/dataAccess';
 
@@ -42,6 +45,11 @@ export function create(values, history) {
       .then(retrieved => {
         dispatch(success(retrieved));
 
+        toast(
+          <ToastSuccess message={"Nouveau produit crée!"} />,
+          {type: "default"}
+        );
+
         history.push({pathname: '../show/'+ retrieved.id });
       })
       .catch(e => {
@@ -55,11 +63,19 @@ export function create(values, history) {
 
         if(/Access Denied/.test(e.message))
         {
+          toast(
+            <ToastError message={"Accès refusé!"} />,
+            { type: "default" }
+          );
           history.push({pathname: '../../', state: {from : window.location.pathname}});
         }
 
         if(/Unauthorized/.test(e.message))
         {
+          toast(
+            <ToastError message={"Identification nécessaire avant l'ajout de produit!"} />,
+            { type: "default" }
+          );
           history.push({ pathname: '../../login', state: { from: window.location.pathname }})
         }
 

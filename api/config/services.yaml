@@ -3,10 +3,8 @@
 
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
-parameters:
-    categories_image_directory: '%kernel.project_dir%/public/upload/images/categories'
-    products_image_directory: '%kernel.project_dir%/public/upload/images/products'
-    users_image_directory: '%kernel.project_dir%/public/upload/images/users'
+#parameters:
+    
     
 services:
     # default configuration for services in *this* file
@@ -26,5 +24,12 @@ services:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
 
-    # add more service definitions when explicit configuration is needed
-    # please note that last definitions always *replace* previous ones
+    
+    # Ajout de données à la création du token de sécurité JWT
+    App\EventListener\JWTCreatedListener:
+        tags:
+            - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_created, method: onJWTCreated }
+    
+    
+
+    

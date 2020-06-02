@@ -175,3 +175,29 @@ div.error_404{
     background-repeat: no-repeat;
     background-position: center;
 }
+
+/** React-toastify **/
+div.Toastify__toast-container{
+    top:unset !important;
+
+    div.Toastify__toast{
+
+        div.Toastify__toast-body{
+            font-family: "Kanit", "Dosis", "Lato", Arial, sans-serif;
+            font-size: 1rem;
+            padding: 0.125rem 0.25rem 0.125rem 0.25rem;
+
+            svg{
+                margin-right: 0.5rem;
+            }
+
+            svg.fa-exclamation-triangle{
+                color: red;
+            }
+            svg.fa-thumbs-up{
+                color: green;
+            }
+        }
+
+    }
+}
