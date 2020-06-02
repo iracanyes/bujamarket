@@ -134,6 +134,28 @@ class SupplierProductForm extends React.Component {
     // Récupération des données de formulaires
     const data = new FormData(document.getElementById('supplier-product-form'));
 
+    /* Affichage des paires clefs/valeurs
+    for(var pair of data.entries()) {
+      console.log(pair[0]+ ', '+ pair[1]);
+    }
+    */
+
+    // Ajout des images aux données du formulaire
+    const images = document.getElementsByName('images')[0].files;
+
+    // Si plus de 10 images, on refuse l'envoie du formulaire
+    if(images.length > 10)
+    {
+
+      return;
+
+    }
+
+    for(let x= 0; x < images.length; x++)
+      data.append("product[images]["+x+"]", images[x] );
+
+    console.log("form data + files", data);
+
     if(data != null)
     {
       this.props.create(data, this.props.history)
@@ -672,7 +694,7 @@ class SupplierProductForm extends React.Component {
             <fieldset>
               <legend>Images du produit</legend>
               <Row>
-                <DropzoneWithPreviews label={"Images du produit"} multiple={true}/>
+                <DropzoneWithPreviews multiple={true}/>
               </Row>
             </fieldset>
             <fieldset className={"mb-2"}>
@@ -741,14 +763,13 @@ class SupplierProductForm extends React.Component {
                     placeholder="0"
                     min="0"
                     step={"1"}
-                    required={true}
                     labelText={intl.formatMessage({
                       id: "app.quantity",
                       defaultMessage: "Quantité",
                       description: "Supplier product item - quantity"
                     })}
                     onChange={this.handleChange}
-                    value={"0"}
+                    value={0}
                   />
                 </Col>
               </Row>
@@ -782,7 +803,7 @@ class SupplierProductForm extends React.Component {
                                          description="Supplier product item - additional information"
                       />
                     </label>
-                    <textarea name="additionalInformation" className={'form-control w-100'} defaultValue={"The cat was playing in the garden."}>
+                    <textarea name="additionalInformation" className={'form-control w-100'} defaultValue={"Add all other useful information here."}>
 
                   </textarea>
                   </div>

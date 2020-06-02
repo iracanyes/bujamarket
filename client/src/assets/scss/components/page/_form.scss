@@ -38,3 +38,36 @@ form#add-shopping-cart
         border-color: #F5A54C;
     }
 }
+
+/* Dropzone */
+.dropzone-thumb{
+    display: inline-flex;
+    border-radius: 0.125rem;
+    border: 1px solid #eaeaea;
+    margin-bottom: 0.5rem;
+    margin-right: 0.5rem;
+    width: 100px;
+    padding: 0.25rem;
+    box-sizing: border-box;
+}
+.dropzone-thumb-inner{
+    display: flex;
+    flex-direction: column;
+    minWidth: 0;
+    overflow: hidden;
+}
+
+#dropzone-preview{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+
+    img{
+        height: 5rem;
+    }
+    .dropzone-preview-img-title{
+        font-size: 10px;
+        height: 20px;
+    }
+}

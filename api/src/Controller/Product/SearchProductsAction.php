@@ -1,9 +1,8 @@
 <?php
 
-
 namespace App\Controller\Product;
 
-
+use App\Entity\Product;
 use App\Service\ProductHandler;
 
 class SearchProductsAction
@@ -15,6 +14,9 @@ class SearchProductsAction
         $this->productHandler = $productHandler;
     }
 
+    /**
+     * @return Product[]|array
+     */
     public function __invoke()
     {
         return $this->productHandler->searchProducts();

@@ -24,9 +24,13 @@ import {
   Navbar,
   NavbarBrand,
 } from 'reactstrap';
-/* @fortawesome/react-fontawesome */
 
+/* @fortawesome/react-fontawesome */
 import './config/FontAwesome';
+
+/* React-toastify */
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css"
 
 /* Importation des reducers et des routes de l'appli */
 
@@ -199,6 +203,19 @@ export class App extends Component
 
                     </aside>
                     <section id="main-content" className="col col-lg-12">
+                      <ToastContainer
+                        limit={5}
+                        position="top-right"
+                        type={"default"}
+                        autoClose={10000}
+                        hideProgressBar={false}
+                        newestOnTop={true}
+                        rtl={false}
+                        closeOnClick
+                        pauseOnFocusLoss
+                        draggable
+                        pauseOnHover
+                      />
                       <div id="search-results-component" className={'col-lg-9 mx-auto'}>
                         {results && (<SearchResults results={ results }/>)}
 
