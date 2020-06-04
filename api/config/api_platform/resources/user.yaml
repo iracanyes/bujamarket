@@ -23,6 +23,13 @@ App\Entity\User:
                 _api_receive: false
             schemes: ['https']
             controller: App\Controller\User\SubscribeMemberAction
+        unlock_account:
+            method: 'POST'
+            path: '/unlock_account'
+            defaults:
+                _api_receive: false
+            schemes: ['https']
+            controller: App\Controller\User\UnlockAccountAction
     itemOperations:
         get:
             method: 'GET'

@@ -9,8 +9,10 @@ import { connect } from 'react-redux';
 import {injectStripe} from 'react-stripe-elements';
 import { FormattedMessage} from 'react-intl';
 import { Button } from 'reactstrap';
+import { toast } from "react-toastify";
+import { ToastInfo } from "../../layout/ToastMessage";
 
-import FlashInfo from "../../layout/FlashInfo";
+
 import {create} from "../../actions/payment/create";
 
 class StoreCheckoutButton extends React.Component {
@@ -47,6 +49,12 @@ class StoreCheckoutButton extends React.Component {
   }
 
   render() {
+    toast(
+      <ToastInfo message={(<p>En cliquant sur "Effectuer le paiement", vous serez redirigé vers la plateforme de paiement en ligne sécurisé Stripe.<br/>À la fin du processus de paiement, vous serez redirigé vers la page suivante : Facture.</p> )} />,
+      {
+        autoclose: 120000,
+      }
+      );
     return (
       <Fragment>
         <div className={"d-flex mx-auto mt-3 justify-content-center"}>
@@ -65,10 +73,7 @@ class StoreCheckoutButton extends React.Component {
         </div>
 
         <div className="my-3">
-          <FlashInfo
-            color={"info"}
-            message={(<p>En cliquant sur "Effectuer le paiement", vous serez redirigé vers la plateforme de paiement en ligne Stripe Checkout.<br/>À la fin du processus de paiement, vous serez redirigé vers la page suivante : Facture.</p>   )}
-          />
+          {/**/}
         </div>
 
       </Fragment>

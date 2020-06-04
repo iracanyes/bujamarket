@@ -93,29 +93,33 @@ export function login(email, password, history, locationState) {
       })
       .catch(e => {
         dispatch(loading(false));
-
+        dispatch(logout());
         /* Déconnexion et forcer le rechargement de la page si erreur 401 */
-        if(e.code === 401)
-        {
-          dispatch(logout());
-          history.push({pathname: 'login', state: locationState });
-        }
+        console.log("Error response",e.message);
 
-        if(/Unauthorized/.test(e.message))
+        /* Redirection vers la page de connexion + message d'erreur */
+        if(/Bad Credentials/.test(e.message.message))
         {
-
-          dispatch(logout());
-          /* Redirection vers la page de connexion + message d'erreur */
-          history.push('login');
-          //sessionStorage.removeItem('flash-message-error');
-          //sessionStorage.setItem('flash-message-error', JSON.stringify({message: "Connexion non-autorisé! identifiant et/ou mot de passe incorrect."}));
           toast(
             <ToastError message={"Connexion non-autorisé! Identifiant et/ou mot de passe incorrect."} />
-            );
-          history.push({pathname: 'login', state: locationState });
+          );
         }
 
+        if(/Account locked/.test(e.message.message))
+        {
+          toast(
+            <ToastError message={"Connexion non-autorisé! Ce compte a été bloqué, un e-mail vous a été envoyé pour débloquer le compte."} />
+          );
+        }
 
+        if(/Account banned/.test(e.message.message))
+        {
+          toast(
+            <ToastError message={"Connexion non-autorisé! Ce compte a été banni de la plateforme."} />
+          );
+        }
+
+        history.push({pathname: 'login', state: locationState });
         dispatch(error(e));
         //dispatch(error(e.message));
       });

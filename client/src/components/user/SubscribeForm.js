@@ -12,7 +12,6 @@ import { FormattedMessage, injectIntl } from "react-intl";
 import { subscribe, retrieve, reset } from "../../actions/user/subscribe";
 import DropzoneWithPreviews from "../image/dropzone/DropzoneWithPreviews";
 import PropTypes from 'prop-types';
-import FlashInfo from "../../layout/FlashInfo";
 
 class SubscribeForm extends React.Component {
   static propTypes = {
@@ -73,51 +72,6 @@ class SubscribeForm extends React.Component {
 
     // Récupération des données de formulaires
     const data = new FormData(document.getElementById('subscribe-form'));
-
-
-    /*
-    const user = {
-      email: data.get('email'),
-      lastname: data.get('lastname'),
-      firstname: data.get('firstname'),
-      userType: this.props.retrieved.userType,
-      language: data.get('language'),
-      currency: data.get('currency'),
-      token: this.props.match.params.token,
-      images: data.get("images"),
-      address: {}
-    };
-
-    // Ajout des données fournisseurs
-    if(this.props.retrieved.userType === 'supplier')
-    {
-      // Données fournisseur
-      user.socialReason = data.get('socialReason');
-      user.brandName = data.get('brandName');
-      user.tradeRegistryNumber = data.get('tradeRegistryNumber');
-      user.vatNumber = data.get('vatNumber');
-      user.contactFullname = data.get('contactFullname');
-      user.contactPhoneNumber = data.get('contactPhoneNumber');
-      user.contactEmail = data.get('contactEmail');
-
-      // Données d'adresse
-      user.address.locationName = 'Head office';
-      user.address.street = data.get('address[street]');
-      user.address.number = data.get('address[number]');
-      user.address.town = data.get('address[town]');
-      user.address.state = data.get('address[state]');
-      user.address.zipCode= data.get('address[zipCode]');
-      user.address.country = data.get('address[country]');
-
-    }
-
-
-    if( user.email && user.firstname && user.lastname && user.userType && user.language && user.currency && user.token )
-    {
-      this.props.subscribe(user, this.props.history);
-    }
-
-     */
 
     data.append("userType", this.props.retrieved.userType);
     data.append("token", this.props.match.params.token);
@@ -204,8 +158,6 @@ class SubscribeForm extends React.Component {
     return (
       <Fragment>
         <div className={"user-authentication-form my-3"}>
-
-
           <h1>
             <FormattedMessage  id={"app.page.user.subscribe.title"}
                                defaultMessage="Devenir membre"
@@ -219,16 +171,7 @@ class SubscribeForm extends React.Component {
                 {this.props.error}
               </div>
             )}
-            { sessionStorage.getItem('flash-message-error') !== null && /^"{\\/.test(sessionStorage.getItem('flash-message-error')) &&
-            <FlashInfo color={"danger"} message={JSON.parse(sessionStorage.getItem('flash-message-error')).message}/>
-            }
-            { sessionStorage.getItem('flash-message-error') !== null && !/^"{\\/.test(sessionStorage.getItem('flash-message-error')) &&
-            <FlashInfo color={"danger"} message={sessionStorage.getItem('flash-message-error')}/>
-            }
           </div>
-
-
-
           { this.props.retrieved !== null && (
             <form
               id="subscribe-form"

@@ -1,5 +1,10 @@
 import { SubmissionError } from 'redux-form';
-import {extractHubURL, fetch, normalize} from '../../utils/dataAccess';
+import {
+  extractHubURL,
+  fetch,
+  normalize,
+  mercureSubscribe as subscribe
+} from '../../utils/dataAccess';
 import React from "react";
 import { toast } from "react-toastify";
 import { ToastSuccess, ToastError } from "../../layout/ToastMessage";
@@ -13,15 +18,15 @@ export function request(user) {
 }
 
 export function loading(loading) {
-  return { type: 'USER_SUBSCRIBE_LOADING', loading };
+  return { type: 'USER_UNLOCK_ACCOUNT_LOADING', loading };
 }
 
 export function success(user) {
-  return { type: 'USER_SUBSCRIBE_SUCCESS', user };
+  return { type: 'USER_UNLOCK_ACCOUNT_SUCCESS', user };
 }
 
 export function successRetrieved(retrieved) {
-  return { type: 'USER_SUBSCRIBE_RETRIEVE_SUCCESS', retrieved };
+  return { type: 'USER_UNLOCK_ACCOUNT_RETRIEVE_SUCCESS', retrieved };
 }
 
 export function retrieve(token) {
@@ -32,7 +37,7 @@ export function retrieve(token) {
       'Content-Type': 'application/json',
     });
 
-    return fetch('/user_temp',{ method: 'POST', headers: headers, body: JSON.stringify({'token': token}) })
+    return fetch('/locked_user',{ method: 'POST', headers: headers, body: JSON.stringify({'token': token}) })
       .then(response =>
         response
           .json()
@@ -60,16 +65,16 @@ export function retrieve(token) {
 }
 
 
-export function subscribe(values, history) {
+export function unlockAccount(values, history) {
   return dispatch => {
     dispatch(loading(true));
     dispatch(request(values));
 
     const headers = new Headers({
-      'Content-Type': 'multipart/form-data',
+      'Content-Type': 'application/json',
     });
 
-    return fetch('subscribe/'+values.get("token"), { method: 'POST', body: values })
+    return fetch('unlock_account', { method: 'POST', body: values })
       .then(response => {
         dispatch(loading(false));
 
@@ -78,14 +83,7 @@ export function subscribe(values, history) {
       .then(retrieved => {
         dispatch(success(retrieved));
 
-
-        if(/Customer/.test(retrieved['@context']))
-        {
-          toast(<ToastSuccess message={'Inscription terminée!\nConnectez vous à la plateforme et visitez votre profil pour ajouter les informations de livraison pour vos achats.\nAu plaisir!'} />);
-        }else{
-
-          toast(<ToastSuccess message={'Inscription terminée!\nConnectez vous à la plateforme et visitez votre profil pour ajouter vos produits.\nAu plaisir!'} />);
-        }
+        toast(<ToastSuccess message={'Compte activé!\nAu plaisir!'} />);
 
         // Redirection vers la page d'accueil
         history.push('../../login');
@@ -99,9 +97,9 @@ export function subscribe(values, history) {
           throw e;
         }
 
-        toast(<ToastError message={e.message} />);
+        toast(<ToastError message={e["hydra:description"]} />);
 
-        history.push({pathname: '.'});
+        history.push({pathname: '/unlock_account/' + values.get('token')});
 
       });
   };
@@ -111,7 +109,7 @@ export function reset(eventSource) {
   return dispatch => {
     if (eventSource) eventSource.close();
 
-    dispatch({ type: 'USER_SUBSCRIBE_RESET' });
+    dispatch({ type: 'USER_UNLOCK_ACCOUNT_RESET' });
     dispatch(error(null));
     dispatch(loading(false));
   };
@@ -128,17 +126,17 @@ export function mercureSubscribe(hubURL, topic) {
 }
 
 export function mercureOpen(eventSource) {
-  return { type: 'USER_SUBSCRIBE_MERCURE_OPEN', eventSource };
+  return { type: 'USER_UNLOCK_ACCOUNT_MERCURE_OPEN', eventSource };
 }
 
 export function mercureMessage(retrieved) {
   return dispatch => {
     if (1 === Object.keys(retrieved).length) {
-      dispatch({ type: 'USER_SUBSCRIBE_MERCURE_DELETED', retrieved });
+      dispatch({ type: 'USER_UNLOCK_ACCOUNT_MERCURE_DELETED', retrieved });
       return;
     }
 
-    dispatch({ type: 'USER_SUBSCRIBE_MERCURE_MESSAGE', retrieved });
+    dispatch({ type: 'USER_UNLOCK_ACCOUNT_MERCURE_MESSAGE', retrieved });
   };
 }
 

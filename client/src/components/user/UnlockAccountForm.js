@@ -1,18 +1,22 @@
 /**
  * Author: iracanyes
- * Date: 16/08/2019
+ * Date: 04/06/2020
  * Description:
  */
 import React, { Fragment } from 'react';
 import { Link } from "react-router-dom";
 //import { Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
 import CardImg from "reactstrap/es/CardImg";
-import { login, logout } from "../../actions/user/login";
+import { unlockAccount } from "../../actions/user/unlockAccount";
+import { logout } from "../../actions/user/login";
 import { connect } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
 import { Field, reduxForm } from "redux-form";
+import { Spinner } from "reactstrap";
+import {toast} from "react-toastify";
+import {ToastError} from "../../layout/ToastMessage";
 
-class LoginForm extends React.Component {
+class UnlockAccountForm extends React.Component {
   constructor(props)
   {
     super(props);
@@ -20,11 +24,10 @@ class LoginForm extends React.Component {
     this.props.logout();
 
     this.state = {
-      email: '',
       password: '',
+      confirmPassword: '',
       submitted: false
     };
-    console.log("props location", this.props.location);
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -42,20 +45,21 @@ class LoginForm extends React.Component {
     /* Empêche la soumission  du formulaire  */
     e.preventDefault();
 
+    if(this.state.password !== this.state.confirmPassword)
+    {
+      toast(<ToastError message={"Les mots de passe ne correspondent pas!"} />);
+      return;
+    }
+
     /* Marquer la soumission du formulaire */
     this.setState({ submitted: true });
 
-    /* On récupère les infos du formulaire contenu dans l'état du composant */
-    const { email,  password } = this.state;
+    const data = new FormData(document.getElementById('unlock-account-form'));
+    data.append('token', this.props.match.params.token);
 
-
-
-    if( email && password )
+    if( data )
     {
-
-      let prevRoute = this.props.location.state ? this.props.location.state.from : '/';
-      let params = this.props.location.state && this.props.location.state.params ? this.props.location.state.params : null;
-      this.props.login(email, password, this.props.history, {state: {from: prevRoute, params: params  }});
+      this.props.unlockAccount(data, this.props.history);
     }
 
   }
@@ -96,37 +100,25 @@ class LoginForm extends React.Component {
   };
 
   render() {
-    const { loggingIn, intl } = this.props;
-    const { email } = this.state;
+    const { unlocking, intl } = this.props;
+    const { password, confirmPassword } = this.state;
     return (
       <Fragment>
 
-        <div id={'form-login'} className="col-md-6 mx-auto col-md-offset-3">
+        <div  className="col-md-6 mx-auto col-md-offset-3">
           <h1>
-            <FormattedMessage  id={"app.page.user.login.title"}
-                               defaultMessage="Connexion"
-                               description="Page User - Login title"
+            <FormattedMessage  id={"app.page.user.unlock_account.title"}
+                               defaultMessage="Ré-activation du compte"
+                               description="Page User - Unlock account title"
             />
           </h1>
 
           <form
             name="form"
+            id={'unlock-account-form'}
             className={"col-lg-6 mx-auto px-3"}
             onSubmit={this.handleSubmit}
           >
-            <Field
-              component={this.renderField}
-              name="email"
-              type="email"
-              labelText={intl.formatMessage({
-                id: "app.user.item.email",
-                defaultMessage: "E-mail",
-                description: "User item - email"
-              })}
-              placeholder="tim_dubois@gmail.com"
-              value={email}
-              onChange={this.handleChange}
-            />
             <Field
               component={this.renderField}
               name="password"
@@ -137,18 +129,31 @@ class LoginForm extends React.Component {
                 description: "User item - password"
               })}
               placeholder="*************"
+              value={password}
+              onChange={this.handleChange}
+            />
+            <Field
+              component={this.renderField}
+              name="confirmPassword"
+              type="password"
+              labelText={intl.formatMessage({
+                id: "app.user.item.confirmPassword",
+                defaultMessage: "Confirmer votre mot de passe",
+                description: "User item - confirm password"
+              })}
+              placeholder="*************"
               onChange={this.handleChange}
             />
 
             <div className="form-group">
               <button className="btn btn-primary mx-2 my-3">
-                <FormattedMessage  id={"app.page.user.login.title"}
-                                   defaultMessage="Connexion"
-                                   description="Page User - login"
+                <FormattedMessage  id={"app.button.validate"}
+                                   defaultMessage="Valider"
+                                   description="Page User - validate"
                 />
               </button>
-              {loggingIn &&
-              <CardImg />
+              {unlocking &&
+                <Spinner color={"primary"} />
               }
               <Link to="/register" className="btn btn-outline-primary mx-2 my-3">
                 <FormattedMessage  id={"app.page.user.register.title"}
@@ -167,20 +172,20 @@ class LoginForm extends React.Component {
 }
 
 const mapStateToProps = state => {
-  const { loggingIn } = state.user.authentication;
+  const { unlocking } = state.user.authentication;
 
-  return { loggingIn };
+  return { unlocking };
 };
 
 const mapDispatchToProps = dispatch => ({
-  login : (email, password, history, prevRoute) => dispatch(login(email, password, history, prevRoute)),
-  logout: () => dispatch( logout())
+  unlockAccount : (data, history) => dispatch(unlockAccount(data,history)),
+  logout: () => dispatch(logout())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(
   reduxForm({
-    form: 'user',
+    form: 'unlock-account-form',
     enableReinitialize: true,
     keepDirtyOnReinitialize: true
-  })(injectIntl(LoginForm))
+  })(injectIntl(UnlockAccountForm))
 );

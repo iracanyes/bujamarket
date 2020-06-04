@@ -1,0 +1,29 @@
+{##
+# Description : modèle de message de confirmation
+#}
+{% extends 'base.html.twig' %}
+
+{% block title  %} Compte bloqué après 4 tentatives de connexion infructrueuses {% endblock %}
+{% block body %}
+
+<div>
+
+    <p>Monsieur, madame {{ user.firstname ~ ' ' ~ user.lastname }} </p>
+    <p>
+        Suite à 4 tentatives de connexion infructueuses à la plateforme, nous avons bloqué votre compte par mesure de sécurité.
+        Dans le cas où ces actions sont de votre fait et vous avez oublié votre mot de passe, vous avez la possibilité de modifier votre mot de passe à l'adresse suivante:<a href="{{ url_unlock_account }}">Buja Market - Update password</a>
+    </p>
+    <p>
+        Cependant, si ces actions ne sont pas de votre fait, vous pouvez nous le signalez en cliquant sur le lien suivant:
+        <a href={{ url_login_fraud }}>Usurpation d'identité</a>
+    </p>
+
+    <p>
+        Au plaisir!
+    </p>
+    {# Makes an absolute URL to the /images/logo.png file
+    <img src="{{ absolute_url(asset('images/logo.png')) }}">
+     #}
+</div>
+
+{% endblock %}

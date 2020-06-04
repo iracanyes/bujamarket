@@ -13,11 +13,13 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\ORM\ORMException;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\UserNotFoundException;
+use mysql_xdevapi\Exception;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 
 class MemberHandler
@@ -163,6 +165,41 @@ class MemberHandler
         $this->em->flush();
 
         return $user;
+    }
+
+    public function unlockAccount(): ?User
+    {
+        $data = $this->request->request->all();
+        dump($data);
+
+        try{
+            $user = $this->em->getRepository(User::class)
+                ->findOneBy(['token' => $data['token']]);
+
+            dump($user);
+            dump(!$user instanceof UserInterface);
+            dump(!$user instanceof User);
+
+
+            if(!$user instanceof UserInterface || !$user instanceof User)
+                return null;
+
+            dump($user ?? null);
+
+            $user->setLocked(false);
+            $user->setPassword($this->encoder->encodePassword($user, $data['password']));
+
+            dump($user);
+
+            $this->em->persist($user);
+            $this->em->flush();
+        }catch (\Exception $exception){
+            $this->logger->error($exception->getMessage(), ['exception' => $exception]);
+        }
+
+        return $user ?? null;
+
+
     }
 
     public function setUserRoles(User $user): void
