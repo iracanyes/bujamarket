@@ -64,7 +64,7 @@ class MainMenu extends Component
 
                 <FontAwesomeIcon icon="user-alt" className="menu-top-l1"/>
                 { user !== null
-                  ? <span className="main-menu-top-level-text">{user.username.split('@')[0]}</span>
+                  ? <span className="main-menu-top-level-text">{user.name[0].toUpperCase() + user.name.slice(1)}</span>
                   : <FormattedMessage  id={"app.header.main_menu.profile.link"}
                                        defaultMessage="Profil"
                                        description="Main menu profil navigation link"

@@ -5,7 +5,7 @@
  * Description: Modification des données du token de sécurité JWT
  * Date:
  */
-namespace App\EventListener;
+namespace App\EventListener\Authentication;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -27,6 +27,11 @@ class JWTCreatedListener
 
         if(!$user instanceof UserInterface)
             return;
+
+
+
+        // Remise à zéro du compteur d'erreurs de connexion
+        $user->setNbErrorConnection(0);
 
         // Ajout de données au payload du token
         $payload["id"] = $this->request->getClientIp();

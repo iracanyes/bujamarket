@@ -14,4 +14,8 @@ function ToastWelcome(props) {
   return <div><FontAwesomeIcon icon={"grin-wink"} className={"toast-welcome"} />{props.message}</div>
 }
 
-export { ToastSuccess, ToastError, ToastWelcome };
+function ToastInfo(props) {
+  return <div><FontAwesomeIcon icon={"info-circle"} className={"toast-info"} />{props.message}</div>;
+}
+
+export { ToastSuccess, ToastError, ToastWelcome, ToastInfo };

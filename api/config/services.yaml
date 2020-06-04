@@ -23,12 +23,16 @@ services:
     App\Controller\:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
-
     
     # Ajout de données à la création du token de sécurité JWT
-    App\EventListener\JWTCreatedListener:
+    App\EventListener\Authentication\JWTCreatedListener:
         tags:
             - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_created, method: onJWTCreated }
+    
+    # Modification du nombre d'essai de connexion infructueux
+    App\EventListener\Authentication\AuthenticationFailureListener:
+        tags:
+            - { name: kernel.event_listener, event: lexik_jwt_authentication.on_authentication_failure, method: onAuthenticationFailureResponse }
     
     
 

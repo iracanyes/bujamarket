@@ -4,5 +4,6 @@ import Subscribe from './SubscribeForm';
 import List from './List';
 import Update from './Update';
 import Show from './Show';
+import UnlockAccount from "./UnlockAccountForm";
 
-export { Register, Login, Subscribe, List, Update, Show };
+export { Register, Login, Subscribe, List, Update, Show, UnlockAccount };

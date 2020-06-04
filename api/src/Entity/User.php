@@ -195,6 +195,11 @@ class User implements UserInterface
      */
     private $messages;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $locked;
+
     public function __construct()
     {
         $this->addresses = new ArrayCollection();
@@ -204,6 +209,7 @@ class User implements UserInterface
         $this->respondedForums = new ArrayCollection();
         $this->nbErrorConnection = 0;
         $this->banned = false;
+        $this->locked = false;
         $this->signinConfirmed = false;
     }
 
@@ -612,6 +618,18 @@ class User implements UserInterface
                 $message->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getLocked(): ?bool
+    {
+        return $this->locked;
+    }
+
+    public function setLocked(bool $locked): self
+    {
+        $this->locked = $locked;
 
         return $this;
     }

@@ -70,7 +70,8 @@ class AdminFixtures extends Fixture implements DependentFixtureInterface, Fixtur
         $user->setLastname($this->faker->lastName);
         $user->setNbErrorConnection(0);
         $user->setBanned(false);
-        $user->setSigninConfirmed(false);
+        $user->setSigninConfirmed(true);
+        $user->setLocked(false);
         $user->setDateRegistration($this->faker->dateTimeAd('now', 'Europe/Paris'));
         $user->setLanguage($this->faker->languageCode);
         $user->setCurrency($this->faker->currencyCode);

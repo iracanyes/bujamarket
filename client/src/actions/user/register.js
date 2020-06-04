@@ -1,6 +1,8 @@
 import { SubmissionError } from 'redux-form';
 import { fetch } from '../../utils/dataAccess';
-
+import React from "react";
+import { toast } from "react-toastify";
+import { ToastWelcome, ToastError } from "../../layout/ToastMessage";
 
 export function error(error) {
   return { type: 'USER_REGISTER_ERROR', error };
@@ -43,14 +45,10 @@ export function register(values, history) {
       .then(retrieved => {
         dispatch(success(retrieved));
 
-        /* Sauvegarde de l'utilisateur temporaire */
-        sessionStorage.setItem(
-          'flash-message',
-          JSON.stringify({
-            message : `Bienvenue ${ retrieved.firstname + " " + retrieved.lastname }, visitez votre boîte de réception pour valider votre inscription!`
-          })
-
+        toast(
+          <ToastWelcome message={`Bienvenue ${ retrieved.firstname + " " + retrieved.lastname }, visitez votre boîte de réception pour valider votre inscription!`}/>
         );
+
         history.push('/');
       })
       .catch(e => {
@@ -71,7 +69,7 @@ export function register(values, history) {
           throw e;
         }
 
-        console.log(Error(e));
+        toast(<ToastError message={e.message}/>);
 
         dispatch(error(e));
         throw e;
