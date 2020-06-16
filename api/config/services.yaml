@@ -34,6 +34,35 @@ services:
         tags:
             - { name: kernel.event_listener, event: lexik_jwt_authentication.on_authentication_failure, method: onAuthenticationFailureResponse }
     
-    
+    # Doctrine Entity Listener - User profil image url
+    # Set Absolute URL to resource image
+    #App\EventListener\ImageProfilListener:
+    #    tags:
+    #        -
+    #            name: doctrine.orm.entity_listener
+    #            event: postLoad
+    #            entity: App\Entity\User
+    #            lazy: true
+    #            #entity_manager: 'custom'
+    #            #method: myCustomMethod
+                
+    # Doctrine Entity Listener - User profil image url
+    # Set Absolute URL to resource image
+    App\EventListener\ImageCategoryListener:
+        tags:
+            -
+                name: doctrine.orm.entity_listener
+                event: postLoad
+                entity: App\Entity\Category
+                lazy: true
+
+    # Doctrine Entity Listener - User profil image url
+    # Set Absolute URL to resource image
+    App\EventListener\ImageSupplierProductListener:
+        tags:
+            -   name: doctrine.orm.entity_listener
+                event: postLoad
+                entity: App\Entity\SupplierProduct
+                lazy: true
 
     

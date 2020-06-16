@@ -8,17 +8,24 @@ $screen-xs-max: 460px;
 @import "variables";
 
 
-/* Composants */
-@import "components/layout/header";
-@import "components/layout/sidebar-left";
-@import "components/layout/footer";
-
-
 /* Superlist styles */
 @import "helpers/detail";
 @import "helpers/detail_gallery";
 @import "helpers/forms";
 @import "helpers/reviews";
+
+
+
+/* Composants */
+@import "components/layout/header";
+@import "components/layout/sidebar-left";
+@import "components/layout/footer";
+@import "components/layout/aside";
+@import "components/page/error";
+
+@import "components/utils/spinner";
+@import "components/utils/toast";
+@import "components/utils/country_flags";
 
 /* Pages */
 @import "components/page/global";
@@ -27,6 +34,7 @@ $screen-xs-max: 460px;
 @import "components/page/list";
 @import "components/page/show";
 @import "components/page/form";
+@import "components/page/profile";
 
 
 

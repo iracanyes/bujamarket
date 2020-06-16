@@ -12,6 +12,7 @@
         "guzzlehttp/guzzle": "^6.3",
         "lexik/jwt-authentication-bundle": "^2.6",
         "nelmio/cors-bundle": "2.0.1",
+        "oneup/flysystem-bundle": "^3.4",
         "sensio/framework-extra-bundle": "5.5.3",
         "stripe/stripe-php": "^7.3",
         "symfony/config": "^5.0",

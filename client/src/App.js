@@ -94,6 +94,12 @@ import userRoutes from './routes/user';
 import withdrawalRoutes from './routes/withdrawal';
 import pageRoutes from './routes/page';
 
+
+
+/* Internationalisation : FormatJS/React-Intl */
+import { IntlProvider} from "react-intl";
+import { addLocaleData, messages, language } from "./config/internationalization.js";
+
 /* Layout */
 import Welcome from './Welcome';
 import Homepage from './page/Homepage';
@@ -101,10 +107,7 @@ import MainMenuSearchForm from "./components/search/MainMenuSearchForm";
 import MainMenu from "./layout/MainMenu";
 import SearchResults from "./components/search/SearchResults";
 import Error404Cat from "./page/Error404Cat";
-
-/* Internationalisation : FormatJS/React-Intl */
-import { IntlProvider} from "react-intl";
-import { addLocaleData, messages, language } from "./config/internationalization.js";
+import SidebarLeftMenu from "./layout/SidebarLeftMenu";
 
 
 /* chargement des données locales */
@@ -162,7 +165,7 @@ export class App extends Component
   }
 
 
-  /* Permet de transmettre les résultats de recherche du composant MainMenuSearchForm vers le composant d'affichage des résultats SearchResults. Utilisation de la technique HOC - High Order Component */
+  /* Permet de transmettre les résultats de recherche du composant MainMenuSearchForm vers le composant d'affichage des résultats SearchResults. HOC - High Order Component */
   search(results)
   {
     this.setState({results: results});
@@ -174,6 +177,8 @@ export class App extends Component
   {
     const { results } = this.state;
 
+    const user = localStorage.getItem("token") && JSON.parse(atob(localStorage.getItem("token").split('.')[1]));
+    console.log(user && user.roles.includes('ROLE_SUPPLIER'));
 
     return (
       <Provider store={store}>
@@ -200,9 +205,9 @@ export class App extends Component
 
                   <main>
                     <aside id="aside-left">
-
+                      { /*user && user.roles.includes('ROLE_SUPPLIER')*/ true && <SidebarLeftMenu /> }
                     </aside>
-                    <section id="main-content" className="col col-lg-12">
+                    <section id="main-content" className="col col-lg-8 mx-2">
                       <ToastContainer
                         limit={5}
                         position="top-right"
@@ -261,6 +266,9 @@ export class App extends Component
                       </div>
 
                     </section>
+                    <aside>
+
+                    </aside>
                   </main>
                 </div>
               </BrowserRouter>

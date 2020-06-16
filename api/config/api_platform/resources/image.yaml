@@ -35,7 +35,15 @@ App\Entity\Image:
             schemes: ['https']
             #options:
             #    my_option: 'my_option_value'
-            status: 200 # customize the HTTP status code to send        
+            status: 200 # customize the HTTP status code to send
+        getProfileImage:
+            method: 'GET'
+            path: '/image_profile'
+            defaults:
+                _api_receive: false
+            schemes: ['https']
+            security: 'is_granted("ROLE_MEMBER") and is_granted("IS_AUTHENTICATED_REMEMBERED")'
+            controller: App\Controller\Image\GetProfileImageAction
         #put:
         #    method: 'PUT'
         #    path: '/image/{id}'

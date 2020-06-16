@@ -182,6 +182,9 @@
     "lcobucci/jwt": {
         "version": "3.3.1"
     },
+    "league/flysystem": {
+        "version": "1.0.69"
+    },
     "league/html-to-markdown": {
         "version": "4.9.1"
     },
@@ -220,6 +223,18 @@
     },
     "ocramius/proxy-manager": {
         "version": "2.7.0"
+    },
+    "oneup/flysystem-bundle": {
+        "version": "3.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "3.0",
+            "ref": "0eb87bba411c227da027fe5f7c1dc7954b02f242"
+        },
+        "files": [
+            "config/packages/oneup_flysystem.yaml"
+        ]
     },
     "phenx/php-font-lib": {
         "version": "0.5.1"

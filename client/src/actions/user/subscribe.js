@@ -2,7 +2,7 @@ import { SubmissionError } from 'redux-form';
 import {extractHubURL, fetch, normalize} from '../../utils/dataAccess';
 import React from "react";
 import { toast } from "react-toastify";
-import { ToastSuccess, ToastError } from "../../layout/ToastMessage";
+import { toastSuccess, toastError } from "../../layout/ToastMessage";
 
 export function error(error) {
   return { type: 'USER_SUBSCRIBE_ERROR', error };
@@ -81,10 +81,9 @@ export function subscribe(values, history) {
 
         if(/Customer/.test(retrieved['@context']))
         {
-          toast(<ToastSuccess message={'Inscription terminée!\nConnectez vous à la plateforme et visitez votre profil pour ajouter les informations de livraison pour vos achats.\nAu plaisir!'} />);
+          toastSuccess('Inscription terminée!\nConnectez vous à la plateforme et visitez votre profil pour ajouter les informations de livraison pour vos achats.\nAu plaisir!');
         }else{
-
-          toast(<ToastSuccess message={'Inscription terminée!\nConnectez vous à la plateforme et visitez votre profil pour ajouter vos produits.\nAu plaisir!'} />);
+          toastSuccess('Inscription terminée!\nConnectez vous à la plateforme et visitez votre profil pour ajouter vos produits.\nAu plaisir!');
         }
 
         // Redirection vers la page d'accueil
@@ -92,16 +91,23 @@ export function subscribe(values, history) {
       })
       .catch(e => {
         dispatch(loading(false));
-        dispatch(error(e));
 
-        if (e instanceof SubmissionError) {
+        if(typeof e === 'string')
+        {
           dispatch(error(e));
-          throw e;
+          dispatch(error(null));
+        }else{
+          if(e['hydra:description'])
+          {
+            dispatch(error(e['hydra:title']));
+            dispatch(error(null));
+          }else{
+            dispatch(error(e.message));
+            dispatch(error(null));
+          }
         }
 
-        toast(<ToastError message={e.message} />);
-
-        history.push({pathname: '.'});
+        history.push({pathname: values.get('token')});
 
       });
   };

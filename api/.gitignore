@@ -17,6 +17,7 @@
 /**/*.*.save
 /public/download/**/*.pdf
 /public/assets/uploads/*
+/private/*
 ###< Custom ###
 
 ###> lexik/jwt-authentication-bundle ###

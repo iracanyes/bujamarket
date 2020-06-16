@@ -20,7 +20,7 @@ export default class Homepage extends Component
       <section>
 
         {/* Carousel - Categories  */}
-        <section className="col-lg-9 mx-auto category-cards bg-transparent pt60 pb60">
+        <section className="mx-auto category-cards bg-transparent pt60 pb60">
           <div className="container-fluid">
             <CarouselCategories />
           </div>

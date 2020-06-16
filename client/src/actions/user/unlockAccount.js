@@ -5,16 +5,14 @@ import {
   normalize,
   mercureSubscribe as subscribe
 } from '../../utils/dataAccess';
-import React from "react";
-import { toast } from "react-toastify";
-import { ToastSuccess, ToastError } from "../../layout/ToastMessage";
+import {toastSuccess, toastError} from "../../layout/ToastMessage";
 
 export function error(error) {
-  return { type: 'USER_SUBSCRIBE_ERROR', error };
+  return { type: 'USER_UNLOCK_ACCOUNT_ERROR', error };
 }
 
 export function request(user) {
-  return { type: 'USER_SUBSCRIBE_REQUEST', user  };
+  return { type: 'USER_UNLOCK_ACCOUNT_REQUEST', user  };
 }
 
 export function loading(loading) {
@@ -55,11 +53,7 @@ export function retrieve(token) {
         dispatch(loading(false));
         dispatch(error(e));
 
-        if(sessionStorage.getItem('flash-message-error') !== null)
-        {
-          sessionStorage.removeItem('flash-message-error');
-        }
-        sessionStorage.setItem('flash-message-error', e);
+        toastError(e.message);
       });
   };
 }
@@ -83,8 +77,7 @@ export function unlockAccount(values, history) {
       .then(retrieved => {
         dispatch(success(retrieved));
 
-        toast(<ToastSuccess message={'Compte activé!\nAu plaisir!'} />);
-
+        toastSuccess('Compte activé!\nAu plaisir!');
         // Redirection vers la page d'accueil
         history.push('../../login');
       })
@@ -97,7 +90,7 @@ export function unlockAccount(values, history) {
           throw e;
         }
 
-        toast(<ToastError message={e["hydra:description"]} />);
+        toastError(e["hydra:description"]);
 
         history.push({pathname: '/unlock_account/' + values.get('token')});
 

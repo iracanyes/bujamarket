@@ -12,13 +12,14 @@ import { FormattedMessage, injectIntl } from "react-intl";
 import { subscribe, retrieve, reset } from "../../actions/user/subscribe";
 import DropzoneWithPreviews from "../image/dropzone/DropzoneWithPreviews";
 import PropTypes from 'prop-types';
+import {toastError} from "../../layout/ToastMessage";
 
 class SubscribeForm extends React.Component {
   static propTypes = {
     handleSubmit: PropTypes.func.isRequired,
     retrieved: PropTypes.object,
     loading: PropTypes.bool.isRequired,
-    error: PropTypes.string,
+    errorSubscribe: PropTypes.string,
     eventSource: PropTypes.instanceOf(EventSource),
     retrieve: PropTypes.func.isRequired,
   };
@@ -60,7 +61,6 @@ class SubscribeForm extends React.Component {
   onChangeInputImage(e)
   {
     const { input : { onChangeInputImage }} = this.props;
-
     onChangeInputImage(e.target.files[0]);
   }
 
@@ -116,7 +116,8 @@ class SubscribeForm extends React.Component {
       </div>
     );
   };
-  /* A faire : une fonction d'affichage d'input checkbox avec les données méta  */
+
+  /* A faire : une fonction d'affichage d'input checkbox avec les données méta
   renderCheckbox = data => {
     data.input.className = 'form-control';
 
@@ -150,10 +151,13 @@ class SubscribeForm extends React.Component {
       </div>
     );
   };
+  */
 
   render() {
-    const { intl  } = this.props;
+    const { intl, errorSubscribe  } = this.props;
 
+    console.log("Render error", errorSubscribe);
+    errorSubscribe && typeof errorSubscribe === "string" && toastError(errorSubscribe);
 
     return (
       <Fragment>
@@ -698,7 +702,7 @@ const mapStateToProps = state => {
   const { subscribing, retrieved, error, loading, eventSource } = state.user.subscription;
 
   /* Retourner les données récupèrés en DB sous le nom "initialValues" permet à redux-form d'initialiser le formulaire à ces valeurs */
-  return { subscribing, retrieved, initialValues: retrieved, error, loading, eventSource };
+  return { subscribing, retrieved, initialValues: retrieved, errorSubscribe: error, loading, eventSource };
 };
 
 const mapDispatchToProps = dispatch => ({

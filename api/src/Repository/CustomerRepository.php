@@ -18,6 +18,21 @@ class CustomerRepository extends ServiceEntityRepository
         parent::__construct($registry, Customer::class);
     }
 
+    public function getProfile(string $email)
+    {
+        return $this->createQueryBuilder('c')
+            ->leftJoin('c.image','i')
+            ->addSelect('i')
+            ->leftJoin('c.addresses', 'a')
+            ->addSelect('a')
+            ->leftJoin('s.bankAccounts', 'ba')
+            ->addSelect('ba')
+            ->where('c.email LIKE :email')
+            ->setParameter('email', $email)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
     // /**
     //  * @return Customer[] Returns an array of Customer objects
     //  */

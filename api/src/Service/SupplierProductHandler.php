@@ -65,9 +65,6 @@ class SupplierProductHandler
         /* Démarrage de la session de transaction ac la db */
         $this->em->beginTransaction();
 
-        dump($data);
-        dump($files);
-        dump($this->request);
 
         $supplierProduct = new SupplierProduct();
 
@@ -156,6 +153,7 @@ class SupplierProductHandler
                     }
 
                     $image->setUrl($newFilename);
+                    $image->setMimeType($imageFile->getMimeType());
 
                     try{
                         $this->em->persist($image);
@@ -183,7 +181,7 @@ class SupplierProductHandler
         // Images du produits
         foreach($files['product']['images'] as $key => $imageFile)
         {
-            // Image de la catégorie
+            // Image produit
             $image = new Image();
 
             $image->setTitle($product->getTitle());
@@ -207,6 +205,7 @@ class SupplierProductHandler
                 }
 
                 $image->setUrl($newFilename);
+                $image->setMimeType($imageFile->getMimeType());
 
 
             }

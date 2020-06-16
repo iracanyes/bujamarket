@@ -64,15 +64,22 @@ export function register(values, history) {
         }
 
 
-        if (e instanceof SubmissionError) {
+        if(typeof e == 'string')
+        {
           dispatch(error(e));
-          throw e;
+          dispatch(error(null));
+        }else{
+          if(e["hydra:description"])
+          {
+            dispatch(error(e["hydra:title"]));
+            dispatch(error(null));
+          }else{
+            dispatch(error(e.message));
+            dispatch(error(null));
+          }
+
         }
 
-        toast(<ToastError message={e.message}/>);
-
-        dispatch(error(e));
-        throw e;
       });
   };
 }

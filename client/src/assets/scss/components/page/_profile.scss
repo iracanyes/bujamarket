@@ -1,0 +1,44 @@
+
+
+#profile-info{
+  picture{
+    width: 7.5rem;
+    height: 7.5rem;
+  }
+
+  .card-body{
+
+    strong{
+      width: 10rem;
+      margin-right: 2rem;
+    }
+  }
+
+  .info-member{
+    div{
+
+      strong{
+        display: flex;
+        width: 10rem;
+      }
+    }
+  }
+
+  #add-payment-method{
+    a.nav-link{
+      border: 2px solid $primary-color;
+      color: $primary-color;
+      display: flex;
+      text-align: center;
+    }
+    a.nav-link:hover{
+      background-color: $primary-color;
+      color: $light-color;
+    }
+
+    .payment-method-icons{
+      font-size: 2.5rem;
+      color: $primary-color;
+    }
+  }
+}

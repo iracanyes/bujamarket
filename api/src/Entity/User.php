@@ -56,7 +56,6 @@ class User implements UserInterface
     /**
      * @var string $password Crypted password
      * @ORM\Column(type="string", length=255)
-     * @Groups({"user:input"})
      */
     private $password;
 
@@ -142,7 +141,7 @@ class User implements UserInterface
     /**
      * @var string
      * @ORM\Column(name="token", type="string", length=255)
-     * @Groups({"profile:output","user:output","admin:output","customer:output","supplier:output","user:input"})
+     * @Groups({"user:output","admin:output","customer:output","supplier:output","user:input"})
      */
     private $token;
 
@@ -165,7 +164,7 @@ class User implements UserInterface
      * @var Collection $addresses Receiving addresses of this user
      *
      * @ORM\OneToMany(targetEntity="App\Entity\Address", mappedBy="user", cascade={"persist"})
-     * @Groups({"supplier:output"})
+     * @Groups({"supplier:output","profile:output"})
      */
     private $addresses;
 
@@ -178,6 +177,7 @@ class User implements UserInterface
     /**
      * @var Collection $forums Forum's subjects created by this user
      * @ORM\OneToMany(targetEntity="App\Entity\Forum", mappedBy="author", orphanRemoval=true)
+     * @Groups({"profile:output"})
      */
     private $forums;
 
@@ -186,6 +186,7 @@ class User implements UserInterface
      *
      * @ORM\OneToMany(targetEntity="App\Entity\Forum", mappedBy="responder")
      * @Assert\Type("Doctrine\Common\Collections\Collection")
+     * @Groups({"profile:output"})
      */
     private $respondedForums;
 
@@ -632,6 +633,16 @@ class User implements UserInterface
         $this->locked = $locked;
 
         return $this;
+    }
+
+    public function isLocked(): bool
+    {
+        return $this->locked;
+    }
+
+    public function isBanned(): bool
+    {
+        return $this->banned;
     }
 
 }

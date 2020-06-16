@@ -54,6 +54,7 @@ class UnlockAccountForm extends React.Component {
     /* Marquer la soumission du formulaire */
     this.setState({ submitted: true });
 
+
     const data = new FormData(document.getElementById('unlock-account-form'));
     data.append('token', this.props.match.params.token);
 

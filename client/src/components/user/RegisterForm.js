@@ -11,11 +11,12 @@ import { Col, Row } from "reactstrap";
 import { FormattedMessage, injectIntl } from "react-intl";
 import { register } from "../../actions/user/register";
 import PropTypes from 'prop-types';
+import {toastError} from "../../layout/ToastMessage";
 
 class RegisterForm extends React.Component {
   static propTypes = {
     handleSubmit: PropTypes.func.isRequired,
-    error: PropTypes.string
+    errorRegister: PropTypes.string
   };
 
   constructor(props) {
@@ -136,8 +137,11 @@ class RegisterForm extends React.Component {
   };
 
   render() {
-    const { intl  } = this.props;
+    const { intl, errorRegister  } = this.props;
     const { user } = this.state;
+
+    errorRegister && typeof errorRegister === "string" && toastError(errorRegister);
+
     return (
       <Fragment>
         <div className={"user-authentication-form my-3"}>
@@ -312,9 +316,9 @@ class RegisterForm extends React.Component {
 }
 
 const mapStateToProps = state => {
-  const { registering } = state.user.registration;
+  const { registering, error } = state.user.registration;
 
-  return { registering };
+  return { registering, errorRegister: error };
 };
 
 const mapDispatchToProps = dispatch => ({
