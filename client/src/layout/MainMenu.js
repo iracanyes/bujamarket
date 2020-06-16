@@ -63,15 +63,16 @@ class MainMenu extends Component
             <DropdownToggle nav caret>
 
                 <FontAwesomeIcon icon="user-alt" className="menu-top-l1"/>
-                { user !== null
-                  ? <span className="main-menu-top-level-text">{user.name[0].toUpperCase() + user.name.slice(1)}</span>
-                  : <FormattedMessage  id={"app.header.main_menu.profile.link"}
-                                       defaultMessage="Profil"
-                                       description="Main menu profil navigation link"
-                                       className="main-menu-top-level-text"
-                  />
-                }
-
+                <span className="main-menu-top-level-text">
+                  { user !== null
+                    ? (user.name[0].toUpperCase() + user.name.slice(1))
+                    : <FormattedMessage  id={"app.button.profile"}
+                                         defaultMessage="Profil"
+                                         description="Main menu profil navigation link"
+                                         className="main-menu-top-level-text"
+                    />
+                  }
+                </span>
             </DropdownToggle>
             <DropdownMenu  >
               { user ===  null && (
@@ -79,7 +80,7 @@ class MainMenu extends Component
                   <DropdownItem>
                     <NavLink tag={RRDNavLink} to={{pathname:"/login", state: { from : window.location.pathname }}}>
                       <FontAwesomeIcon icon="user-check" className={"float-left"} />
-                      <FormattedMessage  id={"app.header.main_menu.profile.sub_menu.sign_in.link"}
+                      <FormattedMessage  id={"app.button.sign_in"}
                                          defaultMessage="Connexion"
                                          description="Main menu profile submenu sign-in  navigation link"
                                          className="main-menu-sub-level-text"
@@ -90,9 +91,9 @@ class MainMenu extends Component
                   <DropdownItem>
                     <NavLink tag={RRDNavLink} to={"/register"}>
                       <FontAwesomeIcon icon="sign-in-alt" />
-                      <FormattedMessage  id={"app.header.main_menu.profile.sub_menu.register.link"}
+                      <FormattedMessage  id={"app.button.register"}
                                          defaultMessage="Inscription"
-                                         description="Main menu profile submenu register  navigation link"
+                                         description="Button - Register"
                                          className="main-menu-sub-level-text"
                       />
                     </NavLink>
@@ -106,9 +107,9 @@ class MainMenu extends Component
                   <DropdownItem>
                     <NavLink tag={RRDNavLink} to={"/profile"}>
                       <FontAwesomeIcon icon="user-edit" />
-                      <FormattedMessage  id={"app.header.main_menu.profile.sub_menu.profile.link"}
+                      <FormattedMessage  id={"app.button.profile"}
                                          defaultMessage="Profil"
-                                         description="Main menu profile submenu profile  navigation link"
+                                         description="Button - Profile"
                                          className="main-menu-sub-level-text"
                       />
                     </NavLink>
@@ -116,9 +117,9 @@ class MainMenu extends Component
                   <DropdownItem>
                     <NavLink tag={RRDNavLink} to={"/profile/parameters"}>
                       <FontAwesomeIcon icon="user-cog" />
-                      <FormattedMessage  id={"app.header.main_menu.profile.sub_menu.configuration.link"}
+                      <FormattedMessage  id={"app.button.configuration"}
                                          defaultMessage="Configuration"
-                                         description="Main menu profile submenu configuration navigation link"
+                                         description="Button - Configuration"
                                          className="main-menu-sub-level-text"
                       />
                     </NavLink>
@@ -129,9 +130,9 @@ class MainMenu extends Component
                 <DropdownItem>
                   <NavLink tag={RRDNavLink} to={"/"} onClick={this.logout}>
                     <FontAwesomeIcon icon="sign-out-alt" />
-                    <FormattedMessage  id={"app.header.main_menu.profile.sub_menu.logout.link"}
+                    <FormattedMessage  id={"app.button.logout"}
                                        defaultMessage="Déconnexion"
-                                       description="Main menu profile submenu logout navigation link"
+                                       description="Button - Logout"
                                        className="main-menu-sub-level-text"
                     />
                   </NavLink>
@@ -144,9 +145,9 @@ class MainMenu extends Component
               <NavItem>
                 <NavLink tag={RRDNavLink} to={"/favorites"}>
                   <FontAwesomeIcon icon="heart" className="menu-top-l1" />
-                  <FormattedMessage  id={"app.header.main_menu.favorites.link"}
+                  <FormattedMessage  id={"app.button.favorite"}
                                      defaultMessage="Favoris"
-                                     description="Main menu favorite navigation link"
+                                     description="Button - Favorite"
                                      className="main-menu-top-level-text"
                   />
                 </NavLink>
@@ -155,9 +156,9 @@ class MainMenu extends Component
               <NavItem>
                 <NavLink tag={RRDNavLink} to={"/shopping_cart"}>
                   <FontAwesomeIcon icon="shopping-cart" className="menu-top-l1" />
-                  <FormattedMessage  id={"app.header.main_menu.shopping_cart.link"}
+                  <FormattedMessage  id={"app.button.shopping_cart"}
                                      defaultMessage={"Panier de commande"}
-                                     description="Main menu shopping cart navigation link"
+                                     description="Button - shopping cart"
                                      className="main-menu-top-level-text"
                   />
                 </NavLink>
@@ -167,9 +168,9 @@ class MainMenu extends Component
           <NavItem>
             <NavLink tag={RRDNavLink} to={"/chat"}>
               <FontAwesomeIcon icon="comments" className="menu-top-l1" />
-              <FormattedMessage  id={"app.header.main_menu.chat.link"}
+              <FormattedMessage  id={"app.button.chat"}
                                  defaultMessage={"Chat"}
-                                 description="Main menu Chat navigation link"
+                                 description="Button - Chat"
                                  className="main-menu-top-level-text"
               />
             </NavLink>
@@ -177,9 +178,9 @@ class MainMenu extends Component
           <NavItem>
             <NavLink tag={RRDNavLink} to={"/about_us"}>
               <FontAwesomeIcon icon="heart" className="menu-top-l1" />
-              <FormattedMessage  id={"app.header.main_menu.about_us.link"}
+              <FormattedMessage  id={"app.button.about_us"}
                                  defaultMessage={"A propos de nous"}
-                                 description="Main menu about us navigation link"
+                                 description="Button - About us"
                                  className="main-menu-top-level-text"
               />
             </NavLink>

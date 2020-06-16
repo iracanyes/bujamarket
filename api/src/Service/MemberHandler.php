@@ -3,11 +3,13 @@
 namespace App\Service;
 
 use App\Entity\Address;
+use App\Entity\Admin;
 use App\Entity\Customer;
 use App\Entity\Supplier;
 use App\Entity\User;
 use App\Entity\UserTemp;
 use App\Exception\User\MemberNotFoundException;
+use App\Exception\User\UpdatePasswordException;
 use Doctrine\DBAL\Driver\PDOException;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityNotFoundException;
@@ -15,12 +17,14 @@ use Doctrine\ORM\ORMException;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\UserNotFoundException;
 use mysql_xdevapi\Exception;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\SerializerInterface;
+use function MongoDB\BSON\fromJSON;
 
 class MemberHandler
 {
@@ -85,6 +89,7 @@ class MemberHandler
     }
 
     /**
+     * Create a new member
      * @return User
      * @throws \Exception
      */
@@ -141,6 +146,11 @@ class MemberHandler
 
     }
 
+    /**
+     * Create a new customer or supplier and validate the sign-in
+     * @return User
+     * @throws \Exception
+     */
     public function subscribe(): User
     {
 
@@ -160,6 +170,9 @@ class MemberHandler
             $this->setSupplierData($user);
         }
 
+        /* Confirmé l'inscription  */
+        $user->setSigninConfirmed(true);
+
         /* Persistence de l'entité en DB */
         $this->em->persist($user);
         $this->em->flush();
@@ -170,21 +183,13 @@ class MemberHandler
     public function unlockAccount(): ?User
     {
         $data = $this->request->request->all();
-        dump($data);
 
         try{
             $user = $this->em->getRepository(User::class)
                 ->findOneBy(['token' => $data['token']]);
 
-            dump($user);
-            dump(!$user instanceof UserInterface);
-            dump(!$user instanceof User);
-
-
             if(!$user instanceof UserInterface || !$user instanceof User)
                 return null;
-
-            dump($user ?? null);
 
             $user->setLocked(false);
             $user->setPassword($this->encoder->encodePassword($user, $data['password']));
@@ -199,6 +204,84 @@ class MemberHandler
 
         return $user ?? null;
 
+
+    }
+
+    public function updatePassword(): ?User
+    {
+        $data = $this->request->request->all();
+
+        try{
+            $connectedUser = $this->security->getUser();
+            dump($connectedUser);
+            $user = $this->em->getRepository(User::class)
+                ->findOneBy(["email" => $connectedUser->getUsername()]);
+            dump($user);
+            // Vérification de l'ancien mot de passe
+            $validPassword = $this->encoder->isPasswordValid($user, $data['password']);
+
+            if(!$validPassword)
+                throw new UpdatePasswordException("L'ancien mot de passe ne correspond pas à l'utilisateur connecté!");
+
+            if(strcmp($data["newPassword"], $data["confirmPassword"]) == 0)
+                $user->setPassword($this->encoder->encodePassword($user, $data['confirmPassword']));
+
+            $this->em->persist($user);
+            $this->em->flush();
+
+        }catch (\Exception $exception){
+            $this->logger->error($exception->getMessage(), ['exception' => $exception]);
+            throw new UpdatePasswordException("Le mot de passe ne correspond pas à l'utilisateur connecté!");
+        }
+
+        return isset($user) ? $user : null;
+    }
+
+    public function getProfile()
+    {
+        try{
+            $connectedUser = $this->security->getUser();
+            dump($connectedUser);
+            dump($connectedUser->getUsername());
+
+            if(!$connectedUser)
+                throw new MemberNotFoundException("Authenticated user not found");
+
+            switch (true)
+            {
+                case in_array('ROLE_ADMIN', $connectedUser->getRoles()):
+                    $user = $this->em->getRepository(Admin::class)
+                        ->getProfile( $connectedUser->getUsername());
+                    break;
+                case in_array('ROLE_SUPPLIER', $connectedUser->getRoles()) && !in_array('ROLE_ADMIN', $connectedUser->getRoles()):
+                    $user = $this->em->getRepository(Supplier::class)
+                        ->getProfile($connectedUser->getUsername());
+                    break;
+                default:
+                    $user = $this->em->getRepository(Customer::class)
+                        ->getProfile( $connectedUser->getUsername());
+                    break;
+            }
+
+            dump($user);
+
+        }catch (\Exception $exception){
+            $this->logger->error(
+                $exception->getMessage(),
+                [
+                    "exception" => $exception
+                ]
+            );
+            throw new MemberNotFoundException("Impossible de récupèrer l'utilisateur connecté!");
+        }
+
+
+        return new JsonResponse([
+            "@context" => "/context/".ucfirst($user->getUserType()),
+            "@id" => "/".$user->getUserType()."/".$user->getId(),
+            "@type" => "https://schema.org/".ucfirst($user->getUserType()),
+            "hydra:member" => [$this->serializer->normalize($user, null, ['groups' => 'profile:output'])]
+        ]);
 
     }
 
@@ -299,7 +382,7 @@ class MemberHandler
         $userTemp->setToken(bin2hex(random_bytes(64)));
 
         // Sauvegarde de l'image de profil
-        $user = $this->imageHandler->uploadProfilImage($user);
+        $user = $this->imageHandler->uploadProfileImage($user);
 
         /* Persistence de l'utilisateur temporaire */
         $this->em->persist($userTemp);

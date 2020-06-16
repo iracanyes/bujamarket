@@ -177,43 +177,17 @@ class MainMenuSearchForm extends Component
                  onChange={this.handleSearchValueChange}
                  onClick={this.reset}
           />
-          <Button type="submit" outline color="light" className={"my-2 my-sm-0"} onClick={this.handleSubmit}>
+          <Button type="submit" outline color="light" className={"my-0 my-sm-0"} onClick={this.handleSubmit}>
             <FontAwesomeIcon icon="search" />
           </Button>
         </Form>
-        <div id={"advanced-search-toggle-button"}>
-          <button onClick={this.handleToggleAdvancedSearchButton} className="btn-advanced-search-toggle-button">
-            <FormattedMessage  id={"app.header.search.form.advanced.button"}
-                               defaultMessage="Recherche avancée"
-                               description="Header - Main menu search form advanced button"
-            />
-          </button>
-        </div>
       </Fragment>
     );
   }
 
 
 }
-/*
-const mapStateToProps = state => {
-  const {
-    retrieved: retrievedProducts,
-    loading: loadingProducts,
-    error: errorProducts,
-    eventSource: eventSourceProducts
-  } = state.product.search;
 
-  const {
-    retrieved: retrievedSuppliers,
-    loading: loadingSuppliers,
-    error: errorSuppliers,
-    eventSource: eventSourceSuppliers,
-  } = state.supplier.list;
-
-  return { retrievedProducts, loadingProducts, errorProducts, eventSourceProducts,retrievedSuppliers,loadingSuppliers, errorSuppliers,  eventSourceSuppliers, };
-};
-*/
 
 const mapDispatchToProps = dispatch => ({
   searchProduct: searchParams => dispatch(searchProduct(searchParams)),

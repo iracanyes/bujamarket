@@ -1,0 +1,42 @@
+# Read the documentation: 
+# https://github.com/1up-lab/OneupFlysystemBundle/tree/master/Resources/doc/index.md
+# https://symfonycasts.com/screencast/symfony-uploads/flysystem
+oneup_flysystem:
+    adapters:
+        default_adapter:
+            local:
+                directory: '%kernel.cache_dir%/flysystem'
+        public_uploads_image_product_adapter:
+            local:
+                #directory: '%kernel.project_dir%/public/assets/uploads/img/product'
+                directory: '%kernel.project_dir%/%env(UPLOAD_SUPPLIER_PRODUCT_IMAGE_DIRECTORY)%'
+        public_uploads_image_category_adapter:
+            local:
+                #directory: '%kernel.project_dir%/public/assets/uploads/img/category'
+                directory: '%kernel.project_dir%/%env(UPLOAD_CATEGORY_IMAGE_DIRECTORY)%'
+        private_uploads_image_customer_adapter:
+            local:
+                #directory: '%kernel.project_dir%/web/uploads/img/profile/customer'
+                directory: '%kernel.project_dir%/%env(UPLOAD_CUSTOMER_IMAGE_DIRECTORY)%'
+        private_uploads_image_supplier_adapter:
+            local:
+                #directory: '%kernel.project_dir%/web/uploads/img/profile/supplier'
+                directory: '%kernel.project_dir%/%env(UPLOAD_SUPPLIER_IMAGE_DIRECTORY)%'
+        private_uploads_image_admin_adapter:
+            local:
+                #directory: '%kernel.project_dir%/web/uploads/img/profile/admin'
+                directory: '%kernel.project_dir%/%env(UPLOAD_ADMIN_IMAGE_DIRECTORY)%'
+    filesystems:
+        default_filesystem:
+            adapter: default_adapter
+            #alias: League\Flysystem\Filesystem
+        public_image_product_filesystem:
+            adapter: public_uploads_image_product_adapter
+        public_image_category_filesystem:
+            adapter: public_uploads_image_category_adapter
+        private_image_customer_filesystem:
+            adapter: private_uploads_image_customer_adapter
+        private_image_supplier_filesystem:
+            adapter: private_uploads_image_supplier_adapter
+        private_image_admin_filesystem:
+            adapter: private_uploads_image_admin_adapter

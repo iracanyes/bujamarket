@@ -98,6 +98,8 @@ class LoginForm extends React.Component {
   render() {
     const { loggingIn, intl } = this.props;
     const { email } = this.state;
+
+
     return (
       <Fragment>
 

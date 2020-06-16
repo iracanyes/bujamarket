@@ -145,7 +145,26 @@ table.table-list-image{
  *
  */
 div.list-categories{
+    div.spinner-loading{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        width: 100%;
+        padding: 5rem;
+        text-align: center;
+        div.spinner-loading-content{
+            display: flex;
+            justify-content: center;
+            &>div:first-of-type{
+                color: orange !important;
+            }
 
+        }
+
+        p{
+            color: #777777;
+        }
+    }
 
     div.card{
         margin: 1rem 0;

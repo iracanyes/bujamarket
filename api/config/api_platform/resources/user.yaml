@@ -12,7 +12,7 @@ App\Entity\User:
                 _format: 'json'
             # host: 'localhost'
             schemes: ['https']
-            access_control: "is_granted('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_FULLY')"
+            security: "is_granted('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_FULLY')"
             #options:
             #    my_option: 'my_option_value'
             status: 200 # customize the HTTP status code to send
@@ -23,6 +23,15 @@ App\Entity\User:
                 _api_receive: false
             schemes: ['https']
             controller: App\Controller\User\SubscribeMemberAction
+        getProfile:
+            method: 'POST'
+            path: '/profile'
+            defaults:
+                _api_receive: false
+                _api_response: false
+            schemes: ['https']
+            security: "is_granted('ROLE_MEMBER') and is_granted('IS_AUTHENTICATED_FULLY')"
+            controller: App\Controller\User\GetProfileAction
         unlock_account:
             method: 'POST'
             path: '/unlock_account'
@@ -30,6 +39,14 @@ App\Entity\User:
                 _api_receive: false
             schemes: ['https']
             controller: App\Controller\User\UnlockAccountAction
+        update_password:
+            method: 'POST'
+            path: '/update_password'
+            defaults:
+                _api_receive: false
+            schemes: ['https']
+            controller: App\Controller\User\UpdatePasswordAction
+            security: "is_granted('ROLE_MEMBER') and is_granted('IS_AUTHENTICATED_FULLY')"
     itemOperations:
         get:
             method: 'GET'
@@ -41,22 +58,21 @@ App\Entity\User:
                 _format: 'json'
             # host: 'localhost'
             schemes: ['https']
-            access_control: "is_granted('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_FULLY')"
+            security: "is_granted('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_FULLY')"
             #options:
             #    my_option: 'my_option_value'
-            status: 200 # customize the HTTP status code to send
-        
+            status: 200 # customize the HTTP status code to send        
         put:
             method: 'PUT'
             path: '/user/{id}'
             requirements:
                 id: '\d+'
-            access_control: 'is_granted("ROLE_MEMBER") and is_granted("IS_AUTHENTICATED_FULLY")'
+            security: 'is_granted("ROLE_MEMBER") and is_granted("IS_AUTHENTICATED_FULLY")'
             schemes: ['https']
         delete:
             method: 'DELETE'
             path: '/user/{id}'
             requirements:
                 id: '\d+'
-            access_control: 'is_granted("ROLE_ADMIN") and is_granted("IS_AUTHENTICATED_FULLY")'
+            security: 'is_granted("ROLE_ADMIN") and is_granted("IS_AUTHENTICATED_FULLY")'
             schemes: ['https']

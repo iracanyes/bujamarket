@@ -28,6 +28,7 @@ class ImageFixtures extends Fixture implements FixtureGroupInterface
         $image->setAlt($this->faker->sentence(7, true));
         $image->setUrl('https://picsum.photos/1600/900');
         $image->setSize($this->faker->numberBetween(3000,8000));
+        $image->setMimeType($this->faker->randomElement(['image/jpeg','image/png','image/jpg']));
 
         $manager->persist($image);
 

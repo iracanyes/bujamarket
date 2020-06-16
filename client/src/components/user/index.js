@@ -5,5 +5,7 @@ import List from './List';
 import Update from './Update';
 import Show from './Show';
 import UnlockAccount from "./UnlockAccountForm";
+import UpdatePassword from "./UpdatePassword";
+import Profile from "./Profile";
 
-export { Register, Login, Subscribe, List, Update, Show, UnlockAccount };
+export { Register, Login, Subscribe, List, Update, Show, UnlockAccount, UpdatePassword, Profile };

@@ -6,6 +6,8 @@ import { list, reset } from '../../actions/category/list';
 import { success } from '../../actions/category/delete';
 import { injectIntl } from "react-intl";
 import 'bootstrap/dist/css/bootstrap.css';
+import { toast } from "react-toastify";
+import { ToastError } from "../../layout/ToastMessage";
 /* Carousel */
 import {
   Col,
@@ -16,8 +18,10 @@ import {
   CarouselItem,
   CarouselControl,
   CarouselIndicators,
+  Spinner
 } from "reactstrap";
 import { FormattedMessage } from "react-intl";
+import {SpinnerLoading} from "../../layout/Spinner";
 
 class CarouselCategories extends Component {
   static propTypes = {
@@ -125,15 +129,6 @@ class CarouselCategories extends Component {
                 <Link to={"/products"}>
                   <div className="card-img-custom">
                     <img src={categories[i * 12 + j]["image"]['url']} alt={categories[i * 12 + j]["image"]["alt"]} className="image img-fluid" style={{ width:"100%"}} />
-                    <div className="middle">
-                      <div className="btn btn-outline-info text">
-                        <FormattedMessage  id={"app.page.customer.list.button.see_more"}
-                                           defaultMessage="Voir plus"
-                                           description="Customers list - button see more"
-                        />
-                      </div>
-
-                    </div>
                     <CardTitle className={"image-bottom-left-title"}>
 
                       <span className="font-weight-bold">
@@ -164,15 +159,7 @@ class CarouselCategories extends Component {
                 >
                   <div className="card-img-custom">
                     <img src={categories[i * 12 + j]["image"]['url']} alt={categories[i * 12 + j]["image"]["alt"]} className="image img-fluid" style={{ width:"100%"}} />
-                    <div className="middle">
-                      <div className="btn btn-outline-info text">
-                        <FormattedMessage  id={"app.page.customer.list.button.see_more"}
-                                           defaultMessage="Voir plus"
-                                           description="Customers list - button see more"
-                        />
-                      </div>
 
-                    </div>
                     <CardTitle className={"image-bottom-left-title"}>
 
                       <span className="font-weight-bold">
@@ -213,15 +200,7 @@ class CarouselCategories extends Component {
                 >
                   <div className="card-img-custom">
                     <img src={categories[i * 12 + j]["image"]['url']} alt={categories[i * 12 + j]["image"]["alt"]} className="image img-fluid" style={{ width:"100%"}} />
-                    <div className="middle">
-                      <div className="btn btn-outline-info text">
-                        <FormattedMessage  id={"app.page.customer.list.button.see_more"}
-                                           defaultMessage="Voir plus"
-                                           description="Customers list - button see more"
-                        />
-                      </div>
 
-                    </div>
                     <CardTitle className={"image-bottom-left-title"}>
 
                       <span className="font-weight-bold">
@@ -280,15 +259,13 @@ class CarouselCategories extends Component {
         margin: "0 40px"
     };
 
+    this.props.error && toast(<ToastError message={this.props.error} />);
+
     return <Fragment>
         <div className={"list-categories"}>
-
-
-          {this.props.loading && <div className="alert alert-info">Loading...</div>}
-          {this.props.deletedItem && <div className="alert alert-success">{this.props.deletedItem['@id']} deleted.</div>}
-          {this.props.error && <div className="alert alert-danger">{this.props.error}</div>}
-
-
+          {this.props.loading &&
+            <SpinnerLoading message={"Chargement des catégories de produit"} />
+          }
 
             {this.props.retrieved &&
               <Carousel

@@ -29,6 +29,7 @@ class ImageSupplierProductFixtures extends Fixture implements DependentFixtureIn
         $image->setAlt($this->faker->sentence(7, true));
         $image->setUrl('https://picsum.photos/1600/900');
         $image->setSize($this->faker->randomNumber(6, false));
+        $image->setMimeType($this->faker->randomElement(['image/jpeg','image/png','image/jpg']));
 
         $image->setSupplierProduct($this->getReference(SupplierProductFixtures::SUPPLIER_PRODUCT_REFERENCE));
 

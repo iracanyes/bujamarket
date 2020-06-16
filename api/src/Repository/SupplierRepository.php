@@ -19,6 +19,21 @@ class SupplierRepository extends ServiceEntityRepository
         parent::__construct($registry, Supplier::class);
     }
 
+    public function getProfile(string $email)
+    {
+        return $this->createQueryBuilder('s')
+            ->leftJoin('s.image','i')
+            ->addSelect('i')
+            ->leftJoin('s.addresses', 'a')
+            ->addSelect('a')
+            ->leftJoin('s.bankAccounts', 'ba')
+            ->addSelect('ba')
+            ->where('s.email LIKE :email')
+            ->setParameter('email', $email)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
     // /**
     //  * @return Supplier[] Returns an array of Supplier objects
     //  */

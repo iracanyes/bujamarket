@@ -20,6 +20,13 @@ class UserRepository extends ServiceEntityRepository implements UserLoaderInterf
         parent::__construct($registry, User::class);
     }
 
+    /**
+     * Surcharge de la méthode de récupération des utilisateurs authentifiés
+     *
+     * @param string $username
+     * @return int|mixed|string|\Symfony\Component\Security\Core\User\UserInterface|null
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
     public function loadUserByUsername(string $username)
     {
         return $this->createQueryBuilder('u')

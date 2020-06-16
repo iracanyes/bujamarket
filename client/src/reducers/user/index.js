@@ -7,5 +7,18 @@ import update from './update';
 import del from './delete';
 import show from './show';
 import unlockAccount from "./unlockAccount";
+import updatePassword from "./updatePassword";
+import profile from "./profile";
 
-export default combineReducers({ list, authentication, registration, subscription, update, del, show, unlockAccount });
+export default combineReducers({
+  list,
+  authentication,
+  registration,
+  subscription,
+  update,
+  del,
+  show,
+  unlockAccount,
+  updatePassword,
+  profile
+});

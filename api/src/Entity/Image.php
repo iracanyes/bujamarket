@@ -6,6 +6,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\HttpFoundation\File\File;
+use Vich\UploaderBundle\Entity\File as EmbeddedFile;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * @ApiResource(attributes={
@@ -13,6 +16,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * })
  * @ORM\Table(name="bjmkt_image")
  * @ORM\Entity(repositoryClass="App\Repository\ImageRepository")
+ * @Vich\Uploadable()
  */
 class Image
 {
@@ -22,7 +26,7 @@ class Image
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"product:output","supplier:output"})
+     * @Groups({"product:output","supplier:output","profile:output"})
      */
     private $id;
 
@@ -36,7 +40,7 @@ class Image
      *     minMessage="The minimum value is {{ limit }}.\nThe current value is {{ value }}.",
      *     maxMessage="The maximum value is {{ limit }}.\nThe current value is {{ value }}."
      * )
-     * @Groups({"product:output","supplier:output","favorite:output"})
+     * @Groups({"profile:output","product:output","supplier:output","favorite:output"})
      */
     private $place;
 
@@ -62,7 +66,7 @@ class Image
      * @ORM\Column(type="string", length=255)
      * @Assert\NotNull()
      * @Assert\Url()
-     * @Groups({"category:output", "supplier_product:output","supplier:output","favorite:output","order_set:output"})
+     * @Groups({"profile:output","category:output", "supplier_product:output","supplier:output","favorite:output","order_set:output"})
      */
     private $url;
 
@@ -92,6 +96,11 @@ class Image
      * @ORM\OneToOne(targetEntity="App\Entity\Category", mappedBy="image", cascade={"persist", "remove"})
      */
     private $category;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $mimeType;
 
     public function getId(): ?int
     {
@@ -146,6 +155,18 @@ class Image
         return $this;
     }
 
+
+    /**
+     * @return \DateTimeInterface|null
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * @return int|null
+     */
     public function getSize(): ?int
     {
         return $this->size;
@@ -201,6 +222,18 @@ class Image
         if ($this !== $category->getImage()) {
             $category->setImage($this);
         }
+
+        return $this;
+    }
+
+    public function getMimeType(): ?string
+    {
+        return $this->mimeType;
+    }
+
+    public function setMimeType(string $mimeType): self
+    {
+        $this->mimeType = $mimeType;
 
         return $this;
     }

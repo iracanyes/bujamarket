@@ -1,0 +1,79 @@
+/**
+ * Author: iracanyes
+ * Date: 23/06/20
+ * Description: Aside content
+ */
+aside#aside-left{
+
+  .navbar-left{
+    flex-direction: column;
+    padding: 0;
+
+    svg{
+      font-size: 1.25rem;
+    }
+
+    svg + span{
+      width: 100%;
+    }
+
+    svg.fa-dollar-sign{
+      margin-left: 0.375rem;
+    }
+
+    button, h6{
+      text-align: left;
+      padding: 0.5rem 1.5rem;
+
+      span{
+        position: absolute;
+        left: 3.5rem;
+        width: 75%;
+        font-weight: 400;
+      }
+    }
+
+    a.nav-link{
+      display: flex;
+      padding: 0;
+    }
+
+    picture{
+      width: 7rem;
+      height: 7rem;
+
+      img{
+        margin: 0 auto;
+      }
+
+    }
+    picture + div{
+      text-align: center;
+      color: $primary-color;
+    }
+
+    div.btn-group{
+      display:flex;
+      flex-direction: column;
+      position: unset;
+      width: 100%;
+
+      div.dropdown-menu{
+        position: unset !important;
+        left: unset !important;
+        top: unset !important;
+        transform: unset !important;
+        border: 2px solid $secondary-color;
+        border-right: unset;
+        border-left: unset;
+
+        .dropdown-header{
+          padding: 0.5rem 1.25rem;
+          border-left: unset;
+          border-right: unset;
+        }
+      }
+    }
+  }
+}
+

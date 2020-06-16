@@ -11,7 +11,7 @@ body, html{
 }
 
 body{
-  font-family: "Kanit","Dosis", "Lato", Arial,sans-serif;
+  font-family: "Nunito", "Carter One","Kanit","Dosis", "Lato", Arial,sans-serif;
   box-sizing: border-box;
   //background-image: url("../img/background-cement-concrete.jpg");
   /* Attention : URL relatif à la page index.scss qui importe ce fichier */
@@ -77,13 +77,13 @@ div.welcome{
   }
 }
 
-
 /*************** MAIN ***********************/
 
 
 /*** MAIN - GLOBAL STYLE ****/
 
-main{
+main {
+  display: flex;
   overflow: hidden;
   width: 100%;
   margin-right: auto;
@@ -167,37 +167,8 @@ main{
 
 /*** END MAIN - GLOBAL STYLE ****/
 
-div.error_404{
-    width: 100%;
-    height: 800px;
-    background-image: url("./../img/error-404-chat-fou.jpg");
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-}
 
-/** React-toastify **/
-div.Toastify__toast-container{
-    top:unset !important;
 
-    div.Toastify__toast{
 
-        div.Toastify__toast-body{
-            font-family: "Kanit", "Dosis", "Lato", Arial, sans-serif;
-            font-size: 1rem;
-            padding: 0.125rem 0.25rem 0.125rem 0.25rem;
 
-            svg{
-                margin-right: 0.5rem;
-            }
 
-            svg.fa-exclamation-triangle{
-                color: red;
-            }
-            svg.fa-thumbs-up{
-                color: green;
-            }
-        }
-
-    }
-}
