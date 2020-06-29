@@ -12,18 +12,18 @@ App\Entity\Address:
                 _format: 'json'
             # host: 'localhost'
             schemes: ['https']
-            access_control: "is_granted('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_FULLY')"
+            security: "is_granted('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_FULLY')"
             #options:
             #    my_option: 'my_option_value'
             status: 200 # customize the HTTP status code to send
         post:
             method: 'POST'
             path: '/address/create'
-            requirements:
-                address: App\Entity\Customer
-            access_control: "is_granted('IS_AUTHENTICATED_FULLY')"
+            defaults:
+                _api_receive: false
+            security: "is_granted('ROLE_MEMBER') and is_granted('IS_AUTHENTICATED_FULLY')"
             schemes: ['https']
-            controller: App\Controller\Customer\CreateAddress::class
+            controller: App\Controller\Address\CreateAddressAction
     itemOperations:
         get:
             method: 'GET'
@@ -35,7 +35,7 @@ App\Entity\Address:
                 _format: 'json'
             # host: 'localhost'
             schemes: ['https']
-            access_control: "is_granted('IS_AUTHENTICATED_FULLY')"
+            security: "is_granted('IS_AUTHENTICATED_FULLY')"
             #options:
             #    my_option: 'my_option_value'
             status: 200 # customize the HTTP status code to send
@@ -46,19 +46,22 @@ App\Entity\Address:
                 _format: 'json'
                 _api_receive: false
             schemes: ['https']
-            access_control: 'is_granted("ROLE_MEMBER") and is_granted("IS_AUTHENTICATED_FULLY")'
+            security: 'is_granted("ROLE_MEMBER") and is_granted("IS_AUTHENTICATED_FULLY")'
             controller: App\Controller\Address\GetAddressesAction
         put:
             method: 'PUT'
             path: '/address/{id}'
             requirements:
                 id: '\d+'
-            access_control: "is_granted('IS_AUTHENTICATED_FULLY')"
+            security: "is_granted('IS_AUTHENTICATED_FULLY') and is_granted('ROLE_MEMBER')"
             schemes: ['https']
         delete:
             method: 'DELETE'
             path: '/address/{id}'
             requirements:
                 id: '\d+'
-            access_control: "is_granted('IS_AUTHENTICATED_FULLY') and is_granted('ROLE_CUSTOMER')"
+            defaults:
+                #_api_response: false
+            security: "is_granted('IS_AUTHENTICATED_FULLY') and is_granted('ROLE_MEMBER')"
             schemes: ['https']
+            controller: App\Controller\Address\DeleteAddressAction

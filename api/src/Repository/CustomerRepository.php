@@ -25,7 +25,7 @@ class CustomerRepository extends ServiceEntityRepository
             ->addSelect('i')
             ->leftJoin('c.addresses', 'a')
             ->addSelect('a')
-            ->leftJoin('s.bankAccounts', 'ba')
+            ->leftJoin('c.bankAccounts', 'ba')
             ->addSelect('ba')
             ->where('c.email LIKE :email')
             ->setParameter('email', $email)

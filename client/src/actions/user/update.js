@@ -21,11 +21,15 @@ export function retrieveSuccess(retrieved) {
   return { type: 'USER_UPDATE_RETRIEVE_SUCCESS', retrieved };
 }
 
-export function retrieve(id) {
+export function retrieve(history, location) {
   return dispatch => {
     dispatch(retrieveLoading(true));
 
-    return fetch(id)
+    const headers = new Headers();
+    if(localStorage.getItem('token') !== null)
+      headers.set('Authorization', 'Bearer '+ JSON.parse(localStorage.getItem('token')).token);
+
+    return fetch('profile', {method: 'POST', headers})
       .then(response =>
         response
           .json()
@@ -34,6 +38,8 @@ export function retrieve(id) {
       .then(({ retrieved, hubURL }) => {
         retrieved = normalize(retrieved);
 
+        console.log("action retrieved", retrieved);
+
         dispatch(retrieveLoading(false));
         dispatch(retrieveSuccess(retrieved));
 
@@ -41,7 +47,25 @@ export function retrieve(id) {
       })
       .catch(e => {
         dispatch(retrieveLoading(false));
-        dispatch(retrieveError(e.message));
+
+        console.log("error", e);
+
+        if (e.code  === 401) {
+          dispatch(retrieveError("Authentification nécessaire!"));
+          history.push({pathname: "../../login", state: { from: location.pathname } });
+        }else{
+
+          if(typeof e === 'string')
+          {
+            dispatch(retrieveError(e));
+          }else{
+            if(e['hydra:description'])
+              dispatch(retrieveError(e['hydra:description']));
+            else
+              dispatch(retrieveError(e))
+          }
+        }
+        dispatch(retrieveError(null));
       });
   };
 }
@@ -58,16 +82,22 @@ export function updateSuccess(updated) {
   return { type: 'USER_UPDATE_UPDATE_SUCCESS', updated };
 }
 
-export function update(item, values) {
+export function update(values, history, location) {
   return dispatch => {
     dispatch(updateError(null));
     dispatch(registerSuccess(null));
     dispatch(updateLoading(true));
 
-    return fetch(item['@id'], {
-      method: 'PUT',
-      headers: new Headers({ ...authHeader(), 'Content-Type': 'application/ld+json' }),
-      body: JSON.stringify(values)
+    const headers = new Headers();
+    if(localStorage.getItem('token') !== null)
+      headers.set('Authorization', 'Bearer '+ JSON.parse(localStorage.getItem('token')).token);
+
+    console.log("update fetch body values", values);
+
+    return fetch('profile/update', {
+      method: 'POST',
+      headers: headers,
+      body: values
     })
       .then(response =>
         response
@@ -90,7 +120,20 @@ export function update(item, values) {
           throw e;
         }
 
-        dispatch(updateError(e.message));
+        if (e.code  === 401) {
+          dispatch(error("Authentification nécessaire!"));
+          history.push({pathname: "../../login", state: { from: location.pathname } });
+        }else{
+
+          if(typeof e === 'string')
+          {
+            dispatch(error(e));
+          }else{
+            dispatch(error(e['hydra:description']));
+          }
+          history.push({pathname: '/profile/update'});
+        }
+        dispatch(error(null));
       });
   };
 }

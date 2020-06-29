@@ -26,22 +26,6 @@ export function getProfileImage() {
       headers.set('Authorization', 'Bearer ' + JSON.parse(localStorage.getItem('token')).token);
 
     return fetch('/image_profile' , { method: 'GET', headers })
-      /*
-      .then(response =>
-        response
-          .json()
-          .then(retrieved => ({ retrieved, hubURL: extractHubURL(response) }))
-      )
-      .then(({ retrieved, hubURL }) => {
-        retrieved = normalize(retrieved);
-
-        dispatch(loading(false));
-        dispatch(success(retrieved));
-
-        if (hubURL) dispatch(mercureSubscribe(hubURL, retrieved['@id']));
-      })
-
-       */
       .then(response => response.body)
       .then(stream => new Response(stream))
       .then(response => response.blob())

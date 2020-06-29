@@ -110,4 +110,26 @@ class UploadHandler
         return $resource;
 
     }
+
+    public function deleteProfileImage(User $user)
+    {
+        try{
+            switch ($user->getUserType()){
+                case "customer":
+                    $this->imageCustomerFilesystem->delete('/'.$user->getImage()->getUrl());
+                    break;
+                case "supplier" :
+                    $this->imageSupplierFilesystem->delete('/'.$user->getImage()->getUrl());
+                    break;
+                case "admin" :
+                    $this->imageAdminFilesystem->delete('/'.$user->getImage()->getUrl());
+                    break;
+            }
+        }catch(\Exception $exception){
+            throw new DeleteImageException(sprintf('Unable to delete profile image %s', $user->brandName()));
+        }
+
+
+
+    }
 }

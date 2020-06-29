@@ -48,7 +48,7 @@ services:
                 
     # Doctrine Entity Listener - User profil image url
     # Set Absolute URL to resource image
-    App\EventListener\ImageCategoryListener:
+    App\EventListener\DoctrineListener\ImageCategoryListener:
         tags:
             -
                 name: doctrine.orm.entity_listener
@@ -58,7 +58,7 @@ services:
 
     # Doctrine Entity Listener - User profil image url
     # Set Absolute URL to resource image
-    App\EventListener\ImageSupplierProductListener:
+    App\EventListener\DoctrineListener\ImageSupplierProductListener:
         tags:
             -   name: doctrine.orm.entity_listener
                 event: postLoad

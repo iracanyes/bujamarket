@@ -1,7 +1,7 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { withRouter, NavLink as RRDNavLink } from "react-router-dom";
-import { Button, NavLink } from "reactstrap";
+import { NavLink } from "reactstrap";
 import {
   faCcAmex,
   faCcMastercard,
@@ -17,11 +17,11 @@ function AddPaymentMethodButton(props){
         Ajouter un moyen de paiement
       </NavLink>
       <div className="payment-method-icons ml-2">
-        <FontAwesomeIcon icon={faCcAmex} className={'mx-1'} />
-        <FontAwesomeIcon icon={faCcMastercard} className={'mx-1'} />
-        <FontAwesomeIcon icon={faCcVisa} className={'mx-1'} />
-        <FontAwesomeIcon icon={faCcPaypal} className={'mx-1'} />
-        <FontAwesomeIcon icon={faCcStripe} className={'mx-1'} />
+        <FontAwesomeIcon icon={['fab','cc-amex']} className={'mx-1'} />
+        <FontAwesomeIcon icon={['fab','cc-mastercard']} className={'mx-1'} />
+        <FontAwesomeIcon icon={['fab','cc-visa']} className={'mx-1'} />
+        <FontAwesomeIcon icon={['fab','cc-paypal']} className={'mx-1'} />
+        <FontAwesomeIcon icon={['fab','cc-stripe']} className={'mx-1'} />
       </div>
     </div>
   );

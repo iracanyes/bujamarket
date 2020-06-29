@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
-import { List, Login, Register, Subscribe, Update, Show, UnlockAccount, UpdatePassword, Profile } from '../components/user/';
+import { List, Login, Register, Subscribe, Update, Show, UnlockAccount, UpdatePassword, Profile, UpdateProfile, ProfileAddresses } from '../components/user/';
 
 export default [
   <Route path="/login" component={Login} exact key="login"/>,
@@ -8,8 +8,10 @@ export default [
   <Route path={'/subscribe/:token'} component={Subscribe} exact key="subscribe"  />,
   <Route path={'/unlock_account/:token'} component={UnlockAccount} exact key="unlockAccount" />,
   <Route path={'/profile'} component={Profile} exact key="profile" />,
+  <Route path={'/profile/update'} component={UpdateProfile} exact key={"update"} />,
   <Route path={'/profile/update_password'} component={UpdatePassword} exact key='updatePassword' />,
-  <Route path="/users/edit/:id" component={Update} exact key="update" />,
+  <Route path={'/profile/addresses'} component={ProfileAddresses} exact key='profileAddresses'/>,
+  /*<Route path="/users/edit/:id" component={Update} exact key="update" />,*/
   <Route path="/users/show/:id" component={Show} exact key="show" />,
   <Route path="/users/" component={List} exact strict key="list" />,
   <Route path="/users/:page" component={List} exact strict key="page" />

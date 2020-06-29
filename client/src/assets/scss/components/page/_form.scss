@@ -43,18 +43,25 @@ form#add-shopping-cart
 .dropzone-thumb{
     display: inline-flex;
     border-radius: 0.125rem;
-    border: 1px solid #eaeaea;
     margin-bottom: 0.5rem;
     margin-right: 0.5rem;
-    width: 100px;
     padding: 0.25rem;
     box-sizing: border-box;
+
+  button{
+    display:flex;
+    height: 1.725rem;
+    padding: 0.25rem;
+    color: $primary-color;
+  }
 }
 .dropzone-thumb-inner{
     display: flex;
     flex-direction: column;
-    minWidth: 0;
+    max-width: 6.5rem;
     overflow: hidden;
+
+
 }
 
 #dropzone-preview{
@@ -64,10 +71,35 @@ form#add-shopping-cart
     margin-top: 1rem;
 
     img{
-        height: 5rem;
+        max-width: 6.5rem;
     }
     .dropzone-preview-img-title{
         font-size: 10px;
-        height: 20px;
     }
+
+
 }
+
+/*--- Profile info page - Update profile info ---*/
+form#update-profile-form{
+  label[for="userType"]{
+    display: flex;
+    align-items: center;
+    span{
+      display: inline-flex;
+    }
+  }
+
+
+}
+/*--- End rofile info page - Update profile info ---*/
+/*--- Profile - Update address form ----*/
+form#update-address-form{}
+datalist{
+  font-family: "Kanit", "Dosis", "Lato", Arial, sans-serif;
+  font-size: 1rem;
+  option{
+    padding: 0.2rem;
+  }
+}
+/*--- Profile - Update address form ----*/
