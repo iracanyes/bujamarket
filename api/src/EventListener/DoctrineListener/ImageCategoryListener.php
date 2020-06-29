@@ -4,7 +4,7 @@
  * Description: Doctrine Entity Listener - Image Load
  */
 
-namespace App\EventListener;
+namespace App\EventListener\DoctrineListener;
 
 use App\Entity\Image;
 use App\Entity\Category;

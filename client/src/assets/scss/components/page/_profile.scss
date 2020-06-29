@@ -1,6 +1,45 @@
 
-
+/*--- Profile info page ---*/
 #profile-info{
+  .profile-card-title{
+    h4, h5{
+      text-align: left;
+    }
+  }
+
+  .card-info-supplier{
+    div{
+      strong{
+        color: $gray-color;
+        display: block;
+        width: 17.5rem;
+
+        span{
+          font-weight: 600;
+        }
+      }
+
+      span{
+        font-weight: 500;
+      }
+    }
+  }
+
+  #profile-relation-widget{
+    div.tab-pane{
+      svg{
+        position: absolute;
+        top: 0.75rem;
+        left: 0.50rem;
+        font-size: 1.25rem;
+      }
+
+      img.rounded-circle{
+        width: 6.25rem;
+      }
+    }
+  }
+
   picture{
     width: 7.5rem;
     height: 7.5rem;
@@ -15,6 +54,7 @@
   }
 
   .info-member{
+    height: 96.75%;
     div{
 
       strong{
@@ -29,7 +69,7 @@
       border: 2px solid $primary-color;
       color: $primary-color;
       display: flex;
-      text-align: center;
+      align-self: center;
     }
     a.nav-link:hover{
       background-color: $primary-color;
@@ -42,3 +82,33 @@
     }
   }
 }
+/*--- End profile info page ---*/
+/*--- Profile Addresses table ----*/
+#profile-addresses-table{
+  h2{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+  .tab-title{
+    button{
+      position: absolute;
+      right: 0;
+      top: 0;
+      color: #1b1b1b;
+    }
+    button:hover{
+      color: white;
+      border-color: $primary-color;
+      background-color: $primary-color;
+    }
+  }
+  .table{
+    margin: 3rem 0;
+
+  }
+  .table td, .table th{
+    vertical-align: baseline !important;
+  }
+}
+/*--- Profile Addresses table ----*/

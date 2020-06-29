@@ -5,11 +5,13 @@ namespace App\Service;
 
 use App\Entity\Address;
 use App\Entity\User;
+use App\Exception\Address\UnauthorizedDeleteException;
 use Doctrine\DBAL\Driver\PDOException;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityNotFoundException;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\UserNotFoundException;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Security;
@@ -105,5 +107,45 @@ class AddressHandler
         }
 
         return $address;
+    }
+
+    public function createAddress(): Address
+    {
+        $data = json_decode($this->request->getContent(), false);
+        dump($data);
+        $address = new Address();
+        $address->setLocationName($data->locationName)
+            ->setStreet($data->street)
+            ->setNumber($data->number)
+            ->setTown($data->town)
+            ->setState($data->state)
+            ->setZipCode($data->zipCode)
+            ->setCountry($data->country);
+
+        return $this->addAddress($address);
+    }
+
+    public function deleteAddress(Address $address): array
+    {
+        $user = $this->security->getUser();
+
+        if($user->getEmail() !== $address->getUser()->getEmail())
+            throw new UnauthorizedDeleteException("Unauthorized delete address action");
+
+        try{
+
+
+            $this->em->remove($address);
+            $this->em->flush();
+
+        }catch (\Exception $exception){
+            $this->logger->alert("Error occured during an attempt to delete an address", ['context' => $exception, 'user' => $user]);
+        }
+
+        return [
+            "@id" => "/address/".$address->getId(),
+            "@context" => '/Address/'.$address->getId(),
+            "hydra:description"=> sprintf("Address '%s' deleted!", $address->getStreet().' '.$address->getNumber().', '.$address->getZipCode().' '.$address->getTown())
+        ];
     }
 }

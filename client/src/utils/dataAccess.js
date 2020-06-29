@@ -33,7 +33,7 @@ export function fetch(id, options = {}) {
       json.violations.map(
         violation => (errors[violation.xpropertyPath] = violation.message)
       );
-
+      console.log('errors', errors);
       throw new SubmissionError(errors);
     });
   });

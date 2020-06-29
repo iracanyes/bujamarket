@@ -38,7 +38,7 @@ class Supplier extends User
      *
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank()
-     * @Groups({"supplier:output","supplier_product:output"})
+     * @Groups({"profile:output","supplier:output","supplier_product:output"})
      */
     private $socialReason;
 
@@ -47,7 +47,7 @@ class Supplier extends User
      *
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank()
-     * @Groups({"supplier:output","supplier_product:output"})
+     * @Groups({"profile:output","supplier:output","supplier_product:output"})
      */
     private $brandName;
 
@@ -56,7 +56,7 @@ class Supplier extends User
      *
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank()
-     * @Groups({"supplier:output"})
+     * @Groups({"profile:output","supplier:output"})
      */
     private $tradeRegistryNumber;
 
@@ -65,7 +65,7 @@ class Supplier extends User
      *
      * @ORM\Column(type="string", length=30)
      * @Assert\NotBlank()
-     * @Groups({"supplier:output"})
+     * @Groups({"profile:output","supplier:output"})
      */
     private $vatNumber;
 
@@ -74,7 +74,7 @@ class Supplier extends User
      *
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank()
-     * @Groups({"supplier:output"})
+     * @Groups({"profile:output","supplier:output"})
      */
     private $contactFullname;
 
@@ -82,7 +82,7 @@ class Supplier extends User
      * @var string $contactPhoneNumber Phone number of this supplier
      * @ORM\Column(type="string", length=50)
      * @Assert\NotBlank()
-     * @Groups({"supplier:output"})
+     * @Groups({"profile:output","supplier:output"})
      */
     private $contactPhoneNumber;
 
@@ -91,7 +91,7 @@ class Supplier extends User
      *
      * @ORM\Column(type="string", length=255)
      * @Assert\Email()
-     * @Groups({"supplier:output"})
+     * @Groups({"profile:output","supplier:output"})
      */
     private $contactEmail;
 
@@ -100,7 +100,7 @@ class Supplier extends User
      *
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\Url()
-     * @Groups({"supplier:output"})
+     * @Groups({"profile:output","supplier:output"})
      */
     private $website;
 
@@ -154,9 +154,11 @@ class Supplier extends User
     /**
      * @param string $brandName
      */
-    public function setBrandName(string $brandName): void
+    public function setBrandName(string $brandName): self
     {
         $this->brandName = $brandName;
+
+        return $this;
     }
 
 
@@ -276,4 +278,6 @@ class Supplier extends User
 
         return $this;
     }
+
+
 }

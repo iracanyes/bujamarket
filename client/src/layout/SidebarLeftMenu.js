@@ -222,7 +222,7 @@ class SidebarLeftMenu extends Component
           </DropdownToggle>
           <DropdownMenu className={'bg-dark text-secondary'} >
             <DropdownItem header>
-              <FontAwesomeIcon icon={"shopping-basket"} className={"mr-2"}/>
+              <FontAwesomeIcon icon={"shopping-basket"} className={"ml-2"}/>
               <FormattedMessage id={"app.button.your_products"} defaultMessage={"Vos produits"} description={"Button - Your products"}/>
             </DropdownItem>
             <DropdownItem divider></DropdownItem>
@@ -233,7 +233,7 @@ class SidebarLeftMenu extends Component
               </NavLink>
             </DropdownItem>
             <DropdownItem>
-              <NavLink tag={RRDNavLink} to={{pathname: "/product/create", state: { from : window.location.pathname }}}>
+              <NavLink tag={RRDNavLink} to={{pathname: "/supplier_product/create", state: { from : window.location.pathname }}}>
                 <FontAwesomeIcon icon={"cart-plus"} className={"mr-2"}/>
                 <FormattedMessage id={"app.button.add_product"} defaultMessage={"Ajouter un produit"} description={"Button - Add product"}/>
               </NavLink>
@@ -268,25 +268,76 @@ class SidebarLeftMenu extends Component
         <UncontrolledButtonDropdown>
           <DropdownToggle outline className={'text-primary'}>
             <FontAwesomeIcon icon={"comments"} className={"mr-2"}/>
-            <FormattedMessage id={"app.button.rating"} defaultMessage={"Évaluations"} description={"Button - Rating"}/>
+            <FormattedMessage id={"app.comments"} />
           </DropdownToggle>
           <DropdownMenu className={'bg-dark text-secondary'} >
             <DropdownItem header>
               <FontAwesomeIcon icon={"inbox"} className={"mr-2"}/>
-              <FormattedMessage id={"app.button.customer_reviews_on_your_products"} defaultMessage={"Avis des clients sur vos produits"} description={"Button - Customer reviews on your products"}/>
+              <FormattedMessage id={"app.reviews_on_your_products"} />
             </DropdownItem>
             <DropdownItem divider></DropdownItem>
             <DropdownItem>
               <NavLink tag={RRDNavLink} to={{pathname: "/comments", state: { from : window.location.pathname }}}>
                 <FontAwesomeIcon icon={"comments"} className={"mr-2"} />
-                <FormattedMessage id={"app.button.rating_and_reviews"} defaultMessage={"Évaluations et commentaires"} description={"Button - Rating and reviews"}/>
+                <FormattedMessage
+                  id={"app.comments"}
+                  defaultMessage={"Commentaires"}
+                  description={"App - Comments"}
+                />
               </NavLink>
             </DropdownItem>
             <DropdownItem divider />
             <DropdownItem>
               <NavLink tag={RRDNavLink} to={{pathname: "/rating", state: { from : window.location.pathname }}}>
                 <FontAwesomeIcon icon={"comments-dollar"} className={"mr-2"} />
-                <span>Évaluations et commentaires</span>
+                <FormattedMessage
+                  id={"app.rating"}
+                  defaultMessage={"Évaluations"}
+                  description={"Product - Your products' rating"}
+                />
+              </NavLink>
+            </DropdownItem>
+          </DropdownMenu>
+        </UncontrolledButtonDropdown>
+        <UncontrolledButtonDropdown>
+          <DropdownToggle outline className={'text-primary'}>
+            <FontAwesomeIcon icon={"comments"} className={"mr-2"}/>
+            <FormattedMessage
+              id={"app.chat"}
+              defaultMessage={"Chat"}
+              description={"App - Chat"}
+            />
+          </DropdownToggle>
+          <DropdownMenu className={'bg-dark text-secondary'} >
+            <DropdownItem header>
+              <FontAwesomeIcon icon={"inbox"} className={"mr-2"}/>
+              <FormattedMessage id={"app.admin_relationship"} />
+            </DropdownItem>
+            <DropdownItem divider></DropdownItem>
+            <DropdownItem>
+              <NavLink tag={RRDNavLink} to={{pathname: "/chat/admin", state: { from : window.location.pathname }}}>
+                <FontAwesomeIcon icon={"comments"} className={"mr-2"} />
+                <FormattedMessage
+                  id={"app.admin.chat"}
+                  defaultMessage={"Chat administrateur"}
+                  description={"App - platform administrator chat"}
+                />
+              </NavLink>
+            </DropdownItem>
+            <DropdownItem divider />
+            <DropdownItem header>
+              <FontAwesomeIcon icon={"inbox"} className={"mr-2"}/>
+              <FormattedMessage id={"app.customer_relationship"} />
+            </DropdownItem>
+            <DropdownItem divider></DropdownItem>
+            <DropdownItem>
+              <NavLink tag={RRDNavLink} to={{pathname: "/chat/customers", state: { from : window.location.pathname }}}>
+                <FontAwesomeIcon icon={"comments"} className={"mr-2"} />
+                <FormattedMessage
+                  id={"app.customer.chat"}
+                  defaultMessage={"Chat client"}
+                  description={"App - customers' chat"}
+                />
               </NavLink>
             </DropdownItem>
           </DropdownMenu>

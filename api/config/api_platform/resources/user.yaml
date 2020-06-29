@@ -47,6 +47,14 @@ App\Entity\User:
             schemes: ['https']
             controller: App\Controller\User\UpdatePasswordAction
             security: "is_granted('ROLE_MEMBER') and is_granted('IS_AUTHENTICATED_FULLY')"
+        update_profile:
+            method: 'POST'
+            path: '/profile/update'
+            defaults:
+                _api_receive: false
+            schemes: ["https"]
+            security: "is_granted('ROLE_MEMBER') and is_granted('IS_AUTHENTICATED_FULLY')"
+            controller: App\Controller\User\UpdateProfileAction
     itemOperations:
         get:
             method: 'GET'

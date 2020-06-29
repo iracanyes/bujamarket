@@ -1,26 +1,27 @@
 /**
  * Author: iracanyes
- * Date: 28/06/2020
- * Description:
+ * Date: 21/06/2020
+ * Description: Update profile component
+ * Update the user's profile information
  */
 import React,{ Fragment } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
 import { Col, Row } from "reactstrap";
 import { FormattedMessage, injectIntl } from "react-intl";
-import { subscribe, retrieve, reset } from "../../actions/user/subscribe";
+import { update, retrieve, reset } from "../../actions/user/update";
 import DropzoneWithPreviews from "../image/dropzone/DropzoneWithPreviews";
 import PropTypes from 'prop-types';
 import {toastError} from "../../layout/ToastMessage";
-import * as ISOCodeJson from "../../config/ISOCode/ISO3166-1Alpha2.json";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-class SubscribeForm extends React.Component {
+class UpdateProfile extends React.Component {
   static propTypes = {
     handleSubmit: PropTypes.func.isRequired,
     retrieved: PropTypes.object,
-    loading: PropTypes.bool.isRequired,
-    errorSubscribe: PropTypes.string,
+    loading: PropTypes.bool,
+    //errorRetrieve: PropTypes.string,
     eventSource: PropTypes.instanceOf(EventSource),
     retrieve: PropTypes.func.isRequired,
   };
@@ -29,19 +30,8 @@ class SubscribeForm extends React.Component {
     super(props);
 
     this.state = {
-      user: {
-        id: '',
-        email: '',
-        firstname: '',
-        lastname: '',
-        userType: '',
-        termsAccepted: null,
-        currency: 'EUR',
-        language: 'FR',
-      },
       submitted: false
     };
-
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.onChangeInputImage = this.onChangeInputImage.bind(this);
@@ -49,9 +39,7 @@ class SubscribeForm extends React.Component {
 
   componentDidMount() {
     /* Récupération de l'utilisateur temporaire via son token */
-    this.props.retrieve(decodeURIComponent(this.props.match.params.token));
-
-
+    this.props.retrieve(this.props.history, this.props.location);
   }
 
 
@@ -71,15 +59,15 @@ class SubscribeForm extends React.Component {
 
     this.setState({ submitted: true });
 
-    // Récupération des données de formulaires
-    const data = new FormData(document.getElementById('subscribe-form'));
+    const { retrieved } = this.props;
 
-    data.append("userType", this.props.retrieved.userType);
-    data.append("token", this.props.match.params.token);
+    // Récupération des données de formulaires
+    const data = new FormData(document.getElementById('update-profile-form'));
+
     // Ajout des images du formulaire
     data.append("images", document.getElementsByName('images')[0].files);
 
-    this.props.subscribe(data, this.props.history);
+    this.props.update(data, this.props.history, this.props.location);
 
   }
 
@@ -120,37 +108,32 @@ class SubscribeForm extends React.Component {
 
 
   render() {
-    const { intl, errorSubscribe  } = this.props;
+    const { intl, retrieved, loading, errorRetrieve, loadingUpdate, errorUpdate  } = this.props;
 
-    console.log("Render error", errorSubscribe);
-    errorSubscribe && typeof errorSubscribe === "string" && toastError(errorSubscribe);
+
+    errorUpdate && typeof errorUpdate === "string" && toastError(errorUpdate);
+    errorRetrieve && typeof errorRetrieve === "string" && toastError(errorRetrieve);
+
+    const user = retrieved && retrieved['hydra:member'][0];
 
     return (
       <Fragment>
-        <div className={"user-authentication-form my-3"}>
+        <div className={"profile-update-form my-3"}>
           <h1>
-            <FormattedMessage  id={"app.page.user.subscribe.title"}
-                               defaultMessage="Devenir membre"
-                               description="Page User - Subscribe title"
+            <FormattedMessage  id={"app.profile.update"}
+                               defaultMessage="Mise à jour des données de profil"
+                               description="Page User - Update profile's information"
             />
           </h1>
-          <div className={"col-lg-6 mx-auto px-3"}>
-            {this.props.error && (
-              <div className="alert alert-danger" role="alert">
-                <span className="fa fa-exclamation-triangle" aria-hidden="true" />{' '}
-                {this.props.error}
-              </div>
-            )}
-          </div>
-          { this.props.retrieved !== null && (
+          { user !== null && (
             <form
-              id="subscribe-form"
-              name="subscribe"
+              id="update-profile-form"
+              name="update-profile"
               className={"col-lg-6 mx-auto px-3"}
               onSubmit={this.handleSubmit}
               /* Si la clé change un réaffichage du composant est lancé */
-              key={this.props.retrieved.id}
-              autoComplete={"on"}
+              key={user.id}
+              //autoComplete={"on"}
             >
               <fieldset>
                 <legend>Information utilisateur</legend>
@@ -161,13 +144,13 @@ class SubscribeForm extends React.Component {
                         component={this.renderField}
                         name="email"
                         type="email"
-                        placeholder={this.props.retrieved.email}
+                        placeholder={user.email}
                         labelText={intl.formatMessage({
                           id: "app.user.item.email",
                           defaultMessage: "Email",
                           description: "User item - email"
                         })}
-                        value={this.props.retrieved.email}
+                        defaultValue={user.email}
                       />
                     </Col>
                   </Row>
@@ -177,13 +160,14 @@ class SubscribeForm extends React.Component {
                         component={this.renderField}
                         name="lastname"
                         type="text"
-                        placeholder={this.props.retrieved.lastname}
+                        placeholder={user.lastname}
                         required={true}
                         labelText={intl.formatMessage({
                           id: "app.user.item.lastname",
                           defaultMessage: "Nom",
                           description: "User item - lastname"
                         })}
+                        value={user.lastname}
                       />
                     </Col>
                     <Col>
@@ -191,46 +175,45 @@ class SubscribeForm extends React.Component {
                         component={this.renderField}
                         name="firstname"
                         type="text"
-                        placeholder={this.props.retrieved.firstname}
+                        placeholder={user.firstname}
                         required={true}
                         labelText={intl.formatMessage({
                           id: "app.user.item.firstname",
                           defaultMessage: "Prénom",
                           description: "User item - firstname"
                         })}
+                        value={ user.firstname }
                       />
                     </Col>
                   </Row>
-                  <Row>
-                    <Col className={'mb-3'}>
+                  <Row className={"px-3"}>
+                    <div className={'mb-3 d-flex flex-row w-100'}>
                       <label
                         htmlFor={'userType'}
-                        className="form-control-label"
+                        className="col-3 mb-0 px-0"
                       >
                         <FormattedMessage  id={"app.user.item.user_type"}
                                            defaultMessage="Type d'utilisateur"
                                            description="User item - user type"
+                                           className={"m-auto"}
 
-                        />
+                        />&nbsp;:
                       </label>
-                      &nbsp;:&nbsp;
-                      <Field
-                        component={"select"}
+                      <select
                         name="userType"
-                        type="select"
-                        className={'custom-select ml-2 col-6'}
-                        disabled={'disabled'}
-                        value={this.props.retrieved.userType ? this.props.retrieved.userType : ''}
-
+                        id="userType"
+                        className={"custom-select col-4 ml-2"}
+                        defaultValue={retrieved['@id'].includes('supplier') ? "supplier" : "customer"}
+                        disabled={true}
                       >
-                        <option value="customer" >
+                        <option value="customer" key={"customer"} >
                           { intl.formatMessage({
                             id: "app.user.item.user_type.client",
                             description: "User item - user type client",
                             defaultMessage: "Client"
                           })}
                         </option>
-                        <option value="supplier"  >
+                        <option value="supplier" key={"supplier"}>
                           { intl.formatMessage({
                             id: "app.user.item.user_type.supplier",
                             description: "User item - user type supplier",
@@ -238,8 +221,8 @@ class SubscribeForm extends React.Component {
                           })}
 
                         </option>
-                      </Field>
-                    </Col>
+                      </select>
+                    </div>
 
                   </Row>
                   <Row>
@@ -260,7 +243,7 @@ class SubscribeForm extends React.Component {
                         name="language"
                         type="select"
                         className={'custom-select d-block col-6'}
-                        value={this.state.user.language}
+                        value={user.language}
                       >
                         <option value="FR">
                           { intl.formatMessage({
@@ -299,12 +282,13 @@ class SubscribeForm extends React.Component {
                         />
                       </label>
                       &nbsp;:&nbsp;
+
                       <Field
                         component={"select"}
                         name="currency"
                         type="select"
-                        className={'custom-select d-block col-9'}
-                        value={this.state.user.currency}
+                        className={'custom-select d-block col-4'}
+                        value={user.currency}
                       >
                         <option value="EUR">
                           &euro;&nbsp;
@@ -321,7 +305,6 @@ class SubscribeForm extends React.Component {
                             description: "User item - currency USD",
                             defaultMessage: "Dollar"
                           })}
-
                         </option>
                         <option value="BIF">
                           &#x1D539;&#x1D540;&#x1D53D;&nbsp;
@@ -330,7 +313,6 @@ class SubscribeForm extends React.Component {
                             description: "User item - currency BIF",
                             defaultMessage: "Francs Burundais"
                           })}
-
                         </option>
                       </Field>
                     </Col>
@@ -338,13 +320,20 @@ class SubscribeForm extends React.Component {
                 </fieldset>
 
               <fieldset>
-                <legend>Image du {this.props.retrieved.userType === "customer" ? "client" : "fournisseur"}</legend>
+                <legend>Image du {user.userType === "customer" ? "client" : "fournisseur"}</legend>
                 <Row>
-                  <DropzoneWithPreviews label={this.props.retrieved.userType === "customer" ? "Image de profil" : "Logo de l'entreprise"}/>
+                  <DropzoneWithPreviews
+                    label={retrieved["@id"].includes("customer") ? "Image de profil" : "Logo de l'entreprise"}
+                    data={[{
+                      "id": user.image.id,
+                      "filename": user.brandName,
+                      "src": user.image.url
+                    }]}
+                  />
                 </Row>
               </fieldset>
 
-              {this.props.retrieved.userType === 'supplier' && (
+              {retrieved['@id'].includes('supplier')  && (
                 <fieldset>
                   <fieldset className={'mt-2'}>
                     <legend>Information fournisseur</legend>
@@ -354,7 +343,7 @@ class SubscribeForm extends React.Component {
                           component={this.renderField}
                           name="socialReason"
                           type="text"
-                          placeholder={"Ex: Google LLC"}
+                          placeholder={user.socialReason}
                           required={true}
                           labelText={intl.formatMessage({
                             id: "app.supplier.item.social_reason",
@@ -369,7 +358,7 @@ class SubscribeForm extends React.Component {
                           component={this.renderField}
                           name="brandName"
                           type="text"
-                          placeholder={"Ex: Google"}
+                          placeholder={user.brandName}
                           required={true}
                           labelText={intl.formatMessage({
                             id: "app.supplier.item.brand_name",
@@ -385,7 +374,7 @@ class SubscribeForm extends React.Component {
                           component={this.renderField}
                           name="tradeRegistryNumber"
                           type="text"
-                          placeholder={"0000000000000"}
+                          placeholder={user.tradeRegistryNumber}
                           required={true}
                           labelText={intl.formatMessage({
                             id: "app.supplier.item.trade_registry_number",
@@ -399,7 +388,7 @@ class SubscribeForm extends React.Component {
                           component={this.renderField}
                           name="vatNumber"
                           type="text"
-                          placeholder={"00000000"}
+                          placeholder={user.vatNumber}
                           required={true}
                           labelText={intl.formatMessage({
                             id: "app.supplier.item.vat_number",
@@ -415,7 +404,7 @@ class SubscribeForm extends React.Component {
                           component={this.renderField}
                           name="contactFullname"
                           type="text"
-                          placeholder={"Dubois Charles"}
+                          placeholder={user.contactFullname}
                           required={true}
                           labelText={intl.formatMessage({
                             id: "app.supplier.item.contact_fullname",
@@ -429,7 +418,7 @@ class SubscribeForm extends React.Component {
                           component={this.renderField}
                           name="contactPhoneNumber"
                           type="text"
-                          placeholder={"Ex: +257 22 _ _ _ _ _ _ "}
+                          placeholder={user.contactPhoneNumber}
                           required={true}
                           labelText={intl.formatMessage({
                             id: "app.supplier.item.contact_phone_number",
@@ -446,7 +435,7 @@ class SubscribeForm extends React.Component {
                           component={this.renderField}
                           name="contactEmail"
                           type="email"
-                          placeholder={"Ex: contact@monsite.ext "}
+                          placeholder={user.contactEmail}
                           required={true}
                           labelText={intl.formatMessage({
                             id: "app.supplier.item.contact_email",
@@ -460,7 +449,7 @@ class SubscribeForm extends React.Component {
                           component={this.renderField}
                           name="website"
                           type="text"
-                          placeholder={"www.google.com"}
+                          placeholder={user.website}
                           labelText={intl.formatMessage({
                             id: "app.supplier.item.website",
                             defaultMessage: "Site web",
@@ -488,12 +477,13 @@ class SubscribeForm extends React.Component {
                         &nbsp;:&nbsp;
                         <Field
                           component={"select"}
-                          name='address[locationName]'
+                          name='addresses[0][locationName]'
                           type="select"
-                          className={'custom-select ml-2 col-6'}
+                          className={'custom-select ml-2 col-4'}
                           disabled={'disabled'}
+                          value={user.addresses[0].locationName}
                         >
-                          <option value="Head office" selected>
+                          <option value="Head office">
                             { intl.formatMessage({
                               id: "app.address.item.location_name.head_office",
                               description: "Address item - location name : head office",
@@ -502,8 +492,8 @@ class SubscribeForm extends React.Component {
                           </option>
                           <option value="Delivery address" >
                             { intl.formatMessage({
-                              id: "app.address.item.location_name.head_office",
-                              description: "Address item - location name : head office",
+                              id: "app.address.item.location_name.delivery_address",
+                              description: "Address item - location name : delivery address",
                               defaultMessage: "Adresse de livraison"
                             })}
 
@@ -524,29 +514,31 @@ class SubscribeForm extends React.Component {
                       <Col>
                         <Field
                           component={this.renderField}
-                          name='address[street]'
+                          name='addresses[0][street]'
                           type="text"
-                          placeholder={"Ex: Rue du collège"}
+                          placeholder={user.addresses[0].street}
                           required={true}
                           labelText={intl.formatMessage({
                             id: "app.address.item.street",
                             defaultMessage: "Nom de rue",
                             description: "Address item - street"
                           })}
+                          value={user.addresses[0].street}
                         />
                       </Col>
                       <Col>
                         <Field
                           component={this.renderField}
-                          name='address[number]'
+                          name='addresses[0][number]'
                           type="text"
-                          placeholder={"Ex: 98/110"}
+                          placeholder={user.addresses[0].number}
                           required={true}
                           labelText={intl.formatMessage({
                             id: "app.address.item.number",
                             defaultMessage: "Numéro",
                             description: "Address item - number"
                           })}
+                          value={user.addresses[0].number}
                         />
                       </Col>
                     </Row>
@@ -554,29 +546,31 @@ class SubscribeForm extends React.Component {
                       <Col>
                         <Field
                           component={this.renderField}
-                          name='address[town]'
+                          name='addresses[0][town]'
                           type="text"
-                          placeholder={"EX: Zaventem"}
+                          placeholder={user.addresses[0].town}
                           required={true}
                           labelText={intl.formatMessage({
                             id: "app.address.item.town",
                             defaultMessage: "Ville",
                             description: "Address item - town"
                           })}
+                          value={user.addresses[0].town}
                         />
                       </Col>
                       <Col>
                         <Field
                           component={this.renderField}
-                          name='address[state]'
+                          name='addresses[0][state]'
                           type="text"
-                          placeholder={"Ex: Bruxelles"}
+                          placeholder={user.addresses[0].state}
                           required={true}
                           labelText={intl.formatMessage({
                             id: "app.address.item.state",
                             defaultMessage: "État/Province/Région",
                             description: "Address item - state"
                           })}
+                          value={user.addresses[0].state}
                         />
                       </Col>
                     </Row>
@@ -584,33 +578,32 @@ class SubscribeForm extends React.Component {
                       <Col>
                         <Field
                           component={this.renderField}
-                          name='address[zipCode]'
+                          name='addresses[0][zipCode]'
                           type="text"
-                          placeholder={"1000"}
+                          placeholder={user.addresses[0].zipCode}
                           required={true}
                           labelText={intl.formatMessage({
                             id: "app.address.item.zip_code",
                             defaultMessage: "Code postal",
                             description: "Address item - zip code"
                           })}
+                          value={user.addresses[0].zipCode}
                         />
                       </Col>
                       <Col>
-                        <label htmlFor="address[country]">
-                          <FormattedMessage id={"app.address.item.country"} />
-                        </label>
                         <Field
-                          component="select"
-                          name='address[country]'
-                          type="select"
-                          placeholder={"Ex: Belgium"}
+                          component={this.renderField}
+                          name='addresses[0][country]'
+                          type="text"
+                          placeholder={user.addresses[0].country}
                           required={true}
-                          className={"form-control"}
-                        >
-                          {Object.entries(ISOCodeJson.default).map(([index, value]) => (
-                            <option value={value} key={index}>{ value }</option>
-                            ))}
-                        </Field>
+                          labelText={intl.formatMessage({
+                            id: "app.address.item.country",
+                            defaultMessage: "Numéro de téléphone personne de contact",
+                            description: "Address item - country"
+                          })}
+                          value={user.addresses[0].country}
+                        />
                       </Col>
 
                     </Row>
@@ -619,29 +612,6 @@ class SubscribeForm extends React.Component {
                 </fieldset>
               )}
 
-                <Row className={'pt-3'}>
-                  <Col>
-                    <div className={`form-group d-flex`}>
-                      <input
-                        name="termsAccepted"
-                        type="checkbox"
-                        className={'mx-2'}
-                        style={{position: 'absolute', top: '10px'}}
-                        required={true}
-                        id={`user_termsAccepted`}
-                      />
-                      <label
-                        htmlFor={`user_termsAccepted`}
-                        className="form-control-label  col-10 ml-5"
-                      >
-                        J'accepte les conditions d'utilisation de la plateforme. <Link to={'/terms_condition'}>Voir termes et conditions</Link> <br/>
-                        J'autorise l'exploitation de mes données personnelles fournies à cette plateforme dans les limites indiquées par le réglement d'<Link to={'/rgpd'}>Utilisations des données personnelles</Link>
-                      </label>
-
-
-                    </div>
-                  </Col>
-                </Row>
                 <Row>
                   <button type="submit" className="btn btn-success my-3 mx-2">
                     <FormattedMessage  id={"app.button.continue"}
@@ -671,22 +641,24 @@ class SubscribeForm extends React.Component {
 }
 
 const mapStateToProps = state => {
-  const { subscribing, retrieved, error, loading, eventSource } = state.user.subscription;
+  const { updating, errorUpdate, loadingUpdate, retrieved, error, loading, eventSource } = state.user.update;
+
+  const profile = retrieved ? retrieved['hydra:member'][0]: {};
 
   /* Retourner les données récupèrés en DB sous le nom "initialValues" permet à redux-form d'initialiser le formulaire à ces valeurs */
-  return { subscribing, retrieved, initialValues: retrieved, errorSubscribe: error, loading, eventSource };
+  return { updating, errorUpdate, loadingUpdate, retrieved, initialValues: profile, errorRetrieve: error, loading, eventSource };
 };
 
 const mapDispatchToProps = dispatch => ({
-  subscribe: (user, history) => dispatch( subscribe(user, history)),
-  retrieve: token => dispatch(retrieve(token)),
+  update: (data, history, location) => dispatch( update(data, history, location)),
+  retrieve: (history, location) => dispatch(retrieve(history, location)),
   reset: eventSource => dispatch(reset(eventSource))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(
   reduxForm({
-    form: 'subscribe',
+    form: 'update-profile',
     enableReinitialize: true,
     keepDirtyOnReinitialize: true
-  })(injectIntl(SubscribeForm))
+  })(withRouter(injectIntl(UpdateProfile)))
 )

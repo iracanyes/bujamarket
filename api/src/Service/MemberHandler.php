@@ -237,6 +237,10 @@ class MemberHandler
         return isset($user) ? $user : null;
     }
 
+    /**
+     * @return JsonResponse
+     * @throws MemberNotFoundException
+     */
     public function getProfile()
     {
         try{
@@ -247,19 +251,21 @@ class MemberHandler
             if(!$connectedUser)
                 throw new MemberNotFoundException("Authenticated user not found");
 
-            switch (true)
+            switch ($connectedUser->getUserType())
             {
-                case in_array('ROLE_ADMIN', $connectedUser->getRoles()):
+                case "admin":
                     $user = $this->em->getRepository(Admin::class)
                         ->getProfile( $connectedUser->getUsername());
                     break;
-                case in_array('ROLE_SUPPLIER', $connectedUser->getRoles()) && !in_array('ROLE_ADMIN', $connectedUser->getRoles()):
+                case "supplier":
                     $user = $this->em->getRepository(Supplier::class)
                         ->getProfile($connectedUser->getUsername());
                     break;
                 default:
                     $user = $this->em->getRepository(Customer::class)
                         ->getProfile( $connectedUser->getUsername());
+                    dump("default");
+                    dump($user);
                     break;
             }
 
@@ -283,6 +289,79 @@ class MemberHandler
             "hydra:member" => [$this->serializer->normalize($user, null, ['groups' => 'profile:output'])]
         ]);
 
+    }
+
+    public function updateProfile()
+    {
+        $connectedUser = $this->security->getUser();
+        dump($connectedUser);
+
+        $data = $this->request->request->all();
+        dump($data);
+
+        $image = $this->request->files->get('images');
+
+        // Mise à jour des données de profil
+        $user = $this->updateUserInfo($connectedUser, $data);
+
+        if($image)
+        {
+
+            $this->imageHandler->uploadProfileImage($user);
+        }
+
+        return $user;
+
+
+    }
+
+    public function updateUserInfo(UserInterface $connectedUser, $data)
+    {
+        try{
+            $user = $this->em->getRepository(User::class)
+                ->findOneBy(['email' => $connectedUser->getUsername()]);
+            dump($user);
+
+            if(!$connectedUser instanceof User)
+                throw new MemberNotFoundException(sprintf("User %s not found", $data["firstname"]." ".$data["lastname"]));
+
+            /* Update member info */
+            $user->setFirstname($data['firstname'])
+                ->setLastname($data['lastname'])
+                ->setLanguage($data['language'])
+                ->setCurrency($data['currency']);
+
+
+
+            if($user instanceof Supplier)
+            {
+                $user->getAddresses()[0]->setStreet($data["addresses"][0]["street"]);
+                $user->getAddresses()[0]->setNumber($data["addresses"][0]["number"]);
+                $user->getAddresses()[0]->setTown($data["addresses"][0]["town"]);
+                $user->getAddresses()[0]->setState($data["addresses"][0]["state"]);
+                $user->getAddresses()[0]->setZipCode($data["addresses"][0]["zipCode"]);
+                $user->getAddresses()[0]->setCountry($data["addresses"][0]["country"]);
+
+                $user->setBrandName($data['brandName'])
+                    ->setSocialReason($data['socialReason'])
+                    ->setTradeRegistryNumber($data['tradeRegistryNumber'])
+                    ->setVatNumber($data['vatNumber'])
+                    ->setContactFullname($data['contactFullname'])
+                    ->setContactPhoneNumber($data['contactPhoneNumber'])
+                    ->setContactEmail($data['contactEmail'])
+                    ->setWebsite($data['website']);
+            }
+
+            dump($user);
+
+            $this->em->persist($user);
+            $this->em->flush();
+
+        }catch (\Exception $exception){
+            throw new UpdateProfileException(sprintf("Unable to update the user profile %s", $connectedUser->getEmail()));
+        }
+
+        return $user;
     }
 
     public function setUserRoles(User $user): void
@@ -408,7 +487,7 @@ class MemberHandler
         $user->setContactFullname($this->request->request->get('contactFullname'));
         $user->setContactPhoneNumber($this->request->request->get('contactPhoneNumber'));
         $user->setContactEmail($this->request->request->get('contactEmail'));
-        $user->setWebsite($this->request->request->get('website ') ?? '');
+        $user->setWebsite($this->request->request->get('website '));
 
         /* Siége social */
         $address = new Address();

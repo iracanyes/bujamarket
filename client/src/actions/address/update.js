@@ -7,7 +7,7 @@ import {
 } from '../../utils/dataAccess';
 import { success as createSuccess } from './create';
 import { loading, error } from './delete';
-
+import authHeader from "../../utils/authHeader";
 export function retrieveError(retrieveError) {
   return { type: 'ADDRESS_UPDATE_RETRIEVE_ERROR', retrieveError };
 }
@@ -57,15 +57,20 @@ export function updateSuccess(updated) {
   return { type: 'ADDRESS_UPDATE_UPDATE_SUCCESS', updated };
 }
 
-export function update(item, values) {
+export function update(item, values, history, location) {
   return dispatch => {
     dispatch(updateError(null));
     dispatch(createSuccess(null));
     dispatch(updateLoading(true));
 
-    return fetch(item['@id'], {
+    /* Ajout du JWT authentication token de l'utilisateur connecté */
+    const token = localStorage.getItem('token') !== null ? JSON.parse(localStorage.getItem('token')) : null;
+    const headers = new Headers({'Content-Type':'application/ld+json'});
+    token && headers.set('Authorization', 'Bearer '+ token.token);
+
+    return fetch('/address/' + item.id, {
       method: 'PUT',
-      headers: new Headers({ 'Content-Type': 'application/ld+json' }),
+      headers: headers,
       body: JSON.stringify(values)
     })
       .then(response =>
@@ -85,11 +90,27 @@ export function update(item, values) {
         dispatch(updateLoading(false));
 
         if (e instanceof SubmissionError) {
-          dispatch(updateError(e.errors._error));
-          throw e;
+          dispatch(updateError(e.errors._error['hydra:description']));
         }
 
-        dispatch(updateError(e.message));
+        if(e.code === 401)
+        {
+          dispatch(updateError("Authentification nécessaire avant de poursuivre!"));
+          history.push({pathname: '../../login', state: { from : location.pathname }});
+        }
+
+        if(typeof e === 'string')
+        {
+          dispatch(updateError(e));
+        }else{
+          if(e['hydra:description'])
+          {
+            dispatch(updateError(e['hydra:title']));
+          }else{
+            dispatch(updateError(e.message));
+          }
+        }
+        dispatch(updateError(null));
       });
   };
 }

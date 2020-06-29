@@ -1,4 +1,5 @@
 {
+  "app.all" : "Tous",
   "app.address": "Adresse",
   "app.address.item.country": "Pays",
   "app.address.item.location_name": "Type d'adresse",
@@ -71,6 +72,8 @@
   "app.category.item.description": "Description de la catégorie",
   "app.category.item.image": "Image de la catégorie",
   "app.category.item.name": "Nom de la catégorie",
+  "app.comments": "Commentaires",
+  "app.comment.recent_comments": "Commentaires récents",
   "app.delivery_address": "Adresse de livraison",
   "app.form.contact.title": "Contactez-nous",
   "app.form.delivery_address.existing_address": "Adresses enregistrées",
@@ -109,7 +112,9 @@
   "app.product.item.title": "Nom du produit",
   "app.product.item.weight":"Poids",
   "app.product.item.width": "Largueur",
+  "app.profile.supplier_info": "Informations fournisseurs",
   "app.quantity": "Quantité",
+  "app.recent": "Récents",
   "app.search.product_notfound": "Aucun produit trouvé",
   "app.search.supplier_notfound": "Aucun fournisseur trouvé",
   "app.search_form.search_input.text": "Recherche",
@@ -148,5 +153,17 @@
   "app.button.pending_payments": "Paiements en cours",
   "app.button.your_products": "Vos produits",
   "app.button.update_product": "Mise à jour des produits",
-  "app.button.customer_reviews_on_your_products": "Commentaires dans vos produits"
+  "app.button.customer_reviews_on_your_products": "Commentaires client sur vos produits",
+  "app.reviews_on_your_products": "Commentaires sur vos produits",
+  "app.your_products_rating": "Évaluations de vos produits",
+  "app.chat": "Chat",
+  "app.admin_relationship": "Relation administrateur",
+  "app.customer_relationship": "Relation client",
+  "app.customer.chat": "Chat clients",
+  "app.admin.chat": "Chat administrateur",
+  "app.profile.update": "Mise à jour du profil",
+  "app.rating": "Évaluation",
+  "app.actions": "Actions",
+  "app.address.add": "Ajouter une adresse",
+  "app.address.item.location_name.deposit_address": "Adresse de dépôt"
 }

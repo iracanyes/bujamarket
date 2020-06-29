@@ -95,18 +95,15 @@ export function subscribe(values, history) {
         if(typeof e === 'string')
         {
           dispatch(error(e));
-          dispatch(error(null));
         }else{
           if(e['hydra:description'])
           {
             dispatch(error(e['hydra:title']));
-            dispatch(error(null));
           }else{
             dispatch(error(e.message));
-            dispatch(error(null));
           }
         }
-
+        dispatch(error(null));
         history.push({pathname: values.get('token')});
 
       });

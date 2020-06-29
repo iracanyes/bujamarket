@@ -54,19 +54,16 @@ export function getProfile(history, location) {
         if(typeof e == 'string')
         {
           dispatch(error(e));
-          dispatch(error(null));
         }else{
           if(e["hydra:description"])
           {
             dispatch(error(e["hydra:description"]));
-            dispatch(error(null));
           }else{
             dispatch(error(e.message));
-            dispatch(error(null));
           }
 
         }
-
+        dispatch(error(null));
       });
   };
 }

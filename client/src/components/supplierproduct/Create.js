@@ -26,6 +26,9 @@ class Create extends Component {
         />
       );
 
+    const user = localStorage.getItem('token') && JSON.parse(localStorage.getItem('token'));
+    console.log('user', user);
+
     return (
       <div>
         <h1>Proposer un produit à la vente</h1>

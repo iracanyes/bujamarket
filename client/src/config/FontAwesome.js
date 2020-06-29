@@ -9,7 +9,12 @@ import {
   faCcMastercard,
   faCcStripe,
   faCcPaypal,
-  faCcVisa
+  faCcVisa,
+  faFacebook,
+  faYoutube,
+  faTwitter,
+  faTripadvisor,
+  faGooglePlus
 } from '@fortawesome/free-brands-svg-icons';
 import {
   faCheckCircle,
@@ -59,13 +64,28 @@ import {
   faTruck,
   faHome,
   faEdit,
+  faBackspace,
+  faEuroSign,
+  faTrashAlt,
+  faMinusCircle
 } from "@fortawesome/free-solid-svg-icons";
 
 import {
-  faStar as faStarEmpty
+  faStar as faStarEmpty,
+  faEdit as farEdit
 } from "@fortawesome/free-regular-svg-icons";
 
 library.add([
+  faCcAmex,
+  faCcMastercard,
+  faCcStripe,
+  faCcPaypal,
+  faCcVisa,
+  faFacebook,
+  faYoutube,
+  faTwitter,
+  faTripadvisor,
+  faGooglePlus,
   faAngleDoubleRight,
   faBars,
   faBoxes,
@@ -114,5 +134,9 @@ library.add([
   faUserLock,
   faUserShield,
   faUsersCog,
-
+  faBackspace,
+  faEuroSign,
+  faTrashAlt,
+  farEdit,
+  faMinusCircle
 ]);

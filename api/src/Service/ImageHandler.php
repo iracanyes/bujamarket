@@ -120,9 +120,20 @@ class ImageHandler
             $this->logger->warning("Le chargement de l'image de profil vers le serveur a échoué", ["exception" => $e]);
         }
 
+        if($user->getImage() !== null)
+        {
+            $this->deleteProfileImage($user);
+        }
+
         $user->setImage($image);
 
         return $user;
+    }
+
+    public function deleteProfileImage(User $user)
+    {
+        $this->uploadHandler->deleteProfileImage($user);
+        $user->setImage(null);
     }
 
 

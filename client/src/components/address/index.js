@@ -1,7 +1,6 @@
-import Create from './Create';
-import List from './List';
-import Update from './Update';
-import Show from './Show';
+
+import UpdateForm from './UpdateForm';
+
 import DeliveryAddressForm from './DeliveryAddressForm';
 
-export { Create, List, Update, Show, DeliveryAddressForm };
+export { UpdateForm, DeliveryAddressForm };

@@ -46,6 +46,9 @@ class ProfileAddressesWidget extends  Component{
             <tr>
               <th scope="row">{ index + 1 }</th>
               <td>
+                { item.locationName }
+              </td>
+              <td>
                 { item.street + " " + item.number }
               </td>
               <td>{ item.zipCode }</td>

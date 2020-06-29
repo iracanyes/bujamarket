@@ -19,8 +19,6 @@ class SupplierShowWidget extends Component{
 
     const supplier = retrieved && retrieved;
 
-
-
     return (
       <Fragment>
         {supplier && (
