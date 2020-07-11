@@ -1,19 +1,28 @@
 /**
  * Author: iracanyes
- * Date: 17/08/2019
+ * Date: 28/06/2020
  * Description: Authorization header bearer
  * Ajouter l'en-tête Authorization : Bearer $token
  */
+import React from 'react';
+import { withRouter } from "react-router-dom";
+import {toastError} from "../layout/ToastMessage";
 
-export default  function authHeader() {
-  let user = JSON.parse(localStorage.getItem("user"));
+function authHeader(history, location) {
+  const token = localStorage.getItem('token') !== null ? JSON.parse(localStorage.getItem("token")) : null;
 
-  if(user && user.token)
+  if(token === null)
   {
-    return {'Authorization': "Bearer " + user.token };
-  }else{
-    return {};
+    history.push({pathname:'../../login', state: { from: location.pathname }});
+    toastError('Authentification nécessaire');
   }
 
 
+  const headers = new Headers({ 'Content-Type': 'application/ld+json'});
+  token && headers.set('Authorization','Bearer '+ token.token)
+
+  return headers;
+
 }
+
+export default  authHeader;

@@ -22,6 +22,15 @@ RUN apk add tzdata; \
 RUN	echo "Europe/Brussels" > /etc/timezone; \
 	date
 
+# Set the locale for
+#RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y locales
+
+#RUN sed -i -e 's/# fr_BE.UTF-8 UTF-8/fr_BE.UTF-8 UTF-8/' /etc/locale.gen && \
+#    locale-gen
+#ENV LANG fr_BE.UTF-8
+#ENV LANGUAGE fr_BE:fr
+#ENV LC_ALL fr_BE.UTF-8
+
 # persistent / runtime deps
 
 RUN apk add --no-cache \
@@ -82,6 +91,7 @@ RUN set -eux; \
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 RUN ln -s $PHP_INI_DIR/php.ini-production $PHP_INI_DIR/php.ini
+# Configuration de php.ini personnalisé
 COPY docker/php/conf.d/api-platform.ini $PHP_INI_DIR/conf.d/api-platform.ini
 
 # https://getcomposer.org/doc/03-cli.md#composer-allow-superuser

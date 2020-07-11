@@ -20,11 +20,11 @@ export function success(user) {
   return { type: 'USER_LOGIN_SUCCESS', user };
 }
 
-export function logout() {
+export function logout(user = null) {
   /* Supprimer les infos de l'utilisateur du localStorage */
   localStorage.removeItem('token');
 
-  return { type: 'USER_LOGOUT'};
+  return { type: 'USER_LOGOUT_SUCCESS', user};
 }
 
 /*
@@ -93,7 +93,7 @@ export function login(email, password, history, locationState) {
       })
       .catch(e => {
         dispatch(loading(false));
-        dispatch(logout());
+        dispatch(logout(null));
         /* Déconnexion et forcer le rechargement de la page si erreur 401 */
         console.log("Error response",e.message);
 

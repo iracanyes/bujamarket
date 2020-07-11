@@ -64,9 +64,7 @@ export function update(item, values, history, location) {
     dispatch(updateLoading(true));
 
     /* Ajout du JWT authentication token de l'utilisateur connecté */
-    const token = localStorage.getItem('token') !== null ? JSON.parse(localStorage.getItem('token')) : null;
-    const headers = new Headers({'Content-Type':'application/ld+json'});
-    token && headers.set('Authorization', 'Bearer '+ token.token);
+    const headers = authHeader(history, location);
 
     return fetch('/address/' + item.id, {
       method: 'PUT',

@@ -11,10 +11,12 @@ use Doctrine\DBAL\Driver\PDOException;
 use Doctrine\ORM\EntityNotFoundException;
 use App\Exception\OrderSet\OrderSetNotFoundException;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\UserNotFoundException;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Security;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Exception\OrderSet\RetrieveUserOrdersException;
 
 class OrderSetHandler
 {
@@ -34,6 +36,11 @@ class OrderSetHandler
     private $em;
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * @var AddressHandler $addressHandler
      */
     private $addressHandler;
@@ -48,11 +55,12 @@ class OrderSetHandler
      */
     private $shipperHandler;
 
-    public function __construct(Security $security, RequestStack $requestStack, EntityManagerInterface $em, AddressHandler $addressHandler, ShoppingCartHandler $shoppingCardHandler, ShipperHandler $shipperHandler)
+    public function __construct(Security $security, RequestStack $requestStack, EntityManagerInterface $em, LoggerInterface $logger, AddressHandler $addressHandler, ShoppingCartHandler $shoppingCardHandler, ShipperHandler $shipperHandler)
     {
         $this->security = $security;
         $this->request = $requestStack->getCurrentRequest();
         $this->em = $em;
+        $this->logger = $logger;
         $this->addressHandler = $addressHandler;
         $this->shoppingCardHandler = $shoppingCardHandler;
         $this->shipperHandler = $shipperHandler;
@@ -198,5 +206,27 @@ class OrderSetHandler
 
         return $orderSet;
 
+    }
+
+    public function getMyOrders()
+    {
+        $orders = null;
+        $user = $this->security->getUser();
+
+        try{
+            if($user->getUserType() === 'customer')
+            {
+                $orders = $this->em->getRepository(OrderSet::class)
+                    ->getCustomerOrders($user->getUsername());
+            }else {
+                $orders = $this->em->getRepository(OrderDetail::class)
+                    ->getSupplierOrders($user->getUsername());
+            }
+        }catch (\Exception $exception){
+            $this->logger->error(sprintf("Error while retrieving the user's (%s) order history", $user->getUsername()), ['context' => $exception]);
+            throw new RetrieveUserOrdersException(sprintf("Error while retrieving the user's (%s) order history", $user->getUsername()));
+        }
+
+        return $orders;
     }
 }

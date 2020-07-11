@@ -17,7 +17,7 @@ export function success(retrieved) {
   return { type: 'IMAGE_PROFILE_SUCCESS', retrieved };
 }
 
-export function getProfileImage() {
+export function getProfileImage(history, location) {
   return dispatch => {
     dispatch(loading(true));
 
@@ -38,24 +38,29 @@ export function getProfileImage() {
       .catch(e => {
         dispatch(loading(false));
 
-        if(typeof e == 'string')
-        {
-          dispatch(error(e));
-          dispatch(error(null));
-        }else{
-          if(e["hydra:description"])
-          {
-            dispatch(error(e["hydra:description"]));
+        switch(true){
+          case e.code === 401:
+            dispatch(error("Authentification nécessaire!"));
             dispatch(error(null));
-          }else{
+            localStorage.removeItem('token');
+            history.push({ pathname: '../../login', state: { from: location.pathname }});
+            break;
+          case typeof e['hydra:description'] === "string":
+            dispatch(error(e['hydra:description']));
+            break;
+          case typeof e.message === "string":
             dispatch(error(e.message));
-            dispatch(error(null));
-          }
-
+            break;
+          case typeof e === "string":
+            dispatch(error(e));
+            break;
         }
+        dispatch(error(null));
+
       });
   };
 }
+
 
 export function reset(eventSource) {
   return dispatch => {

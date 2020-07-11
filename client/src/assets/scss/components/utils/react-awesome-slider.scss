@@ -1,0 +1,102 @@
+
+/*--- Homepage slider ---*/
+#homepage-slider{
+  margin-bottom: 5rem;
+
+  /*--- React Awesome Slider - Fall animation---*/
+  .awssld{
+    --fall-animation-duration: 700ms;
+    --fall-animation-angle: 16deg;
+    --fall-scaling-in-from: 0.9;
+  }
+  /*--- React Awesome Slider - Smooth lettering HOC ---*/
+  .awssld {
+
+    &__wrapper, &__container, &__box{
+      max-height: 46.875rem;
+      height: 46.875rem;
+    }
+
+    .homepage-slider-content{
+      z-index: 1;
+    }
+    &__content {
+
+      .title{
+        background-color: lighten(rgba(0,0,0,0.1), 80%);
+      }
+      h1, h2, h3, h4{
+        font-weight: bolder;
+        color: $primary-color;
+        padding: 1rem;
+      }
+      h1{
+        font-size: 5rem;
+      }
+      h2{
+        font-size: 4.5rem;
+      }
+      a.btn{
+        font-size: 1.2rem;
+        float: right;
+        border: 2px solid $primary-color;
+        font-weight: bold;
+        color: $primary-color;
+      }
+      a.btn:hover{
+        background-color: $primary-color;
+        color: white;
+      }
+      h1, p {
+        transform: translate3d(0, 0, 0);
+        opacity: 1;
+        transition: transform 0.45s cubic-bezier(0.15, 0.3, 0.15, 1), opacity 0.35s ease-out;
+      }
+      h1, h4,p:nth-child(2) {
+        transition-delay: 0.05s, 0.05s;
+      }
+      &--exit {
+        h1, h4, p {
+          transition: transform 0.225s cubic-bezier(0.85, 0, 0.85, 0.7), opacity 0.4s ease-out;
+        }
+        p:nth-child(2) {
+          transition-delay: 0.05s, 0.05s;
+        }
+      }
+      &--moveLeft {
+        p {
+          transform: translate3d(-50px, 0, 0);
+          opacity: 0;
+        }
+      }
+      &--moveRight {
+        p {
+          transform: translate3d(50px, 0, 0);
+          opacity: 0;
+        }
+      }
+    }
+
+    &__next, &__prev{
+      top: 15rem !important;
+    }
+  }
+}
+
+/*- Supplier product images slider -*/
+div#sp-show-slider{
+  .awssld{
+    --cube-animation-duration: 675ms;
+    --cube-animation-perspective: 1800px;
+    --cube-animation-ease-in: cubic-bezier(0.8, 0, 1, 0.8);
+    --cube-animation-ease-out: cubic-bezier(0, 0.2, 0.2, 1);
+    --cube-translateZ-distance: -225px;
+
+    &__bullets{
+      position: unset;
+      button{
+        background-color: $primary-color;
+      }
+    }
+  }
+}

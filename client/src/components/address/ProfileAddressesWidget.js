@@ -43,7 +43,7 @@ class ProfileAddressesWidget extends  Component{
           </thead>
           <tbody>
           { user.addresses.map( (item, index) => (
-            <tr>
+            <tr key={index}>
               <th scope="row">{ index + 1 }</th>
               <td>
                 { item.locationName }

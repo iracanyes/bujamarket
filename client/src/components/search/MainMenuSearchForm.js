@@ -11,7 +11,7 @@ import { withRouter } from "react-router-dom";
 import { Button, Form, FormGroup, Input } from "reactstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import PropTypes from "prop-types";
-import { FormattedMessage, injectIntl } from "react-intl";
+import { injectIntl } from "react-intl";
 import { search as searchProduct, reset as resetProduct } from "../../actions/product/search";
 import { search as searchSupplier, reset as resetSupplier } from "../../actions/supplier/search";
 

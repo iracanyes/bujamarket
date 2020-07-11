@@ -1,6 +1,4 @@
 /**
- * Author: iracanyes
- * Date: 23/06/19
  * Description: Home page of this app
  */
 import React, {Component, Fragment} from 'react';
@@ -8,10 +6,8 @@ import CarouselCategories from '../components/category/CarouselCategories';
 import UserAuth from "../layout/UserAuth";
 
 
-
 export default class Homepage extends Component
 {
-
 
   render(){
 
@@ -20,7 +16,7 @@ export default class Homepage extends Component
       <section>
 
         {/* Carousel - Categories  */}
-        <section className="mx-auto category-cards bg-transparent pt60 pb60">
+        <section id={'home-carousel-categories'} className="mx-auto category-cards bg-transparent pt60 pb60">
           <div className="container-fluid">
             <CarouselCategories />
           </div>

@@ -9,11 +9,11 @@ oneup_flysystem:
         public_uploads_image_product_adapter:
             local:
                 #directory: '%kernel.project_dir%/public/assets/uploads/img/product'
-                directory: '%kernel.project_dir%/%env(UPLOAD_SUPPLIER_PRODUCT_IMAGE_DIRECTORY)%'
+                directory: '%kernel.project_dir%/public/%env(UPLOAD_SUPPLIER_PRODUCT_IMAGE_DIRECTORY)%'
         public_uploads_image_category_adapter:
             local:
                 #directory: '%kernel.project_dir%/public/assets/uploads/img/category'
-                directory: '%kernel.project_dir%/%env(UPLOAD_CATEGORY_IMAGE_DIRECTORY)%'
+                directory: '%kernel.project_dir%/public/%env(UPLOAD_CATEGORY_IMAGE_DIRECTORY)%'
         private_uploads_image_customer_adapter:
             local:
                 #directory: '%kernel.project_dir%/web/uploads/img/profile/customer'

@@ -1,7 +1,21 @@
 /**
  * Description: Style des formulaires
  */
-
+/*---- Style général des formulaires -------*/
+textarea{
+  width: 100%;
+  height: 10rem;
+  font-size: 0.8rem;
+  padding: 0.2rem;
+  border-color: lighten($gray-color, 50%);
+}
+textarea[name="product[resume]"]{
+  height: 5rem;
+}
+legend{
+  text-align:center;
+}
+/*---- End Style général des formulaires -------*/
 /**
  * Formulaire adresse de livraison
  */

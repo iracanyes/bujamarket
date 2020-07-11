@@ -68,7 +68,7 @@ div.category-detail-products{
 
 }
 
-/* Page : show supplier */
+/*--- Page : show supplier ----*/
 div.supplier-details
 {
     margin-top: 2rem;
@@ -125,12 +125,55 @@ div.supplier-details
     }
 }
 
-/* Page: show Supplier product */
+/*----- Page: show Supplier product ----*/
+div.spinner-loading-page{
+  font-size: 1.5rem;
+  margin: 10rem auto;
+  div.spinner-loading-content{
+    color: $primary-color !important;
+  }
+  p.spinner-loading-message{
+    color: $primary-color;
+    font-family: "Carter One";
+  }
+}
+div#supplier-product-show{
 
+  div.detail-banner-btn.bookmark{
+    padding: 0.525rem;
+
+    button{
+      color: $primary-color;
+
+    }
+  }
+
+  div.detail-banner-btn{
+    border: none;
+    button{
+      border-color: $primary-color;
+      border-radius: 10%;
+    }
+  }
+
+  div.detail-banner-btn:hover{
+    border: unset !important;
+    border-radius: 5%;
+    button{
+      background-color: unset;
+      border: unset;
+    }
+  }
+
+  div.detail-banner-btn.heart:hover{
+    svg{
+      color: gray !important;
+    }
+  }
+
+}
 div.detail-gallery-preview{
     img{
-        max-width: 6.875rem;
-        max-width: 6rem;
         margin-right: 0;
     }
 
@@ -186,6 +229,7 @@ div#toast-shopping-cart{
     text-align: center;
     width: 21px;
 }
+
 
 
 /* End Page: show Supplier product */

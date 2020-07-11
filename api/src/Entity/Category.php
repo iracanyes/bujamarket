@@ -26,7 +26,7 @@ class Category
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"category:output","product:output"})
+     * @Groups({"category:output","product:output","supplier_product_owner:output"})
      *
      */
     private $id;
@@ -36,7 +36,7 @@ class Category
      *
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank()
-     * @Groups({"category:output","supplier_product:output"})
+     * @Groups({"category:output","supplier_product:output","supplier_product_owner:output"})
      */
     private $name;
 

@@ -7,6 +7,7 @@ import {
 } from '../../utils/dataAccess';
 import { success as createSuccess } from './create';
 import { loading, error } from './delete';
+import authHeader from "../../utils/authHeader";
 
 export function retrieveError(retrieveError) {
   return { type: 'SUPPLIERPRODUCT_UPDATE_RETRIEVE_ERROR', retrieveError };
@@ -24,7 +25,7 @@ export function retrieve(id) {
   return dispatch => {
     dispatch(retrieveLoading(true));
 
-    return fetch(id)
+    return fetch('supplier_product/'+id)
       .then(response =>
         response
           .json()
@@ -40,7 +41,19 @@ export function retrieve(id) {
       })
       .catch(e => {
         dispatch(retrieveLoading(false));
-        dispatch(retrieveError(e.message));
+
+        switch (true) {
+          case typeof e === "string":
+            dispatch(error(e));
+            break;
+          case e['hydra:description']:
+            dispatch(error(e['hydra:description']));
+            break;
+          case e.message:
+            dispatch(error(e.message));
+            break;
+        }
+        dispatch(error(null));
       });
   };
 }
@@ -57,16 +70,24 @@ export function updateSuccess(updated) {
   return { type: 'SUPPLIERPRODUCT_UPDATE_UPDATE_SUCCESS', updated };
 }
 
-export function update(item, values) {
+export function update(item, values, history, location) {
   return dispatch => {
     dispatch(updateError(null));
     dispatch(createSuccess(null));
     dispatch(updateLoading(true));
 
-    return fetch(item['@id'], {
-      method: 'PUT',
-      headers: new Headers({ 'Content-Type': 'application/ld+json' }),
-      body: JSON.stringify(values)
+    const headers = new Headers();
+    if(localStorage.getItem('token') !== null) {
+      headers.append('Authorization', "Bearer " + JSON.parse(localStorage.getItem('token')).token)
+    }else{
+      dispatch(updateError("Authentification nécessaire avant tout mise à jour de produit !"));
+      history.push({ pathname: "../../login", state: { from: location.pathname }});
+    }
+
+    return fetch("supplier_product/update/" + item['id'], {
+      method: 'POST',
+      headers,
+      body: values
     })
       .then(response =>
         response
@@ -86,10 +107,25 @@ export function update(item, values) {
 
         if (e instanceof SubmissionError) {
           dispatch(updateError(e.errors._error));
-          throw e;
         }
+        console.log("error", e);
 
-        dispatch(updateError(e.message));
+        switch (true) {
+          case e.code === 401:
+            dispatch(updateError("Authentification nécessaire avant de supprimer l'image!"));
+            history.push({ pathname: '../../login', state: { from: location.pathname }});
+            break;
+          case typeof e === "string":
+            dispatch(updateError(e));
+            break;
+          case typeof e['hydra:description'] === "string":
+            dispatch(updateError(e['hydra:description']));
+            break;
+          case typeof e.message === "string":
+            dispatch(updateError(e.message));
+            break;
+        }
+        dispatch(updateError(null));
       });
   };
 }
@@ -99,8 +135,8 @@ export function reset(eventSource) {
     if (eventSource) eventSource.close();
 
     dispatch({ type: 'SUPPLIERPRODUCT_UPDATE_RESET' });
-    dispatch(error(null));
-    dispatch(loading(false));
+    dispatch(updateError(null));
+    dispatch(updateLoading(false));
     dispatch(createSuccess(null));
   };
 }

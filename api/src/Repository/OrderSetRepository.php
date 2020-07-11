@@ -19,6 +19,16 @@ class OrderSetRepository extends ServiceEntityRepository
         parent::__construct($registry, OrderSet::class);
     }
 
+    public function getCustomerOrders(string $email)
+    {
+        return $this->createQueryBuilder('o')
+            ->leftJoin('o.customer', 'c')
+            ->andWhere('c.email LIKE :email')
+            ->setParameter('email', $email)
+            ->getQuery()
+            ->getResult();
+    }
+
     // /**
     //  * @return OrderSet[] Returns an array of OrderSet objects
     //  */
