@@ -35,7 +35,7 @@ class Product
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"product:output","category:output","favorite:output"})
+     * @Groups({"product:output","category:output","favorite:output","supplier_product_owner:output"})
      */
     private $id;
 
@@ -44,7 +44,7 @@ class Product
      *
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank()
-     * @Groups({"product:output","category:output","supplier_product:output","favorite:output","order_set:output"})
+     * @Groups({"product:output","category:output","supplier_product:output","favorite:output","order_set:output","supplier_product_owner:output"})
      */
     private $title;
 
@@ -53,7 +53,7 @@ class Product
      *
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank()
-     * @Groups({"product:output","category:output","supplier_product:output","favorite:output"})
+     * @Groups({"product:output","category:output","supplier_product:output","favorite:output","supplier_product_owner:output"})
      */
     private $resume;
 
@@ -62,7 +62,7 @@ class Product
      *
      * @ORM\Column(type="text")
      * @Assert\NotBlank()
-     * @Groups({"product:output","supplier_product:output"})
+     * @Groups({"product:output","supplier_product:output","supplier_product_owner:output"})
      */
     private $description;
 
@@ -70,7 +70,7 @@ class Product
      * @var string $countryOrigin Country where this product was made
      *
      * @ORM\Column(name="country_origin", type="string", length=3)
-     * @Groups({"product:output","category:output","supplier_product:output","favorite:output"})
+     * @Groups({"product:output","category:output","supplier_product:output","favorite:output","supplier_product_owner:output"})
      */
     private $countryOrigin;
 
@@ -83,7 +83,7 @@ class Product
      *     min=0.0,
      *     maxMessage="The minimum value is {{ limit }}.\The current value is {{ value }}"
      * )
-     * @Groups({"product:output"})
+     * @Groups({"product:output","supplier_product_owner:output"})
      */
     private $weight;
 
@@ -95,7 +95,7 @@ class Product
      *     min=0.0,
      *     maxMessage="The minimum value is {{ limit }}.\The current value is {{ value }}"
      * )
-     * @Groups({"product:output"})
+     * @Groups({"product:output","supplier_product_owner:output"})
      */
     private $length;
 
@@ -107,7 +107,7 @@ class Product
      *     min=0.0,
      *     maxMessage="The minimum value is {{ limit }}.\The current value is {{ value }}"
      * )
-     * @Groups({"product:output"})
+     * @Groups({"product:output","supplier_product_owner:output"})
      */
     private $width;
 
@@ -119,7 +119,7 @@ class Product
      *     min=0.0,
      *     maxMessage="The minimum value is {{ limit }}.\The current value is {{ value }}"
      * )
-     * @Groups({"product:output"})
+     * @Groups({"product:output","supplier_product_owner:output"})
      */
     private $height;
 
@@ -128,7 +128,7 @@ class Product
      *
      * @ORM\Column(type="float")
      * @Assert\Type("float")
-     * @Groups({"product:output","category:output","supplier_product:output","favorite:output"})
+     * @Groups({"product:output","category:output","supplier_product:output","favorite:output","supplier_product_owner:output"})
      */
     private $minimumPrice;
 
@@ -137,7 +137,7 @@ class Product
      * @ORM\ManyToOne(targetEntity="App\Entity\Category", inversedBy="products", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      * @Assert\Type("App\Entity\Category")
-     * @Groups({"product:output","supplier_product:output"})
+     * @Groups({"product:output","supplier_product:output","supplier_product_owner:output"})
      * @MaxDepth(1)
      */
     private $category;
@@ -211,9 +211,11 @@ class Product
     /**
      * @param string $countryOrigin
      */
-    public function setCountryOrigin(string $countryOrigin): void
+    public function setCountryOrigin(string $countryOrigin): self
     {
         $this->countryOrigin = $countryOrigin;
+
+        return $this;
     }
 
 

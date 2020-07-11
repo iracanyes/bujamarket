@@ -26,7 +26,7 @@ class Image
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"product:output","supplier:output","profile:output"})
+     * @Groups({"product:output","supplier:output","profile:output","supplier_product_owner:output"})
      */
     private $id;
 
@@ -40,7 +40,7 @@ class Image
      *     minMessage="The minimum value is {{ limit }}.\nThe current value is {{ value }}.",
      *     maxMessage="The maximum value is {{ limit }}.\nThe current value is {{ value }}."
      * )
-     * @Groups({"profile:output","product:output","supplier:output","favorite:output"})
+     * @Groups({"profile:output","product:output","supplier:output","favorite:output","supplier_product:output","supplier_product_owner:output"})
      */
     private $place;
 
@@ -48,7 +48,7 @@ class Image
      * @var string $title Title of this image
      *
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"category:output","supplier_product:output","supplier:output","favorite:output"})
+     * @Groups({"category:output","supplier_product:output","supplier:output","favorite:output","supplier_product_owner:output"})
      */
     private $title;
 
@@ -66,7 +66,7 @@ class Image
      * @ORM\Column(type="string", length=255)
      * @Assert\NotNull()
      * @Assert\Url()
-     * @Groups({"profile:output","category:output", "supplier_product:output","supplier:output","favorite:output","order_set:output"})
+     * @Groups({"profile:output","category:output", "supplier_product:output","supplier:output","favorite:output","order_set:output","supplier_product_owner:output"})
      */
     private $url;
 
@@ -75,7 +75,7 @@ class Image
      *
      * @ORM\Column(type="integer")
      * @Assert\NotNull()
-     * @Groups({"category:output","product:output","supplier:output"})
+     * @Groups({"category:output","product:output","supplier:output","supplier_product_owner:output"})
      */
     private $size;
 

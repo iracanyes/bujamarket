@@ -55,38 +55,6 @@ export function list(page = 'categories') {
   };
 }
 
-export function listByName(page = 'categories_names') {
-  return dispatch => {
-    dispatch(loading(true));
-    dispatch(error(''));
-
-    fetch(page)
-      .then(response =>
-        response
-          .json()
-          .then(retrieved => ({ retrieved, hubURL: extractHubURL(response) }))
-      )
-      .then(({ retrieved, hubURL }) => {
-        retrieved = normalize(retrieved);
-
-        dispatch(loading(false));
-        dispatch(success(retrieved));
-
-        if (hubURL && retrieved['hydra:member'].length)
-          dispatch(
-            mercureSubscribe(
-              hubURL,
-              retrieved['hydra:member'].map(i => i['@id'])
-            )
-          );
-      })
-      .catch(e => {
-        dispatch(loading(false));
-        dispatch(error(e.message));
-      });
-  };
-}
-
 export function reset(eventSource) {
   return dispatch => {
     if (eventSource) eventSource.close();

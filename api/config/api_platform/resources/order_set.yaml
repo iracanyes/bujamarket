@@ -12,14 +12,22 @@ App\Entity\OrderSet:
                 _format: 'json'
             # host: 'localhost'
             schemes: ['https']
-            access_control: "is_granted('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
+            security: "is_granted('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
             #options:
             #    my_option: 'my_option_value'
             status: 200 # customize the HTTP status code to send
+        my_orders:
+            method: 'GET'
+            path: '/orders'
+            defaults:
+                _api_receive: false
+            schemes: ['https']
+            security: "(is_granted('ROLE_CUSTOMER') or is_granted('ROLE_SUPPLIER') ) and is_granted('IS_AUTHENTICATED_REMEMBERED')"
+            controller: App\Controller\OrderSet\GetCustomerOrdersAction
         post:
             method: 'POST'
             path: '/order_set/create'
-            access_control: "is_granted('ROLE_MEMBER') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
+            security: "is_granted('ROLE_MEMBER') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
             schemes: ['https']
             controller: App\Controller\OrderSet\CreateOrderSetAction
         getOrderSetSuccess:
@@ -32,7 +40,7 @@ App\Entity\OrderSet:
                 _format: 'json'
             # host: 'localhost'
             schemes: ['https']
-            access_control: "is_granted('ROLE_CUSTOMER') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
+            security: "is_granted('ROLE_CUSTOMER') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
             #options:
             #    my_option: 'my_option_value'
             status: 200 # customize the HTTP status code to send
@@ -48,7 +56,7 @@ App\Entity\OrderSet:
                 _format: 'json'
             # host: 'localhost'
             schemes: ['https']
-            access_control: "is_granted('ROLE_CUSTOMER') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
+            security: "is_granted('ROLE_CUSTOMER') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
             #options:
             #    my_option: 'my_option_value'
             status: 200 # customize the HTTP status code to send            
@@ -57,12 +65,12 @@ App\Entity\OrderSet:
             path: '/order_set/{id}'
             requirements:
                 id: '\d+'
-            access_control: 'is_granted("ROLE_ADMIN") and is_granted("IS_AUTHENTICATED_REMEMBERED")'
+            security: 'is_granted("ROLE_ADMIN") and is_granted("IS_AUTHENTICATED_REMEMBERED")'
             schemes: ['https']
         delete:
             method: 'DELETE'
             path: '/order_set/{id}'
             requirements:
                 id: '\d+'
-            access_control: 'is_granted("ROLE_ADMIN") and is_granted("IS_AUTHENTICATED_REMEMBERED")'
+            security: 'is_granted("ROLE_ADMIN") and is_granted("IS_AUTHENTICATED_REMEMBERED")'
             schemes: ['https']

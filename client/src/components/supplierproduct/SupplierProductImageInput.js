@@ -1,8 +1,4 @@
-/**
- * Author: dashouney
- * Date: 10/31/19
- * Description:
- */
+
 import React, {Component} from 'react'
 
 export default class SupplierProductImageInput  extends Component{

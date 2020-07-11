@@ -43,4 +43,14 @@ export function login(state = initialState, action) {
   }
 }
 
-export default combineReducers({ error, loading, request, login });
+export function logout(state = initialState, action) {
+  switch (action.type) {
+    case 'USER_LOGOUT_SUCCESS':
+      return { loggedOut: true, user: action.user};
+
+    default:
+      return state;
+  }
+}
+
+export default combineReducers({ error, loading, request, login, logout });

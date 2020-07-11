@@ -13,7 +13,7 @@ use Symfony\Component\Serializer\Annotation\MaxDepth;
 
 /**
  * @ApiResource(attributes={
- *     "normalization_context"={"groups"={"favorite:output","supplier_product:output"}},
+ *     "normalization_context"={"groups"={"supplier_product:output","supplier_product_owner:output"}},
  *     "denormalization_context"={"groups"={"supplier_product:input"}}
  * })
  * @ORM\Table(name="bjmkt_supplier_product")
@@ -28,7 +28,7 @@ class SupplierProduct
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"favorite:output","supplier_product:output"})
+     * @Groups({"favorite:output","supplier_product:output","supplier_product_owner:output"})
      *
      */
     private $id;
@@ -41,7 +41,7 @@ class SupplierProduct
      *     min=0.0,
      *     minMessage="The minimum value is {{ limit }}.\nThe current value is {{ value }}."
      * )
-     * @Groups({"favorite:output","supplier_product:output"})
+     * @Groups({"favorite:output","supplier_product:output","supplier_product_owner:output"})
      */
     private $initialPrice;
 
@@ -53,7 +53,7 @@ class SupplierProduct
      *     min=0,
      *     minMessage="The minimum value is {{ limit }}.\nThe current value is {{ value }}."
      * )
-     * @Groups({"favorite:output","supplier_product:output"})
+     * @Groups({"favorite:output","supplier_product:output","supplier_product_owner:output"})
      */
     private $quantity;
 
@@ -65,7 +65,7 @@ class SupplierProduct
      *     min=0,
      *     minMessage="The minimum value is {{ limit }}.\nThe current value is {{ value }}."
      * )
-     * @Groups({"favorite:output","supplier_product:output"})
+     * @Groups({"favorite:output","supplier_product:output","supplier_product_owner:output"})
      */
     private $additionalFee;
 
@@ -73,7 +73,7 @@ class SupplierProduct
      * @var string $additionalInformation Additional information for this supplier product
      *
      * @ORM\Column(type="text", nullable=true)
-     * @Groups({"favorite:output","supplier_product:output"})
+     * @Groups({"favorite:output","supplier_product:output","supplier_product_owner:output"})
      */
     private $additionalInformation;
 
@@ -82,7 +82,7 @@ class SupplierProduct
      *
      * @ORM\Column(type="boolean")
      * @Assert\Type("boolean")
-     * @Groups({"favorite:output","supplier_product:output"})
+     * @Groups({"favorite:output","supplier_product:output","supplier_product_owner:output"})
      */
     private $isAvailable;
 
@@ -91,7 +91,7 @@ class SupplierProduct
      *
      * @ORM\Column(type="boolean")
      * @Assert\Type("boolean")
-     * @Groups({"favorite:output","supplier_product:output"})
+     * @Groups({"favorite:output","supplier_product:output","supplier_product_owner:output"})
      */
     private $isLimited;
 
@@ -114,7 +114,7 @@ class SupplierProduct
      * @ORM\JoinColumn(nullable=false)
      * @Assert\Type("App\Entity\Product")
      * @Assert\NotNull()
-     * @Groups({"favorite:output","supplier_product:output","order_set:output"})
+     * @Groups({"favorite:output","supplier_product:output","order_set:output","supplier_product_owner:output"})
      *
      */
     private $product;
@@ -123,7 +123,7 @@ class SupplierProduct
      * @var Collection $images Images of the product
      * @ORM\OneToMany(targetEntity="App\Entity\Image", mappedBy="supplierProduct", cascade={"persist","remove"})
      * @ApiSubresource()
-     * @Groups({"supplier_product:output","favorite:output","order_set:output"})
+     * @Groups({"supplier_product:output","favorite:output","order_set:output","supplier_product_owner:output"})
      * @MaxDepth(1)
      */
     private $images;
@@ -162,7 +162,7 @@ class SupplierProduct
      *      minMessage = "L'évaluation minimale est {{ limit }} pour un produit!",
      *      maxMessage = "L'évaluation maximale est {{ limit }} pour un produit!"
      * )
-     * @Groups({"supplier_product:output"})
+     * @Groups({"supplier_product:output","supplier_product_owner:output"})
      */
     private $rating;
 
@@ -173,14 +173,35 @@ class SupplierProduct
 
     /**
      * @ORM\Column(type="float")
-     * @Groups({"supplier_product:output","order_set:output","favorite:output"})
+     * @Groups({"supplier_product:output","order_set:output","favorite:output","supplier_product_owner:output"})
      */
     private $finalPrice;
+
+    /**
+     * @var int
+     * @Groups({"supplier_product:output","supplier_product_owner:output"})
+     */
+    private $nbComments;
+
+    /**
+     * @var int
+     * @Groups({"supplier_product:output","supplier_product_owner:output"})
+     */
+    private $nbLikes;
+
+    /**
+     * @var int
+     * @Groups({"supplier_product_owner:output"})
+     */
+    private $nbOrders;
 
     public function __construct()
     {
         $this->initialPrice = 0;
         $this->rating = 5;
+        $this->nbComments = 0;
+        $this->nbLikes = 0;
+        $this->nbOrders = 0;
         $this->images = new ArrayCollection();
         $this->comments = new ArrayCollection();
         $this->favorites = new ArrayCollection();
@@ -415,7 +436,7 @@ class SupplierProduct
 
 
     /**
-     *
+     * Update the minimum price for the product
      */
     public function updateMinimumPrice(): void
     {
@@ -481,5 +502,21 @@ class SupplierProduct
         $this->updateMinimumPrice();
 
         return $this;
+    }
+
+    public function getNbComments(): ?int
+    {
+        return count($this->comments);
+    }
+
+
+    public function getNbLikes(): ?int
+    {
+        return count($this->favorites);
+    }
+
+    public function getNbOrders(): ?int
+    {
+        return count($this->orderDetails);
     }
 }

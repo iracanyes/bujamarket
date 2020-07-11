@@ -3,6 +3,18 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { list, reset } from '../../actions/orderset/list';
+import {FormattedMessage, injectIntl } from "react-intl";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  Button,
+  Card,
+  CardTitle,
+  Container,
+  Table,
+  Modal,
+  ModalHeader,
+  ModalBody
+} from "reactstrap";
 
 class List extends Component {
   static propTypes = {
@@ -10,7 +22,6 @@ class List extends Component {
     loading: PropTypes.bool.isRequired,
     error: PropTypes.string,
     eventSource: PropTypes.instanceOf(EventSource),
-    deletedItem: PropTypes.object,
     list: PropTypes.func.isRequired,
     reset: PropTypes.func.isRequired
   };
@@ -18,7 +29,9 @@ class List extends Component {
   componentDidMount() {
     this.props.list(
       this.props.match.params.page &&
-        decodeURIComponent(this.props.match.params.page)
+        decodeURIComponent(this.props.match.params.page),
+      this.props.history,
+      this.props.location
     );
   }
 
@@ -26,7 +39,9 @@ class List extends Component {
     if (this.props.match.params.page !== nextProps.match.params.page)
       nextProps.list(
         nextProps.match.params.page &&
-          decodeURIComponent(nextProps.match.params.page)
+          decodeURIComponent(nextProps.match.params.page),
+        nextProps.history,
+        nextProps.location
       );
   }
 
@@ -35,30 +50,21 @@ class List extends Component {
   }
 
   render() {
+    const { loading } = this.props;
+
+
     return (
       <div>
-        <h1>OrderGlobal List</h1>
-
-        {this.props.loading && (
-          <div className="alert alert-info">Loading...</div>
-        )}
-        {this.props.deletedItem && (
-          <div className="alert alert-success">
-            {this.props.deletedItem['@id']} deleted.
-          </div>
-        )}
-        {this.props.error && (
-          <div className="alert alert-danger">{this.props.error}</div>
-        )}
-
-        <p>
-          <Link to="create" className="btn btn-primary">
-            Create
-          </Link>
-        </p>
-
-        <table className="table table-responsive table-striped table-hover">
-          <thead>
+        <Container>
+          <h1>
+            <FormattedMessage
+              id={'app.order.history'}
+              defaultMessage={"Historique des commandes"}
+              description={"Order - History"}
+            />
+          </h1>
+          <table className="table table-responsive table-striped table-hover">
+            <thead>
             <tr>
               <th>id</th>
               <th>dateCreated</th>
@@ -69,42 +75,45 @@ class List extends Component {
               <th>billCustomer</th>
               <th>deliveryGlobal</th>
               <th>orderDetails</th>
-              <th colSpan={2} />
+              <th colSpan={2} >Actions</th>
             </tr>
-          </thead>
-          <tbody>
+            </thead>
+            <tbody>
             {this.props.retrieved &&
-              this.props.retrieved['hydra:member'].map(item => (
-                <tr key={item['@id']}>
-                  <th scope="row">
-                    <Link to={`show/${encodeURIComponent(item['@id'])}`}>
-                      {item['@id']}
-                    </Link>
-                  </th>
-                  <td>{item['dateCreated']}</td>
-                  <td>{item['totalWeight']}</td>
-                  <td>{item['nbPackage']}</td>
-                  <td>{item['totalCost']}</td>
-                  <td>{this.renderLinks('users', item['customer'])}</td>
-                  <td>{this.renderLinks('bills', item['billCustomer'])}</td>
-                  <td>{this.renderLinks('delivery_globals', item['deliveryGlobal'])}</td>
-                  <td>{this.renderLinks('order_details', item['orderDetails'])}</td>
-                  <td>
-                    <Link to={`show/${encodeURIComponent(item['@id'])}`}>
-                      <span className="fa fa-search" aria-hidden="true" />
-                      <span className="sr-only">Show</span>
-                    </Link>
-                  </td>
-                  <td>
-                    <Link to={`edit/${encodeURIComponent(item['@id'])}`}>
-                      <span className="fa fa-pencil" aria-hidden="true" />
-                      <span className="sr-only">Edit</span>
-                    </Link>
-                  </td>
-                </tr>
-              ))}
-          </tbody>
-        </table>
+            this.props.retrieved['hydra:member'].map(item => (
+              <tr key={item['@id']}>
+                <th scope="row">
+                  <Link to={`show/${encodeURIComponent(item['@id'])}`}>
+                    {item['@id']}
+                  </Link>
+                </th>
+                <td>{item['dateCreated']}</td>
+                <td>{item['totalWeight']}</td>
+                <td>{item['nbPackage']}</td>
+                <td>{item['totalCost']}</td>
+                <td>{this.renderLinks('users', item['customer'])}</td>
+                <td>{this.renderLinks('bills', item['billCustomer'])}</td>
+                <td>{this.renderLinks('delivery_globals', item['deliveryGlobal'])}</td>
+                <td>{this.renderLinks('order_details', item['orderDetails'])}</td>
+                <td>
+                  <Link to={`show/${encodeURIComponent(item['@id'])}`}>
+                    <span className="fa fa-search" aria-hidden="true" />
+                    <span className="sr-only">Show</span>
+                  </Link>
+                </td>
+                <td>
+                  <Link to={`edit/${encodeURIComponent(item['@id'])}`}>
+                    <span className="fa fa-pencil" aria-hidden="true" />
+                    <span className="sr-only">Edit</span>
+                  </Link>
+                </td>
+              </tr>
+            ))}
+            </tbody>
+          </table>
+        </Container>
+
+
 
         {this.pagination()}
       </div>
@@ -174,12 +183,12 @@ const mapStateToProps = state => {
     error,
     eventSource,
     deletedItem
-  } = state.orderglobal.list;
+  } = state.orderset.list;
   return { retrieved, loading, error, eventSource, deletedItem };
 };
 
 const mapDispatchToProps = dispatch => ({
-  list: page => dispatch(list(page)),
+  list: (page, history, location) => dispatch(list(page, history, location)),
   reset: eventSource => dispatch(reset(eventSource))
 });
 

@@ -12,6 +12,11 @@ import ButtonAddToFavorite2 from "../favorite/ButtonAddToFavorite2";
 import SupplierProductCommentsWidget from "../comment/SupplierProductCommentsWidget";
 import ButtonAddToShoppingCart2 from "../shoppingcart/ButtonAddToShoppingCart2";
 import SupplierShowWidget from "../supplier/SupplierShowWidget";
+import {toastError} from "../../layout/ToastMessage";
+import {SpinnerLoading} from "../../layout/Spinner";
+import AwesomeSlider from "react-awesome-slider";
+import CoreStyles from "react-awesome-slider/src/core/styles.scss";
+import AwesomeSliderStyles from "react-awesome-slider/src/styled/cube-animation/cube-animation.scss";
 
 class Show extends Component {
   static propTypes = {
@@ -27,10 +32,10 @@ class Show extends Component {
 
   componentDidMount() {
 
-    this.props.retrieve(decodeURIComponent(this.props.match.params.id));
+    this.props.retrieve(decodeURIComponent(this.props.match.params.id), this.props.history, this.props.location);
 
     if(localStorage.getItem('token'))
-      this.props.listComments({supplier_product: decodeURIComponent(this.props.match.params.id)},'comments/supplier_product',this.props.history );
+      this.props.listComments({supplier_product: decodeURIComponent(this.props.match.params.id)},'comments/supplier_product',this.props.history, this.props.location );
   }
 
   componentWillUnmount() {
@@ -39,7 +44,7 @@ class Show extends Component {
   }
 
   render() {
-
+    const { loading, error, retrieved } = this.props;
 
     if (this.props.deleted) return <Redirect to=".." />;
 
@@ -48,39 +53,21 @@ class Show extends Component {
 
     const comments = this.props.retrievedComments && this.props.retrievedComments['hydra:member'] ;
 
+    const user = localStorage.getItem('token')  ? JSON.parse(atob(localStorage.getItem('token').split('.')[1])) : null;
+    console.log("user",user);
 
+    error && toastError(error);
 
     return (
       <div>
-
         {this.props.loading && (
-
-          <div className="alert alert-light col-lg-3 mx-auto" role="status">
-            <Spinner type={'grow'} color={'info'} className={'mx-auto'}/>
-            <strong className={'mx-2 align-baseline'} style={{fontSize: '1.75rem'}}>
-              <FormattedMessage id={'app.loading'}
-                                defaultMessage={'Chargement en cours'}
-                                description={'App - Loading'}
-              />
-            </strong>
-          </div>
-
-        )}
-        {this.props.error && (
-          <div className="alert alert-danger" role="alert">
-            <span className="fa fa-exclamation-triangle" aria-hidden="true" />{' '}
-            {this.props.error}
-          </div>
-        )}
-        {this.props.deleteError && (
-          <div className="alert alert-danger" role="alert">
-            <span className="fa fa-exclamation-triangle" aria-hidden="true" />{' '}
-            {this.props.deleteError}
+          <div className="spinner-loading-page">
+            <SpinnerLoading message={'Chargement du produit'}/>
           </div>
         )}
 
         {item && (
-          <div className="container">
+          <div id={'supplier-product-show'} className="container">
 
             <div className="table-row h-100">
               <div className="px-3">
@@ -114,14 +101,18 @@ class Show extends Component {
                                {item.finalPrice.toFixed(2) +' €'}
                              </p>
                            </div>
+                          { user && !user.roles.includes('ROLE_SUPPLIER') && (
+                            <div>
+                              <div className="detail-banner-btn bookmark">
+                                <ButtonAddToShoppingCart2 product={item}/>
+                              </div>
 
-                           <div className="detail-banner-btn bookmark">
-                             <ButtonAddToShoppingCart2 product={item}/>
-                           </div>
+                              <div className="detail-banner-btn heart">
+                                <ButtonAddToFavorite2 supplierProductId={item.id}/>
+                              </div>
+                            </div>
 
-                          <div className="detail-banner-btn heart">
-                            <ButtonAddToFavorite2 supplierProductId={item.id}/>
-                          </div>
+                          )}
                           {/* /.detail-claim */}
 
                         </div>
@@ -138,21 +129,27 @@ class Show extends Component {
                       <div className="col-sm-7">
                         <div className="detail-gallery my-2">
                           <div className="detail-gallery-preview">
+                            <div id="sp-show-slider">
+                              <AwesomeSlider
+                                animation={'cubeAnimation'}
+                                cssModule={[ CoreStyles, AwesomeSliderStyles]}
+                              >
+                                {item.images.map((image, index) => (
+                                  <div data-src={ image.url } key={index}/>
+                                ))}
+                              </AwesomeSlider>
+                            </div>
 
-                            <ul className="detail-gallery-index">
-                              {item.images.map((image, index) => (
-                                <li className="detail-gallery-list-item active" key={index}>
-                                  <a data-target={image['url']} >
-                                    <img src={image['url']} alt={image['alt']} />
-                                  </a>
-                                </li>
-                              ))}
-
-                            </ul>
                           </div>
 
                           <div className="detail-description">
-                            <h4>Description du produit</h4>
+                            <h4>
+                              <FormattedMessage
+                                id={"app.product_description"}
+                                defaultMessage={"Description du produit"}
+                                description={"Supplier Product - Product Description"}
+                              />
+                            </h4>
                             <p>{item.product.description}</p>
                           </div>
                         </div>
@@ -196,7 +193,12 @@ class Show extends Component {
 
                           <div className="detail-actions row">
                             <div className="col-sm-4">
-                              <div className="btn btn-primary btn-book">
+                              <div
+                                className={
+                                  "btn btn-primary btn-book"
+                                  + ((user === null || !user.roles.includes('ROLE_SUPPLIER')) && ' disabled')
+                                }
+                              >
                                 <FontAwesomeIcon icon="shopping-cart" />
                                 <span className="d-block">Commander</span>
                               </div>
@@ -235,10 +237,7 @@ class Show extends Component {
                         <div>
                           <h4>Fournisseur :  <span className="text-secondary">{item.supplier.brandName}</span></h4>
                           <div className="bg-white p-2">
-                            { localStorage.getItem('token') !== null && (
-                              <SupplierShowWidget supplierId={item.supplier.id}/>
-                            )}
-
+                            <SupplierShowWidget supplierId={item.supplier.id}/>
                           </div>
                         </div>
 
@@ -322,20 +321,7 @@ class Show extends Component {
 
         )}
 
-        {/* /.page-wrapper */}
-        {/* Bouton de commande
-        <Link to=".." className="btn btn-primary">
-          Back to list
-        </Link>
-        {item && (
-          <Link to={`/supplier_products/edit/${encodeURIComponent(item['@id'])}`}>
-            <button className="btn btn-warning">Edit</button>
-          </Link>
-        )}
-        <button onClick={this.del} className="btn btn-danger">
-          Delete
-        </button>
-        */}
+
       </div>
     );
   }
@@ -373,7 +359,7 @@ const mapStateToProps = state => {
     eventSource: eventSourceComments
   } = state.comment.list;
 
-  const retour = {
+  return {
     retrieved,
     retrievedComments,
     error,
@@ -384,12 +370,10 @@ const mapStateToProps = state => {
     eventSource,
     eventSourceComments
   };
-
-  return retour;
 };
 
 const mapDispatchToProps = dispatch => ({
-  retrieve: id => dispatch(retrieve(id)),
+  retrieve: (id, history, location) => dispatch(retrieve(id, history, location)),
   reset: eventSource => dispatch(reset(eventSource)),
   listComments: (options,page, history) => dispatch(listComments(options, page, history)),
   resetComments: eventSourceComments => dispatch(resetComments(eventSourceComments))

@@ -8,7 +8,7 @@ import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import { reducer as form } from 'redux-form';
-import { Switch, Route, BrowserRouter } from 'react-router-dom';
+import { Switch, Route, BrowserRouter, Router } from 'react-router-dom';
 import history from './utils/history';
 import {
   ConnectedRouter,
@@ -106,9 +106,8 @@ import Homepage from './page/Homepage';
 import MainMenuSearchForm from "./components/search/MainMenuSearchForm";
 import MainMenu from "./layout/MainMenu";
 import SearchResults from "./components/search/SearchResults";
-import Error404Cat from "./page/Error404Cat";
 import SidebarLeftMenu from "./layout/SidebarLeftMenu";
-
+import HomepageSlider from "./page/HomepageSlider";
 
 /* chargement des données locales */
 addLocaleData();
@@ -164,28 +163,25 @@ export class App extends Component
     this.search = this.search.bind(this);
   }
 
-
   /* Permet de transmettre les résultats de recherche du composant MainMenuSearchForm vers le composant d'affichage des résultats SearchResults. HOC - High Order Component */
   search(results)
   {
     this.setState({results: results});
   }
 
-
-
   render()
   {
     const { results } = this.state;
 
     const user = localStorage.getItem("token") && JSON.parse(atob(localStorage.getItem("token").split('.')[1]));
-    console.log(user && user.roles.includes('ROLE_SUPPLIER'));
+
 
     return (
       <Provider store={store}>
         <IntlProvider locale={language} messages={messages[language]}>
           <StripeProvider apiKey={`${process.env.REACT_APP_STRIPE_PUBLIC_KEY}`}>
             <ConnectedRouter history={history}>
-              <BrowserRouter>
+              <Router history={history}>
                 <div>
                   <header>
                     <Navbar color={"bg-primary"} dark expand={"lg"}   id="navbar-primary" className="navbar navbar-expand-lg navbar-dark bg-primary">
@@ -202,10 +198,18 @@ export class App extends Component
 
                     </Navbar>
                   </header>
+                  {/* HomepageSlider */}
+                  <Route path={'/'} exact={true}>
+                    <div id="homepage-slider">
+                      <HomepageSlider />
+                    </div>
+                  </Route>
+
+
 
                   <main>
                     <aside id="aside-left">
-                      { /*user && user.roles.includes('ROLE_SUPPLIER')*/ true && <SidebarLeftMenu /> }
+                      { ( user && user.roles.includes('ROLE_MEMBER') ) && <SidebarLeftMenu /> }
                     </aside>
                     <section id="main-content" className="col col-lg-8 mx-2">
                       <ToastContainer
@@ -258,7 +262,7 @@ export class App extends Component
                           { supplierProductRoutes }
                           { userRoutes }
                           { withdrawalRoutes }
-                          {pageRoutes}
+                          { pageRoutes }
 
                         </Switch>
 
@@ -271,7 +275,7 @@ export class App extends Component
                     </aside>
                   </main>
                 </div>
-              </BrowserRouter>
+              </Router>
             </ConnectedRouter>
           </StripeProvider>
         </IntlProvider>

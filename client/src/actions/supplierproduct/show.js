@@ -17,7 +17,7 @@ export function success(retrieved) {
   return { type: 'SUPPLIERPRODUCT_SHOW_SUCCESS', retrieved };
 }
 
-export function retrieve(id) {
+export function retrieve(id, history, location) {
   return dispatch => {
     dispatch(loading(true));
 
@@ -37,7 +37,25 @@ export function retrieve(id) {
       })
       .catch(e => {
         dispatch(loading(false));
-        dispatch(error(e.message));
+
+        if(e.code === 401)
+        {
+          dispatch(error("Authentification nécessaire avant de poursuivre!"));
+          history.push({pathname: '../../login', state: { from : location.pathname }});
+        }
+
+        if(typeof e === 'string')
+        {
+          dispatch(error(e));
+        }else{
+          if(e['hydra:description'])
+          {
+            dispatch(error(e['hydra:description']));
+          }else{
+            dispatch(error(e.message));
+          }
+        }
+        dispatch(error(null));
       });
   };
 }

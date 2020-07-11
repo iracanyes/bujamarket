@@ -13,8 +13,9 @@ import { FormattedMessage, injectIntl } from "react-intl";
 import { update, retrieve, reset } from "../../actions/user/update";
 import DropzoneWithPreviews from "../image/dropzone/DropzoneWithPreviews";
 import PropTypes from 'prop-types';
-import {toastError} from "../../layout/ToastMessage";
+import { toastError } from "../../layout/ToastMessage";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import * as ISOCountryJson from "../../config/ISOCode/ISO3166-1Alpha2.json";
 
 class UpdateProfile extends React.Component {
   static propTypes = {
@@ -591,19 +592,37 @@ class UpdateProfile extends React.Component {
                         />
                       </Col>
                       <Col>
+                        <label
+                          htmlFor={'addresses[0][country]'}
+                          className="form-control-label"
+                        >
+                          <FormattedMessage  id={"app.address.item.country"}
+                                             defaultMessage="Pays"
+                                             description="Address - Country"
+
+                          />
+                        </label>
+                        &nbsp;:&nbsp;
                         <Field
-                          component={this.renderField}
-                          name='addresses[0][country]'
-                          type="text"
-                          placeholder={user.addresses[0].country}
+                          component={"select"}
+                          name="addresses[0][country]"
+                          id={"address-country-select"}
+                          type="select"
+                          className={'custom-select ml-2 col-2'}
                           required={true}
-                          labelText={intl.formatMessage({
-                            id: "app.address.item.country",
-                            defaultMessage: "Numéro de téléphone personne de contact",
-                            description: "Address item - country"
-                          })}
-                          value={user.addresses[0].country}
-                        />
+                          style={{minWidth: "100%"}}
+                          onChange={this.handleChange}
+                        >
+                          <option value="">--- Choisir parmi les pays ---</option>
+                          {
+                            Object.entries(ISOCountryJson.default).map(([index, value]) => (
+                              <option value={value} key={index}>
+                                { value }
+                              </option>
+                            ))
+                          }
+
+                        </Field>
                       </Col>
 
                     </Row>

@@ -4,54 +4,69 @@
  * Description: Formulaire d'ajout de produits par un fournisseur
  */
 import React,{ Fragment } from 'react';
-import { Link, withRouter } from 'react-router-dom';
+import {Link, Redirect, withRouter} from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Field, FieldArray, reduxForm } from 'redux-form';
+import { Field, reduxForm } from 'redux-form';
 import {
   Button,
   Col,
   Row,
-  Fieldset
+  Fieldset,
+  Collapse
 } from "reactstrap";
 import { FormattedMessage, injectIntl } from "react-intl";
-import { create } from "../../actions/supplierproduct/create";
-import { listByName } from "../../actions/category/list";
-import { getNames } from '../../actions/product/getNames';
-
+import { create, reset as resetCreate  } from "../../actions/supplierproduct/create";
+import { update, reset as resetUpdate } from "../../actions/supplierproduct/update";
+import { listByName, reset as resetCategories } from "../../actions/category/getNames";
+import { getNames, reset as resetProducts } from '../../actions/product/getNames';
 import PropTypes from 'prop-types';
-import SupplierProductImageInput from "./SupplierProductImageInput";
-import SupplierProductCategoryImageInput from "./SupplierProductCategoryImageInput";
 import DropzoneWithPreviews from "../image/dropzone/DropzoneWithPreviews";
+import { toastError } from "../../layout/ToastMessage";
+import {SpinnerLoading} from "../../layout/Spinner";
+import * as ISOCountryJson from "../../config/ISOCode/ISO3166-1Alpha2.json";
+import * as _ from 'lodash';
 
 class SupplierProductForm extends React.Component {
   static propTypes = {
     create: PropTypes.func.isRequired,
+    errorCreate: PropTypes.string,
+    loadingCreate: PropTypes.bool,
+    eventSourceCreate: PropTypes.instanceOf(EventSource),
+    update: PropTypes.func.isRequired,
     listByName: PropTypes.func.isRequired,
     retrievedCategories: PropTypes.array,
+    errorCategories: PropTypes.string,
+    loadingCategories: PropTypes.bool,
+    eventSourceCategories: PropTypes.instanceOf(EventSource),
     getNames: PropTypes.func.isRequired,
     retrievedProducts: PropTypes.object,
+    errorProducts: PropTypes.string,
+    loadingProducts: PropTypes.bool,
+    eventSourceProducts: PropTypes.instanceOf(EventSource),
     handleSubmit: PropTypes.func.isRequired,
-    error: PropTypes.string
   };
 
   constructor(props) {
     super(props);
 
     this.state = {
-      submitted: false
+      submitted: false,
+      toggleProduct: 0,
+      toggleCategory: false
     };
 
     this.auth = this.auth.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChangeImage= this.handleChangeImage.bind(this);
-    this.renderProductImageForm = this.renderProductImageForm.bind(this);
-    this.showProductForm = this.showProductForm.bind(this);
+    this.showNewProductForm = this.showNewProductForm.bind(this);
+    this.showExistingProductForm = this.showExistingProductForm.bind(this);
     this.showProductCategoryForm = this.showProductCategoryForm.bind(this);
+    this.showErrors = this.showErrors.bind(this);
+
+    this.auth();
   }
 
   componentDidMount() {
-
-    this.auth();
 
     /* Récupération des catégories de produits */
     this.props.listByName();
@@ -61,32 +76,34 @@ class SupplierProductForm extends React.Component {
 
   }
 
+  componentWillUnmount() {
+    this.props.resetCategories(this.props.eventSourceCategories);
+    this.props.resetCreate(this.props.eventSourceCreate);
+    this.props.resetProducts(this.props.eventSourceProducts);
+    this.props.resetUpdate(this.props.eventSourceUpdate);
+  }
+
   auth()
   {
-    if(localStorage.getItem("token") !== null )
+    const user = localStorage.getItem("token") !== null
+      ? JSON.parse(atob(localStorage.getItem("token").split('.')[1]))
+      : {};
+
+    if(user && user.roles && !user.roles.includes('ROLE_SUPPLIER'))
     {
-      const userToken = JSON.parse(atob(localStorage.getItem("token").split('.')[1]));
+      toastError("Vous n'êtes pas autorisé à publier du contenu sur la plateforme");
+      this.props.history.push({ pathname: '../../'});
+    }
 
-      console.log("userToken",userToken);
-
-      if(userToken && !userToken.roles.includes('ROLE_SUPPLIER'))
-      {
-
-        this.props.history.push({ pathname: '../../'});
-        sessionStorage.removeItem('flash-message');
-        sessionStorage.setItem('flash-message', JSON.stringify({message: "Vous n'êtes pas autorisé à publier du contenu sur la plateforme"}));
-      }
-    }else{
-      this.props.history.push({ pathname: "../../login", state: { from : window.location.pathname }});
-      sessionStorage.removeItem('flash-message');
-      sessionStorage.setItem('flash-message', JSON.stringify({message: "Une authentification est nécessaire avant de publier un produit sur la plateforme."}));
+    if(user === {})
+    {
+      this.props.history.push({ pathname: "../../login", state: { from : this.props.location.pathname }});
+      toastError("Une authentification est nécessaire avant de publier un produit sur la plateforme.");
     }
   }
 
   handleChangeImage(event, input)
   {
-    //event.preventDefault();
-
 
     let images = [];
 
@@ -97,15 +114,11 @@ class SupplierProductForm extends React.Component {
         const localImageUrl = URL.createObjectURL(imageFile);
         let imageObject = new window.Image();
 
-        console.log("imageFile",imageFile);
-
         imageFile.file = localImageUrl;
-        console.log("imageObject", imageObject);
 
         URL.revokeObjectURL(imageFile);
 
       }
-
 
     }else{
       event.target.files.map((image, index) => {
@@ -134,155 +147,132 @@ class SupplierProductForm extends React.Component {
     // Récupération des données de formulaires
     const data = new FormData(document.getElementById('supplier-product-form'));
 
-    /* Affichage des paires clefs/valeurs
-    for(var pair of data.entries()) {
-      console.log(pair[0]+ ', '+ pair[1]);
-    }
-    */
+    // Ajout de l'id du produit
+    this.props.product && data.append("product[id]", this.props.product.product.id);
 
     // Ajout des images aux données du formulaire
     const images = document.getElementsByName('images')[0].files;
+    console.log("images", images);
 
-    // Si plus de 10 images, on refuse l'envoie du formulaire
-    if(images.length > 10)
-    {
 
+    const nbImages = (this.props.product && this.props.product.images) ? (this.props.product.images.length + images.length) : images.length;
+    console.log("nbImages", nbImages);
+    // Si plus de 10 images, on refuse l'envoi du formulaire
+    if(nbImages > 10){
+      toastError(`Maximum 10 images! (${images.length} images présentes)`);
       return;
-
     }
 
     for(let x= 0; x < images.length; x++)
       data.append("product[images]["+x+"]", images[x] );
 
-    console.log("form data + files", data);
+    //const imageCategProduct = document.getElementsByName("product[category][image]")[0].files;
+    //data.append("product[category][image]", imageCategProduct);
 
-    if(data != null)
+    //const imageCategNewProduct = document.getElementsByName("newProduct[category][image]")[0].files;
+    //data.append("newProduct[category][image]", imageCategNewProduct);
+
+
+
+    if(data !== null)
     {
-      this.props.create(data, this.props.history)
+      !this.props.product
+        ? this.props.create(data, this.props.history, this.props.location)
+        : this.props.update(this.props.product, data, this.props.history, this.props.location);
     }
 
   }
 
-  renderProductImageForm = ({ fields, meta: { error } }) => {
-    const { intl } = this.props;
-    return (
-      <div>
-        <Row>
-          <Col>
-            <button className={"btn btn-outline-primary"}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      fields.push();
-                    }}
-
-            >
-              Ajouter une image
-            </button>
-          </Col>
-        </Row>
-        {fields.map((image, index) => (
-          <Row key={index}>
-            <Col>
-
-              <Field
-                component={SupplierProductImageInput}
-                name={`${image}[src]`}
-                type="file"
-                labelText={intl.formatMessage({
-                  id: "app.product.item.image",
-                  defaultMessage: "Image du produit",
-                  description: "Product item - image"
-                })}
-                accept="image/jpeg,image/png,image/jpg"
-                onChange={(event) => this.handleChangeImage(event)}
-                value={""}
-              />
-              <Button
-                outline
-                color={"danger"}
-                title="Supprimer l'image"
-                onClick={() => fields.remove(index)}
-              >
-                Supprimer l'image
-              </Button>
-            </Col>
-            <Col>
-              <Field
-                component={this.renderField}
-                name={`${image}[title]`}
-                type="text"
-                placeholder="Titre de l'image"
-                labelText={intl.formatMessage({
-                  id: "app.image.item.title",
-                  defaultMessage: "Titre de l'image",
-                  description: "Image item - title"
-                })}
-
-              />
-              <Field
-                component={this.renderField}
-                name={`${image}[place]`}
-                type="number"
-                min={"0"}
-                max={"10"}
-                step={"1"}
-                placeholder={index}
-                labelText={intl.formatMessage({
-                  id: "app.image.item.place",
-                  defaultMessage: "Place de l'image",
-                  description: "Image item - place"
-                })}
-                value={index}
-                list={"image-place"}
-              />
-            </Col>
-          </Row>
-        ))}
-        {error && <div className="error">{error}</div>}
-      </div>
-    )
-  };
-
-  showProductForm()
+  showNewProductForm()
   {
-    if(document.getElementById('product-form').classList.contains('d-none'))
+    if(document.getElementById('new-product-form').classList.contains('d-none'))
     {
       /* Ré-initialisation du choix de catégorie */
-      document.getElementById('product-name-select').selectedIndex = 0;
+      document.getElementById('existing-product-name-select').selectedIndex = 0;
       /* Désactivation du champ de sélection de catégorie de produit */
-      document.getElementById('product-name-select').setAttribute('disabled', 'disabled');
+      document.getElementById('existing-product-name-select').setAttribute('disabled', 'disabled');
       /* Affichage du formulaire  */
-      document.getElementById('product-form').classList.remove("d-none");
-
+      document.getElementById('new-product-form').classList.remove("d-none");
+      if(!document.getElementById('existing-product-form').classList.contains('d-none'))
+        document.getElementById('existing-product-form').classList.add('d-none');
     }else{
       /* Si le formulaire est affiché */
       // Activation du champ de sélection de la catégorie du produit
-      document.getElementById('product-name-select').removeAttribute('disabled');
+      document.getElementById('existing-product-name-select').removeAttribute('disabled');
       // Cacher le formulaire de proposition de catégorie
-      document.getElementById('product-form').classList.add('d-none');
+      document.getElementById('new-product-form').classList.add('d-none');
     }
 
   }
 
-  showProductCategoryForm()
+  showExistingProductForm()
   {
-    if(document.getElementById('product-category-form').classList.contains('d-none'))
+    if(document.getElementById('existing-product-form').classList.contains('d-none'))
+    {
+      /* Ré-initialisation du choix de catégorie */
+      document.getElementById('existing-product-name-select').selectedIndex = 0;
+      /* Désactivation du champ de sélection de catégorie de produit */
+      document.getElementById('existing-product-name-select').setAttribute('disabled', 'disabled');
+      /* Affichage du formulaire  */
+      document.getElementById('existing-product-form').classList.remove("d-none");
+
+      if(!document.getElementById('new-product-form').classList.contains('d-none'))
+        document.getElementById('new-product-form').classList.add('d-none');
+    }else{
+      /* Si le formulaire est affiché */
+      // Activation du champ de sélection de la catégorie du produit
+      document.getElementById('existing-product-name-select').removeAttribute('disabled');
+      // Cacher le formulaire de proposition de catégorie
+      document.getElementById('existing-product-form').classList.add('d-none');
+    }
+
+  }
+
+  showProductCategoryForm(id)
+  {
+    const { toggleCategory } = this.state;
+    /*
+     * Si on ne clique pas pour la 2 fois sur le mm bouton , on affiche le formulaire et on desactive le bouton select,
+     * Sinon, on n'affiche pas le formulaire et on active le bouton select
+     */
+    if(!((id === "1" && toggleCategory === "1" )|| (id=== "2" && toggleCategory === "2")))
     {
       /* Ré-initialisation du choix de catégorie */
       document.getElementById('product-category-select').selectedIndex = 0;
       /* Désactivation du champ de sélection de catégorie de produit */
       document.getElementById('product-category-select').setAttribute('disabled', 'disabled');
+
       /* Affichage du formulaire  */
-      document.getElementById('product-category-form').classList.remove("d-none");
+      this.setState(state => ({
+        ...state,
+        toggleCategory: id
+      }))
 
     }else{
       /* Si le formulaire est affiché */
       // Activation du champ de sélection de la catégorie du produit
       document.getElementById('product-category-select').removeAttribute('disabled');
       // Cacher le formulaire de proposition de catégorie
-      document.getElementById('product-category-form').classList.add('d-none');
+      /* Affichage du formulaire  */
+      this.setState(state => ({
+        ...state,
+        toggleCategory: "0"
+      }))
+
     }
 
+
+
+  }
+
+  showErrors()
+  {
+    const { errorCreate, errorProducts, errorCategories, updateError } = this.props;
+
+    errorCreate && toastError(errorCreate);
+    updateError && toastError(updateError);
+    errorProducts && toastError(errorProducts);
+    errorCategories && toastError(errorCategories);
   }
 
   renderField = data => {
@@ -305,7 +295,7 @@ class SupplierProductForm extends React.Component {
     return (
       <div className={`form-group`}>
         <label
-          htmlFor={`user_${data.input.name}`}
+          htmlFor={`supplier_product_${data.input.name}`}
           className="form-control-label"
         >
           {data.labelText}
@@ -316,34 +306,78 @@ class SupplierProductForm extends React.Component {
           step={data.step}
           required={data.required}
           placeholder={data.placeholder}
-          id={`user_${data.input.name}`}
+          id={`supplier_product_${data.input.name}`}
         />
         {isInvalid && <div className="invalid-feedback">{data.meta.error}</div>}
       </div>
     );
   };
 
+  renderTextarea = data => {
+
+
+    const isInvalid = data.meta.touched && !!data.meta.error;
+    if (isInvalid) {
+      data.input.className += ' is-invalid';
+      data.input['aria-invalid'] = true;
+    }
+
+    if (this.props.error && data.meta.touched && !data.meta.error) {
+      data.input.className += ' is-valid';
+    }
+
+    return (
+      <div className={`form-group`}>
+        <label
+          htmlFor={`supplier_product_${data.input.name}`}
+          className="form-control-label"
+        >
+          {data.labelText}
+        </label>
+        <textarea
+          {...data.input}
+          required={data.required}
+          id={`supplier_product_${data.input.name}`}
+          placeholder={data.placeholder}
+        >
+        </textarea>
+        {isInvalid && <div className="invalid-feedback">{data.meta.error}</div>}
+      </div>
+    );
+  };
 
   render() {
-    const { intl  } = this.props;
-    /* Authentification de l'utilisateur */
-    this.auth();
+    const { intl, product, created, updated, updateError, loadingCreate,  updateLoading  } = this.props;
+
+    // Affichage des erreurs
+    this.showErrors();
+
+    // Redirection en cas de mise à jour du produit
+    if (this.props.updated || this.props.created) {
+      return (
+        <Redirect
+          to={`../../supplier_product/show/${encodeURIComponent(this.props.updated ? this.props.updated['id'] : this.props.created['id'] )}`}
+        />
+      );
+    }
+
 
     return (
       <Fragment>
         <div className={"supplier-product-form my-3"}>
-          <h4 className={'text-center'}>
-            <FormattedMessage  id={"app.page.supplier_product.title.add_product"}
-                               defaultMessage="Ajouter un produit"
-                               description="Page Supplier product - Add form title"
-            />
+          <h4 className={'text-center mb-5'}>
+            {!this.props.product
+              ? <FormattedMessage  id={"app.page.supplier_product.title.add_product"}
+                                   defaultMessage="Ajouter à un produit"
+                                   description="Page Supplier product - Add form title"
+                />
+              : ""
+
+            }
+            { this.props.product && this.props.product.product.title}
+
           </h4>
-          {this.props.error && (
-            <div className="alert alert-danger" role="alert">
-              <span className="fa fa-exclamation-triangle text-center" aria-hidden="true" />{' '}
-              {this.props.error}
-            </div>
-          )}
+
           <form
             id="supplier-product-form"
             name="supplier-product"
@@ -353,7 +387,7 @@ class SupplierProductForm extends React.Component {
           >
             <fieldset className={"mb-2"}>
               <legend>Information sur le produit</legend>
-              <Row>
+              <Row className={'mb-3'}>
                 <Col className={'col-8 mb-3'}>
                   <label
                     htmlFor={'product[id]'}
@@ -369,9 +403,9 @@ class SupplierProductForm extends React.Component {
                   <Field
                     component={"select"}
                     name="product[id]"
-                    id={"product-name-select"}
+                    id={"existing-product-name-select"}
                     type="select"
-                    className={'custom-select w-100 ml-2 col-2'}
+                    className={'custom-select w-100 col-2'}
                     style={{minWidth: "100%"}}
                     onChange={this.handleChange}
                   >
@@ -384,18 +418,36 @@ class SupplierProductForm extends React.Component {
 
                   </Field>
                 </Col>
-                <Col>
+                <div className={'btn-actions d-flex flex-row mx-auto'}>
+                  { this.props.product && (
+                    <Button
+                      color={'success'}
+                      className={"mr-3"}
+                      onClick={() => this.showExistingProductForm()}
+                    >
+                      <FormattedMessage
+                        id={"app.button.update_existing_product"}
+                        defaultMessage={"Mise à jour du produit existant"}
+                        description={'Product - update existing product'}
+                      />
+                    </Button>
+                  )}
                   <Button outline
                           color={'primary'}
-                          style={{position:"absolute", bottom:"1rem"}}
-                          onClick={() => this.showProductForm()}
+                          onClick={() => this.showNewProductForm()}
                   >
-                    Proposer un nouveau produit
+                    <FormattedMessage
+                      id={"app.button.associate_with_new_product"}
+                      defaultMessage={"Associer à un nouveau produit"}
+                      description={'Product - associate with a new product'}
+                    />
                   </Button>
-                </Col>
+
+                </div>
 
               </Row>
-              <div id="product-form" className={"d-none"}>
+              <div id="existing-product-form" className={"d-none"}>
+                <h5>Modifier le produit</h5>
                 <fieldset>
                   <legend>Infos publiés sur la plateforme</legend>
                   <Row>
@@ -422,13 +474,17 @@ class SupplierProductForm extends React.Component {
                           className="form-control-label"
                         >
                           <FormattedMessage  id={"app.product.item.resume"}
-                                             defaultMessage="Description résumés"
+                                             defaultMessage="Description résumée"
                                              description="Product item - resume"
                           />
                         </label>
-                        <textarea name="product[resume]" className={'form-control w-100'} defaultValue={"The cat was playing in the garden."}>
-
-                        </textarea>
+                        <Field
+                          component={this.renderTextarea}
+                          name="product[resume]"
+                          className={'form-control w-100'}
+                          defaultValue={"The cat was playing in the garden."}
+                          normalize={(value) => _.truncate(value, {'length':  250, 'separator': ' ', 'omission': ' ...'})}
+                        />
                       </div>
                     </Col>
                   </Row>
@@ -444,9 +500,12 @@ class SupplierProductForm extends React.Component {
                                              description="Product item - description"
                           />
                         </label>
-                        <textarea name="product[description]" className={'form-control w-100'} defaultValue={"The cat was playing in the garden."}>
-
-                        </textarea>
+                        <Field
+                          component={this.renderTextarea}
+                          name="product[description]"
+                          className={'form-control w-100'}
+                          placeholder={"The cat was playing in the garden."}
+                        />
                       </div>
                     </Col>
                   </Row>
@@ -473,17 +532,14 @@ class SupplierProductForm extends React.Component {
                         onChange={this.handleChange}
                       >
                         <option value="">--- Choisir parmi les pays d'orgine autorisés ---</option>
-                        {[
-                          {id: "1", country: 'Burundi'},
-                          {id: 2, country: "Congo"},
-                          {id: 3, country: "Ouganda"},
-                          {id: 4, country: "Rwanda"},
-                          {id: 5, country: "Tanzanie"}
-                         ].map(item => (
-                          <option value={item.id} key={item.id}>
-                            { item.country }
-                          </option>
-                        ))}
+                        {
+                          Object.entries(ISOCountryJson.default).map(([index, value]) => (
+                            <option value={index.toUpperCase()} key={index}>
+                              { value }
+                            </option>
+                          ))
+                        }
+
 
                       </Field>
                     </Col>
@@ -594,107 +650,336 @@ class SupplierProductForm extends React.Component {
                     <Col>
                       <Button outline
                               color={'primary'}
-                              style={{position:"absolute", bottom:"1rem"}}
-                              onClick={() => this.showProductCategoryForm()}
+                              style={{position:"absolute", bottom:"1rem", right: '0'}}
+                              onClick={() => this.showProductCategoryForm("1")}
                       >
                         Proposer une catégorie
                       </Button>
                     </Col>
 
                   </Row>
-                  <div id={"product-category-form"} className={'d-none'}>
-                    <Row >
-                      <Col>
-                        <Field
-                          component={this.renderField}
-                          name="product[category][name]"
-                          type="text"
-                          placeholder="Nom de la catégorie"
-                          labelText={intl.formatMessage({
-                            id: "app.category.item.name",
-                            defaultMessage: "Nom de la catégorie",
-                            description: "Category item - name"
-                          })}
-                        />
-                      </Col>
+                  <Collapse isOpen={this.state.toggleCategory === "1"}>
+                    <div id={"product-category-form"}>
+                      <Row >
+                        <Col>
+                          <Field
+                            component={this.renderField}
+                            name="product[category][name]"
+                            type="text"
+                            placeholder="Nom de la catégorie"
+                            labelText={intl.formatMessage({
+                              id: "app.category.item.name",
+                              defaultMessage: "Nom de la catégorie",
+                              description: "Category item - name"
+                            })}
+                          />
+                        </Col>
 
-                    </Row>
-                    <Row>
-                      <Col>
-                        <label htmlFor="product[category][description]">
-                          <FormattedMessage id={"app.category.item.description"}
-                                            defaultMessage={"Description de la catégorie"}
-                                            description={"Category item - description"}
+                      </Row>
+                      <Row>
+                        <Col>
+                          <label htmlFor="product[category][description]">
+                            <FormattedMessage id={"app.category.item.description"}
+                                              defaultMessage={"Description de la catégorie"}
+                                              description={"Category item - description"}
+                            />
+                          </label>
+                          <Field
+                            component={this.renderTextarea}
+                            name="product[category][description]"
+                            id="product-category-description"
+                            placeholder={"Une brève description de la catégorie"}
+                            className={'form-control'}
+                          />
+                        </Col>
+                      </Row>
+                      <Row className={'mt-3'}>
+                        <Col>
+                          <DropzoneWithPreviews
+                            label={intl.formatMessage({
+                              id: "app.category.item.image",
+                              defaultMessage: "Image de la catégorie",
+                              description: "Category item - image"
+                            })}
+                            inputName={'product[category][image]'}
+                          />
+                        </Col>
+                      </Row>
+                    </div>
+                  </Collapse>
+
+
+                </fieldset>
+
+              </div>
+              <div id="new-product-form" className={"d-none"}>
+                <h5>Ajouter un nouveau produit</h5>
+                <fieldset>
+                  <legend>Infos publiés sur la plateforme</legend>
+                  <Row>
+                    <Col>
+                      <Field
+                        component={this.renderField}
+                        name="newProduct[title]"
+                        type="text"
+                        placeholder="Nom et modèle du produit"
+                        labelText={intl.formatMessage({
+                          id: "app.product.item.title",
+                          defaultMessage: "Nom du produit",
+                          description: "Product item - title"
+                        })}
+
+                      />
+                    </Col>
+                  </Row>
+                  <Row className={'pt-3'}>
+                    <Col>
+                      <div className={'d-flex-row'}>
+                        <label
+                          htmlFor={'newProduct[resume]'}
+                          className="form-control-label"
+                        >
+                          <FormattedMessage  id={"app.product.item.resume"}
+                                             defaultMessage="Description résumée"
+                                             description="Product item - resume"
                           />
                         </label>
-                        <textarea name="product[category][description]" id="product-category-description" defaultValue={"Une brève description de la catégorie"} className={'form-control'}>
-
-                      </textarea>
-
-                      </Col>
-                    </Row>
-                    <Row className={'mt-3'}>
-                      <Col>
                         <Field
-                          component={SupplierProductCategoryImageInput}
-                          name={`product[category][image][src]`}
-                          type="file"
-                          labelText={intl.formatMessage({
-                            id: "app.category.item.image",
-                            defaultMessage: "Image de la catégorie",
-                            description: "Category item - image"
-                          })}
-                          accept="image/jpeg,image/png,image/jpg"
-                          onChange={(event) => this.handleChangeImage(event)}
-                          value={""}
+                          component={this.renderTextarea}
+                          name="newProduct[resume]"
+                          className={'form-control w-100'}
+                          placeholder={"Make a short description of the product. (max: 255 characters)"}
+                          normalize={(value) => _.truncate(value, {'length':  250, 'separator': ' ', 'omission': ' ...'})}
                         />
-                      </Col>
-                      <Col>
+                      </div>
+                    </Col>
+                  </Row>
+                  <Row className={'pt-3'}>
+                    <Col>
+                      <div className={'d-flex-row'}>
+                        <label
+                          htmlFor={'newProduct[description]'}
+                          className="form-control-label"
+                        >
+                          <FormattedMessage  id={"app.product.item.description"}
+                                             defaultMessage="Description"
+                                             description="Product item - description"
+                          />
+                        </label>
                         <Field
-                          component={this.renderField}
-                          name={`product[category][image][title]`}
-                          type="text"
-                          placeholder="Titre de l'image"
-                          labelText={intl.formatMessage({
-                            id: "app.image.item.title",
-                            defaultMessage: "Titre de l'image",
-                            description: "Image item - title"
-                          })}
+                          component={this.renderTextarea}
+                          name="newProduct[description]"
+                          className={'form-control w-100'}
+                          placeholder={"Make a full description of the product"}
+                        />
+                      </div>
+                    </Col>
+                  </Row>
+                  <Row className={'mt-3'}>
+                    <Col className={'col-8 mb-3'}>
+                      <label
+                        htmlFor={'newProduct[countryOrigin]'}
+                        className="form-control-label"
+                      >
+                        <FormattedMessage  id={"app.product.item.country_origin"}
+                                           defaultMessage="Origine du produit"
+                                           description="Product item - country of origin"
 
                         />
-                        <Field
-                          component={this.renderField}
-                          name={`product[category][image][place]`}
-                          type="number"
-                          min={"0"}
-                          max={"10"}
-                          step={"1"}
-                          labelText={intl.formatMessage({
-                            id: "app.image.item.place",
-                            defaultMessage: "Place de l'image",
-                            description: "Image item - place"
-                          })}
-                          list={"image-place"}
-                        />
-                      </Col>
-                    </Row>
-                  </div>
+                      </label>
+                      &nbsp;:&nbsp;
+                      <Field
+                        component={"select"}
+                        name="newProduct[countryOrigin]"
+                        id={"product-country-origin-select"}
+                        type="select"
+                        className={'custom-select ml-2 col-2'}
+                        style={{minWidth: "100%"}}
+                        onChange={this.handleChange}
+                      >
+                        <option value="">--- Choisir parmi les pays d'orgine autorisés ---</option>
+                        {
+                          Object.entries(ISOCountryJson.default).map(([index, value]) => (
+                            <option value={index.toUpperCase()} key={index}>
+                              { value }
+                            </option>
+                          ))
+                        }
 
+                      </Field>
+                    </Col>
+
+                  </Row>
                 </fieldset>
 
                 <fieldset>
-                  <legend>Images du produit</legend>
-                  <fieldset>
-                    <FieldArray name={'product[images]'} component={this.renderProductImageForm} />
-                  </fieldset>
+                  <legend>Dimension du produit</legend>
+                  <Row>
+                    <Col>
+                      <Field
+                        component={this.renderField}
+                        name="newProduct[weight]"
+                        type="number"
+                        step="0.01"
+                        min="0.01"
+                        placeholder="000.00"
+                        labelText={intl.formatMessage({
+                          id: "app.product.item.weight",
+                          defaultMessage: "Poids",
+                          description: "Product item - weight"
+                        })}
+                        value={0.0}
+                        normalize={v => parseFloat(v)}
+                      />
+                      <Field
+                        component={this.renderField}
+                        name="newProduct[length]"
+                        type="number"
+                        step="0.01"
+                        placeholder="000.00"
+                        labelText={intl.formatMessage({
+                          id: "app.product.item.length",
+                          defaultMessage: "Longueur",
+                          description: "Product item - length"
+                        })}
+                        normalize={v => parseFloat(v)}
+                      />
+                    </Col>
+                    <Col>
+                      <Field
+                        component={this.renderField}
+                        name="newProduct[width]"
+                        type="number"
+                        step="0.01"
+                        min="0.01"
+                        placeholder="000.00"
+                        labelText={intl.formatMessage({
+                          id: "app.product.item.width",
+                          defaultMessage: "Largeur",
+                          description: "Product item - width"
+                        })}
+                        normalize={v => parseFloat(v)}
+                      />
+                      <Field
+                        component={this.renderField}
+                        name="newProduct[height]"
+                        type="number"
+                        step="0.01"
+                        min="0.01"
+                        placeholder="000.00"
+                        labelText={intl.formatMessage({
+                          id: "app.product.item.height",
+                          defaultMessage: "Hauteur",
+                          description: "Product item - height"
+                        })}
+                        normalize={v => parseFloat(v)}
+                      />
+
+                    </Col>
+                  </Row>
                 </fieldset>
+
+                <fieldset className={"mb-2"}>
+                  <legend>Catégorie du produit</legend>
+                  <Row>
+                    <Col className={'mb-3'}>
+                      <label
+                        htmlFor={'newProduct[category]'}
+                        className="form-control-label"
+                      >
+                        <FormattedMessage  id={"app.product.item.category"}
+                                           defaultMessage="Catégorie du produit"
+                                           description="Product item - category"
+
+                        />
+                      </label>
+                      &nbsp;:&nbsp;
+                      <Field
+                        component={"select"}
+                        name="newProduct[category][id]"
+                        id={"product-category-select"}
+                        type="select"
+                        className={'custom-select w-100 ml-2 col-2'}
+                        style={{minWidth: "max-content"}}
+                        onChange={this.handleChange}
+                      >
+                        <option value="">--- Choisir une catégorie de produit ---</option>
+                        {this.props.retrievedCategories && this.props.retrievedCategories.map(item => (
+                          <option value={item.id} key={item.id}>
+                            { item.name }
+                          </option>
+                        ))}
+
+                      </Field>
+                    </Col>
+                    <Col>
+                      <Button outline
+                              color={'primary'}
+                              style={{position:"absolute", bottom:"1rem", right: '0'}}
+                              onClick={() => this.showProductCategoryForm("2")}
+                      >
+                        Proposer une catégorie
+                      </Button>
+                    </Col>
+
+                  </Row>
+                  <Collapse isOpen={this.state.toggleCategory === "2"}>
+                    <div id={"product-category-form"}>
+                      <Row >
+                        <Col>
+                          <Field
+                            component={this.renderField}
+                            name="newProduct[category][name]"
+                            type="text"
+                            placeholder="Nom de la catégorie"
+                            labelText={intl.formatMessage({
+                              id: "app.category.item.name",
+                              defaultMessage: "Nom de la catégorie",
+                              description: "Category item - name"
+                            })}
+                          />
+                        </Col>
+
+                      </Row>
+                      <Row>
+                        <Col>
+                          <label htmlFor="newProduct[category][description]">
+                            <FormattedMessage id={"app.category.item.description"}
+                                              defaultMessage={"Description de la catégorie"}
+                                              description={"Category item - description"}
+                            />
+                          </label>
+                          <Field
+                            component={this.renderTextarea}
+                            name="newProduct[category][description]"
+                            id="product-category-description"
+                            placeholder={"Une brève description de la catégorie"}
+                            className={'form-control'}
+                          />
+                        </Col>
+                      </Row>
+                      <Row className={'mt-3'}>
+                        <Col>
+                          <DropzoneWithPreviews label={"Image de la catégorie"} inputName={'newProduct[category][image]'}/>
+                        </Col>
+                      </Row>
+                    </div>
+                  </Collapse>
+
+
+                </fieldset>
+
               </div>
 
             </fieldset>
             <fieldset>
               <legend>Images du produit</legend>
               <Row>
-                <DropzoneWithPreviews multiple={true}/>
+                {
+                  product
+                    ?  <DropzoneWithPreviews images={product.images} multiple={true}/>
+                    :  <DropzoneWithPreviews multiple={true}/>
+                }
               </Row>
             </fieldset>
             <fieldset className={"mb-2"}>
@@ -702,7 +987,8 @@ class SupplierProductForm extends React.Component {
               <Row>
                 <Col>
                   <div className={`form-group d-flex`}>
-                    <input
+                    <Field
+                      component="input"
                       name="isAvailable"
                       type="checkbox"
                       className={'mx-2 '}
@@ -738,7 +1024,8 @@ class SupplierProductForm extends React.Component {
               <Row className={'pt-3'}>
                 <Col>
                   <div className={`form-group d-flex`}>
-                    <input
+                    <Field
+                      component={"input"}
                       name="isLimited"
                       type="checkbox"
                       className={'mx-2'}
@@ -803,46 +1090,61 @@ class SupplierProductForm extends React.Component {
                                          description="Supplier product item - additional information"
                       />
                     </label>
-                    <textarea name="additionalInformation" className={'form-control w-100'} defaultValue={"Add all other useful information here."}>
-
-                  </textarea>
+                    <Field
+                      component={this.renderTextarea}
+                      name="additionalInformation"
+                      className={'form-control w-100'}
+                      defaultValue={"Add all other useful information here."}
+                    />
                   </div>
                 </Col>
               </Row>
             </fieldset>
+            {!this.props.product && (
+              <Row className={"mb-2"}>
+                <Col>
+                  <div className={`form-group d-flex mt-2`}>
+                    <input
+                      name="termsAccepted"
+                      type="checkbox"
+                      className={'mx-2'}
+                      style={{position: 'absolute', top: '0.25rem'}}
+                      required={true}
+                      id={`user_termsAccepted`}
+                      onChange={this.handleChange}
+                      value={true}
+                    />
+                    <label
+                      htmlFor={`user_termsAccepted`}
+                      className="form-control-label col-10 ml-5"
+                    >
+                      J'accepte les condition d'utilisation de la plateforme. <Link to={'/terms_condition'}>Voir termes et conditions</Link> <br/>
+                      J'autorise l'exploitation de mes données personnelles fournis à cette plateforme dans les limites indiquées par les <Link to={'/rgpd'}>Utilisations des données personnelles</Link>
+                    </label>
 
-            <Row className={"mb-2"}>
-              <Col>
-                <div className={`form-group d-flex mt-2`}>
-                  <input
-                    name="termsAccepted"
-                    type="checkbox"
-                    className={'mx-2'}
-                    style={{position: 'absolute', top: '0.25rem'}}
-                    required={true}
-                    id={`user_termsAccepted`}
-                    onChange={this.handleChange}
-                    value={true}
-                  />
-                  <label
-                    htmlFor={`user_termsAccepted`}
-                    className="form-control-label col-10 ml-5"
-                  >
-                    J'accepte les condition d'utilisation de la plateforme. <Link to={'/terms_condition'}>Voir termes et conditions</Link> <br/>
-                    J'autorise l'exploitation de mes données personnelles fournis à cette plateforme dans les limites indiquées par les <Link to={'/rgpd'}>Utilisations des données personnelles</Link>
-                  </label>
 
-
-                </div>
-              </Col>
-            </Row>
+                  </div>
+                </Col>
+              </Row>
+            )}
+            <div>
+              {loadingCreate && (
+                <SpinnerLoading message={"Création du produit en cours..."} />
+              )}
+              { updateLoading && (
+                <SpinnerLoading message={"Mise à jour du produit en cours..."} />
+              )}
+            </div>
             <Row>
-              <button type="submit" className="btn btn-success my-3 mx-2">
-                Envoyer
-              </button>
-              <Link to={".."} className={"btn btn-outline-danger my-3 mx-2"}>
-                Annuler
-              </Link>
+              <div className="mx-auto">
+                <button type="submit" className="btn btn-success my-3 mx-2">
+                  Envoyer
+                </button>
+
+                <Link to={".."} className={"btn btn-outline-danger my-3 mx-2"}>
+                  Annuler
+                </Link>
+              </div>
             </Row>
 
 
@@ -854,28 +1156,75 @@ class SupplierProductForm extends React.Component {
   }
 }
 
-const mapStateToProps = state => {
-  const { created, error: errorCreate, loading: loadingCreate } = state.supplierproduct.create;
-  const { retrieved: retrievedCategories,error: errorCategories,loading: loadingCategories } = state.category.list;
-  const { retrieved: retrievedProducts, error: errorProducts, loading: loadingProducts } = state.product.getNames;
+const mapStateToProps = (state, ownProps) => {
+  const { created, error: errorCreate, loading: loadingCreate, eventSource: eventSourceCreate } = state.supplierproduct.create;
+  const { updated, updateError, updateLoading, eventSource: eventSourceUpdate } = state.supplierproduct.update;
+  const { retrieved: retrievedCategories,error: errorCategories,loading: loadingCategories, eventSource: eventSourceCategories } = state.category.getNames;
+  const { retrieved: retrievedProducts, error: errorProducts, loading: loadingProducts, eventSource: eventSourceProducts } = state.product.getNames;
+
+  let product = null;
+  if(ownProps.product)
+  {
+    product = {
+      product:{
+        id: ownProps.product.product.id,
+        title: ownProps.product.product.title,
+        resume: ownProps.product.product.resume,
+        description: ownProps.product.product.description,
+        length: ownProps.product.product.length,
+        weight: ownProps.product.product.weight,
+        width: ownProps.product.product.width,
+        height: ownProps.product.product.height,
+        countryOrigin: ownProps.product.product.countryOrigin,
+        category: {
+          id: ownProps.product.product.category.id
+        }
+      },
+      initialPrice: ownProps.product.initialPrice,
+      quantity: ownProps.product.quantity,
+      isAvailable: ownProps.product.isAvailable,
+      isLimited: ownProps.product.isLimited,
+      additionalFee: ownProps.product.additionalFee,
+      additionalInformation: ownProps.product.additionalInformation,
+      images: ownProps.product.images,
+      category: ownProps.product.product.category.id,
+
+    };
+  }
+
+
+
 
   return {
     created,
     errorCreate,
     loadingCreate,
+    eventSourceCreate,
     retrievedCategories,
+    eventSourceCategories,
     errorCategories,
     loadingCategories,
     retrievedProducts,
     errorProducts,
-    loadingProducts
+    loadingProducts,
+    eventSourceProducts,
+    updated,
+    updateError,
+    updateLoading,
+    eventSourceUpdate,
+    initialValues: ownProps.product ? product : {}
   };
 };
 
 const mapDispatchToProps = dispatch => ({
-  create: (supplierProduct, history ) => dispatch( create(supplierProduct, history)),
+  create: (supplierProduct, history, location ) => dispatch( create(supplierProduct, history, location)),
+  update: (retrieved, supplierProduct, history, location) => dispatch(update(retrieved, supplierProduct, history, location)),
   listByName: () => dispatch(listByName()),
-  getNames: () => dispatch(getNames())
+  getNames: () => dispatch(getNames()),
+  resetCreate: eventSource => dispatch(resetCreate(eventSource)),
+  resetCategories: eventSource => dispatch(resetCategories(eventSource)),
+  resetUpdate: eventSource => dispatch(resetUpdate(eventSource)),
+  resetProducts: eventSource => dispatch(resetProducts(eventSource))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(

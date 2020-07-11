@@ -8,6 +8,7 @@ use App\Entity\Admin;
 use App\Entity\Customer;
 use App\Entity\Supplier;
 use App\Entity\User;
+use App\Entity\Image;
 use League\Flysystem\FilesystemInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -111,7 +112,7 @@ class UploadHandler
 
     }
 
-    public function deleteProfileImage(User $user)
+    public function deleteProfileImage(User $user): void
     {
         try{
             switch ($user->getUserType()){
@@ -131,5 +132,10 @@ class UploadHandler
 
 
 
+    }
+
+    public function deleteSupplierProductImage(Image $image): void
+    {
+        $this->imageProductFilesystem->delete('/'.$image->getUrl());
     }
 }

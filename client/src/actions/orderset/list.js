@@ -5,6 +5,7 @@ import {
   mercureSubscribe as subscribe
 } from '../../utils/dataAccess';
 import { success as deleteSuccess } from './delete';
+import authHeader from "../../utils/authHeader";
 
 export function error(error) {
   return { type: 'ORDERSET_LIST_ERROR', error };
@@ -18,12 +19,15 @@ export function success(retrieved) {
   return { type: 'ORDERSET_LIST_SUCCESS', retrieved };
 }
 
-export function list(page = 'order_sets') {
+export function list(page, history, location) {
   return dispatch => {
     dispatch(loading(true));
     dispatch(error(''));
 
-    fetch(page)
+    /* Ajout du JWT authentication token de l'utilisateur connecté */
+    const headers = authHeader();
+
+    fetch('orders'+ (page ? '/'+page : ''), {method: 'GET', headers})
       .then(response =>
         response
           .json()
@@ -45,7 +49,25 @@ export function list(page = 'order_sets') {
       })
       .catch(e => {
         dispatch(loading(false));
-        dispatch(error(e.message));
+
+        if(e.code === 401)
+        {
+          dispatch(error("Authentification nécessaire avant de poursuivre!"));
+          history.push({pathname: '../../login', state: { from : location.pathname }});
+        }
+
+        if(typeof e === 'string')
+        {
+          dispatch(error(e));
+        }else{
+          if(e['hydra:description'])
+          {
+            dispatch(error(e['hydra:description']));
+          }else{
+            dispatch(error(e.message));
+          }
+        }
+        dispatch(error(null));
       });
   };
 }

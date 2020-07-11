@@ -16,8 +16,6 @@ class ButtonAddToShoppingCart2 extends Component{
     this.toggle = this.toggle.bind(this);
   }
 
-
-
   toggle()
   {
     this.setState({show: !this.state.show });
@@ -27,11 +25,10 @@ class ButtonAddToShoppingCart2 extends Component{
   {
     return (
       <div>
-
-        <Button  onClick={this.toggle}>
+        <div  onClick={this.toggle}>
           <FontAwesomeIcon icon="shopping-cart" className="menu-top-l1" />
           <span data-toggle="Bookmarked" className={'ml-1'}>Ajouter au panier</span>
-        </Button>
+        </div>
         <Toast isOpen={this.state.show} id={"toast-shopping-cart"}>
           <ToastHeader toggle={this.toggle}>Panier de commande</ToastHeader>
           <ToastBody>

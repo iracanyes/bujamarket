@@ -1,6 +1,4 @@
 /**
- * Author: Iracanye S.
- * Date: 31/07/2019
  * Description: Composant d'affichage des résultats de recherche
  */
 import React, { Component, Fragment } from "react";
@@ -92,7 +90,7 @@ class SearchResults extends  Component{
           </Row>
         );
 
-        console.log('rows', rows);
+
 
         items.push(
           <div id="search-results-items"
@@ -321,9 +319,6 @@ class SearchResults extends  Component{
   render()
   {
     const { results, retrievedProducts } = this.props;
-
-    console.log("HOC results",results);
-    console.log("State retrieved product", retrievedProducts);
 
     return (<Fragment>
       <div id="search-results-header">

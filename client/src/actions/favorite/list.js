@@ -5,6 +5,7 @@ import {
   mercureSubscribe as subscribe
 } from '../../utils/dataAccess';
 import { success as deleteSuccess } from './delete';
+import authHeader from "../../utils/authHeader";
 
 export function error(error) {
   return { type: 'FAVORITE_LIST_ERROR', error };
@@ -18,22 +19,13 @@ export function success(retrieved) {
   return { type: 'FAVORITE_LIST_SUCCESS', retrieved };
 }
 
-export function list(page = 'my_favorites', history) {
+export function list(page = 'my_favorites', history, location) {
   return dispatch => {
     dispatch(loading(true));
     dispatch(error(''));
 
     /* Récupération de la clé JWT et ajout au header de la requête */
-    const userToken = JSON.parse(localStorage.getItem('token'));
-    let headers = new Headers();
-    if(userToken === null)
-    {
-      history.push({pathname: '../../login', state: { from : window.location.pathname }});
-    }else{
-      /* Création du header de la requête */
-      headers.set('Authorization', 'Bearer ' + userToken.token);
-
-    }
+    let headers = authHeader();
 
     fetch(page, {method: 'GET', headers: headers})
       .then(response =>
@@ -57,48 +49,36 @@ export function list(page = 'my_favorites', history) {
       })
       .catch(e => {
         dispatch(loading(false));
-        dispatch(error(e.message));
 
-        if(/Access Denied/.test(e.message))
+        if(e.code === 401)
         {
-          if(sessionStorage.getItem('flash-message-error') !== null)
-          {
-            sessionStorage.removeItem('flash-message-error');
-          }
-          sessionStorage.setItem('flash-message-error', JSON.stringify({message: "Accès refusé!"}));
-          history.push({pathname: '../../', state: {from : window.location.pathname}});
+          dispatch(error("Authentification nécessaire avant de poursuivre!"));
+          history.push({pathname: '../../login', state: { from : location.pathname }});
         }
 
-        if(/Unauthorized/.test(e.message))
+        if(typeof e === 'string')
         {
-          if(sessionStorage.getItem('flash-message-error') !== null)
+          dispatch(error(e));
+        }else{
+          if(e['hydra:description'])
           {
-            sessionStorage.removeItem('flash-message-error');
+            dispatch(error(e['hydra:description']));
+          }else{
+            dispatch(error(e.message));
           }
-          sessionStorage.setItem('flash-message-error', JSON.stringify({message: "Connexion nécessaire!"}));
-          history.push({ pathname: '../../login', state: { from: window.location.pathname }})
         }
+        dispatch(error(null));
       });
   };
 }
 
-export function retrieveIds(history) {
+export function retrieveIds(history, location) {
   return dispatch => {
     dispatch(loading(true));
     dispatch(error(''));
 
     /* Récupération de la clé JWT et ajout au header de la requête */
-    const userToken = JSON.parse(localStorage.getItem('token'));
-
-    /* Ajout du header */
-    let headers = new Headers();
-    if(userToken !== null)
-    {
-
-      headers.set('Authorization', 'Bearer ' + userToken.token);
-    }else{
-      history.push({pathname:"../../login", state: { from: window.location.pathname }})
-    }
+    let headers = authHeader();
 
 
     fetch('favorites/ids', {method: 'GET', headers: headers})
@@ -112,12 +92,11 @@ export function retrieveIds(history) {
 
         dispatch(loading(false));
 
-
+        // Set in favorite products in the localStorage
         if(localStorage.getItem('favorites') !== null)
         {
           localStorage.removeItem('favorites');
         }
-
         localStorage.setItem("favorites", JSON.stringify(retrieved.favorites));
 
         dispatch(success(retrieved));
@@ -132,18 +111,24 @@ export function retrieveIds(history) {
       })
       .catch(e => {
         dispatch(loading(false));
-        dispatch(error(e.message));
-
-        if( /Unauthorized/.test(e))
+        if(e.code === 401)
         {
-          /* Création du message d'avertissement */
-          sessionStorage.removeItem('flash-message-error');
-          sessionStorage.setItem('flash-message-error', JSON.stringify({message: "Authentification nécessaire avant de continuer!"}));
-          /* Suppression du token de sécurité actuel  */
-          localStorage.removeItem("token");
-          /* Redirection vers la page de connexion */
-          history.push({pathname: '../../login', state: { from: window.location.pathname}});
+          dispatch(error("Authentification nécessaire avant de poursuivre!"));
+          history.push({pathname: '../../login', state: { from : location.pathname }});
         }
+
+        if(typeof e === 'string')
+        {
+          dispatch(error(e));
+        }else{
+          if(e['hydra:description'])
+          {
+            dispatch(error(e['hydra:description']));
+          }else{
+            dispatch(error(e.message));
+          }
+        }
+        dispatch(error(null));
 
       });
   };

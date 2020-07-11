@@ -609,7 +609,7 @@ class SubscribeForm extends React.Component {
                         >
                           {Object.entries(ISOCodeJson.default).map(([index, value]) => (
                             <option value={value} key={index}>{ value }</option>
-                            ))}
+                          ))}
                         </Field>
                       </Col>
 

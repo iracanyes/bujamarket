@@ -14,7 +14,9 @@ import {
   faYoutube,
   faTwitter,
   faTripadvisor,
-  faGooglePlus
+  faGooglePlus,
+  faPaypal,
+  faPinterest,
 } from '@fortawesome/free-brands-svg-icons';
 import {
   faCheckCircle,
@@ -67,7 +69,8 @@ import {
   faBackspace,
   faEuroSign,
   faTrashAlt,
-  faMinusCircle
+  faMinusCircle,
+  faTimesCircle
 } from "@fortawesome/free-solid-svg-icons";
 
 import {
@@ -138,5 +141,8 @@ library.add([
   faEuroSign,
   faTrashAlt,
   farEdit,
-  faMinusCircle
+  faMinusCircle,
+  faPaypal,
+  faPinterest,
+  faTimesCircle
 ]);

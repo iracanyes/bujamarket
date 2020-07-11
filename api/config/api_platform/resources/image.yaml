@@ -44,6 +44,13 @@ App\Entity\Image:
             schemes: ['https']
             security: 'is_granted("ROLE_MEMBER") and is_granted("IS_AUTHENTICATED_REMEMBERED")'
             controller: App\Controller\Image\GetProfileImageAction
+        get_supplier_image:
+            method: 'GET'
+            path: '/image_supplier/{id}'
+            requirements:
+                id: '\d+'
+            schemes: ['https']
+            controller: App\Controller\Image\GetSupplierImageAction
         #put:
         #    method: 'PUT'
         #    path: '/image/{id}'

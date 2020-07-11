@@ -24,7 +24,6 @@ export function fetch(id, options = {}) {
     if (response.ok) return response;
 
     return response.json().then(json => {
-
       const error = json || response.statusText;
 
       if (!json.violations) throw error;
@@ -33,7 +32,7 @@ export function fetch(id, options = {}) {
       json.violations.map(
         violation => (errors[violation.xpropertyPath] = violation.message)
       );
-      console.log('errors', errors);
+
       throw new SubmissionError(errors);
     });
   });

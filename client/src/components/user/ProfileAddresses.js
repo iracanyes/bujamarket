@@ -19,6 +19,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getProfileAddresses } from "../../actions/address/profileAddresses";
 import { UpdateForm } from  "../address";
 import { del } from "../../actions/address/delete";
+import {toastSuccess} from "../../layout/ToastMessage";
 
 class ProfileAddresses extends  Component{
   constructor(props) {
@@ -51,6 +52,7 @@ class ProfileAddresses extends  Component{
       modal: !state.modal,
       addressToDelete: address
     }));
+
   }
 
   addNewAddress(address)
@@ -79,12 +81,20 @@ class ProfileAddresses extends  Component{
 
   delete(item)
   {
+    const { intl } = this.props;
     this.props.delete(item, this.props.history, this.props.location);
     this.setState(state => ({
       ...state,
       modal: !state.modal,
       deletedAddress: true
-    }))
+    }));
+
+    toastSuccess(intl.formatMessage({
+      id: 'app.address.deleted',
+      defaultMessage: 'Adresse supprimée!',
+      description: 'Address - Deleted'
+    }));
+
   }
 
   updateTable(retrieved)
@@ -101,10 +111,11 @@ class ProfileAddresses extends  Component{
   render(){
 
     const retrieved = this.props.retrieved && this.props.retrieved['hydra:member'];
-    console.log("user", addresses);
-    const { isOpen, modal, addressToUpdate, addressToDelete, deletedAddress } = this.state;
+
+    const { isOpen, modal, addressToUpdate, addressToDelete, deletedAddress, intl } = this.state;
 
     const addresses = this.updateTable(retrieved);
+
 
     return (
       <Fragment>

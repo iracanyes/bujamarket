@@ -19,6 +19,17 @@ class OrderDetailRepository extends ServiceEntityRepository
         parent::__construct($registry, OrderDetail::class);
     }
 
+    public function getSupplierOrders(string $email)
+    {
+        return $this->createQueryBuilder('od')
+            ->leftJoin('od.supplierProduct', 'sp')
+            ->leftJoin('sp.supplier', 's')
+            ->andWhere('s.email LIKE :email')
+            ->setParameter('email', $email)
+            ->getQuery()
+            ->getResult();
+    }
+
     // /**
     //  * @return OrderDetail[] Returns an array of OrderDetail objects
     //  */

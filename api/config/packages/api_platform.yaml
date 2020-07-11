@@ -148,7 +148,6 @@ api_platform:
 
         # The oauth scopes
         #scopes: []
-
     graphql:
         enabled: false
         graphiql:

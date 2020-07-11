@@ -5,27 +5,27 @@ import {
   mercureSubscribe as subscribe
 } from '../../utils/dataAccess';
 import { success as deleteSuccess } from './delete';
+import authHeader from "../../utils/authHeader";
 
 export function error(error) {
-  return { type: 'SUPPLIERPRODUCT_LIST_BY_PROD_ID_ERROR', error };
+  return { type: 'SUPPLIERPRODUCT_LIST_BY_SUPPLIER_ID_ERROR', error };
 }
 
 export function loading(loading) {
-  return { type: 'SUPPLIERPRODUCT_LIST_BY_PROD_ID_LOADING', loading };
+  return { type: 'SUPPLIERPRODUCT_LIST_BY_SUPPLIER_ID_LOADING', loading };
 }
 
 export function success(retrieved) {
-  return { type: 'SUPPLIERPRODUCT_LIST_BY_PROD_ID_SUCCESS', retrieved };
+  return { type: 'SUPPLIERPRODUCT_LIST_BY_SUPPLIER_ID_SUCCESS', retrieved };
 }
 
-export function retrieveBySupplierId(productId) {
+export function retrieveBySupplierId(productId,history, location) {
   return dispatch => {
     dispatch(loading(true));
     dispatch(error(''));
 
-    const userToken = JSON.parse(localStorage.getItem('token'));
-    let headers = new Headers();
-    headers.set('Authorization', 'Bearer ' + userToken.token);
+
+    const headers = authHeader(history,location);
 
     fetch('/supplier/'+productId+'/supplier_products', {method: 'GET', headers: headers})
       .then(response =>
@@ -49,7 +49,19 @@ export function retrieveBySupplierId(productId) {
       })
       .catch(e => {
         dispatch(loading(false));
-        dispatch(error(e.message));
+
+        if(typeof e == 'string')
+        {
+          dispatch(error(e));
+        }else{
+          if(e["hydra:description"])
+          {
+            dispatch(error(e["hydra:description"]));
+          }else{
+            dispatch(error(e.message));
+          }
+        }
+        dispatch(error(null));
       });
   };
 }
@@ -58,7 +70,7 @@ export function reset(eventSource) {
   return dispatch => {
     if (eventSource) eventSource.close();
 
-    dispatch({ type: 'SUPPLIERPRODUCT_LIST_BY_PROD_ID_RESET' });
+    dispatch({ type: 'SUPPLIERPRODUCT_LIST_BY_SUPPLIER_ID_RESET' });
     dispatch(deleteSuccess(null));
   };
 }
@@ -74,16 +86,16 @@ export function mercureSubscribe(hubURL, topics) {
 }
 
 export function mercureOpen(eventSource) {
-  return { type: 'SUPPLIERPRODUCT_LIST_BY_PROD_ID_MERCURE_OPEN', eventSource };
+  return { type: 'SUPPLIERPRODUCT_LIST_BY_SUPPLIER_ID_MERCURE_OPEN', eventSource };
 }
 
 export function mercureMessage(retrieved) {
   return dispatch => {
     if (1 === Object.keys(retrieved).length) {
-      dispatch({ type: 'SUPPLIERPRODUCT_LIST_BY_PROD_ID_MERCURE_DELETED', retrieved });
+      dispatch({ type: 'SUPPLIERPRODUCT_LIST_BY_SUPPLIER_ID_MERCURE_DELETED', retrieved });
       return;
     }
 
-    dispatch({ type: 'SUPPLIERPRODUCT_LIST_BY_PROD_ID_MERCURE_MESSAGE', retrieved });
+    dispatch({ type: 'SUPPLIERPRODUCT_LIST_BY_SUPPLIER_ID_MERCURE_MESSAGE', retrieved });
   };
 }

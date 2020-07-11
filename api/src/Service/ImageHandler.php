@@ -5,7 +5,9 @@ namespace App\Service;
 
 
 use App\Entity\Image;
+use App\Entity\SupplierProduct;
 use App\Entity\User;
+use App\Exception\SupplierProduct\SupplierProductImagesDeleteException;
 use App\Exception\User\MemberNotFoundException;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
@@ -20,6 +22,8 @@ use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use App\Exception\Image\UploadImageException;
+use App\Exception\Image\ImagePersistException;
 
 class ImageHandler
 {
@@ -130,10 +134,61 @@ class ImageHandler
         return $user;
     }
 
+    public function uploadCategoryImage(Image $image,string $filename = "", UploadedFile $imageFile)
+    {
+
+        if($imageFile && !empty($filename))
+        {
+            $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $filename);
+            $newFilename = $safeFilename.'-'.uniqid("_", true).'.'.$imageFile->guessExtension();
+
+            try{
+                $image->setUrl($newFilename);
+                $image->setMimeType($imageFile->getMimeType());
+                $imageFile->move(getenv("UPLOAD_CATEGORY_IMAGE_DIRECTORY"), $newFilename);
+            }catch (FileException $exception){
+                return new UploadImageException(sprintf("Code: %d.\nMessage: %s", $exception->getCode(), $exception->getMessage()));
+            }
+
+
+            try{
+                $this->em->persist($image);
+            }catch (PDOException $exception){
+                $this->em->rollback();
+                throw new ImagePersistException(sprintf("Category image can't be persisted!"));
+            }
+
+
+        }
+    }
+
+    /**
+     * Delete Profile image
+     *
+     * @param User $user
+     */
     public function deleteProfileImage(User $user)
     {
         $this->uploadHandler->deleteProfileImage($user);
         $user->setImage(null);
+    }
+
+    public function deleteSupplierProductImages(SupplierProduct $supplierProduct)
+    {
+        try{
+            foreach($supplierProduct->getImages() as $image)
+            {
+                $this->uploadHandler->deleteSupplierProductImage($image);
+                $this->em->remove($image);
+            }
+
+            $this->em->flush();
+        }catch (\Exception $exception){
+            $this->logger->error("Error while deleting supplier product images'", ['context' => $exception] );
+            throw new SupplierProductImagesDeleteException(sprintf("Error while deleting supplier product images'"));
+        }
+
+
     }
 
 
@@ -156,8 +211,6 @@ class ImageHandler
         $user = $this->em->getRepository(User::class)
             ->findOneBy(['email' => $connectedUser->getUsername()]);
 
-        dump($connectedUser);
-        dump($user);
 
         if(!$user instanceof User)
             throw new MemberNotFoundException(sprintf("User '%s' not found in the DB ", $connectedUser->getUsername()));
@@ -165,6 +218,45 @@ class ImageHandler
         $image = $user->getImage();
 
         $response =  new StreamedResponse(function () use ($image,$user, $uploadHandler) {
+            $outputStream = fopen('php://output', 'wb');
+            $fileStream = $uploadHandler->readStreamProfileImage($user, $image->getUrl());
+
+            stream_copy_to_stream($fileStream, $outputStream);
+        });
+
+        $response->headers->set('Content-Type', $image->getMimeType());
+
+        $disposition = HeaderUtils::makeDisposition(HeaderUtils::DISPOSITION_ATTACHMENT, $image->getUrl());
+
+        dump($disposition);
+
+        $response->headers->set('Content-Disposition', $disposition);
+
+        dump($response);
+
+        return $response;
+
+    }
+
+    public function getSupplierImage(): StreamedResponse
+    {
+        $id = $this->request->attributes->get('id');
+        $uploadHandler = $this->uploadHandler;
+        $user = $this->security->getUser();
+
+        try{
+            $image = $this->em->getRepository(Image::class)->find($id);
+
+
+        }catch (\Exception $exception){
+            $this->logger->error(
+                sprintf("Error while retrieving Image id=%d", $id),
+                ['context' => $exception]
+            );
+
+        }
+
+        $response =  new StreamedResponse(function () use ($image, $user, $uploadHandler) {
             $outputStream = fopen('php://output', 'wb');
             $fileStream = $this->uploadHandler->readStreamProfileImage($user, $image->getUrl());
 

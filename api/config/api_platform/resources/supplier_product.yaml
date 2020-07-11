@@ -14,12 +14,47 @@ App\Entity\SupplierProduct:
             #options:
             #    my_option: 'my_option_value'
             status: 200 # customize the HTTP status code to send
+        supplier_products:
+            method: 'GET'
+            path: '/my_products'
+            schemes: ['https']
+            security: "is_granted('ROLE_SUPPLIER') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
+            controller: App\Controller\SupplierProduct\GetMyProductsAction            
         post:
             method: 'POST'
             path: '/supplier_product/create'
-            access_control: "is_granted('ROLE_SUPPLIER') and is_granted('IS_AUTHENTICATED_FULLY')"
+            defaults:
+                _api_receive: false
+            security: "is_granted('ROLE_SUPPLIER') and is_granted('IS_AUTHENTICATED_FULLY')"            
             schemes: ['https']
             controller: App\Controller\SupplierProduct\CreateSupplierProductAction
+            deserialize: false
+            validation_groups: ['Default']
+            openapi_context:
+                requestBody:
+                    content:
+                        'multipart/form-data':
+                            schema:
+                                type: "object"
+                                properties:
+                                    product:
+                                        images:
+                                            file:
+                                                type: string
+                                                format: binary
+                                        category:
+                                            image:                                                   
+                                                file:
+                                                    type: string
+                                                    format: binary
+        post_update:
+            method: 'POST'
+            path: '/supplier_product/update/{id}'
+            defaults:
+                id: '\d+'
+            security: "is_granted('ROLE_SUPPLIER') and is_granted('IS_AUTHENTICATED_FULLY')"
+            schemes: ['https']
+            controller: App\Controller\SupplierProduct\UpdateSupplierProductAction
             deserialize: false
             validation_groups: ['Default']
             openapi_context:
@@ -39,7 +74,6 @@ App\Entity\SupplierProduct:
                                                 file:
                                                     type: string
                                                     format: binary
-                                                
     itemOperations:
         get:
             method: 'GET'
@@ -49,25 +83,28 @@ App\Entity\SupplierProduct:
                 _format: 'json\jsonld\html'
             defaults:
                 _format: 'json'
+                _api_receive: false
             schemes: ['https']
             # host: 'localhost'
             #options:
             #    my_option: 'my_option_value'
-            status: 200 # customize the HTTP status code to send        
+            status: 200 # customize the HTTP status code to send
+            controller: App\Controller\SupplierProduct\GetSupplierProductAction
         put:
             method: 'PUT'
             path: '/supplier_product/{id}'
             requirements:
                 id: '\d+'
-            access_control: 'is_granted("ROLE_SUPPLIER")  and is_granted("IS_AUTHENTICATED_FULLY")'
+            security: 'is_granted("ROLE_SUPPLIER")  and is_granted("IS_AUTHENTICATED_FULLY")'
             schemes: ['https']
         delete:
             method: 'DELETE'
             path: '/supplier_product/{id}'
             requirements:
                 id: '\d+'
-            access_control: 'is_granted("ROLE_SUPPLIER")  and is_granted("IS_AUTHENTICATED_FULLY")'
+            security: 'is_granted("ROLE_SUPPLIER")  and is_granted("IS_AUTHENTICATED_FULLY")'
             schemes: ['https']
+            controller: App\Controller\SupplierProduct\DeleteAction
     subresourceOperations:
         supplier_get_subresource:
             method: 'GET'

@@ -32,7 +32,7 @@ export class ButtonAddToFavorite2 extends React.Component
 
   componentDidMount() {
     if(localStorage.getItem('token') !== null)
-      this.props.list(this.props.history);
+      this.props.list(this.props.history, this.props.location);
   }
 
   componentWillUnmount() {
@@ -50,7 +50,7 @@ export class ButtonAddToFavorite2 extends React.Component
   deleteFavorite()
   {
     const { tooltipOpen } = this.state;
-    this.props.delete(this.props.supplierProductId, this.props.history);
+    this.props.delete(this.props.supplierProductId, this.props.history, this.props.location);
     this.setState({tooltipOpen: tooltipOpen, added: false});
   }
 
@@ -59,7 +59,7 @@ export class ButtonAddToFavorite2 extends React.Component
     if(localStorage.getItem('token') !== null)
     {
       const { tooltipOpen } = this.state;
-      this.props.create(this.props.supplierProductId, this.props.history);
+      this.props.create(this.props.supplierProductId, this.props.history, this.props.location);
       this.setState({tooltipOpen: tooltipOpen, added: true});
     }else{
       this.props.history.push({path:"../../login", state: { from: window.location.pathname }});
@@ -121,10 +121,10 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  create: (id, history) => dispatch(create(id, history)),
-  delete: (id, history) => dispatch(del(id, history)),
+  create: (id, history, location) => dispatch(create(id, history, location)),
+  delete: (id, history, location) => dispatch(del(id, history, location)),
   resetCreate: eventSourceCreate => dispatch(reset(eventSourceCreate)),
-  list: history => dispatch(retrieveIds( history)),
+  list: (history, location) => dispatch(retrieveIds( history, location )),
   resetList: eventSourceList => dispatch(reset(eventSourceList))
 });
 

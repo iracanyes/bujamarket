@@ -19,7 +19,66 @@ class SupplierProductRepository extends ServiceEntityRepository
         parent::__construct($registry, SupplierProduct::class);
     }
 
+    public function myFind(int $id)
+    {
+        return $this->createQueryBuilder('sp')
+            ->leftJoin('sp.product', 'p')
+            ->addSelect('p')
+            ->leftJoin('sp.images', 'i')
+            ->addSelect('i')
+            ->leftJoin('sp.supplier', 's')
+            ->addSelect('s')
+            ->andWhere('sp.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 
+    public function getMyProducts(int $id)
+    {
+        return $this->createQueryBuilder('sp')
+            ->leftJoin('sp.product', 'p')
+            ->addSelect('p')
+            ->leftJoin('sp.images', 'i','sp.id = i.supplier_product_id')
+            ->addSelect('i')
+            ->leftJoin('sp.comments', 'c','sp = c.supplierProduct')
+            ->addSelect('c')
+            ->leftJoin('sp.favorites','f','sp = f.supplierProduct')
+            ->addSelect('f')
+            ->leftJoin('sp.orderDetails', 'od','sp = od.supplierProduct')
+            ->addSelect('od')
+            ->leftJoin('sp.supplier', 's')
+            ->addSelect('s')
+            ->groupBy('sp.id')
+            ->andWhere('s.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function getOneSupplierProduct(int $id, string $email)
+    {
+        return $this->createQueryBuilder('sp')
+            ->leftJoin('sp.product', 'p')
+            ->addSelect('p')
+            ->leftJoin('sp.images', 'i','sp.id = i.supplier_product_id')
+            ->addSelect('i')
+            ->leftJoin('sp.comments', 'c','sp = c.supplierProduct')
+            ->addSelect('c')
+            ->leftJoin('sp.favorites','f','sp = f.supplierProduct')
+            ->addSelect('f')
+            ->leftJoin('sp.orderDetails', 'od','sp = od.supplierProduct')
+            ->addSelect('od')
+            ->leftJoin('sp.supplier', 's')
+            ->addSelect('s')
+            ->groupBy('sp.id')
+            ->andWhere('s.email = :email')
+            ->andWhere('sp.id = :id')
+            ->setParameter('email', $email)
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 
     // /**
     //  * @return SupplierProduct[] Returns an array of SupplierProduct objects
