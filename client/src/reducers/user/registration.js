@@ -31,14 +31,14 @@ export function loading(state = {}, action) {
   }
 }
 
-export function register(state = {}, action) {
+export function success(state = {}, action) {
   switch (action.type) {
     case 'USER_REGISTER_SUCCESS':
-        return {};
+        return action.user;
 
     default:
       return state;
   }
 }
 
-export default combineReducers({ error, loading, request, register });
+export default combineReducers({ error, loading, request, success });

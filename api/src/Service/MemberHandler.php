@@ -8,8 +8,11 @@ use App\Entity\Customer;
 use App\Entity\Supplier;
 use App\Entity\User;
 use App\Entity\UserTemp;
+use App\Exception\User\DeleteUserException;
 use App\Exception\User\MemberNotFoundException;
+use App\Exception\User\UnsubscribeException;
 use App\Exception\User\UpdatePasswordException;
+use App\Exception\User\UserNotAllowedToTakeSuchAction;
 use Doctrine\DBAL\Driver\PDOException;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityNotFoundException;
@@ -24,7 +27,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\SerializerInterface;
-use function MongoDB\BSON\fromJSON;
+use App\Exception\User\CreateMemberException;
 
 class MemberHandler
 {
@@ -89,7 +92,7 @@ class MemberHandler
     }
 
     /**
-     * Create a new member
+     * Create a temporary member
      * @return User
      * @throws \Exception
      */
@@ -119,9 +122,29 @@ class MemberHandler
         // Création du token de sécurité
         $user->setToken(bin2hex(random_bytes(64)));
 
+        try{
+            $member = $this->em->getRepository(User::class)
+                ->findOneBy(['email'  => $data->email]);
+
+            if($member){
+                throw new CreateMemberException("Username already used by an another user!");
+            }
+
+        }catch (\Exception $e){
+            $this->logger->error("Error while persisting the new member", ['context' => $e]);
+            throw new CreateMemberException("Username already used by an another user!");
+        }
+
         /* Persistence de l'entité en DB */
-        $this->em->persist($user);
-        $this->em->flush();
+        try{
+            $this->em->persist($user);
+            $this->em->flush();
+        }catch(\Exception $e){
+            dump($e);
+            $this->logger->error("Error while persisting the new member", ['context' => $e]);
+            throw new CreateMemberException("Error while persisting the new member!");
+        }
+
 
 
 
@@ -130,6 +153,10 @@ class MemberHandler
         return $user;
     }
 
+    /**
+     * Get a temporary member
+     * @return UserTemp|null
+     */
     public function getUserTemp(): ?UserTemp
     {
         $data = $this->request->getContent();
@@ -180,6 +207,10 @@ class MemberHandler
         return $user;
     }
 
+    /**
+     * Unlock a user's account
+     * @return User|null
+     */
     public function unlockAccount(): ?User
     {
         $data = $this->request->request->all();
@@ -207,6 +238,11 @@ class MemberHandler
 
     }
 
+    /**
+     * Update a user's password
+     * @return User|null
+     * @throws UpdatePasswordException
+     */
     public function updatePassword(): ?User
     {
         $data = $this->request->request->all();
@@ -238,6 +274,7 @@ class MemberHandler
     }
 
     /**
+     * Get the user's profile
      * @return JsonResponse
      * @throws MemberNotFoundException
      */
@@ -291,6 +328,11 @@ class MemberHandler
 
     }
 
+    /**
+     * Update a user's profile
+     * @return Supplier|object|null
+     * @throws \Exception
+     */
     public function updateProfile()
     {
         $connectedUser = $this->security->getUser();
@@ -315,6 +357,12 @@ class MemberHandler
 
     }
 
+    /**
+     * Update user's entity informations
+     * @param UserInterface $connectedUser
+     * @param $data
+     * @return Supplier|object|null
+     */
     public function updateUserInfo(UserInterface $connectedUser, $data)
     {
         try{
@@ -364,6 +412,10 @@ class MemberHandler
         return $user;
     }
 
+    /**
+     * Set roles for a new member
+     * @param User $user
+     */
     public function setUserRoles(User $user): void
     {
 
@@ -384,7 +436,7 @@ class MemberHandler
     }
 
     /**
-     *
+     * Create a new member
      * @return User
      * @throws \Exception
      */
@@ -470,6 +522,11 @@ class MemberHandler
         return $user;
     }
 
+    /**
+     * Set customer's data
+     * @param Customer $user
+     * @throws \Exception
+     */
     public function setCustomerData(Customer $user): void
     {
         /* Création d'une clé client */
@@ -477,6 +534,11 @@ class MemberHandler
         $user->setSigninConfirmed(true);
     }
 
+    /**
+     * Get supplier data
+     * @param Supplier $user
+     * @throws \Exception
+     */
     public function setSupplierData(Supplier $user):void
     {
         /* Données fournisseurs */
@@ -504,6 +566,10 @@ class MemberHandler
         $user->setSupplierKey(bin2hex(random_bytes(64)));
     }
 
+    /**
+     * Get user
+     * @return object|null
+     */
     public function getUser()
     {
         try{
@@ -516,6 +582,12 @@ class MemberHandler
         return $user;
     }
 
+    /**
+     * Get a customer
+     * @param null $data
+     * @return Customer|null
+     * @throws \Exception
+     */
     public function getCustomer($data = null): ?Customer
     {
         /* Pr test webhook
@@ -558,6 +630,128 @@ class MemberHandler
         }
 
         return $customer;
+    }
+
+    /**
+     * Authorize a supplier to publish
+     * @return object|null
+     * @throws UserNotAllowedToTakeSuchAction
+     */
+    public function authorizePublishing()
+    {
+        $admin = $this->security->getUser();
+
+        if(!$admin instanceof Admin)
+        {
+            throw new UserNotAllowedToTakeSuchAction(sprintf("User not allowed to take such action"));
+        }
+
+        $idSupplier = $this->request->attributes->get('id');
+
+        try {
+            $supplier = $this->em->getRepository(Supplier::class)
+                ->find((int) $idSupplier);
+
+            $supplier->setRoles(array_push($supplier->getRoles(), 'ROLE_PUBLISHER'));
+        }catch (\Exception $exception){
+            $this->logger->error("Error while authorizing a supplier to publish");
+        }
+
+        return $supplier;
+    }
+
+    /**
+     * Unauthorize a supplier to publish
+     *
+     * @return object|null
+     * @throws MemberNotFoundException
+     * @throws UserNotAllowedToTakeSuchAction
+     */
+    public function unauthorizePublishing()
+    {
+        $admin = $this->security->getUser();
+
+        if(!$admin instanceof Admin)
+        {
+            throw new UserNotAllowedToTakeSuchAction(sprintf("User not allowed to take such action"));
+        }
+
+        $idSupplier = $this->request->attributes->get('id');
+
+        try {
+            $supplier = $this->em->getRepository(Supplier::class)
+                ->find((int) $idSupplier);
+
+            $roles = $supplier->getRoles();
+            $supplier->setRoles(array_slice($roles, array_search('ROLE_PUBLISHER'), 1));
+        }catch (\Exception $exception){
+
+            $this->logger->error("Error while unauthorizing a supplier to publish");
+            throw new MemberNotFoundException("Error while unauthorizing a supplier to publish");
+        }
+
+        return $supplier;
+    }
+
+
+    public function unsubscribe()
+    {
+        $connectedUser = $this->security->getUser();
+        $data = json_decode($this->request->getContent(), true);
+
+        if(!$connectedUser instanceof UserInterface)
+        {
+            throw new MemberNotFoundException("Error while retrieving the authenticated user!");
+        }
+
+        try{
+            $user = $this->em->getRepository(User::class)
+                ->findOneBy(['email' => $connectedUser->getUsername()]);
+
+            if(!$user instanceof User || ($user->getEmail() !== $data['username'])){
+                throw new UnsubscribeException("Unidentified user!");
+            }
+
+            $user->setRoles([]);
+            $user->setSigninConfirmed(false);
+
+            $this->em->persist($user);
+            $this->em->flush();
+        }catch (\Exception $exception){
+            $this->logger->error("Error while persisting the user!", ['context' => $exception]);
+            throw new UnsubscribeException("Error while persisting the user!");
+
+        }
+
+        return $user;
+
+    }
+
+    public function deleteUser()
+    {
+        $admin = $this->security->getUser();
+        $data = $this->request->request->all();
+
+        if(!$admin instanceof UserInterface)
+        {
+            throw new MemberNotFoundException("Error while retrieving the authenticated user!");
+        }
+
+
+        try{
+            $user = $this->em->getRepository(User::class)
+                ->findOneBy(['id' => $data['id'], 'email' => $data['username']]);
+
+            $this->em->remove($user);
+            $this->em->flush();
+        }catch(\Exception $exception){
+            $this->logger->error("Error while removing a user!", ['context' => $exception]);
+            throw new DeleteUserException("Error while removing a user!");
+        }
+
+        return [
+            "message" => sprintf('User %s is deleted', $data['email'])
+        ];
     }
 
 

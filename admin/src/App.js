@@ -1,15 +1,16 @@
 import React from 'react';
-import { HydraAdmin, ResourceGuesser  } from '@api-platform/admin';
-import parseHydraDocumentation from '@api-platform/api-doc-parser/lib/hydra/parseHydraDocumentation';
-import { dataProvider as baseDataProvider, fetchHydra as baseFetchHydra  } from '@api-platform/admin';
-import { Redirect } from 'react-router-dom';
-import authProvider from "./authProvider";
+import { HydraAdmin, ResourceGuesser, hydraDataProvider as baseDataProvider, fetchHydra as baseFetchHydra  } from '@api-platform/admin';
+import { parseHydraDocumentation } from "@api-platform/api-doc-parser";
+import { Redirect, Route } from 'react-router-dom';
+import authProvider from "./utils/authProvider";
 import AddressesList from "./component/address/AddressesList";
 import { messages, i18nProvider } from "./config/i18n";
 import Dashboard  from "./component/page/dashboard/Dashboard";
 import history from "./utils/history";
-import isIndex from "lodash-es/_isIndex";
-//import AdminDashboardLayout from "./component/page/layout/AdminDashboardLayout";
+/* Styles */
+import { ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.min.css';
+import './assets/scss/index.scss';
 
 
 import {
@@ -38,74 +39,80 @@ import {
   AccountBoxTwoTone,
   MessageTwoTone, MonetizationOnTwoTone, AllInboxTwoTone, StorageTwoTone, QueueTwoTone,
 } from "@material-ui/icons";
-
-
+import {
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Collapse
+} from "@material-ui/core";
+import MainMenuLeft from "./component/layout/MainMenuLeft";
+import * as fetchUtils from "./utils/fetchUtils";
+import LoginPage from "./component/page/LoginPage";
 
 const entrypoint = process.env.REACT_APP_API_ENTRYPOINT;
-const fetchHeaders = {'Authorization': `Bearer ${window.localStorage.getItem('token')}`, 'Content-Type': 'application/json' };
+
+const fetchHeaders = {'Authorization': `Bearer ${localStorage.getItem('token')}`, 'Content-Type': 'application/ld+json' };
+
 const fetchHydra = (url, options = {}) => {
-  options.headers = new Headers(fetchHeaders);
-  return baseFetchHydra(url, options)
-          .then(response => {
-            /* Corriger une erreur de définitions dans @api-platform/admin/src/hydra/dataProvider */
-            response.json['hydra:totalItems'] = response.json['hydra:member'] ? response.json['hydra:member'].length : 0;
+  return baseFetchHydra(url, {
+    ...options,
+    headers: new Headers(fetchHeaders),
+  })
+  .then(response => {
+    // Corriger une erreur de définitions dans @api-platform/admin/src/hydra/dataProvider
+    response.json['hydra:totalItems'] = response.json['hydra:member'] ? response.json['hydra:member'].length : 0;
 
-            return response;
-          })
+    return response;
+  })
+  .catch(e => {
+    console.log('baseFetchHydra -catch', e);
+  })
+
+
 };
+
+
 const apiDocumentationParser = entrypoint => parseHydraDocumentation(entrypoint, { headers: new Headers(fetchHeaders) })
-  .then(
-    ({ api }) => ({api}),
-    (result) => {
-
-      switch (result.status) {
-        case 401:
-          console.log("Error 401 - result",result);
-          //return Promise.resolve({redirectTo: 'login'});
-
-          return Promise.resolve({
-            api: result.api,
-            customRoutes: [{
-              props: {
-                path: '/',
-                render: () => (
-                  <Redirect to={{
-                      pathname: `../../login`,
-                      state: { from: window.location }
-                    }}
-                  />
-                ),
-              },
-            }],
-          });
-
-        case 200:
-
-          return Promise.resolve(result);
-
-        default:
-
-          return Promise.reject(result);
-      }
-    },
-  );
+    .then(
+        ({ api }) => ({ api }),
+        (result) => {
+          console.log("apiDocumentationParser - result", result);
+          switch (result.status) {
+            case 401:
+                // Prevent infinite loop if the token is expired
+                localStorage.removeItem("token");
+                return Promise.resolve({
+                  ...result,
+                  customRoutes: [
+                    <Route path="/" render={() => {
+                      return window.localStorage.getItem("token") !== null  && window.location.pathname !== '/' ? window.location.reload() : <Redirect to="login" />
+                    }} />
+                  ]
+                });
+              default:
+                  return Promise.reject(result);
+          }
+        },
+    );
 
 
 const dataProvider = baseDataProvider(entrypoint, fetchHydra, apiDocumentationParser);
 
 export default () => (
   <HydraAdmin
-    apiDocumentationParser={ apiDocumentationParser }
     entrypoint={process.env.REACT_APP_API_ENTRYPOINT}
     authProvider={authProvider}
     dataProvider={dataProvider}
+    loginPage={LoginPage}
     dashboard={Dashboard}
-    //title={"Buja Market - Admin"}
-    locale={'fr'}
-    i18nProvider={i18nProvider}
-    //appLayout={AdminDashboardLayout}
+    title={"Buja Market - Admin"}
+    //i18nProvider={i18nProvider}
+    menu={MainMenuLeft}
+    history={history}
   >
 
+    {/*
     <ResourceGuesser name={"addresses"} icon={LocationOnTwoTone} options={{label: 'Adresses'}} list={AddressesList}/>
     <ResourceGuesser name={"bank_accounts"} icon={PaymentTwoTone} options={{label: 'Comptes bancaires'}} />
     <ResourceGuesser name={"bills"} icon={ReceiptTwoTone} options={{label: 'Factures'}} />
@@ -134,7 +141,7 @@ export default () => (
     <ResourceGuesser name={"suppliers"} icon={AccountBoxTwoTone} options={{label: 'Fournisseurs'}} />
     <ResourceGuesser name={"supplier_products"} icon={QueueTwoTone} options={{label: 'Fournisseurs - produits'}} />
     <ResourceGuesser name={"users"} icon={PeopleAltTwoTone} options={{label: 'Utilisateurs'}} />
-
+    */}
 
 
   </HydraAdmin>

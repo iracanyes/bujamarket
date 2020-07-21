@@ -41,7 +41,11 @@ class SupplierProductFixtures extends Fixture implements DependentFixtureInterfa
         /* Relations */
         $supplierProduct->setProduct($this->getReference(ProductFixtures::PRODUCT_REFERENCE));
         $supplierProduct->setSupplier($this->getReference(SupplierFixtures::SUPPLIER_REFERENCE));
-        $supplierProduct->addImage($this->getReference(ImageFixtures::IMAGE_REFERENCE));
+
+        for($i=0; $i < $this->faker->numberBetween(3,10); $i++ ){
+            $supplierProduct->addImage($this->getReference(ImageFixtures::IMAGE_REFERENCE));
+        }
+
 
 
         $manager->persist($supplierProduct);

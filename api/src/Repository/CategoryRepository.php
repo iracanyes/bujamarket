@@ -28,6 +28,16 @@ class CategoryRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function getNamesWithImage()
+    {
+        return $this->createQueryBuilder('c')
+            ->select('c.id, c.name')
+            ->leftJoin('c.image', 'i')
+            ->addSelect('i.url')
+            ->getQuery()
+            ->getResult();
+    }
+
     // /**
     //  * @return Category[] Returns an array of Category objects
     //  */

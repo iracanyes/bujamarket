@@ -15,7 +15,13 @@ shared
 *.*.save
 *.save
 # Fichiers uploadés
-api/public/assets/uploads/*
+api/public/assets/uploads/img/category/*
+api/public/assets/uploads/img/supplier_product/*
+api/private/uploads/img/profil/admin/*
+api/private/uploads/img/profil/customer/*
+api/private/uploads/img/profil/supplier/*
+# Documentation
+/docs
 ###< Custom ###
 
 ###> Security ###

@@ -33,12 +33,9 @@ class SidebarLeftMenu extends Component
   }
 
   componentDidMount() {
+
     if(this.props.retrievedImage === null)
       this.props.getProfileImage(this.props.history, this.props.location);
-
-
-
-    console.log('loggingIn', this.props.loggingIn);
 
     this.props.loggingIn && this.setState({loggingIn: true});
   }
@@ -53,7 +50,6 @@ class SidebarLeftMenu extends Component
     const { retrievedImage, loading, intl } = this.props;
 
     const user = localStorage.getItem('token') !== null ? JSON.parse(atob(localStorage.getItem('token').split(".")[1])) : null;
-    console.log("sidebarleft - user",user);
 
     return <Fragment>
       { user !== null  && (
@@ -105,9 +101,22 @@ class SidebarLeftMenu extends Component
               </DropdownItem>
               <DropdownItem divider />
               <DropdownItem>
+                <NavLink tag={RRDNavLink} to={{pathname: "/unsubscribe", state: { from : this.props.location.pathname}}}>
+                  <FontAwesomeIcon icon={"user-alt-slash"}  className={"mr-2"}/>
+                  <FormattedMessage
+                    id={"app.unsubscribe"}
+                    defaultMessage={"Désinscription"}
+                    description={'Button - Unsubscribe'}
+                  />
+                </NavLink>
+              </DropdownItem>
+              <DropdownItem>
                 <NavLink tag={RRDNavLink} to={{pathname: "/logout"}}>
                   <FontAwesomeIcon icon={"sign-out-alt"}  className={"mr-2"}/>
-                  <FormattedMessage id={"app.button.logout"} defaultMessage={"Dé-connexion"} />
+                  <FormattedMessage
+                    id={"app.button.logout"}
+                    defaultMessage={"Dé-connexion"}
+                  />
                 </NavLink>
               </DropdownItem>
             </DropdownMenu>

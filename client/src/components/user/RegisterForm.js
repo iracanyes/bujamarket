@@ -16,7 +16,7 @@ import {toastError} from "../../layout/ToastMessage";
 class RegisterForm extends React.Component {
   static propTypes = {
     handleSubmit: PropTypes.func.isRequired,
-    errorRegister: PropTypes.string
+    error: PropTypes.string
   };
 
   constructor(props) {
@@ -137,10 +137,10 @@ class RegisterForm extends React.Component {
   };
 
   render() {
-    const { intl, errorRegister  } = this.props;
+    const { intl, error, loading  } = this.props;
     const { user } = this.state;
 
-    errorRegister && typeof errorRegister === "string" && toastError(errorRegister);
+    error && typeof error === "string" && toastError(error);
 
     return (
       <Fragment>
@@ -151,12 +151,7 @@ class RegisterForm extends React.Component {
                                description="Page User - Register title"
             />
           </h1>
-          {this.props.error && (
-            <div className="alert alert-danger" role="alert">
-              <span className="fa fa-exclamation-triangle" aria-hidden="true" />{' '}
-              {this.props.error}
-            </div>
-          )}
+          {}
           <form
             id="register-form"
             name="register"
@@ -316,9 +311,9 @@ class RegisterForm extends React.Component {
 }
 
 const mapStateToProps = state => {
-  const { registering, error } = state.user.registration;
+  const { registering, error, loading } = state.user.registration;
 
-  return { registering, errorRegister: error };
+  return { registering, error, loading };
 };
 
 const mapDispatchToProps = dispatch => ({

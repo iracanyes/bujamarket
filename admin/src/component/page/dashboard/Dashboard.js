@@ -33,64 +33,6 @@ import NewSuppliers from "./NewSuppliers";
 import {Title} from 'react-admin';
 
 
-
-const drawerWidth = 240;
-
-const styles = theme => ({
-  root: {
-    display: 'flex',
-  },
-  toolbar: {
-    paddingRight: "24px", // keep right padding when drawer closed
-  },
-  toolbarIcon: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    padding: '0 8px',
-    ...theme.mixins.toolbar,
-  },
-  appBar: {
-    zIndex: theme.zIndex.drawer + 1,
-    transition: theme.transitions.create(['width', 'margin'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-  },
-  appBarShift: {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(['width', 'margin'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  },
-  menuButton: {
-    marginRight: "36px",
-  },
-  menuButtonHidden: {
-    display: 'none',
-  },
-  content: {
-    flexGrow: 1,
-    //height: '300vh',
-    overflow: 'auto',
-  },
-  container: {
-    paddingTop: theme.spacing(2),
-    paddingBottom: theme.spacing(4),
-  },
-  paper: {
-    padding: theme.spacing(2),
-    display: 'flex',
-    overflow: 'auto',
-    flexDirection: 'column',
-  },
-  fixedHeight: {
-    height: "240px",
-  },
-});
-
 class Dashboard extends Component
 {
   constructor(props)
@@ -120,18 +62,16 @@ class Dashboard extends Component
 
   render() {
 
-    const { classes } = this.props;
+    //const { classes } = this.props;
 
     const user = this.getAuthData();
 
-    const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
-
     return (
-      <div className={classes.root}>
+      <div id={'dashboard'}>
         <CssBaseline />
-        <main className={classes.content}>
+        <main className={'dashboard-content'}>
           <Title title="Buja Market - Admin | Accueil " />
-          <div className={classes.container}>
+          <div className={'container'}>
             <Grid container spacing={3}>
               <Grid item xs={12}>
                 <Paper >
@@ -143,25 +83,25 @@ class Dashboard extends Component
               </Grid>
               {/* Chart */}
               <Grid item xs={12} md={8} lg={9}>
-                <Paper className={fixedHeightPaper}>
+                <Paper className={'fixed-height-paper'}>
                   <Chart />
                 </Paper>
               </Grid>
               {/* Recent Deposits */}
               <Grid item xs={12} md={4} lg={3}>
-                <Paper className={fixedHeightPaper}>
+                <Paper className={'fixed-height-paper'}>
                   <Deposits />
                 </Paper>
               </Grid>
               {/* Recent Orders */}
               <Grid item xs={12}>
-                <Paper className={classes.paper}>
+                <Paper className={'paper'}>
                   <Orders />
                 </Paper>
               </Grid>
               {/* New Suppliers */}
               <Grid item xs={12}>
-                <Paper className={classes.paper}>
+                <Paper className={'paper'}>
                   <NewSuppliers />
                 </Paper>
               </Grid>
@@ -174,4 +114,4 @@ class Dashboard extends Component
   }
 }
 
-export default withRouter(withStyles(styles, {withTheme: true})(Dashboard));
+export default withRouter(Dashboard);

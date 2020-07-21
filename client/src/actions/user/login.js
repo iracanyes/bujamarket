@@ -73,17 +73,13 @@ export function login(email, password, history, locationState) {
           // Redirection vers la page précédent l'identification avec les données
           history.push({ pathname: locationState.state.from, state: { params: locationState.state.params } });
         }else{
-
           if(locationState.state.from && !/login/.test(locationState.state.from) )
           {
-
             // Redirection page précédente sans données
             history.push({ pathname: locationState.state.from });
           }else{
-
             // Redirection page d'accueil
             toast(<ToastWelcome message={"Bienvenue " + user.name} />);
-
             history.push('/');
           }
 
@@ -94,34 +90,28 @@ export function login(email, password, history, locationState) {
       .catch(e => {
         dispatch(loading(false));
         dispatch(logout(null));
-        /* Déconnexion et forcer le rechargement de la page si erreur 401 */
-        console.log("Error response",e.message);
 
+        switch (true) {
+          case e.code === 500:
+            dispatch(error("Tentative de connexion avec l'adresse e-mail suivant est impossible! Contactez l'administrateur de la plateforme." ));
+          case /Bad Credentials/.test(e.message.message):
+            dispatch(error("Connexion non-autorisé! Identifiant et/ou mot de passe incorrect."));
+            break;
+          case /Account locked/.test(e.message.message):
+            dispatch(error("Connexion non-autorisé! Ce compte a été bloqué, un e-mail vous a été envoyé pour débloquer le compte."));
+            break;
+          case /Account banned/.test(e.message.message):
+            dispatch(error("Connexion non-autorisé! Ce compte a été banni de la plateforme."))
+            break;
+          case typeof e.message === "string":
+            dispatch(error(e.message));
+            break;
+          case typeof e === "string":
+            dispatch(error(e));
+            break;
+        }
         /* Redirection vers la page de connexion + message d'erreur */
-        if(/Bad Credentials/.test(e.message.message))
-        {
-          toast(
-            <ToastError message={"Connexion non-autorisé! Identifiant et/ou mot de passe incorrect."} />
-          );
-        }
-
-        if(/Account locked/.test(e.message.message))
-        {
-          toast(
-            <ToastError message={"Connexion non-autorisé! Ce compte a été bloqué, un e-mail vous a été envoyé pour débloquer le compte."} />
-          );
-        }
-
-        if(/Account banned/.test(e.message.message))
-        {
-          toast(
-            <ToastError message={"Connexion non-autorisé! Ce compte a été banni de la plateforme."} />
-          );
-        }
-
         history.push({pathname: 'login', state: locationState });
-        dispatch(error(e));
-        //dispatch(error(e.message));
       });
   };
 }

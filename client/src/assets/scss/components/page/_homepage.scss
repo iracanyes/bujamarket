@@ -8,7 +8,7 @@
 }
 .parallax {
     /* The image used */
-    background-image: url("./../../assets/img/parallax1.jpg");
+    background-image: url("./../img/parallax1.jpg");
 
     /* Full height */
     height: 500px;
@@ -48,3 +48,5 @@
         background-attachment: scroll;
     }
 }
+
+

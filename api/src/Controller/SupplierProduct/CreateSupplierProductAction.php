@@ -6,8 +6,8 @@ namespace App\Controller\SupplierProduct;
 
 use App\Service\SupplierProductHandler;
 
-ini_set('upload_max_filesize', '200M');
-ini_set('post_max_size', '256M');
+ini_set('upload_max_filesize', '2M');
+ini_set('post_max_size', '15M');
 
 class CreateSupplierProductAction
 {

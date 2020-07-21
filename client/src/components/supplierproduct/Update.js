@@ -9,6 +9,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { injectIntl, FormattedMessage } from "react-intl";
 import {toastError} from "../../layout/ToastMessage";
 import {SpinnerLoading} from "../../layout/Spinner";
+import PublicationRules from "./PublicationRules";
 
 
 class Update extends Component {
@@ -34,8 +35,10 @@ class Update extends Component {
     // Affichage des erreurs
     retrieveError && toastError(retrieveError);
 
-    const user = localStorage.getItem('token') && JSON.parse(atob(localStorage.getItem('token').split('.')[1]));
-    console.log('user', user);
+    const user = localStorage.getItem('token')  ? JSON.parse(atob(localStorage.getItem('token').split('.')[1])) : null;
+
+    if(user == null || !user.roles.includes('ROLE_PUBLISHER'))
+      return (<PublicationRules />);
 
     return (
       <div>

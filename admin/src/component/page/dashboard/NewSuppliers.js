@@ -60,7 +60,7 @@ export default function NewSuppliers() {
         </TableBody>
       </Table>
       <div className={classes.seeMore}>
-        <a href="javascript:;">
+        <a href="/orders">
           See more orders
         </a>
       </div>

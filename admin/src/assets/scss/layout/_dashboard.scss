@@ -1,0 +1,52 @@
+#dashboard{
+  display: flex;
+
+  .toolbar {
+    padding-right: 1.5rem; // keep right padding when drawer closed
+  }
+
+  .toolbar-icon{
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0 0.5rem;
+    //...theme.mixins.toolbar,
+  }
+
+  .appBar{
+    z-index: 1;
+    transition: width 3s ease-in-out, margin 3s ease-in-out;
+
+  }
+  .appBarShift{
+    margin-left: 2rem;
+    width: 100% ;
+    transition: all 3s ease-in-out;
+  }
+
+  .menuButton{
+    margin-right: 2.25rem;
+  }
+  .menuButtonHidden {
+    display: none;
+  }
+  .content{
+    flex-grow: 1;
+    //height: '300vh',
+    overflow: auto;
+  }
+  .container{
+    padding-top: 1rem;
+    padding-bottom: 1.5rem;
+  }
+  .paper{
+    padding: 1rem;
+    display: flex;
+    overflow: auto;
+    flex-direction: column;
+  }
+  .fixed-height{
+    height: 15rem;
+  }
+
+}

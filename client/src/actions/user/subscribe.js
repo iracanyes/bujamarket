@@ -44,17 +44,12 @@ export function retrieve(token) {
         dispatch(loading(false));
         dispatch(successRetrieved(retrieved));
 
-        if (hubURL) dispatch(mercureSubscribe(hubURL, retrieved['@id']));
+        //if (hubURL) dispatch(mercureSubscribe(hubURL, retrieved['@id']));
       })
       .catch(e => {
         dispatch(loading(false));
         dispatch(error(e));
 
-        if(sessionStorage.getItem('flash-message-error') !== null)
-        {
-          sessionStorage.removeItem('flash-message-error');
-        }
-        sessionStorage.setItem('flash-message-error', e);
       });
   };
 }
@@ -92,16 +87,16 @@ export function subscribe(values, history) {
       .catch(e => {
         dispatch(loading(false));
 
-        if(typeof e === 'string')
-        {
-          dispatch(error(e));
-        }else{
-          if(e['hydra:description'])
-          {
-            dispatch(error(e['hydra:title']));
-          }else{
+        switch(true){
+          case typeof e['hydra:description'] === "string":
+            dispatch(error(e['hydra:description']));
+            break;
+          case typeof e.message === "string":
             dispatch(error(e.message));
-          }
+            break;
+          case typeof e === "string":
+            dispatch(error(e));
+            break;
         }
         dispatch(error(null));
         history.push({pathname: values.get('token')});
@@ -119,7 +114,7 @@ export function reset(eventSource) {
     dispatch(loading(false));
   };
 }
-
+/*
 export function mercureSubscribe(hubURL, topic) {
   return dispatch => {
     const eventSource = subscribe(hubURL, [topic]);
@@ -144,4 +139,4 @@ export function mercureMessage(retrieved) {
     dispatch({ type: 'USER_SUBSCRIBE_MERCURE_MESSAGE', retrieved });
   };
 }
-
+*/

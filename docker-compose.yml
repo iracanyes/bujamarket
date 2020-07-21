@@ -70,7 +70,7 @@ services:
       - ./.env
     volumes:
       - ./shared/mysql/db/data:/var/lib/mysql/data:rw
-      - ./api/docker/db/conf.d/default.conf:/etc/mysql/conf.d/myConf.cnf
+      - ./api/docker/db/conf.d/default.conf:/etc/mysql/conf.d/myConf.conf:rw
     # Port d'accés au container MySQL (3306) via le port interne d'accès à l'instance MySQL (3306)
     # Attention le port d'accés au container MySQL devra être modifié si une instance sur la machine locale utilise le même port 3306
     ports:
@@ -126,7 +126,7 @@ services:
   admin:
     # Use a static website hosting service in production
     # See https://facebook.github.io/create-react-app/docs/deployment
-    image: ${CONTAINER_REGISTRY_BASE}/admin
+    image: ${CONTAINER_REGISTRY_BASE}/admin    
     build:
       context: ./admin
       cache_from:

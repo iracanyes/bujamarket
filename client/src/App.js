@@ -8,7 +8,7 @@ import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import { reducer as form } from 'redux-form';
-import { Switch, Route, BrowserRouter, Router } from 'react-router-dom';
+import { Switch, Route, Router } from 'react-router-dom';
 import history from './utils/history';
 import {
   ConnectedRouter,
