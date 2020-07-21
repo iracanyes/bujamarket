@@ -6,6 +6,7 @@ import SupplierProductForm from './SupplierProductForm';
 import { reset } from '../../actions/supplierproduct/create';
 import {SpinnerLoading} from "../../layout/Spinner";
 import { injectIntl, FormattedMessage} from "react-intl";
+import PublicationRules from "./PublicationRules";
 
 class Create extends Component {
   static propTypes = {
@@ -23,7 +24,10 @@ class Create extends Component {
   render() {
     const { error, loading, created } = this.props;
 
-    const user = localStorage.getItem('token') && JSON.parse(localStorage.getItem('token'));
+    const user = localStorage.getItem('token')  ? JSON.parse(atob(localStorage.getItem('token').split('.')[1])) : null;
+
+    if(user == null || !user.roles.includes('ROLE_PUBLISHER'))
+      return (<PublicationRules />);
 
     return (
       <div>

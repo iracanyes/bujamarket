@@ -2,12 +2,14 @@ import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { list, reset } from '../../actions/category/list';
+import { getNamesWithImage, reset } from '../../actions/category/getNamesWithImage';
 import { success } from '../../actions/category/delete';
 import { injectIntl } from "react-intl";
 import 'bootstrap/dist/css/bootstrap.css';
 import { toast } from "react-toastify";
 import { ToastError } from "../../layout/ToastMessage";
+import BackGroundCarouselItem from "../../assets/img/parallax-gris.jpg";
+
 /* Carousel */
 import {
   Col,
@@ -22,6 +24,10 @@ import {
 } from "reactstrap";
 import { FormattedMessage } from "react-intl";
 import {SpinnerLoading} from "../../layout/Spinner";
+import AwesomeSlider from "react-awesome-slider";
+import AwesomeSliderStyles from "react-awesome-slider/src/styled/fold-out-animation/fold-out-animation.scss";
+import BackgroundImageItems from '../../assets/img/abstract-art-black-and-white.jpg';
+import BackgroundImageItem from '../../assets/img/parallax-gris.jpg';
 
 class CarouselCategories extends Component {
   static propTypes = {
@@ -29,7 +35,7 @@ class CarouselCategories extends Component {
     loading: PropTypes.bool.isRequired,
     retrieved: PropTypes.object,
     deletedItem: PropTypes.object,
-    list: PropTypes.func.isRequired,
+    getNamesWithImage: PropTypes.func.isRequired,
     reset: PropTypes.func.isRequired,
   };
 
@@ -48,14 +54,14 @@ class CarouselCategories extends Component {
 
 
   componentDidMount() {
-    this.props.list();
+    this.props.getNamesWithImage();
   }
 
-  /*
+
   componentWillUnmount() {
     this.props.reset();
   }
-  */
+
 
 
   onExiting()
@@ -91,7 +97,6 @@ class CarouselCategories extends Component {
     this.setState({ activeIndex: nexIndex });
   }
 
-
   showCategories()
   {
 
@@ -99,12 +104,7 @@ class CarouselCategories extends Component {
 
     const categories = this.props.retrieved && this.props.retrieved["hydra:member"];
 
-
-    // console.log("Résultats catégories", categories);
-
     let rows = [];
-
-
 
     for(let i = 0; i < Math.ceil(categories.length / 12 ); i++)
     {
@@ -112,7 +112,7 @@ class CarouselCategories extends Component {
       let resultsPer12 = [];
 
 
-      for(let j = 0; (i !== 0 && j < 12) || j < 11; j++)
+      for(let j = 0; (i !== 0) ? (j <= 12) : (j < 11); j++)
       {
         if(process.env.DEBUG === 1 )
         {
@@ -128,7 +128,7 @@ class CarouselCategories extends Component {
               <Card body className={" text-white bg-dark"}>
                 <Link to={"/products"}>
                   <div className="card-img-custom">
-                    <img src={categories[i * 12 + j]["image"]['url']} alt={categories[i * 12 + j]["image"]["alt"]} className="image img-fluid" style={{ width:"100%"}} />
+                    <img src={BackgroundImageItems} className="image img-fluid" style={{ width:"100%"}} />
                     <CardTitle className={"image-bottom-left-title"}>
 
                       <span className="font-weight-bold">
@@ -158,7 +158,7 @@ class CarouselCategories extends Component {
                   to={`categories/show/${encodeURIComponent(categories[i * 12 + j]['id'])}`}
                 >
                   <div className="card-img-custom">
-                    <img src={categories[i * 12 + j]["image"]['url']} alt={categories[i * 12 + j]["image"]["alt"]} className="image img-fluid" style={{ width:"100%"}} />
+                    <img src={categories[i * 12 + j]['url']} alt={categories[i * 12 + j]["name"]} className="image img-fluid" style={{ width:"100%"}} />
 
                     <CardTitle className={"image-bottom-left-title"}>
 
@@ -199,7 +199,7 @@ class CarouselCategories extends Component {
                   to={`categories/show/${encodeURIComponent(categories[i * 12 + j]['id'])}`}
                 >
                   <div className="card-img-custom">
-                    <img src={categories[i * 12 + j]["image"]['url']} alt={categories[i * 12 + j]["image"]["alt"]} className="image img-fluid" style={{ width:"100%"}} />
+                    <img src={categories[i * 12 + j]['url']} alt={categories[i * 12 + j]["name"]} className="image img-fluid" style={{ width:"100%"}} />
 
                     <CardTitle className={"image-bottom-left-title"}>
 
@@ -231,24 +231,24 @@ class CarouselCategories extends Component {
       }
 
       rows.push(
-        <CarouselItem
-          onExiting={this.onExiting}
-          onExited={this.onExited}
+        <div
+          data-src={BackgroundImageItem}
           key={i}
+          className={'col-10'}
         >
           <Row
             key={"category_rows" + (i)}
+            className={'justify-content-center'}
           >
             {resultsPer12}
           </Row>
-        </CarouselItem>
+        </div>
       );
     }
 
     return rows;
 
   }
-
 
   render() {
     const { activeIndex } = this.state;
@@ -267,23 +267,16 @@ class CarouselCategories extends Component {
             <SpinnerLoading message={"Chargement des catégories de produit"} />
           }
 
-            {this.props.retrieved &&
-              <Carousel
-                  activeIndex={activeIndex}
-                  next={this.next}
-                  previous={this.previous}
-                  style={styleCarouselInner}
-                  className={" col-lg-12"}
-              >
-
-
-                  {this.props.retrieved['hydra:member'] && items}
-
-                  <CarouselIndicators items={this.props.retrieved['hydra:member'] && items} activeIndex={activeIndex} onClickHandler={this.goToIndex}/>
-                  <CarouselControl direction={"prev"} directionText={"Précédent"} onClickHandler={this.previous}/>
-                  <CarouselControl direction={"next"} directionText={"Suivant"} onClickHandler={this.next}/>
-              </Carousel>
-            }
+          { this.props.retrieved && (
+            <AwesomeSlider
+              animation={'foldOutAnimation'}
+              cssModule={AwesomeSliderStyles}
+            >
+              {this.props.retrieved['hydra:member'] && (
+                this.showCategories()
+              )}
+            </AwesomeSlider>
+          )}
 
 
     </div>
@@ -307,15 +300,15 @@ class CarouselCategories extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    retrieved: state.category.list.retrieved,
-    error: state.category.list.error,
-    loading: state.category.list.loading,
+    retrieved: state.category.getNamesWithImage.retrieved,
+    error: state.category.getNamesWithImage.error,
+    loading: state.category.getNamesWithImage.loading,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    list: (page) => dispatch(list(page)),
+    getNamesWithImage: (page) => dispatch(getNamesWithImage(page)),
     reset: () => {
       dispatch(reset());
       dispatch(success(null));

@@ -17,8 +17,17 @@ App\Entity\Category:
         getNames:
             method: 'GET'
             path: '/categories_names'
-            schemes: ["https","http"]
+            schemes: ["https"]
             controller: App\Controller\Category\GetCategoriesNameAction
+        getNamesWithImages:
+            method: 'GET'
+            path: '/category_names_with_image'
+            schemes: ['https']
+            defaults:
+                _api_receive: false
+                _api_respond: false
+            serialize: false 
+            controller: App\Controller\Category\GetNamesWithImageAction
         post:
             method: 'POST'
             path: '/category/create'
@@ -37,7 +46,8 @@ App\Entity\Category:
             # host: 'localhost'
             #options:
             #    my_option: 'my_option_value'
-            status: 200 # customize the HTTP status code to send        
+            status: 200 # customize the HTTP status code to send
+            
         put:
             method: 'PUT'
             path: '/category/{id}'

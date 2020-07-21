@@ -25,7 +25,7 @@ App\Entity\SupplierProduct:
             path: '/supplier_product/create'
             defaults:
                 _api_receive: false
-            security: "is_granted('ROLE_SUPPLIER') and is_granted('IS_AUTHENTICATED_FULLY')"            
+            security: "is_granted('ROLE_SUPPLIER') and is_granted('ROLE_PUBLISHER') and is_granted('IS_AUTHENTICATED_FULLY')"            
             schemes: ['https']
             controller: App\Controller\SupplierProduct\CreateSupplierProductAction
             deserialize: false
@@ -52,7 +52,7 @@ App\Entity\SupplierProduct:
             path: '/supplier_product/update/{id}'
             defaults:
                 id: '\d+'
-            security: "is_granted('ROLE_SUPPLIER') and is_granted('IS_AUTHENTICATED_FULLY')"
+            security: "is_granted('ROLE_SUPPLIER') and is_granted('ROLE_PUBLISHER') and is_granted('IS_AUTHENTICATED_FULLY')"
             schemes: ['https']
             controller: App\Controller\SupplierProduct\UpdateSupplierProductAction
             deserialize: false
@@ -95,14 +95,14 @@ App\Entity\SupplierProduct:
             path: '/supplier_product/{id}'
             requirements:
                 id: '\d+'
-            security: 'is_granted("ROLE_SUPPLIER")  and is_granted("IS_AUTHENTICATED_FULLY")'
+            security: "is_granted('ROLE_SUPPLIER') and is_granted('ROLE_PUBLISHER') and is_granted('IS_AUTHENTICATED_FULLY')"
             schemes: ['https']
         delete:
             method: 'DELETE'
             path: '/supplier_product/{id}'
             requirements:
                 id: '\d+'
-            security: 'is_granted("ROLE_SUPPLIER")  and is_granted("IS_AUTHENTICATED_FULLY")'
+            security: "is_granted('ROLE_SUPPLIER') and is_granted('ROLE_PUBLISHER') and is_granted('IS_AUTHENTICATED_FULLY')"
             schemes: ['https']
             controller: App\Controller\SupplierProduct\DeleteAction
     subresourceOperations:

@@ -9,5 +9,6 @@ import UpdatePassword from "./UpdatePassword";
 import Profile from "./Profile";
 import UpdateProfile from "./UpdateProfile";
 import ProfileAddresses from "./ProfileAddresses";
+import Unsubscribe from "./Unsubscribe";
 
-export { Register, Login, Subscribe, List, Update, Show, UnlockAccount, UpdatePassword, Profile, UpdateProfile, ProfileAddresses };
+export { Register, Login, Subscribe, List, Update, Show, UnlockAccount, UpdatePassword, Profile, UpdateProfile, ProfileAddresses, Unsubscribe };

@@ -186,5 +186,18 @@
   "app.button.associate_with_new_product": "Associer à un nouveau produit",
   "app.supplier_product.item.nb_orders": "Nombre de commandes",
   "app.your_products": "Vos produits",
-  "app.product_description": "Description du produit"
+  "app.product_description": "Description du produit",
+  "app.button.see_categories": "Voir les catégories",
+  "app.homepage.welcome": "Bienvenue sur Buja Market",
+  "app.publication_rules": "Règles de publication",
+  "app.unsubscribe": "Désinscription",
+  "app.sad_to_see_you_living_us": "Nous sommes triste de vous voir nous quitter!",
+  "app.button.confirm_unsubscribe": "Confirmer la désinscription",
+  "app.homepage.slider.title2": "Un suivi de vos commandes en temps réel jusqu'à destination",
+  "app.homepage.slider.title3": "Tous vos achats sont sécurisés par Stripe (un des meilleurs plateformes de paiement sécurisés en ligne)",
+  "app.products_category": "Catégories de produit",
+  "app.button.see_favorite_products": "Voir les produits favoris",
+  "app.button.confirm": "Confirmer",
+  "app.button.favorite": "Favoris"
+
 }

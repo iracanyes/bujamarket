@@ -122,7 +122,6 @@ class SubscribeForm extends React.Component {
   render() {
     const { intl, errorSubscribe  } = this.props;
 
-    console.log("Render error", errorSubscribe);
     errorSubscribe && typeof errorSubscribe === "string" && toastError(errorSubscribe);
 
     return (

@@ -24,10 +24,10 @@ class ImageSuperAdminFixtures extends Fixture implements FixtureGroupInterface
     {
         $image = new Image();
 
-        $image->setPlace($this->faker->numberBetween(1,10));
+        $image->setPlace(1);
         $image->setTitle($this->faker->sentence(7, true));
         $image->setAlt($this->faker->sentence(7, true));
-        $image->setUrl('https://picsum.photos/1600/900');
+        $image->setUrl('Skull-5ef4440403024.jpeg');
         $image->setSize($this->faker->numberBetween(3000,8000));
         $image->setMimeType($this->faker->randomElement(['image/jpeg','image/png','image/jpg']));
 

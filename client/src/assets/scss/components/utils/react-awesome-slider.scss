@@ -1,8 +1,23 @@
 
 /*--- Homepage slider ---*/
-#homepage-slider{
-  margin-bottom: 5rem;
 
+
+nav.awssld__bullets{
+  margin: 2rem auto;
+  position: unset;
+  button {
+    background-color: $primary-color;
+  }
+}
+
+.awssld__controls{
+  &__arrow-left::before, &__arrow-left::after, &__arrow-right::before, &__arrow-right::after{
+    background-color: $primary-color;
+  }
+}
+
+/*- Homepage slider -*/
+#homepage-slider{
   /*--- React Awesome Slider - Fall animation---*/
   .awssld{
     --fall-animation-duration: 700ms;
@@ -21,7 +36,7 @@
       z-index: 1;
     }
     &__content {
-
+      background-color: unset;
       .title{
         background-color: lighten(rgba(0,0,0,0.1), 80%);
       }
@@ -97,6 +112,15 @@ div#sp-show-slider{
       button{
         background-color: $primary-color;
       }
+    }
+  }
+}
+
+/*-  Homepage Categories Slider -*/
+section#home-carousel-categories{
+  div.card-img-custom {
+    img.image{
+      height: 11rem;
     }
   }
 }

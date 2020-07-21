@@ -9,10 +9,12 @@ use App\Entity\Category;
 use App\Entity\Image;
 use App\Exception\Category\CategoryNotFoundException;
 use App\Exception\Category\CategoryPersistException;
+use App\Exception\Category\RetrieveCategoriesException;
 use Doctrine\DBAL\Driver\PDOException;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Serializer\SerializerAwareInterface;
 
 class CategoryHandler
 {
@@ -46,6 +48,38 @@ class CategoryHandler
                                         ->getNames();
 
         return new JsonResponse($categories_names);
+    }
+
+    public function getNamesWithImage()
+    {
+        try{
+            $categories = $this->em->getRepository(Category::class)
+                ->getNamesWithImage();
+        }catch(\Exception $exception){
+            $this->logger->error("Error while retrieving categories' of product!", ['context' => $exception]);
+            throw new RetrieveCategoriesException("Error while retrieving categories' of product!");
+        }
+
+        dump($categories);
+
+        $myCategories = [];
+        /* Mise à jour de l'emplacement du fichier image */
+        foreach($categories as $category)
+        {
+            dump($category);
+            $category['url'] = getenv('API_ENTRYPOINT').'/'.getenv('UPLOAD_CATEGORY_IMAGE_DIRECTORY').'/'.$category['url'];
+            dump($category);
+            array_push($myCategories, $category);
+        }
+
+        dump($categories);
+        dump($myCategories);
+
+        return new JsonResponse([
+            '@context' => 'Collection',
+            'hydra:member' => $myCategories
+        ]);
+
     }
 
     public function persistNewCategory(array $data = [], $file): Category

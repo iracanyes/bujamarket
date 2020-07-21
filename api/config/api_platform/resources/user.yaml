@@ -55,6 +55,14 @@ App\Entity\User:
             schemes: ["https"]
             security: "is_granted('ROLE_MEMBER') and is_granted('IS_AUTHENTICATED_FULLY')"
             controller: App\Controller\User\UpdateProfileAction
+        authorize_publishing:
+            method: 'POST'
+            path: '/authorize_publishing/{id}'
+            requirements:
+                id: '\d+'
+            schemes: ['https']
+            security: "is_granted('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_FULLY')"
+            controller: App\Controller\User\AuthorizePublishingAction                          
     itemOperations:
         get:
             method: 'GET'
@@ -75,7 +83,7 @@ App\Entity\User:
             path: '/user/{id}'
             requirements:
                 id: '\d+'
-            security: 'is_granted("ROLE_MEMBER") and is_granted("IS_AUTHENTICATED_FULLY")'
+            security: 'is_granted("ROLE_ADMIN") and is_granted("IS_AUTHENTICATED_FULLY")'
             schemes: ['https']
         delete:
             method: 'DELETE'
@@ -84,3 +92,12 @@ App\Entity\User:
                 id: '\d+'
             security: 'is_granted("ROLE_ADMIN") and is_granted("IS_AUTHENTICATED_FULLY")'
             schemes: ['https']
+            controller: App\Controller\User\DeleteUserAction
+        unsubscribe:
+            method: 'POST'
+            path: '/unsubscribe'
+            schemes: ['https']
+            defaults:
+                _api_receive: false
+            security: "is_granted('ROLE_MEMBER') and is_granted('IS_AUTHENTICATED_FULLY')"
+            controller: App\Controller\User\UnsubscribeAction

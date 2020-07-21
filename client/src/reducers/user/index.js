@@ -9,6 +9,7 @@ import show from './show';
 import unlockAccount from "./unlockAccount";
 import updatePassword from "./updatePassword";
 import profile from "./profile";
+import unsubscribe from "./unsubscribe";
 
 export default combineReducers({
   list,
@@ -20,5 +21,6 @@ export default combineReducers({
   show,
   unlockAccount,
   updatePassword,
-  profile
+  profile,
+  unsubscribe
 });

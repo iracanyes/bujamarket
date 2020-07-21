@@ -70,7 +70,9 @@ import {
   faEuroSign,
   faTrashAlt,
   faMinusCircle,
-  faTimesCircle
+  faTimesCircle,
+  faUserAltSlash,
+  faFrownOpen
 } from "@fortawesome/free-solid-svg-icons";
 
 import {
@@ -144,5 +146,7 @@ library.add([
   faMinusCircle,
   faPaypal,
   faPinterest,
-  faTimesCircle
+  faTimesCircle,
+  faUserAltSlash,
+  faFrownOpen
 ]);

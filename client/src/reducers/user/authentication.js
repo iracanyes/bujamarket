@@ -36,7 +36,7 @@ export function loading(state = initialState, action) {
 export function login(state = initialState, action) {
   switch (action.type) {
     case 'USER_LOGIN_SUCCESS':
-        return { loggingIn: true, user: action.user};
+        return { loggedIn: true, user: action.user};
 
     default:
       return state;

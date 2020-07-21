@@ -9,6 +9,7 @@ import { Container, Button } from "reactstrap";
 import {toastError, toastSuccess} from "../../layout/ToastMessage";
 import {SpinnerLoading} from "../../layout/Spinner";
 import { del } from "../../actions/supplierproduct/delete";
+import PublicationRules from "./PublicationRules";
 
 class SupplierList extends Component {
   static propTypes = {
@@ -48,6 +49,11 @@ class SupplierList extends Component {
 
   render() {
     const { retrieved, loading, error, deleted, deleteError, intl } = this.props;
+
+    const user = localStorage.getItem('token')  ? JSON.parse(atob(localStorage.getItem('token').split('.')[1])) : null;
+
+    if(user == null || !user.roles.includes('ROLE_PUBLISHER'))
+      return (<PublicationRules />);
 
     //Affichage des erreurs
     error && toastError(error);

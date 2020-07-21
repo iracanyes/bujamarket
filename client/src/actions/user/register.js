@@ -1,8 +1,7 @@
 import { SubmissionError } from 'redux-form';
 import { fetch } from '../../utils/dataAccess';
 import React from "react";
-import { toast } from "react-toastify";
-import { ToastWelcome, ToastError } from "../../layout/ToastMessage";
+import { toastWelcome, toastError } from "../../layout/ToastMessage";
 
 export function error(error) {
   return { type: 'USER_REGISTER_ERROR', error };
@@ -45,40 +44,23 @@ export function register(values, history) {
       .then(retrieved => {
         dispatch(success(retrieved));
 
-        toast(
-          <ToastWelcome message={`Bienvenue ${ retrieved.firstname + " " + retrieved.lastname }, visitez votre boîte de réception pour valider votre inscription!`}/>
-        );
-
         history.push('/');
       })
       .catch(e => {
         dispatch(loading(false));
 
-
-
-        /* Déconnexion et forcer le rechargement de la page si erreur 401 */
-        if(e.code === 401)
-        {
-          dispatch(logout());
-          history.push('register');
-        }
-
-
-        if(typeof e == 'string')
-        {
-          dispatch(error(e));
-          dispatch(error(null));
-        }else{
-          if(e["hydra:description"])
-          {
-            dispatch(error(e["hydra:title"]));
-            dispatch(error(null));
-          }else{
+        switch(true){
+          case typeof e === 'string':
+            dispatch(error(e));
+            break;
+          case typeof e["hydra:description"] === "string":
+            dispatch(error(e["hydra:description"]));
+            break;
+          case typeof e.message === "string":
             dispatch(error(e.message));
-            dispatch(error(null));
-          }
-
+            break;
         }
+        dispatch(error(null));
 
       });
   };
@@ -88,5 +70,6 @@ export function reset() {
   return dispatch => {
     dispatch(loading(false));
     dispatch(error(null));
+    //dispatch(success({}));
   };
 }

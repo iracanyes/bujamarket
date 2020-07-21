@@ -11,7 +11,7 @@ export const messages = {
   'en': englishMessages
 };
 
-export const i18nProvider = locale => {
+export function i18nProvider( locale ){
   if(locale !== 'en')
   {
     return messages[locale];

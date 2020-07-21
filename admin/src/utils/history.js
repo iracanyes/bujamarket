@@ -1,9 +1,7 @@
 /**
- * Author: iracanyes
- * Date: 16/08/2019
  * Description:
  */
-/* Reducers */
+/* History */
 import { createBrowserHistory } from "history";
 
 export default createBrowserHistory({basename: '/#/'});

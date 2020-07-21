@@ -17,6 +17,7 @@ import {SpinnerLoading} from "../../layout/Spinner";
 import AwesomeSlider from "react-awesome-slider";
 import CoreStyles from "react-awesome-slider/src/core/styles.scss";
 import AwesomeSliderStyles from "react-awesome-slider/src/styled/cube-animation/cube-animation.scss";
+import PublicationRules from "./PublicationRules";
 
 class Show extends Component {
   static propTypes = {
@@ -50,11 +51,12 @@ class Show extends Component {
 
     const item = this.props.retrieved && this.props.retrieved;
 
-
     const comments = this.props.retrievedComments && this.props.retrievedComments['hydra:member'] ;
 
     const user = localStorage.getItem('token')  ? JSON.parse(atob(localStorage.getItem('token').split('.')[1])) : null;
-    console.log("user",user);
+
+    if(user == null || !user.roles.contains('ROLE_PUBLISHER'))
+      return (<PublicationRules />);
 
     error && toastError(error);
 
