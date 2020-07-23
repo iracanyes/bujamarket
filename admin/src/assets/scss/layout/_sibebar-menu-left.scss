@@ -8,4 +8,25 @@ nav.sidebar-nav-left{
   .nav-item-nested{
     padding-left: 1rem;
   }
+  // button - Dashboard
+  a.MuiButtonBase-root{
+    div.MuiListItemIcon-root{
+      min-width: 3.5rem;
+      font-size: 1.5rem;
+    }
+  }
+  div.MuiCollapse-container{
+    a.MuiButtonBase-root{
+      font-size: 0.8rem;
+      div.MuiListItemIcon-root{
+        min-width: 3rem;
+        font-size: 1.5rem;
+      }
+    }
+  }
+
+  div.MuiListItemIcon-root{
+    //min-width: 3.5rem;
+    font-size: 1.5rem;
+  }
 }

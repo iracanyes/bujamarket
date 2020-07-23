@@ -41,6 +41,7 @@ export default (type, params) => {
   /* Authentification error */
   if (type === AUTH_ERROR) {
     const status  = params.status;
+    console.log('AUTH_ERROR - params', params);
     if ((status === 401 || status === 403)) {
       localStorage.removeItem('token');
       return Promise.reject({redirectTo: '/login'});
@@ -49,13 +50,12 @@ export default (type, params) => {
   }
 
   if (type === AUTH_CHECK) {
-    console.log("AuthProvider - authcheck", params);
 
     const user = localStorage.getItem('token') !== null ?  JSON.parse(atob(localStorage.getItem('token').split('.')[1])) : null;
 
     console.log('auth_check - user', user);
 
-    return localStorage.getItem('token') || !user || user.roles.includes('ROLE_ADMIN') ? Promise.resolve() : Promise.reject({ redirectTo: '/login' });
+    return localStorage.getItem('token') && user && user.roles.includes('ROLE_ADMIN') && !window.location.href.includes( 'login') ? Promise.resolve() : Promise.reject({ redirectTo: '/login' });
   }
 
   return Promise.resolve();
