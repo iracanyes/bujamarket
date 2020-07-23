@@ -4,6 +4,7 @@ import { parseHydraDocumentation } from "@api-platform/api-doc-parser";
 import { Redirect, Route } from 'react-router-dom';
 import authProvider from "./utils/authProvider";
 import AddressesList from "./component/address/AddressesList";
+import CategoriesList from "./component/category/CategoriesList";
 import { messages, i18nProvider } from "./config/i18n";
 import Dashboard  from "./component/page/dashboard/Dashboard";
 import history from "./utils/history";
@@ -86,7 +87,14 @@ const apiDocumentationParser = entrypoint => parseHydraDocumentation(entrypoint,
                   ...result,
                   customRoutes: [
                     <Route path="/" render={() => {
-                      return window.localStorage.getItem("token") !== null  && window.location.pathname !== '/' ? window.location.reload() : <Redirect to="login" />
+                      switch (true) {
+                        case  window.localStorage.getItem("token") !== null  && !window.location.href.includes( 'login'):
+                          window.location.reload();
+                          break;
+                        default:
+                          return  <Redirect to="login" />;
+                      }
+
                     }} />
                   ]
                 });
@@ -112,14 +120,14 @@ export default () => (
     history={history}
   >
 
-    {/*
+
     <ResourceGuesser name={"addresses"} icon={LocationOnTwoTone} options={{label: 'Adresses'}} list={AddressesList}/>
     <ResourceGuesser name={"bank_accounts"} icon={PaymentTwoTone} options={{label: 'Comptes bancaires'}} />
     <ResourceGuesser name={"bills"} icon={ReceiptTwoTone} options={{label: 'Factures'}} />
     <ResourceGuesser name={"customer_bills"} icon={ReceiptTwoTone} options={{label: 'Factures client'}} />
     <ResourceGuesser name={"supplier_bills"} icon={ReceiptTwoTone} options={{label: 'Factures fournisseurs'}} />
     <ResourceGuesser name={"refund_bills"} icon={ReceiptTwoTone} options={{label: 'Factures remboursement'}} />
-    <ResourceGuesser name={"categories"} icon={CategoryTwoTone} options={{label: 'Catégories'}} />
+    <ResourceGuesser name={"categories"} icon={CategoryTwoTone} options={{label: 'Catégories'}} list={CategoriesList} />
     <ResourceGuesser name={"comments"} icon={ThumbsUpDownTwoTone} options={{label: 'Évaluations'}} />
     <ResourceGuesser name={"customers"} icon={AccountCircleTwoTone} options={{label: 'Clients'}} />
     <ResourceGuesser name={"delivery_details"} icon={HowToVoteTwoTone} options={{label: 'Livraisons - Détail'}} />
@@ -141,7 +149,6 @@ export default () => (
     <ResourceGuesser name={"suppliers"} icon={AccountBoxTwoTone} options={{label: 'Fournisseurs'}} />
     <ResourceGuesser name={"supplier_products"} icon={QueueTwoTone} options={{label: 'Fournisseurs - produits'}} />
     <ResourceGuesser name={"users"} icon={PeopleAltTwoTone} options={{label: 'Utilisateurs'}} />
-    */}
 
 
   </HydraAdmin>

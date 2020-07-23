@@ -19,6 +19,7 @@ import {
   FaGoogle,
   FaUserLock
 } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
 import { RiAccountPinCircleLine } from "react-icons/ri";
 import backgroundImage from "../../assets/img/bg-1.jpg";
 
@@ -31,13 +32,11 @@ const LoginPage = ({ theme }) => {
   const notify = useNotify();
   let backgroundImageLoaded = false;
   const containerRef = useRef();
-  const history = useHistory();
 
   const submit = (e) => {
     e.preventDefault();
     login({ email, password })
-      //.then(() => <Redirect to={'/'}/>)
-      .then(() => history.push('/'))
+      .then(() => <Redirect to={'/'}/>)
       .catch(() => toast.error('Invalid email or password'));
   };
 
@@ -119,7 +118,7 @@ const LoginPage = ({ theme }) => {
                 <Button
                   variant={'contained'}
                   color={'primary'}
-                  startIcon={<FaGoogle/>}
+                  startIcon={<FcGoogle/>}
                 >
                   Connexion avec Google
                 </Button>

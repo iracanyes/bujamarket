@@ -1,5 +1,4 @@
 /**
- * Author: iracanyes
  * Date: 11/14/19
  * Description:
  */

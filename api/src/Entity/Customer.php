@@ -89,7 +89,7 @@ class Customer extends User
      * @var Collection $customerBills Orders Bill of this customer
      *
      * @ORM\OneToMany(targetEntity="App\Entity\BillCustomer", mappedBy="customer", orphanRemoval=true)
-     * @Groups({"customer:output"})
+     * @Groups({"customer_bills:output"})
      */
     private $customerBills;
 

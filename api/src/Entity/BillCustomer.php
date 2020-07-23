@@ -9,7 +9,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ApiResource(attributes={
- *     "normalization_context"={"groups"={"payment:output"}}
+ *     "normalization_context"={"groups"={"bill_customer:output","payment:output"}}
  * })
  * @ORM\Table(name="bjmkt_customer_bill")
  * @ORM\Entity(repositoryClass="App\Repository\BillCustomerRepository")
