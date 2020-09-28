@@ -11,7 +11,7 @@ App\Entity\Admin:
                 _format: 'json'
             # host: 'localhost'
             schemes: ['https']
-            access_control: "is_granted('ROLE_SUPER_ADMIN') and is_granted('IS_AUTHENTICATED_FULLY')"
+            security: "is_granted('ROLE_SUPER_ADMIN') and is_granted('IS_AUTHENTICATED_FULLY')"
             #options:
             #    my_option: 'my_option_value'
             status: 200 # customize the HTTP status code to send
@@ -21,7 +21,7 @@ App\Entity\Admin:
             path: '/admin/create'
             requirements:
                 admin: App\Entity\Admin
-            access_control: "is_granted('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_FULLY')"
+            security: "is_granted('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_FULLY')"
             schemes: ['https']
             controller: App\Controller\Admin\CreateAdmin::class
     itemOperations:
@@ -35,7 +35,7 @@ App\Entity\Admin:
                 _format: 'json'
             # host: 'localhost'
             schemes: ['https']
-            access_control: "is_granted('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_FULLY')"
+            security: "is_granted('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_FULLY')"
             #options:
             #    my_option: 'my_option_value'
             status: 200 # customize the HTTP status code to send
@@ -45,12 +45,12 @@ App\Entity\Admin:
             path: '/admin/{id}'
             requirements:
                 id: '\d+'
-            access_control: "is_granted('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_FULLY')"
+            security: "is_granted('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_FULLY')"
             schemes: ['https']
         delete:
             method: 'DELETE'
             path: '/admin/{id}'
             requirements:
                 id: '\d+'
-            access_control: 'is_granted("ROLE_ADMIN")'
+            security: 'is_granted("ROLE_ADMIN")'
             schemes: ['https']

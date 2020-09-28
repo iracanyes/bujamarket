@@ -5,5 +5,5 @@
  */
 //import Show from './Show';
 import List from './List';
-
-export { List };
+import SidebarLeftMenu from "./SidebarLeftMenu";
+export { List, SidebarLeftMenu };

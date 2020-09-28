@@ -1,6 +1,5 @@
 
-/*--- Homepage slider ---*/
-
+/*--- Global slider ---*/
 
 nav.awssld__bullets{
   margin: 2rem auto;
@@ -16,6 +15,31 @@ nav.awssld__bullets{
   }
 }
 
+div.slider-page{
+  width: 80%;
+  margin: 0 auto;
+  div.slider-item{
+    div.slider-card{
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+      a:hover{
+        text-decoration: none;
+      }
+
+      div.card-img-custom{
+        div.card-title{
+          padding: 0 0.5rem;
+          color: black;
+          margin: 0.5rem 0 0 0;
+        }
+      }
+      div.card-body{
+        font-size: 0.9rem !important;
+        padding: 0.5rem;
+      }
+    }
+  }
+}
+/*--- Global slider ---*/
 /*- Homepage slider -*/
 #homepage-slider{
   /*--- React Awesome Slider - Fall animation---*/
@@ -97,6 +121,7 @@ nav.awssld__bullets{
     }
   }
 }
+/*- End Homepage slider -*/
 
 /*- Supplier product images slider -*/
 div#sp-show-slider{
@@ -121,6 +146,35 @@ section#home-carousel-categories{
   div.card-img-custom {
     img.image{
       height: 11rem;
+    }
+  }
+}
+/*-  Homepage Categories Slider -*/
+
+/*-  Page : Product Suppliers Slider -*/
+div#slider-product-suppliers{
+  div.slider-page{
+    width: 80%;
+    margin: 0 auto;
+    div.slider-item{
+      div.slider-card{
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        a:hover{
+          text-decoration: none;
+        }
+
+        div.card-img-custom{
+          div.card-title{
+            padding: 0 0.5rem;
+            color: black;
+            margin: 0.5rem 0 0 0;
+          }
+        }
+        div.card-body{
+          font-size: 0.9rem !important;
+          padding: 0.5rem;
+        }
+      }
     }
   }
 }

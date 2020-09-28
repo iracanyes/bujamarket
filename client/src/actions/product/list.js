@@ -44,16 +44,11 @@ export function list(options={}, page = 'products_with_images') {
       {
         page += '&'
       }
-
       page += ('page='+encodeURIComponent(options.itemsPerPage));
     }
 
-
-
-
     fetch(page)
       .then(response => {
-
         return response
                 .json()
                 .then(retrieved => ({retrieved, hubURL: extractHubURL(response)}))
@@ -63,8 +58,6 @@ export function list(options={}, page = 'products_with_images') {
 
         dispatch(loading(false));
         dispatch(success(retrieved));
-
-
 
         if (hubURL && retrieved['hydra:member'].length)
           dispatch(
@@ -76,7 +69,15 @@ export function list(options={}, page = 'products_with_images') {
       })
       .catch(e => {
         dispatch(loading(false));
-        dispatch(error(e.message));
+
+        switch (true){
+          case typeof e.message === "string":
+            dispatch(error(e.message));
+            break;
+          case typeof e['hydra:description'] === "string":
+            dispatch(error(e['hydra:description']));
+            break;
+        }
       });
   };
 }

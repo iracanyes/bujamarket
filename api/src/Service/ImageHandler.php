@@ -238,6 +238,9 @@ class ImageHandler
 
     }
 
+    /**
+     * @return StreamedResponse
+     */
     public function getSupplierImage(): StreamedResponse
     {
         $id = $this->request->attributes->get('id');
@@ -274,6 +277,15 @@ class ImageHandler
         dump($response);
 
         return $response;
+
+    }
+
+    /**
+     * @param Image $image
+     */
+    public function setSupplierProductPublicDirectory(Image $image)
+    {
+        $image->setUrl(getenv('API_ENTRYPOINT')."/".getenv("UPLOAD_SUPPLIER_PRODUCT_IMAGE_DIRECTORY")."/".$image->getUrl());
 
     }
 }

@@ -95,6 +95,11 @@ class ButtonAddToShoppingCart extends React.Component {
     /* Enregistrement du panier de commande */
     localStorage.removeItem('shopping_cart');
     localStorage.setItem('shopping_cart', JSON.stringify(shopping_cart));
+
+    console.log("props",this.props);
+    // fermeture du modal
+    this.props.toggle();
+
   }
 
   deleteProduct(id)
@@ -120,8 +125,6 @@ class ButtonAddToShoppingCart extends React.Component {
 
 
   cancel(){
-
-
     /* Annuler l'ajout au  panier de commande dans LocalStorage  */
     let shopping_cart = localStorage.getItem("shopping_cart") !== null ? JSON.parse(localStorage.getItem("shopping_cart")) : [];
 
@@ -162,23 +165,27 @@ class ButtonAddToShoppingCart extends React.Component {
                                  defaultMessage="Quantité"
                                  description=" Shopping cart - quantity"
               />
-            </Label>{' '}
+            </Label>
             <Input type="number" min={1} name="quantity" id="quantity" className={"w-100"} onChange={this.changeQuantity} value={this.state.quantity} />
 
           </FormGroup>
-          {' '}
-          <Button outline color="success" className={"w-100 my-2"} onClick={this.toggle}>
-            <FormattedMessage  id={"app.button.add_shopping_cart"}
-                               defaultMessage="Ajouter au panier"
-                               description=" Button - Order now"
-            />
-          </Button>
-          <Link to={'/shopping_cart'} className={"btn btn-outline-danger w-100"} onClick={this.addToShoppingCart}>
-            <FormattedMessage  id={"app.button.order_now"}
-                               defaultMessage="Commande immédiate"
-                               description=" Button - Order now"
-            />
-          </Link>
+
+          <div className="form-actions w-100">
+            <Button outline color="success" size={'sm'} className={"w-100 my-2"} onClick={this.toggle}>
+              <FormattedMessage
+                id={"app.button.add_shopping_cart"}
+                defaultMessage="Ajouter au panier"
+                description=" Button - Order now"
+              />
+            </Button>
+            <Link to={'/shopping_cart'} className={"btn-sm btn-outline-danger w-100"} onClick={this.addToShoppingCart}>
+              <FormattedMessage  id={"app.button.order_now"}
+                                 defaultMessage="Commande immédiate"
+                                 description=" Button - Order now"
+              />
+            </Link>
+          </div>
+
         </Form>
         <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className} >
           <ModalHeader toggle={this.toggle}>Panier de commande</ModalHeader>
@@ -221,12 +228,10 @@ class ButtonAddToShoppingCart extends React.Component {
                 <strong>{parseFloat(sum).toFixed(2) + ' €'}</strong>
               </li>
             </ul>
-
-
           </ModalBody>
           <ModalFooter>
             <Button color="primary" onClick={this.orderNow}>Commander</Button>{' '}
-            <Button color="secondary" onClick={this.cancel}>Annuler</Button>
+            <Button color="secondary"  onClick={this.cancel}>Annuler</Button>
           </ModalFooter>
         </Modal>
       </div>

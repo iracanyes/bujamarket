@@ -12,11 +12,12 @@ import {
   Card,
   CardFooter,
   CardTitle,
-  Carousel,
-  CarouselItem,
-  CarouselControl,
-  CarouselIndicators,
 } from "reactstrap";
+import AwesomeSlider from "react-awesome-slider";
+import CoreStyles from 'react-awesome-slider/src/core/styles.scss';
+import AwesomeSliderStyles from "react-awesome-slider/src/styled/cube-animation";
+import {SpinnerLoading} from "../../layout/Spinner";
+import { toastError, toastInfo } from "../../layout/ToastMessage";
 
 class CarouselCategoryProducts extends Component {
   static propTypes = {
@@ -39,8 +40,6 @@ class CarouselCategoryProducts extends Component {
   componentDidMount() {
 
     this.props.id && this.props.list({'category': this.props.id});
-
-
   }
 
 
@@ -85,18 +84,12 @@ class CarouselCategoryProducts extends Component {
 
     const products = this.props.retrieved && this.props.retrieved.products;
 
-
-    console.log("Résultats produits", products);
-    console.log("Résultats produits taille", products.length);
-    console.log("Math.ceil(products.length / 12 )", Math.ceil(products.length / 12 ));
-
     let rows = [];
 
     if(products.length > 1)
     {
       for(let i = 0; i < Math.ceil(products.length / 12 ); i++)
       {
-
         let resultsPer12 = [];
 
         for(let j = 0; j < 12 && products[j]; j++)
@@ -106,36 +99,21 @@ class CarouselCategoryProducts extends Component {
             console.log("Résultats produit" + j, products[i * 12 + j]);
           }
 
-
-
           if(j >= 0 && products[i * 12 + j])
           {
-
             resultsPer12.push(
-              <Col key={"products" + (i * 12 + j)} xs={"12"} sm="6" md="4" lg="3">
-                <Card body className={" text-white bg-dark"}>
+              <Col key={"products" + (i * 12 + j)} xs={"12"} sm="6" md="3" className={'slider-item'}>
+                <Card className={"slider-card"}>
                   <Link
-
                     to={`/products/show/${encodeURIComponent(products[i * 12 + j]['id'])}`}
                   >
                     <div className="card-img-custom">
                       <img src={products[i * 12 + j]['url']} alt={products[i * 12 + j]["alt"]} className="image img-fluid" style={{ width:"100%"}} />
 
                       <CardTitle>
-
                         <span className="font-weight-bold">
-
-                          {/* Permet d'injecter la traduction d'une valeur reçu par une entité
-                            intl.formatMessage({
-                              id: "app.category.item"+products[i * 12 + j]["id"]+".name",
-                              description: "category item - name for item "+products[i * 12 + j]["id"],
-                              defaultMessage: products[i * 12 + j]["name"]
-                            })
-                          */}
                           {products[i * 12 + j]["title"]}
                         </span>
-
-
                       </CardTitle>
                     </div>
                   </Link>
@@ -153,44 +131,38 @@ class CarouselCategoryProducts extends Component {
         }
 
         rows.push(
-          <CarouselItem
-            onExiting={this.onExiting}
-            onExited={this.onExited}
+          <div
+            className={'col-10'}
             key={i}
+            className={'slider-page'}
           >
             <Row
               key={"rows" + (i)}
             >
               {resultsPer12}
             </Row>
-          </CarouselItem>
+          </div>
         );
       }
     }else{
       /* Cas table contenant 1 seul élément */
       rows.push(
-        <CarouselItem
-          onExiting={this.onExiting}
-          onExited={this.onExited}
+        <div
           key={0}
+          className={'slider-page'}
         >
           <Row
             key={"rows0"}
           >
-            <Col key={"products0"} xs={"12"} sm="6" md="4" lg="3">
-              <Card body className={" text-white bg-dark"}>
+            <Col key={"products0"} sm="6" md="3" className={'slider-item'}>
+              <Card className={"slider-card"}>
                 <Link
-
                   to={`/products/show/${encodeURIComponent(products[0]['id'])}`}
                 >
                   <div className="card-img-custom">
-                    <img src={products[0]['url']} alt={products[0]["alt"]} className="image img-fluid" style={{ width:"100%"}} />
-
-
+                    <img src={products[0]['img-src']} alt={products[0]["alt"]} className="image img-fluid" style={{ width:"100%"}} />
                     <CardTitle>
-
                         <span className="font-weight-bold">
-
                           {/* Permet d'injecter la traduction d'une valeur reçu par une entité
                             intl.formatMessage({
                               id: "app.category.item"+products[0]["id"]+".name",
@@ -200,12 +172,9 @@ class CarouselCategoryProducts extends Component {
                           */}
                           {products[0]["title"].replace(/(([^\s]+\s\s*){8})(.*)/,"$1…")}
                         </span>
-
-
                     </CardTitle>
                   </div>
                 </Link>
-
                 <CardFooter>
                   <p>
                     À partir de : {products[0]["minimumPrice"].toFixed(2)} &euro;
@@ -214,7 +183,7 @@ class CarouselCategoryProducts extends Component {
               </Card>
             </Col>
           </Row>
-        </CarouselItem>
+        </div>
       );
     }
 
@@ -225,45 +194,24 @@ class CarouselCategoryProducts extends Component {
 
 
   render() {
-    const { activeIndex } = this.state;
-
     const items = this.props.retrieved  !== null ? this.showProducts() : {};
 
 
-
-    const styleCarouselInner = {
-        margin: "0 40px"
-    };
+    this.props.deletedItem && toastInfo(`Element : ${this.props.deletedItem['@id']} supprimé!`);
+    this.props.error && toastError(this.props.error);
 
     return <Fragment>
-        <div className={"list-products my-3 py-2  "}>
+        <div className={"slider-container my-3 py-2"}>
+          {this.props.loading && <SpinnerLoading message={'Chargement des produits de la catégorie'} />}
 
-
-          {this.props.loading && <div className="alert alert-info">Loading...</div>}
-          {this.props.deletedItem && <div className="alert alert-success">{this.props.deletedItem['@id']} deleted.</div>}
-          {this.props.error && <div className="alert alert-danger">{this.props.error}</div>}
-
-
-
-            {this.props.retrieved &&
-              <Carousel
-                  activeIndex={activeIndex}
-                  next={this.next}
-                  previous={this.previous}
-                  style={styleCarouselInner}
-                  className={" col-lg-12"}
-              >
-
-
-                  {this.props.retrieved && items}
-
-                  <CarouselIndicators items={this.props.retrieved && items} activeIndex={activeIndex} onClickHandler={this.goToIndex}/>
-                  <CarouselControl direction={"prev"} directionText={"Précédent"} onClickHandler={this.previous} className={"col-lg-1"}/>
-                  <CarouselControl direction={"next"} directionText={"Suivant"} onClickHandler={this.next}/>
-              </Carousel>
-            }
-
-
+          {this.props.retrieved &&
+            <AwesomeSlider
+                animation={'cube-animation'}
+                cssModule={AwesomeSliderStyles}
+            >
+                {this.props.retrieved && items}
+            </AwesomeSlider>
+          }
     </div>
     </Fragment>;
   }

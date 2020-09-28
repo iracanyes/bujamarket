@@ -23,8 +23,13 @@ export function getProfile(history, location) {
     dispatch(loading(true));
 
     const headers = new Headers();
-    if(localStorage.getItem('token'))
+    if(localStorage.getItem('token') !== null){
       headers.set('Authorization', 'Bearer ' + JSON.parse(localStorage.getItem('token')).token );
+    }else{
+      toastError("Authentification nécessaire!");
+      history.push({pathname: 'login', state: { from: location.pathname }});
+    }
+
 
     return fetch("/profile", { method: 'POST', headers })
       .then(response =>

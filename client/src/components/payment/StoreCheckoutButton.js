@@ -6,20 +6,24 @@
 // MyStoreCheckout.js
 import React, {Fragment} from 'react';
 import { connect } from 'react-redux';
-import {injectStripe} from 'react-stripe-elements';
+import { withRouter } from "react-router-dom";
+import { ElementsConsumer } from '@stripe/react-stripe-js';
 import { FormattedMessage} from 'react-intl';
-import { Button } from 'reactstrap';
+import {
+  Button,
+  Spinner
+} from 'reactstrap';
 import { toast } from "react-toastify";
-import { ToastInfo } from "../../layout/ToastMessage";
-
-
+import {toastError, toastStripePaymentInfo} from "../../layout/ToastMessage";
 import {create} from "../../actions/payment/create";
 
-class StoreCheckoutButton extends React.Component {
+class CheckoutButton extends React.Component {
 
   constructor(props)
   {
     super(props);
+
+    toastStripePaymentInfo();
 
     this.onSubmit = this.onSubmit.bind(this);
   }
@@ -28,43 +32,42 @@ class StoreCheckoutButton extends React.Component {
   {
     e.preventDefault();
 
-    let item = {};
+    const { stripe } = this.props.stripe;
 
-    this.props && console.log('onSubmit - location state ', this.props.location.state );
+    let orderSet = {};
+
 
     if(this.props.location.state !== undefined){
-      item = this.props.location.state.params.orderSet;
-      console.log('location.state.order_set', item);
+      orderSet = this.props.location.state.params.orderSet;
+      console.log('location.state.order_set', orderSet);
     }else{
       if(sessionStorage.getItem('my_order'))
       {
-        item = JSON.parse(sessionStorage.getItem('my_order'));
-        console.log('session_storage.my_order_set', item);
+        orderSet = JSON.parse(sessionStorage.getItem('my_order'));
+        //console.log('session_storage.my_order_set', item);
       }
     }
 
-    this.props.create(item.id, this.props.history, this.props.location, this.props.stripe);
-
+    this.props.create(orderSet.id, this.props.history, this.props.location, stripe);
 
   }
 
   render() {
-    toast(
-      <ToastInfo message={(<p>En cliquant sur "Effectuer le paiement", vous serez redirigé vers la plateforme de paiement en ligne sécurisé Stripe.<br/>À la fin du processus de paiement, vous serez redirigé vers la page suivante : Facture.</p> )} />,
-      {
-        autoclose: 120000,
-      }
-      );
+    const { loading, errorCreate } = this.props;
+    // Affichage des erreurs
+    typeof errorCreate === "string" && toastError(errorCreate);
+
     return (
       <Fragment>
         <div className={"d-flex mx-auto mt-3 justify-content-center"}>
-          <Button outline color={"success"} className={'mr-3'} onClick={this.onSubmit}>
+          <Button outline color={"success"} className={'mr-3 border-success'} onClick={this.onSubmit}>
+            { loading && <Spinner color={'primary'} className={'spinner mr-2'} />}
             <FormattedMessage  id={"app.button.make_payment"}
                                defaultMessage="Effectuer le paiement"
                                description="Button - make payment"
             />
           </Button>
-          <Button outline color={"danger"} onClick={() => this.props.history.goBack()}>
+          <Button outline color={"danger"} className={'border-danger'} onClick={() => this.props.history.goBack()}>
             <FormattedMessage  id={"app.button.cancel_order"}
                                defaultMessage="Annuler la commande"
                                description="Button - return"
@@ -81,8 +84,29 @@ class StoreCheckoutButton extends React.Component {
   }
 }
 
+const mapStateToProps = state => {
+  const { error: errorCreate, loading } = state.payment.create;
+
+  return { errorCreate, loading };
+};
+
 const mapDispatchToProps = dispatch => ({
   create: (id, history, location, stripe) => dispatch(create(id, history, location, stripe))
 });
 
-export default connect(null, mapDispatchToProps)(injectStripe(StoreCheckoutButton));
+const StoreCheckoutForm = (props) => (
+  <ElementsConsumer>
+    {(stripe, elements) => (
+      <CheckoutButton
+        stripe={stripe}
+        elements={elements}
+        location={props.location}
+        history={props.history}
+        create={props.create}
+        loading={props.loading}
+        errorCreate={props.errorCreate}
+      />
+    )}
+  </ElementsConsumer>
+);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(StoreCheckoutForm));

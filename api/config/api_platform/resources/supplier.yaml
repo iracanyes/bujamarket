@@ -13,7 +13,7 @@ App\Entity\Supplier:
                 _format: 'json'
             # host: 'localhost'
             schemes: ['https']
-            access_control: "is_granted('ROLE_MEMBER') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
+            security: "is_granted('ROLE_MEMBER') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
             #options:
             #    my_option: 'my_option_value'
             status: 200 # customize the HTTP status code to send
@@ -22,7 +22,7 @@ App\Entity\Supplier:
             path: '/supplier/create'
             requirements:
                 supplier: App\Entity\Supplier
-            access_control: "is_granted('ROLE_SUPPLIER') and is_granted('IS_AUTHENTICATED_FULLY')"
+            security: "is_granted('ROLE_SUPPLIER') and is_granted('IS_AUTHENTICATED_FULLY')"
             schemes: ['https']
             controller: App\Controller\Supplier\CreateSupplier::class
     itemOperations:
@@ -36,7 +36,7 @@ App\Entity\Supplier:
                 _format: 'json'
             # host: 'localhost'
             schemes: ['https']
-            access_control: "is_granted('ROLE_MEMBER') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
+            security: "is_granted('ROLE_MEMBER') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
             #options:
             #    my_option: 'my_option_value'
             status: 200 # customize the HTTP status code to send        
@@ -45,14 +45,14 @@ App\Entity\Supplier:
             path: '/supplier/{id}'
             requirements:
                 id: '\d+'
-            access_control: 'is_granted("ROLE_SUPPLIER") and is_granted("IS_AUTHENTICATED_FULLY")'
+            security: 'is_granted("ROLE_SUPPLIER") and is_granted("IS_AUTHENTICATED_FULLY")'
             schemes: ['https']
         delete:
             method: 'DELETE'
             path: '/supplier/{id}'
             requirements:
                 id: '\d+'
-            access_control: 'is_granted("ROLE_SUPPLIER") and is_granted("IS_AUTHENTICATED_FULLY")'
+            security: 'is_granted("ROLE_SUPPLIER") and is_granted("IS_AUTHENTICATED_FULLY")'
             schemes: ['https']
     subresourceOperations:
         supplier_products_get_subresource:

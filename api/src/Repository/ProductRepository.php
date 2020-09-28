@@ -47,7 +47,7 @@ class ProductRepository extends ServiceEntityRepository
                  ->setParameter("title", "%".$options['title']."%");
 
          if($options['resume'] !== null)
-             $qb->andWhere("p.resume")
+             $qb->andWhere("p.resume LIKE :resume")
                  ->setParameter("resume", $options['resume']);
 
 
@@ -57,10 +57,17 @@ class ProductRepository extends ServiceEntityRepository
                  ->setParameter('category',$options['category']);
          }
 
+        if($options['id'] !== null)
+        {
+            $qb->andWhere('p.id = :id')
+                ->setParameter('id', $options['id']);
+        }
+
          if($options['itemsPerPage'] !== null)
          {
              $qb->setMaxResults($options["itemsPerPage"]);
          }
+
 
 
          return $qb->getQuery()
@@ -91,9 +98,12 @@ class ProductRepository extends ServiceEntityRepository
         }
 
 
-        return $qb->getQuery()
+        return $qb->groupBy('p.id')
+            ->getQuery()
             ->getResult();
     }
+
+
 
     public function searchProducts($options = [])
     {

@@ -22,7 +22,7 @@ App\Entity\Product:
             defaults:
                 _api_receive: false
                 _api_respond: false
-            schemes: ['https','http']
+            schemes: ['https']
             controller: App\Controller\Product\GetProductsWithImageAction            
         getNames:
             method: 'GET'
@@ -35,13 +35,13 @@ App\Entity\Product:
             defaults:
                 _api_receive: false
             schemes: ['https']
-            controller: App\Controller\Product\SearchProductsAction
+            controller: App\Controller\Product\SearchProductsAction        
         post:
             method: 'POST'
             path: '/product/create'
             requirements:
                 product: App\Entity\Product
-            access_control: "is_granted('ROLE_SUPPLIER') and is_granted('IS_AUTHENTICATED_FULLY')"
+            security: "is_granted('ROLE_SUPPLIER') and is_granted('IS_AUTHENTICATED_FULLY')"
             schemes: ['https']
             controller: App\Controller\Product\CreateProduct::class
     itemOperations:
@@ -62,14 +62,24 @@ App\Entity\Product:
             path: '/product/{id}'
             requirements:
                 id: '\d+'
-            access_control: 'is_granted("ROLE_SUPPLIER") and is_granted("IS_AUTHENTICATED_FULLY")'
+            security: 'is_granted("ROLE_SUPPLIER") and is_granted("IS_AUTHENTICATED_FULLY")'
             schemes: ['https']
         delete:
             method: 'DELETE'
             path: '/product/{id}'
             requirements:
                 id: '\d+'
-            access_control: 'is_granted("ROLE_ADMIN") and is_granted("IS_AUTHENTICATED_FULLY")'
+            security: 'is_granted("ROLE_ADMIN") and is_granted("IS_AUTHENTICATED_FULLY")'
             schemes: ['https']
+    subresourceOperations:
+        #supplierproducts_get_subresources:
+        #    method: 'GET'
+        #    path: '/products/{id}/product_suppliers'
+        #    requirements:
+        #        id: '\d+'
+        #    defaults:
+        #        _api_receive: false
+        #    schemes: ['https']
+        #    controller: App\Controller\Product\GetProductSuppliersAction
         
         

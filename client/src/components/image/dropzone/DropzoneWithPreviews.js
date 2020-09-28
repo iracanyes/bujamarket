@@ -6,12 +6,17 @@ import {
   Col,
   Button
 } from "reactstrap";
+import { Box } from '@material-ui/core';
 import {toastError, toastSuccess} from "../../../layout/ToastMessage";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getProfileImage, reset  } from "../../../actions/image/profile";
 import { del } from "../../../actions/image/delete";
 import {injectIntl, FormattedMessage } from "react-intl";
 import _ from "lodash";
+import {BsImages, GiClick} from "react-icons/all";
+import { RiImageAddLine } from "react-icons/all";
+import { IoIosImages } from "react-icons/all";
+
 
 class DropzoneWithPreviews extends React.Component
 {
@@ -198,19 +203,34 @@ class DropzoneWithPreviews extends React.Component
       >
         {({ getRootProps, getInputProps }) => (
           <Col className={"container"}>
-            <label htmlFor={this.props.label}>{this.props.label}</label>
             <div {...getRootProps({className:"dropzone" })}>
               <input {...getInputProps()} name={this.props.inputName ? this.props.inputName : 'images'}/>
-              <p>Glisser et Déposer vo(tre|s) image ici, ou Cliquer pour choisir vo(tre|s) image(s)</p>
+              <div className="d-flex flex-column">
+                <div className="d-inline-flex justify-content-center">
+                  <IoIosImages classname={'mr-2'}/>
+                  <p className={'mb-0'}>Glisser et Déposer vo(tre|s) image ici.</p>
+
+                </div>
+                <div className="d-inline-flex justify-content-center">
+                  <p className={'mb-0'}>Ou</p>
+                </div>
+                <div className="d-inline-flex justify-content-center">
+                  <GiClick classname={'mr-2'}/>
+                  <p className={'mb-0'}>Cliquer pour choisir vo(tre|s) image(s)</p>
+                </div>
+              </div>
+
+
+
             </div>
-            <aside>
+            <div>
               <label>Images uploadées</label>
               <div id={"dropzone-preview"} >
                 { retrievedProfileImage && retrievedProfileImage }
                 { files && files }
                 { newFiles && newFiles }
               </div>
-            </aside>
+            </div>
           </Col>
 
         )}

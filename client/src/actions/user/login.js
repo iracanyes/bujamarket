@@ -4,6 +4,10 @@ import React from "react";
 import { toast } from "react-toastify";
 import { ToastSuccess, ToastError, ToastWelcome } from "../../layout/ToastMessage";
 
+export function notify(notification){
+  return { type: 'USER_LOGIN_NOTIFICATION', notification};
+}
+
 export function error(error) {
   return { type: 'USER_LOGIN_ERROR', error };
 }
@@ -66,6 +70,7 @@ export function login(email, password, history, locationState) {
         dispatch(success(retrieved));
 
         const user = JSON.parse(atob(retrieved["token"].split(".")[1]));
+        dispatch(notify(`Bienvenue ${ user.name }`));
 
         //
         if(locationState.state && locationState.state.params && locationState.state.from)
@@ -79,7 +84,6 @@ export function login(email, password, history, locationState) {
             history.push({ pathname: locationState.state.from });
           }else{
             // Redirection page d'accueil
-            toast(<ToastWelcome message={"Bienvenue " + user.name} />);
             history.push('/');
           }
 
@@ -110,6 +114,7 @@ export function login(email, password, history, locationState) {
             dispatch(error(e));
             break;
         }
+        dispatch(error(null));
         /* Redirection vers la page de connexion + message d'erreur */
         history.push({pathname: 'login', state: locationState });
       });

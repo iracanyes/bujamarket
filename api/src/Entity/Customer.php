@@ -35,7 +35,7 @@ class Customer extends User
     /**
      * @var string $customerKey Customer key on Stripe platform
      *
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\NotBlank()
      * @Groups({"customer:output"})
      */

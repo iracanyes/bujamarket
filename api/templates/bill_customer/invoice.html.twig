@@ -3,7 +3,7 @@
 {% block title %}Customer - Invoice{% endblock %}
 
 {%  block stylesheets %}
-    <link href="https://fonts.googleapis.com/css?family=Carter+One|Lato&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Nunito|Carter+One|Lato&display=swap" rel="stylesheet">
     <style type="text/css">
         {% include('assets/bootstrap-4.3.1-dist/css/bootstrap-reboot.css') %}
         {% include('assets/bootstrap-4.3.1-dist/css/bootstrap-grid.css') %}
@@ -17,6 +17,10 @@
 
 {% block body %}
     <div class="container " style="font-size: 0.9rem">
+      {% dump payment %}
+      {% dump orderSet %}
+      {% dump payment %}
+      {% dump bill %}
         <h1 class="text-center">Customer invoice</h1>
         <div style="min-width: 600px">
             <section class="m-0 p-0">
@@ -46,13 +50,20 @@
                 <div class="row m-0 p-0">
                     <div class="col text-left">
                         <div class="text-gray-light"><strong>Destinataire:</strong></div>
-                        <strong class="">{{ payment.bill.customer.firstname ~ ' ' ~ payment.bill.customer.lastname }}</strong>
-                        <div class="">796 Silver Harbour, TX 79273, US</div>
-                        <div class=""><a href="mailto:john@example.com">{{ payment.bill.customer.email }}</a></div>
+                        <strong class="">{{ bill.customer.firstname ~ ' ' ~ bill.customer.lastname }}</strong>
+                        <div class="">
+                          <p>
+                            {{ orderSet.address.street ~ ' ' ~ orderSet.address.number }}<br>
+                            {{ orderSet.address.town }}<br>
+                            {{ orderSet.address.zipCode ~ ' ' ~ orderSet.address.state }}<br>
+                            {{ orderSet.address.country }}
+                          </p>
+                        </div>
+                        <div class=""><a href="mailto:john@example.com">{{ bill.customer.email }}</a></div>
                     </div>
                     <div class="col mb-0 text-right">
                         <div class="text-gray-light"><strong>Facture:</strong></div>
-                        <strong class="">{{ payment.bill.reference }}</strong>
+                        <strong class="">{{ bill.reference }}</strong>
                         <div class="">Date de facturation: {{ payment.dateCreated|date("d/m/Y", "Europe/Paris") }}</div>
                         <div class="">Date d'échéance: {{ payment.dateCreated|date_modify("+10 day")|date("d/m/Y", "Europe/Paris") }}</div>
                     </div>
@@ -68,19 +79,27 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for item in session.display_items %}
+                        {% dump lineItems %}
+                        {% for item in lineItems %}
+                          {% dump item %}
                             <tr>
                                 <td class="no">{{ loop.index }}</td>
                                 <td class="text-left">
                                     <strong>
-                                            {{ item.custom.name }}
+                                      {% if item.name is defined %}
+                                        {{  item.name|default(null) }}
+                                      {% else %}
+                                        {{ item.description|default(null) }}
+                                      {% endif %}
                                     </strong>
                                     <br/>
                                     <span>
-                                        {{ item.custom.description }}
+                                      {% if item.name is defined %}
+                                        {{ item.description }}
+                                      {% endif %}
                                     </span>
                                 </td>
-                                {% set price =  item.amount / 100.0 %}
+                                {% set price =  item.amount_total / 100.0 %}
                                 <td class="text-right">{{ price|round(2, 'ceil')  ~ ' €'}}</td>
                                 <td class="text-right">{{ item.quantity }}</td>
                                 <td class="text-right">{{ (price * item.quantity)|round(2)  ~ ' €' }}</td>
@@ -92,22 +111,22 @@
                     <tr>
                         <td colspan="2"></td>
                         <td colspan="2"><strong>Transport</strong></td>
-                        <td class="text-right">{{ payment.bill.totalShippingCost|round(2, 'ceil')  ~ ' €'}}</td>
+                        <td class="text-right">{{ orderSet.deliverySet.shippingCost|round(2, 'ceil')  ~ ' €'}}</td>
                     </tr>
                     <tr>
                         <td colspan="2"></td>
                         <td colspan="2"><strong>Total Excl Tax</strong></td>
-                        <td class="text-right">{{ payment.bill.totalExclTax|round(2, 'ceil')  ~ ' €'}}</td>
+                        <td class="text-right">{{ bill.totalExclTax|round(2, 'ceil')  ~ ' €'}}</td>
                     </tr>
                     <tr>
                         <td colspan="2"></td>
-                        <td colspan="2">TAX {{ payment.bill.vatRateUsed }}%</td>
-                        <td class="text-right">{{ (payment.bill.totalExclTax * payment.bill.vatRateUsed)|round(2, 'ceil')  ~ ' €'}}</td>
+                        <td colspan="2">TAX {{ bill.vatRateUsed }}%</td>
+                        <td class="text-right">{{ (bill.totalExclTax * bill.vatRateUsed)|round(2, 'ceil')  ~ ' €'}}</td>
                     </tr>
                     <tr>
                         <td colspan="2"></td>
                         <td colspan="2"><strong>Total Incl Tax</strong></td>
-                        <td class="text-right">{{ payment.bill.totalInclTax|round(2, 'ceil')  ~ ' €'}}</td>
+                        <td class="text-right">{{ bill.totalInclTax|round(2, 'ceil')  ~ ' €'}}</td>
                     </tr>
                     </tfoot>
                 </table>
@@ -120,14 +139,15 @@
                 </div>
             </section>
             <footer>
-
             </footer>
         </div>
-
+        {% dump 'End templating' %}
         <div></div>
 
     </div>
 {% endblock %}
 {% block javascripts %}
+  {#
     <script src="{{ asset('public/assets/bootstrap-4.3.1-dist/js/bootstrap.js') }}"></script>
+  #}
 {% endblock %}

@@ -108,7 +108,6 @@ export function update(item, values, history, location) {
         if (e instanceof SubmissionError) {
           dispatch(updateError(e.errors._error));
         }
-        console.log("error", e);
 
         switch (true) {
           case e.code === 401:

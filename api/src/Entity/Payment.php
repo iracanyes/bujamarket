@@ -55,7 +55,7 @@ class Payment
     /**
      * @var string $description Optional description of the reason of this payment
      *
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", nullable=true)
      * @Groups({"payment:output"})
      */
     private $description;

@@ -24,24 +24,24 @@ class Homepage extends Component
   }
 
   welcome(){
-    const { connectedUser, user } = this.props;
+    const { registerNotification, loginNotification } = this.props;
 
-    if(user && user.firstname)
-      toastWelcome(`Bienvenue ${ user.firstname + " " + user.lastname }, visitez votre boîte de réception pour valider votre inscription!`);
+    typeof registerNotification === 'string' && toastWelcome(registerNotification);
 
-    if(connectedUser && connectedUser.firstname)
-      toastWelcome(`Bienvenue ${ connectedUser.firstname + " " + connectedUser.lastname }`);
+    typeof loginNotification === 'string' && toastWelcome(loginNotification);
+
   }
 
   render(){
-    console.log('render - user register', this.props.user );
-    console.log('render - user loggedIn', this.props.connectedUser );
+    const { registerNotification, loginNotification } = this.props;
 
-    this.welcome();
+    console.log("registerNotification", registerNotification);
+    console.log("loginNotification", loginNotification);
+
+    (registerNotification || loginNotification ) && this.welcome();
 
     return <Fragment>
       <section>
-
         {/* Carousel - Categories  */}
         <section id={'home-carousel-categories'} className="mx-auto category-cards bg-transparent pt60 pb60 mb-5">
           <h1>
@@ -77,9 +77,13 @@ class Homepage extends Component
 }
 
 const mapStateToProps = state => {
-  const { success: user } = state.user.registration;
-  const { login : connectedUser } = state.user.authentication;
-  return { user, connectedUser };
+  const { notify: registerNotification } = state.user.registration;
+
+  console.log('mapStateToProps - registration',state.user.registration);
+  console.log('mapStateToProps - authentication',state.user.authentication);
+
+  const { notify: loginNotification } = state.user.authentication;
+  return { registerNotification, loginNotification };
 };
 
 const mapDispatchToProps = dispatch => ({

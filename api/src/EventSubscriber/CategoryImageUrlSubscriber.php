@@ -5,7 +5,7 @@ namespace App\EventSubscriber;
 
 use ApiPlatform\Core\EventListener\EventPriorities;
 use App\Entity\Category;
-use Doctrine\ORM\Tools\Pagination\Paginator;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\AbstractPaginator;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ViewEvent;
@@ -28,32 +28,49 @@ class CategoryImageUrlSubscriber implements EventSubscriberInterface
     {
         $result = $event->getControllerResult();
         $method = $event->getRequest()->getMethod();
-        
 
-        foreach($result as $category){
-            if(!$category instanceof Category){
-                return;
-            }
-        }
+        dump($result);
+        dump($result instanceof AbstractPaginator);
+        dump($result instanceof Category);
+        dump(!($result instanceof Category || $result instanceof AbstractPaginator) && !(Request::METHOD_GET === $method || Request::METHOD_PUT === $method || Request::METHOD_POST === $method));
 
-
-        if((!$result instanceof Category || !$result instanceof Paginator) && Request::METHOD_GET !== $method ){
+        if(!($result instanceof Category || $result instanceof AbstractPaginator) && !(Request::METHOD_GET === $method || Request::METHOD_PUT === $method || Request::METHOD_POST === $method) ){
             return;
         }
 
-        foreach($result as $category){
-            if($category instanceof Category){
-                if(strpos($category->getImage()->getUrl(), getenv("UPLOAD_CATEGORY_IMAGE_DIRECTORY")) === false){
-                    $category->getImage()->setUrl( getenv("API_ENTRYPOINT").'/'.getenv("UPLOAD_CATEGORY_IMAGE_DIRECTORY").'/'.$category->getImage()->getUrl());
-                    dump($category);
+
+
+        if($result instanceof AbstractPaginator){
+            foreach($result as $category){
+                if(!$category instanceof Category){
+                    return;
                 }
-            }else{
-                return;
             }
-
-
         }
-        //$category->getImage()->setUrl(getenv("UPLOAD_CATEGORY_IMAGE_DIRECTORY").'/'.$category->getImage()->getUrl());
+
+        if($result instanceof AbstractPaginator)
+        {
+            foreach($result as $category){
+                if($category instanceof Category){
+                    if(strpos($category->getImage()->getUrl(), getenv("UPLOAD_CATEGORY_IMAGE_DIRECTORY")) === false){
+                        $category->getImage()->setUrl( getenv("API_ENTRYPOINT").'/'.getenv("UPLOAD_CATEGORY_IMAGE_DIRECTORY").'/'.$category->getImage()->getUrl());
+                    }
+                }else{
+                    return;
+                }
+                dump($category);
+
+            }
+        }
+
+
+
+        if($result instanceof Category)
+        {
+            if(strpos($result->getImage()->getUrl(), getenv("UPLOAD_CATEGORY_IMAGE_DIRECTORY")) === false){
+                $result->getImage()->setUrl( getenv("API_ENTRYPOINT").'/'.getenv("UPLOAD_CATEGORY_IMAGE_DIRECTORY").'/'.$result->getImage()->getUrl());
+            }
+        }
 
         $event->setControllerResult($result);
 

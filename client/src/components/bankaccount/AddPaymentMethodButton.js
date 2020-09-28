@@ -12,8 +12,8 @@ import {
 
 function AddPaymentMethodButton(props){
   return (
-    <div id={'add-payment-method'} className={'d-flex flex-row'}>
-      <NavLink tag={RRDNavLink} to={'/payment_method/add'} className={'btn btn-outline-primary'}>
+    <div id={'add-payment-method'} className={'d-flex flex-row justify-content-center'}>
+      <NavLink tag={RRDNavLink} to={'/payment_method/create'} className={'btn btn-outline-primary'}>
         Ajouter un moyen de paiement
       </NavLink>
       <div className="payment-method-icons ml-2">

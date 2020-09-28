@@ -1,5 +1,14 @@
 import { combineReducers } from 'redux';
 
+export function notify(state = {}, action) {
+  switch (action.type) {
+    case 'USER_REGISTER_NOTIFICATION':
+      return action.notification;
+
+    default:
+      return state;
+  }
+}
 
 export function error(state = {}, action) {
   switch (action.type) {
@@ -41,4 +50,4 @@ export function success(state = {}, action) {
   }
 }
 
-export default combineReducers({ error, loading, request, success });
+export default combineReducers({ error, loading, request, success, notify });

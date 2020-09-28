@@ -11,16 +11,24 @@ App\Entity\BankAccount:
                 _format: 'json'
             # host: 'localhost'
             schemes: ['https']
-            access_control: "is_granted('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_FULLY')"
+            security: "is_granted('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_FULLY')"
             #options:
             #    my_option: 'my_option_value'
             status: 200 # customize the HTTP status code to send
         post:
             method: 'POST'
             path: '/bank_account/create'
-            access_control: "is_granted('IS_AUTHENTICATED_FULLY')"
+            security: "is_granted('IS_AUTHENTICATED_FULLY') and is_granted('ROLE_MEMBER')"
             schemes: ['https']
-            controller: App\Controller\BankAccount\CreateBankAccount::class
+            defaults:
+                _api_receive: false
+            controller: App\Controller\BankAccount\CreateBankAccountAction
+        delete:
+            method: 'POST'
+            path: '/bank_account/delete'
+            security: "is_granted('IS_AUTHENTICATED_FULLY')"
+            schemes: [ 'https' ]
+            controller: App\Controller\BankAccount\DeleteBankAccountAction
     itemOperations:
         get:
             method: 'GET'
@@ -32,22 +40,23 @@ App\Entity\BankAccount:
                 _format: 'json'
             # host: 'localhost'
             schemes: ['https']
-            access_control: "is_granted('IS_AUTHENTICATED_FULLY')"
+            security: "is_granted('IS_AUTHENTICATED_FULLY')"
             #options:
             #    my_option: 'my_option_value'
             status: 200 # customize the HTTP status code to send
-        
+        getClientSecret:
+            method: 'GET'
+            path: '/bank_account/client_secret'
+            defaults:
+                _api_receive: false
+            schemes: ['https']
+            security: "is_granted('IS_AUTHENTICATED_FULLY') and is_granted('ROLE_MEMBER')"
+            controller: App\Controller\BankAccount\GetClientSecretAction
         put:
             method: 'PUT'
             path: '/bank_account/{id}'
             requirements:
                 id: '\d+'
-            access_control: "is_granted('IS_AUTHENTICATED_FULLY')"
+            security: "is_granted('IS_AUTHENTICATED_FULLY')"
             schemes: ['https']
-        delete:
-            method: 'DELETE'
-            path: '/bank_account/{id}'
-            requirements:
-                id: '\d+'
-            access_control: "is_granted('IS_AUTHENTICATED_FULLY')"
-            schemes: ['https']
+        

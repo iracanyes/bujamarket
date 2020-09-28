@@ -22,7 +22,6 @@ export function create(values, history) {
     let headers = new Headers();
     headers.set('Authorization', 'Bearer ' + userToken.token);
 
-    console.log("create values", values);
 
     return fetch('favorite/create', { method: 'POST', headers: headers, body: JSON.stringify(values) })
       .then(response => {

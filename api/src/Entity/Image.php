@@ -16,7 +16,6 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  * })
  * @ORM\Table(name="bjmkt_image")
  * @ORM\Entity(repositoryClass="App\Repository\ImageRepository")
- * @Vich\Uploadable()
  */
 class Image
 {

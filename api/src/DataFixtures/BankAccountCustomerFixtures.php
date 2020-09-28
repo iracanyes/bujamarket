@@ -25,6 +25,7 @@ class BankAccountCustomerFixtures extends Fixture implements DependentFixtureInt
         $bankAccount = new BankAccount();
 
         $bankAccount->setIdCard($this->faker->unique()->iban());
+        $bankAccount->setOwnerFullname($this->faker->name());
         $bankAccount->setBrand($this->faker->creditCardType);
         $bankAccount->setCountryCode($this->faker->countryCode);
         $bankAccount->setLast4($this->faker->randomNumber(4, true));

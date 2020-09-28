@@ -14,8 +14,11 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FormattedMessage } from 'react-intl';
 import EuVat from '../../config/EuVat/rate.json';
-import { Elements } from 'react-stripe-elements';
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
 import StoreCheckoutButton from "../payment/StoreCheckoutButton";
+
+const stripePromise = loadStripe(`${process.env.REACT_APP_STRIPE_PUBLIC_KEY}`);
 
 class ValidateOrder extends Component {
   static propTypes = {
@@ -30,21 +33,28 @@ class ValidateOrder extends Component {
   constructor(props)
   {
     super(props);
+
+
   }
 
   componentDidMount() {
-    if(localStorage.getItem('token') === null)
+    if(localStorage.getItem('token') === null  )
     {
-      this.props.history.push({
-        pathname:'login',
-        state: {
-          from: this.props.location.pathname,
-          params: {
-            orderSet: this.props.location.state.params.orderSet ? this.props.location.state.params.orderSet : null
+      if(this.props.location.state){
+        this.props.history.push({
+          pathname:'../../login',
+          state: {
+            from: this.props.location.pathname,
+            params: {
+              orderSet: this.props.location.state.params.orderSet ? this.props.location.state.params.orderSet : null
+            }
           }
-        }
 
-      });
+        });
+      }else{
+        this.props.history.push({pathname: '../../login'});
+      }
+
     }
   }
 
@@ -52,18 +62,14 @@ class ValidateOrder extends Component {
     this.props.reset(this.props.eventSource);
   }
 
-
-
-
   render() {
     let item = {};
-
 
     /* Index de la liste de commande */
     let orderSetKey = 1;
 
     /* Récupération de l'ensemble de commande */
-    if(this.props.location.state.params !== null){
+    if(this.props.location.state && this.props.location.state.params !== null){
       item = this.props.location.state.params.orderSet;
       console.log('render - props location state', item);
     }else{
@@ -72,42 +78,35 @@ class ValidateOrder extends Component {
         item = JSON.parse(sessionStorage.getItem('my_order'));
         console.log('render - session_storage.my_order_set', item);
       }else{
-        this.props.history.push({pathname: 'shopping_card', state:{from: this.props.location.pathname, params: this.props.location.state.params}});
+        this.props.history.push({pathname: 'shopping_cart', state:{from: this.props.location.pathname, params: this.props.location.state.params}});
       }
     }
 
-    console.log(item);
 
     return (
-      <div className={"col-6 mx-auto"}>
+      <div className={"col-8 mx-auto"}>
         <div>
-
           <div className="col-12 px-0">
-
             <nav className="navbar navbar-expand-md navbar-dark bg-primary mb-5 no-content w-100">
               {/* Breadcrumb */}
               <div className="col-12 mr-auto">
                 <nav aria-label="breadcrumb" className={"w-100 bg-primary text-white"}>
                   <ol className="breadcrumb clearfix d-none d-md-inline-flex p-0 w-100 mb-0 bg-primary">
                     <li className="">
-                      <FormattedMessage  id={"app.page.shopping_card.shopping_card_validation"}
+                      <FormattedMessage  id={"app.page.shopping_cart.shopping_cart_validation"}
                                          defaultMessage="Validation du panier de commande"
                                          description="App - Delivery address"
                       />
                       <FontAwesomeIcon icon={'angle-double-right'} className={'mx-2 text-white'} aria-hidden={'true'}/>
-
                     </li>
                     <li className="">
                       <span className="text-white">
-
                         <FormattedMessage  id={"app.delivery_address"}
                                            defaultMessage="Adresse de livraison"
                                            description="App - Delivery address"
                         />
-
                       </span>
                       <FontAwesomeIcon icon={'angle-double-right'} className={'mx-2 text-white'} aria-hidden={'true'}/>
-
                     </li>
                     <li className="">
                       <span className="text-white" >
@@ -117,7 +116,6 @@ class ValidateOrder extends Component {
                                              description="App - Payment"
                           />
                         </b>
-
                       </span>
                       <FontAwesomeIcon icon={'angle-double-right'} className={'mx-2 text-white'} aria-hidden={'true'}/>
 
@@ -133,11 +131,8 @@ class ValidateOrder extends Component {
                   </ol>
                 </nav>
               </div>
-
             </nav>
-
           </div>
-
         </div>
 
         {item.id && (
@@ -147,7 +142,6 @@ class ValidateOrder extends Component {
               <span className="badge badge-secondary badge-pill">{item && item.orderDetails.length}</span>
             </h4>
             <ListGroup>
-
               {item && item.orderDetails.map((item, index) => (
                 <ListGroupItem className={'d-flex'} key={orderSetKey++}>
                   <div className="col-9">
@@ -173,7 +167,6 @@ class ValidateOrder extends Component {
               ))}
               <ListGroupItem className={'d-flex'} key={orderSetKey++}>
                 <div className="col-9">
-
                   <ListGroupItemText>
                     {"Total HTVA"}
                   </ListGroupItemText>
@@ -222,16 +215,7 @@ class ValidateOrder extends Component {
                 </div>
               </ListGroupItem>
             </ListGroup>
-            {/*
-              <div className="d-flex mx-auto mt-3">
-                {item.orderDetails.length > 0 && (
-                  <StoreCheckout/>
-                )}
-
-
-              </div>
-            */}
-            <Elements>
+            <Elements stripe={stripePromise}>
               <StoreCheckoutButton location={this.props.location} history={this.props.history}/>
             </Elements>
 
@@ -243,19 +227,6 @@ class ValidateOrder extends Component {
     );
   }
 
-  renderLinks = (type, items) => {
-    if (Array.isArray(items)) {
-      return items.map((item, i) => (
-        <div key={i}>{this.renderLinks(type, item)}</div>
-      ));
-    }
-
-    return (
-      <Link to={`../../${type}/show/${encodeURIComponent(items)}`}>
-        {items}
-      </Link>
-    );
-  };
 }
 
 const mapStateToProps = state => ({

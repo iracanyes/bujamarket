@@ -46,8 +46,7 @@ App\Entity\Category:
             # host: 'localhost'
             #options:
             #    my_option: 'my_option_value'
-            status: 200 # customize the HTTP status code to send
-            
+            status: 200 # customize the HTTP status code to send            
         put:
             method: 'PUT'
             path: '/category/{id}'

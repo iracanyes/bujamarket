@@ -63,7 +63,7 @@ class Category
      *
      * @ORM\Column(type="boolean")
      * @Assert\Type("boolean")
-     * @ Groups("category:output")
+     * @Groups("category:output")
      */
     private $isValid;
 

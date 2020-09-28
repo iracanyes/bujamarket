@@ -38,8 +38,6 @@ export function retrieve(history, location) {
       .then(({ retrieved, hubURL }) => {
         retrieved = normalize(retrieved);
 
-        console.log("action retrieved", retrieved);
-
         dispatch(retrieveLoading(false));
         dispatch(retrieveSuccess(retrieved));
 
@@ -47,8 +45,6 @@ export function retrieve(history, location) {
       })
       .catch(e => {
         dispatch(retrieveLoading(false));
-
-        console.log("error", e);
 
         if (e.code  === 401) {
           dispatch(retrieveError("Authentification nécessaire!"));
@@ -91,8 +87,6 @@ export function update(values, history, location) {
     const headers = new Headers();
     if(localStorage.getItem('token') !== null)
       headers.set('Authorization', 'Bearer '+ JSON.parse(localStorage.getItem('token')).token);
-
-    console.log("update fetch body values", values);
 
     return fetch('profile/update', {
       method: 'POST',

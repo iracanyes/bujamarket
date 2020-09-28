@@ -24,7 +24,7 @@ export function successRetrieved(retrieved) {
   return { type: 'USER_SUBSCRIBE_RETRIEVE_SUCCESS', retrieved };
 }
 
-export function retrieve(token) {
+export function retrieve(token, history) {
   return dispatch => {
     dispatch(loading(true));
 
@@ -48,7 +48,21 @@ export function retrieve(token) {
       })
       .catch(e => {
         dispatch(loading(false));
-        dispatch(error(e));
+
+        switch(true){
+          case typeof e['hydra:description'] === "string":
+            dispatch(error("Security token invalid!"));
+            dispatch(error(null));
+            history.push('/register');
+            break;
+          case typeof e.message === "string":
+            dispatch(error(e.message));
+            break;
+          case typeof e === "string":
+            dispatch(error(e));
+            break;
+        }
+        dispatch(error(null));
 
       });
   };

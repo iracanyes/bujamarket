@@ -556,4 +556,35 @@ class SupplierProductHandler
         }
     }
 
+    public function getProductSuppliers()
+    {
+        $id = $this->request->attributes->get('id') ?? null;
+
+        dump($this->request);
+        dump($id);
+
+        try{
+            $productSuppliers = $this->em->getRepository(SupplierProduct::class)
+                ->getProductSuppliersByProductId((int) $id);
+
+            dump($productSuppliers);
+
+            foreach($productSuppliers as $value){
+                dump($value);
+                foreach($value->getImages() as $image){
+                    dump($image);
+                    $image->setUrl( getenv('API_ENTRYPOINT')."/".getenv('UPLOAD_SUPPLIER_PRODUCT_IMAGE_DIRECTORY')."/".$image->getUrl() );
+                    dump($image);
+                }
+            }
+
+            return $productSuppliers;
+
+        }catch (\Exception $e){
+            $this->logger->error($e->getMessage(), ['context' => $e]);
+        }
+
+
+    }
+
 }

@@ -28,13 +28,17 @@ class FavoriteHandler
 
     private $em;
 
-    public function __construct(RequestStack $requestStack, Security $security, EntityManagerInterface $entityManager)
+    private $imageHandler;
+
+    public function __construct(RequestStack $requestStack, Security $security, EntityManagerInterface $entityManager, ImageHandler $imageHandler)
     {
         $this->security = $security;
 
         $this->request = $requestStack->getCurrentRequest();
 
         $this->em = $entityManager;
+
+        $this->imageHandler = $imageHandler;
     }
 
     public function getIds()
@@ -98,15 +102,12 @@ class FavoriteHandler
     {
         $id =( int ) $this->request->attributes->get('id');
 
-
-
         try{
             $customer = $this->em->getRepository(Customer::class)
                 ->findOneBy([self::SECURITY_EMAIL_PROPERTY => $this->security->getUser()->getUsername()]);
         }catch (PDOException $exception){
             throw new UserNotFoundException(self::SECURITY_EMAIL_PROPERTY, $this->security->getUser()->getUsername());
         }
-
 
 
         try{
@@ -121,7 +122,7 @@ class FavoriteHandler
         try{
             $this->em->remove($favorite);
             $this->em->flush();
-        }catch (PDOException $exception){
+        }catch (\Exception $exception){
             throw new DeleteOperationException(sprintf('Error during the deletion process of the supplier product %d', $favorite->getSupplierProduct()->getId()));
         }
 
@@ -145,6 +146,13 @@ class FavoriteHandler
         }catch(\PDOException $exception)
         {
             throw new FavoritesNotFoundException($exception->getMessage());
+        }
+
+        // Mise à jour de url public des images
+        foreach($favorites as $favorite){
+            foreach($favorite->getSupplierProduct()->getImages() as $image){
+                $this->imageHandler->setSupplierProductPublicDirectory($image);
+            }
         }
 
         return $favorites;

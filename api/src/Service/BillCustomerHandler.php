@@ -4,24 +4,25 @@
 namespace App\Service;
 
 
+use App\Entity\Bill;
 use App\Entity\BillCustomer;
 use App\Entity\Customer;
+use App\Entity\OrderSet;
 use App\Entity\Payment;
 use App\Exception\BillCustomer\BillCustomerNotFoundException;
 use Doctrine\DBAL\Driver\PDOException;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\EntityNotFoundException;
 use Stripe\Checkout\Session;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Twig\Environment;
 use Dompdf\Dompdf;
 use Dompdf\Options;
-use Lexik\Bundle\JWTAuthenticationBundle\Exception\UserNotFoundException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Security;
+use Stripe\LineItem;
 
 class BillCustomerHandler
 {
@@ -37,7 +38,9 @@ class BillCustomerHandler
 
     private $memberHandler;
 
-    public function __construct(EntityManagerInterface $em, RequestStack $requestStack, SessionInterface $session, LoggerInterface $logger, Security $security, Environment $twig, MemberHandler $memberHandler)
+    private $downloadHandler;
+
+    public function __construct(EntityManagerInterface $em, RequestStack $requestStack, SessionInterface $session, LoggerInterface $logger, Security $security, Environment $twig, MemberHandler $memberHandler, DownloadHandler $downloadHandler)
     {
         $this->em = $em;
         $this->request = $requestStack->getCurrentRequest();
@@ -45,15 +48,11 @@ class BillCustomerHandler
         $this->logger = $logger;
         $this->twig = $twig;
         $this->memberHandler = $memberHandler;
+        $this->downloadHandler = $downloadHandler;
     }
 
-    public function createBill($data = null)
+    public function createBill(\Stripe\Checkout\Session $session)
     {
-        if($data === null)
-        {
-            throw new \Exception("Bill customer handler - create bill : no data received" );
-        }
-
         $billCustomer = new BillCustomer();
 
         $billCustomer->setStatus('completed')
@@ -64,10 +63,7 @@ class BillCustomerHandler
             ->setAdditionalFee(0)
             ->setAdditionalInformation('');
 
-        $customer = $this->memberHandler->getCustomer($data);
-
-
-
+        $customer = $this->memberHandler->getCustomer($session);
 
 
         if(!$billCustomer)
@@ -78,11 +74,10 @@ class BillCustomerHandler
         }
 
 
-
         return $billCustomer;
     }
 
-    public function createPdf(Payment $payment, Session $session): string
+    public function createPdf(Payment $payment, Session $session, OrderSet $orderSet, array $line_items, BillCustomer $billCustomer): string
     {
 
 
@@ -97,12 +92,20 @@ class BillCustomerHandler
 
         /* Création du template HTML  */
         try{
-            $htmlBill = $this->twig->render('bill_customer/invoice.html.twig', ['payment' => $payment, 'session' => $session] );
-            //dump($htmlBill);
+            $htmlBill = $this->twig->render(
+                'bill_customer/invoice.html.twig',
+                [
+                    'payment' => $payment,
+                    'session' => $session,
+                    'orderSet' => $orderSet,
+                    'lineItems' => $line_items,
+                    'bill' => $billCustomer
+                ]
+            );
 
             /* chemin du fichier pdf */
-            $pathname = $payment->getReference().'.pdf';
-
+            $filename = $payment->getReference().'.pdf';
+            dump($filename);
 
 
         }catch(\Exception $exception){
@@ -110,25 +113,28 @@ class BillCustomerHandler
         }
 
         /* Création du pdf à partir de la page html */
-        $pdf->loadHtml($htmlBill);
+        try{
+            $pdf->loadHtml($htmlBill);
 
+            dump('pdf loadHtml - ok');
+            $pdf->setPaper('A4', 'portrait');
+            dump('pdf setPaper - ok');
+            $pdf->render();
+            dump('pdf render - ok');
+            $pdfBill = $pdf->output();
+            dump('pdf output - ok');
+            dump($pdfBill);
 
-        $pdf->setPaper('A4', 'portrait');
-        $pdf->render();
-
-        $pdfBill = $pdf->output();
-
-        dump($pdfBill);
-
-
-        if(!file_put_contents($_SERVER['DOCUMENT_ROOT'].'/download/invoices/customers/'.$pathname, $pdfBill))
-        {
-            throw new \Exception("Error while creating the pdf for the customer's bill  ");
+            // Déplacement du pdf créé dans le répertoire privé des factures
+            $this->downloadHandler->movePdfToDirectory($filename, $pdfBill);
+        }catch (\Exception $e){
+            $this->logger->error($e->getMessage(), ['context' => $e]);
         }
 
 
+        dump('Déplacement du pdf achevé!');
 
-        return $pathname;
+        return $filename;
     }
 
     public function downloadPdf()
@@ -151,21 +157,17 @@ class BillCustomerHandler
                 dump($bill);
             }
 
+            if(!$bill instanceof Bill)
+            {
+                throw new BillCustomerNotFoundException('Bill not found!');
+            }
 
-        }catch(PDOException $exception){
+
+        }catch(\Exception $exception){
             throw new BillCustomerNotFoundException(sprintf("The Bill associated to the user %s and the file %s not found!", $this->security->getUser()->getUsername(), $data ), 404);
         }
 
-        $response = new BinaryFileResponse(getenv('DOCUMENT_ROOT').'/download/invoices/customers/'.$bill->getUrl());
-
-        $response->headers->set('Content-Type', 'application/pdf');
-
-        $response->setContentDisposition(
-            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-            $bill->getUrl()
-        );
-
-        return $response;
+        return $this->downloadHandler->getBillCustomer($bill);
 
     }
 

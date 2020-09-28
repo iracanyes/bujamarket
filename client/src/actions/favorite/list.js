@@ -19,15 +19,20 @@ export function success(retrieved) {
   return { type: 'FAVORITE_LIST_SUCCESS', retrieved };
 }
 
-export function list(page = 'my_favorites', history, location) {
+export function list( page = null, history, location) {
   return dispatch => {
     dispatch(loading(true));
-    dispatch(error(''));
+    dispatch(error(null));
 
     /* Récupération de la clé JWT et ajout au header de la requête */
-    let headers = authHeader();
+    const headers = authHeader(history, location);
+    let route = "my_favorites"
+    if(page && typeof page === "number")
+    {
+      route = route + "?page=" + page;
+    }
 
-    fetch(page, {method: 'GET', headers: headers})
+    fetch(route , {method: 'GET', headers})
       .then(response =>
         response
           .json()
@@ -50,24 +55,24 @@ export function list(page = 'my_favorites', history, location) {
       .catch(e => {
         dispatch(loading(false));
 
-        if(e.code === 401)
-        {
-          dispatch(error("Authentification nécessaire avant de poursuivre!"));
-          history.push({pathname: '../../login', state: { from : location.pathname }});
-        }
-
-        if(typeof e === 'string')
-        {
-          dispatch(error(e));
-        }else{
-          if(e['hydra:description'])
-          {
+        switch(true) {
+          case e.code === 401:
+            dispatch(error("Authentification nécessaire avant de poursuivre!"));
+            dispatch(error(null));
+            history.push({pathname: '../../login', state: {from: location.pathname}});
+            break;
+          case typeof e['hydra:description'] === "string":
             dispatch(error(e['hydra:description']));
-          }else{
+            break;
+          case typeof e.message === "string":
             dispatch(error(e.message));
-          }
+            break;
+          case typeof e === 'string':
+            dispatch(error(e));
+            break;
         }
         dispatch(error(null));
+
       });
   };
 }

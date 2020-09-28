@@ -3,14 +3,32 @@
  *
  */
 
-/* Page : show category */
-div.category-detail{
+/****** Page : show category ************/
+div.show-detail{
+    background-color: white;
+    padding: 1rem;
     img.img-fluid{
         width: 48.75rem;
         height: auto;
         max-height: 25rem;
     }
-    div.category-control-buttons{
+
+    div.card{
+      border: none;
+      div.card-header, div.card-body, div.card-footer{
+        background-color: white;
+        border: none;
+      }
+      h6{
+        font-weight: bold;
+        font-size: 0.9rem !important;
+      }
+      p.card-text{
+        font-size: 0.9rem;
+
+      }
+    }
+    div.show-detail-control-buttons{
         a, button{
             display: inline-block;
             margin: 0 1rem;
@@ -20,43 +38,52 @@ div.category-detail{
     }
 }
 
-div.category-detail-products{
-    background-color: whitesmoke;
+/****** Page : show category ************/
 
-    div.carousel-inner{
-        margin: 1.25rem auto;
-        font-size: 14px;
+div.show-detail-list{
+  background-color: whitesmoke;
 
-        div.card{
-            padding: unset;
-            /*  Titre se trouvant en bas à gauche de l'imaage */
-            div.image-bottom-left-title{
-                position: absolute;
-                left: 0;
-                bottom: 0;
-                background: linear-gradient(to top, black, transparent);
-                width: 100%;
-                margin: 0 !important;
-                padding: 1.75rem 0.625rem;
-            }
-
-            div.card-footer svg{
-                color: $primary-color;
-            }
+  div#slider-product-suppliers{
+    .aws-sld {
+      &--exit {
+        &.aws-sld--moveRight, &.aws-sld--moveLeft {
+          animation: scaleOut var(--slider-transition-duration) both
+          var(--transition-bezier);
         }
+      }
     }
 
-    ol.carousel-indicators{
-        position: unset;
-        left: unset;
-        bottom: unset;
-        right: unset;
-
-        li{
-            background-color: $primary-color;
-            height: 0.3125rem;
-        }
+    @keyframes scaleOut {
+      to {
+        transform: scale(0.85);
+      }
     }
+  }
+
+  div.carousel-inner{
+      margin: 1.25rem auto;
+      font-size: 14px;
+
+      div.card{
+          padding: unset;
+          /*  Titre se trouvant en bas à gauche de l'imaage */
+          div.image-bottom-left-title{
+              position: absolute;
+              left: 0;
+              bottom: 0;
+              background: linear-gradient(to top, black, transparent);
+              width: 100%;
+              margin: 0 !important;
+              padding: 1.75rem 0.625rem;
+          }
+
+          div.card-footer svg{
+              color: $primary-color;
+          }
+      }
+  }
+
+
 
     @media screen and (min-width: 992px) {
         div.carousel-inner{

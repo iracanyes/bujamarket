@@ -46,20 +46,25 @@ export function create(values, history, locationState) {
       .catch(e => {
         dispatch(loading(false));
 
-        if (e instanceof SubmissionError) {
-          dispatch(error(e.errors._error));
-          throw e;
+        switch (true){
+          case e.code === 401:
+            dispatch(error("Authentification nécessaire avant de poursuivre!"));
+            history.push({pathname: '../../login', state: { from : locationState.from }});
+            break;
+          case /Unauthorized/.test(e):
+            dispatch(logout());
+            dispatch(error("Accès non-autorisé! Authentification obligatoire"));
+            dispatch(error(null));
+            history.push({pathname:'login', state: {from: locationState.from }});
+            break;
+          case typeof e.message === 'string':
+            dispatch(error(e.message));
+            break;
+          case typeof e['hydra:description'] === "string":
+            dispatch(error(e['hydra:description']));
+            break;
         }
-
-        if(/Unauthorized/.test(e))
-        {
-          dispatch(logout());
-          sessionStorage.removeItem('flash-message-error');
-          sessionStorage.setItem("flash-message-error", JSON.stringify({ message: "Accés non-autorisé! Identifiez-vous."}));
-          history.push({pathname:'login', state: {from: locationState.from }});
-        }
-
-        dispatch(error(e.message));
+        dispatch(error(null));
       });
   };
 }

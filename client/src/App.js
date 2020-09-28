@@ -15,7 +15,7 @@ import {
   connectRouter,
   routerMiddleware
 } from 'connected-react-router';
-import { StripeProvider } from 'react-stripe-elements';
+
 
 /* Stylesheets */
 import 'bootstrap/dist/css/bootstrap.css';
@@ -60,7 +60,9 @@ import product from './reducers/product/';
 import shipper from './reducers/shipper/';
 import supplier from  './reducers/supplier/';
 import supplierproduct from './reducers/supplierproduct';
+import shoppingcart from "./reducers/shoppingcart";
 import user from './reducers/user/';
+import usertemp from './reducers/usertemp/';
 import withdrawal from  './reducers/withdrawal/';
 
 /* Routes */
@@ -142,9 +144,11 @@ const store = createStore(
     payment,
     product,
     shipper,
+    shoppingcart,
     supplier,
     supplierproduct,
     user,
+    usertemp,
     withdrawal
   }),
   applyMiddleware(routerMiddleware(history), thunk)
@@ -173,111 +177,113 @@ export class App extends Component
   {
     const { results } = this.state;
 
-    const user = localStorage.getItem("token") && JSON.parse(atob(localStorage.getItem("token").split('.')[1]));
+    const user = localStorage.getItem("token") !== null ? JSON.parse(atob(localStorage.getItem("token").split('.')[1])) : null;
+    console.log("token exists",localStorage.getItem("token") !== null);
 
 
     return (
       <Provider store={store}>
         <IntlProvider locale={language} messages={messages[language]}>
-          <StripeProvider apiKey={`${process.env.REACT_APP_STRIPE_PUBLIC_KEY}`}>
-            <ConnectedRouter history={history}>
-              <Router history={history}>
-                <div>
-                  <header>
-                    <Navbar color={"bg-primary"} dark expand={"lg"}   id="navbar-primary" className="navbar navbar-expand-lg navbar-dark bg-primary">
-                      {/* Navbar brand*/}
-                      <NavbarBrand href="/" className="col-lg-2">Buja Market</NavbarBrand>
+          <ConnectedRouter history={history}>
+            <Router history={history}>
+              <div>
+                <header>
+                  <Navbar color={"bg-primary"} dark expand={"lg"}   id="navbar-primary" className="navbar navbar-expand-lg navbar-dark bg-primary">
+                    {/* Navbar brand*/}
+                    <NavbarBrand href="/" className="col-lg-2">Buja Market</NavbarBrand>
 
 
-                      <div className="main-menu-search-form col-lg-5">
-                        <MainMenuSearchForm onSearch={this.search}/>
-                      </div>
+                    <div className="main-menu-search-form col-lg-5">
+                      <MainMenuSearchForm onSearch={this.search}/>
+                    </div>
 
 
-                      <MainMenu/>
+                    <MainMenu/>
 
-                    </Navbar>
-                  </header>
-                  {/* HomepageSlider */}
+                  </Navbar>
+                </header>
+                {/* HomepageSlider */}
+                { user === null && (
                   <Route path={'/'} exact={true}>
                     <div id="homepage-slider">
                       <HomepageSlider />
                     </div>
                   </Route>
+                ) }
 
 
 
-                  <main>
-                    <aside id="aside-left">
-                      { ( user && user.roles.includes('ROLE_MEMBER') ) && <SidebarLeftMenu /> }
-                    </aside>
-                    <section id="main-content" className="col col-lg-8 mx-2">
-                      <ToastContainer
-                        limit={5}
-                        position="top-right"
-                        type={"default"}
-                        autoClose={10000}
-                        hideProgressBar={false}
-                        newestOnTop={true}
-                        rtl={false}
-                        closeOnClick
-                        pauseOnFocusLoss
-                        draggable
-                        pauseOnHover
-                      />
-                      <div id="search-results-component" className={'col-lg-9 mx-auto'}>
-                        {results && (<SearchResults results={ results }/>)}
 
-                      </div>
+                <main>
+                  <aside id="aside-left">
+                    { ( user && user.roles.includes('ROLE_MEMBER') ) && <SidebarLeftMenu /> }
+                  </aside>
+                  <section id="main-content" className="col col-lg-8 mx-2">
+                    <ToastContainer
+                      limit={5}
+                      position="top-right"
+                      type={"default"}
+                      autoClose={10000}
+                      hideProgressBar={false}
+                      newestOnTop={true}
+                      rtl={false}
+                      closeOnClick
+                      pauseOnFocusLoss
+                      draggable
+                      pauseOnHover
+                    />
+                    <div id="search-results-component" className={'col-lg-9 mx-auto'}>
+                      {results && (<SearchResults results={ results }/>)}
 
-                      <div>
-                        <Switch>
-                          <Route path="/dev" component={Welcome} strict={true} exact={true}/>
-                          <Route path="/" component={Homepage} strict={true} exact={true} />
-                          {/* Add your routes here */}
-                          { addressRoutes }
-                          { adminRoutes }
-                          { bankAccountRoutes }
-                          { billRoutes }
-                          { billCustomerRoutes }
-                          { billRefundRoutes }
-                          { billSupplierRoutes }
-                          { categoryRoutes }
-                          { commentRoutes }
-                          { customerRoutes }
-                          { deliveryDetailRoutes }
-                          { deliverySetRoutes }
-                          { favoriteRoutes }
-                          { forumRoutes }
-                          { imageRoutes }
-                          { messageRoutes }
-                          { orderDetailRoutes }
-                          { orderReturnedRoutes }
-                          { paymentRoutes }
-                          { orderSetRoutes }
-                          { productRoutes }
-                          { shipperRoutes }
-                          { shoppingCartRoutes }
-                          { supplierRoutes }
-                          { supplierProductRoutes }
-                          { userRoutes }
-                          { withdrawalRoutes }
-                          { pageRoutes }
+                    </div>
 
-                        </Switch>
+                    <div>
+                      <Switch>
+                        <Route path="/dev" component={Welcome} strict={true} exact={true}/>
+                        <Route path="/" component={Homepage} strict={true} exact={true} />
+                        {/* Add your routes here */}
+                        { addressRoutes }
+                        { adminRoutes }
+                        { bankAccountRoutes }
+                        { billRoutes }
+                        { billCustomerRoutes }
+                        { billRefundRoutes }
+                        { billSupplierRoutes }
+                        { categoryRoutes }
+                        { commentRoutes }
+                        { customerRoutes }
+                        { deliveryDetailRoutes }
+                        { deliverySetRoutes }
+                        { favoriteRoutes }
+                        { forumRoutes }
+                        { imageRoutes }
+                        { messageRoutes }
+                        { orderDetailRoutes }
+                        { orderReturnedRoutes }
+                        { paymentRoutes }
+                        { orderSetRoutes }
+                        { productRoutes }
+                        { shipperRoutes }
+                        { shoppingCartRoutes }
+                        { supplierRoutes }
+                        { supplierProductRoutes }
+                        { userRoutes }
+                        { withdrawalRoutes }
+                        { pageRoutes }
+
+                      </Switch>
 
 
-                      </div>
+                    </div>
 
-                    </section>
-                    <aside>
+                  </section>
+                  <aside>
 
-                    </aside>
-                  </main>
-                </div>
-              </Router>
-            </ConnectedRouter>
-          </StripeProvider>
+                  </aside>
+                </main>
+              </div>
+            </Router>
+          </ConnectedRouter>
         </IntlProvider>
       </Provider>
     );

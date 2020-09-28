@@ -1,6 +1,6 @@
 import React, {Component, Fragment} from 'react';
 import { connect } from 'react-redux';
-import { Link, Redirect, NavLink as RRDNavLink } from 'react-router-dom';
+import { Link, Redirect, NavLink as RRDNavLink, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { getProfile , reset } from '../../actions/user/profile';
 import { getProfileImage } from "../../actions/image/profile";
@@ -28,6 +28,10 @@ import { FormattedMessage, injectIntl } from "react-intl";
 import ProfileAddressesWidget from "../address/ProfileAddressesWidget";
 import ProfileBankAccountsWidget from "../bankaccount/ProfileBankAccountsWidget";
 import ProfileForumsWidget from "../forum/ProfileForumsWidget";
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
+
+const stripePromise = loadStripe(`${process.env.REACT_APP_STRIPE_PUBLIC_KEY}`);
 
 class Profile extends Component {
   static propTypes = {
@@ -40,6 +44,8 @@ class Profile extends Component {
     getProfileImage: PropTypes.func.isRequired,
     reset: PropTypes.func.isRequired
   };
+
+
 
   constructor(props) {
     super(props);
@@ -56,7 +62,7 @@ class Profile extends Component {
   componentDidMount() {
     this.props.getProfile(this.props.history, this.props.location);
     if(this.props.retrievedImage === null)
-      this.props.getProfileImage();
+      this.props.getProfileImage(this.props.history, this.props.location);
   }
 
   componentWillUnmount() {
@@ -165,6 +171,7 @@ class Profile extends Component {
 
                 </Col>
               </Row>
+              {/* Supplier info card */}
               { item.brandName && (
                 <Row>
                   <Col>
@@ -196,8 +203,13 @@ class Profile extends Component {
                           </Col>
                           <Col>
                             <div className={'d-flex mr-1'}>
-                              <strong><FormattedMessage id={"app.supplier.item.website"} /> : </strong>
-                              <NavLink tag={RRDNavLink} to={ item.website }>{ item.website }</NavLink>
+                              <strong><FormattedMessage id={"app.supplier.item.website.domain-name"} /> : </strong>
+                              {
+                                item.website !== null
+                                ? (<NavLink tag={RRDNavLink} to={ item.website }>{ item.website }</NavLink>)
+                                  : <span> Aucun site internet</span>
+                              }
+
                             </div>
                             <div className={'d-flex mt-2 mr-1'}>
                               <strong><FormattedMessage id={"app.supplier.item.contact_email"} /> : </strong>
@@ -219,7 +231,7 @@ class Profile extends Component {
                   </Col>
                 </Row>
               )}
-              
+
             </div>
           )}
 
@@ -243,11 +255,11 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   getProfile: (history, location) => dispatch(getProfile(history, location)),
-  getProfileImage : () => dispatch(getProfileImage()),
+  getProfileImage : (history, location) => dispatch(getProfileImage(history, location)),
   reset: eventSource => dispatch(reset(eventSource))
 });
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(injectIntl(Profile));
+)(injectIntl(withRouter(Profile)));

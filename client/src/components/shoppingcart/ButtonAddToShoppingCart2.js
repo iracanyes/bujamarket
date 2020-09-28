@@ -5,6 +5,14 @@
  */
 import React, { Component } from 'react';
 import { Button, Toast, ToastBody, ToastHeader } from 'reactstrap';
+import {
+  Modal,
+  Paper,
+  Card,
+  CardContent,
+  CardActions,
+  Typography
+} from "@material-ui/core";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import ButtonAddToShoppingCart from "../supplierproduct/ButtonAddToShoppingCart";
 
@@ -24,17 +32,25 @@ class ButtonAddToShoppingCart2 extends Component{
   render()
   {
     return (
-      <div>
-        <div  onClick={this.toggle}>
+      <div id={'shopping-cart-actions'}>
+        <Button outline color={'primary'} className={'border-primary'} onClick={this.toggle}>
           <FontAwesomeIcon icon="shopping-cart" className="menu-top-l1" />
-          <span data-toggle="Bookmarked" className={'ml-1'}>Ajouter au panier</span>
-        </div>
-        <Toast isOpen={this.state.show} id={"toast-shopping-cart"}>
-          <ToastHeader toggle={this.toggle}>Panier de commande</ToastHeader>
-          <ToastBody>
-            <ButtonAddToShoppingCart toggle={this.toggle} product={this.props.product}/>
-          </ToastBody>
-        </Toast>
+          <span data-toggle="Bookmarked" className={'ml-2'}>Ajouter</span>
+        </Button>
+        <Modal
+          open={this.state.show}
+          onClose={this.toggle}
+          id={"toast-shopping-cart"}
+        >
+          <Paper elevation={3}>
+            <Card  className={'mx-2'}>
+              <Typography variant={'h6'}>Panier de commande</Typography>
+              <CardContent>
+                <ButtonAddToShoppingCart toggle={() => this.toggle()} product={this.props.product}/>
+              </CardContent>
+            </Card>
+          </Paper>
+        </Modal>
       </div>
     );
   }

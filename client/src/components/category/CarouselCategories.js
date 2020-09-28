@@ -8,7 +8,6 @@ import { injectIntl } from "react-intl";
 import 'bootstrap/dist/css/bootstrap.css';
 import { toast } from "react-toastify";
 import { ToastError } from "../../layout/ToastMessage";
-import BackGroundCarouselItem from "../../assets/img/parallax-gris.jpg";
 
 /* Carousel */
 import {
@@ -16,11 +15,6 @@ import {
   Row,
   Card,
   CardTitle,
-  Carousel,
-  CarouselItem,
-  CarouselControl,
-  CarouselIndicators,
-  Spinner
 } from "reactstrap";
 import { FormattedMessage } from "react-intl";
 import {SpinnerLoading} from "../../layout/Spinner";
@@ -163,17 +157,8 @@ class CarouselCategories extends Component {
                     <CardTitle className={"image-bottom-left-title"}>
 
                       <span className="font-weight-bold">
-
-                        {/* Permet d'injecter la traduction d'une valeur reçu par une entité
-                          intl.formatMessage({
-                            id: "app.category.item"+categories[i * 12 + j]["id"]+".name",
-                            description: "category item - name for item "+categories[i * 12 + j]["id"],
-                            defaultMessage: categories[i * 12 + j]["name"]
-                          })
-                        */}
                         {categories[i * 12 + j]["name"]}
                       </span>
-
 
                     </CardTitle>
                   </div>
@@ -202,20 +187,9 @@ class CarouselCategories extends Component {
                     <img src={categories[i * 12 + j]['url']} alt={categories[i * 12 + j]["name"]} className="image img-fluid" style={{ width:"100%"}} />
 
                     <CardTitle className={"image-bottom-left-title"}>
-
                       <span className="font-weight-bold">
-
-                        {/* Permet d'injecter la traduction d'une valeur reçu par une entité
-                          intl.formatMessage({
-                            id: "app.category.item"+categories[i * 12 + j]["id"]+".name",
-                            description: "category item - name for item "+categories[i * 12 + j]["id"],
-                            defaultMessage: categories[i * 12 + j]["name"]
-                          })
-                        */}
                         {categories[i * 12 + j]["name"]}
                       </span>
-
-
                     </CardTitle>
                   </div>
                 </Link>

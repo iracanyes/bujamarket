@@ -4,23 +4,28 @@
  * Description:
  */
 import React,{ Fragment } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
 import { Col, Row } from "reactstrap";
+import { Box } from '@material-ui/core';
 import { FormattedMessage, injectIntl } from "react-intl";
-import { subscribe, retrieve, reset } from "../../actions/user/subscribe";
+import { subscribe, reset as resetSubscribe } from "../../actions/user/subscribe";
+import { retrieve, reset } from "../../actions/usertemp/show";
 import DropzoneWithPreviews from "../image/dropzone/DropzoneWithPreviews";
 import PropTypes from 'prop-types';
 import {toastError} from "../../layout/ToastMessage";
 import * as ISOCodeJson from "../../config/ISOCode/ISO3166-1Alpha2.json";
+import {SpinnerLoading} from "../../layout/Spinner";
+import { Spinner } from 'reactstrap';
 
 class SubscribeForm extends React.Component {
   static propTypes = {
     handleSubmit: PropTypes.func.isRequired,
     retrieved: PropTypes.object,
     loading: PropTypes.bool.isRequired,
-    errorSubscribe: PropTypes.string,
+    errorSubscribe: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+    loadingSubscribe: PropTypes.bool.isRequired,
     eventSource: PropTypes.instanceOf(EventSource),
     retrieve: PropTypes.func.isRequired,
   };
@@ -49,7 +54,7 @@ class SubscribeForm extends React.Component {
 
   componentDidMount() {
     /* Récupération de l'utilisateur temporaire via son token */
-    this.props.retrieve(decodeURIComponent(this.props.match.params.token));
+    this.props.retrieve(decodeURIComponent(this.props.match.params.token), this.props.history);
 
 
   }
@@ -120,9 +125,11 @@ class SubscribeForm extends React.Component {
 
 
   render() {
-    const { intl, errorSubscribe  } = this.props;
+    const { intl, error, errorSubscribe, retrieved, loading, loadingSubscribe  } = this.props;
 
+    error && typeof error === "string" && toastError(error);
     errorSubscribe && typeof errorSubscribe === "string" && toastError(errorSubscribe);
+
 
     return (
       <Fragment>
@@ -133,19 +140,12 @@ class SubscribeForm extends React.Component {
                                description="Page User - Subscribe title"
             />
           </h1>
-          <div className={"col-lg-6 mx-auto px-3"}>
-            {this.props.error && (
-              <div className="alert alert-danger" role="alert">
-                <span className="fa fa-exclamation-triangle" aria-hidden="true" />{' '}
-                {this.props.error}
-              </div>
-            )}
-          </div>
+          {loading && <SpinnerLoading message={'Chargement du formulaire de validation d\'inscription'}/>}
           { this.props.retrieved !== null && (
             <form
               id="subscribe-form"
               name="subscribe"
-              className={"col-lg-6 mx-auto px-3"}
+              className={"col-lg-6 mx-auto px-3 bg-white"}
               onSubmit={this.handleSubmit}
               /* Si la clé change un réaffichage du composant est lancé */
               key={this.props.retrieved.id}
@@ -338,9 +338,9 @@ class SubscribeForm extends React.Component {
 
               <fieldset>
                 <legend>Image du {this.props.retrieved.userType === "customer" ? "client" : "fournisseur"}</legend>
-                <Row>
-                  <DropzoneWithPreviews label={this.props.retrieved.userType === "customer" ? "Image de profil" : "Logo de l'entreprise"}/>
-                </Row>
+                <Box boxShadow={1}>
+                  <DropzoneWithPreviews />
+                </Box>
               </fieldset>
 
               {this.props.retrieved.userType === 'supplier' && (
@@ -459,11 +459,11 @@ class SubscribeForm extends React.Component {
                           component={this.renderField}
                           name="website"
                           type="text"
-                          placeholder={"www.google.com"}
+                          placeholder={"google.com"}
                           labelText={intl.formatMessage({
-                            id: "app.supplier.item.website",
-                            defaultMessage: "Site web",
-                            description: "Supplier item - website"
+                            id: "app.supplier.item.website.domain-name",
+                            defaultMessage: "Site web (Nom de domaine)",
+                            description: "Supplier item - website (Domain name)"
                           })}
                         />
                       </Col>
@@ -492,7 +492,7 @@ class SubscribeForm extends React.Component {
                           className={'custom-select ml-2 col-6'}
                           disabled={'disabled'}
                         >
-                          <option value="Head office" selected>
+                          <option value="Head office">
                             { intl.formatMessage({
                               id: "app.address.item.location_name.head_office",
                               description: "Address item - location name : head office",
@@ -641,8 +641,9 @@ class SubscribeForm extends React.Component {
                     </div>
                   </Col>
                 </Row>
-                <Row>
+                <Row className={'justify-content-center'}>
                   <button type="submit" className="btn btn-success my-3 mx-2">
+                    {loadingSubscribe && <Spinner color={'info'}/>}
                     <FormattedMessage  id={"app.button.continue"}
                                        defaultMessage="Continuer"
                                        description="App button - continue"
@@ -670,16 +671,25 @@ class SubscribeForm extends React.Component {
 }
 
 const mapStateToProps = state => {
-  const { subscribing, retrieved, error, loading, eventSource } = state.user.subscription;
-
+  const { subscribing, error: errorSubscribe, loading: loadingSubscribe } = state.user.subscription;
+  const { retrieved, loading, error, eventSource } = state.usertemp.show;
   /* Retourner les données récupèrés en DB sous le nom "initialValues" permet à redux-form d'initialiser le formulaire à ces valeurs */
-  return { subscribing, retrieved, initialValues: retrieved, errorSubscribe: error, loading, eventSource };
+  return {
+    subscribing,
+    retrieved,
+    initialValues: retrieved,
+    errorSubscribe,
+    error,
+    loading,
+    loadingSubscribe,
+    eventSource
+  };
 };
 
 const mapDispatchToProps = dispatch => ({
   subscribe: (user, history) => dispatch( subscribe(user, history)),
-  retrieve: token => dispatch(retrieve(token)),
-  reset: eventSource => dispatch(reset(eventSource))
+  retrieve: (token, history) => dispatch(retrieve(token, history)),
+  reset: eventSource => dispatch(reset(eventSource)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(
@@ -687,5 +697,5 @@ export default connect(mapStateToProps, mapDispatchToProps)(
     form: 'subscribe',
     enableReinitialize: true,
     keepDirtyOnReinitialize: true
-  })(injectIntl(SubscribeForm))
+  })(injectIntl(withRouter(SubscribeForm)))
 )

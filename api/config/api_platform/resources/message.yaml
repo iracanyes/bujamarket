@@ -12,14 +12,14 @@ App\Entity\Message:
                 _format: 'json'
             # host: 'localhost'
             schemes: ['https']
-            access_control: "is_granted('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
+            security: "is_granted('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
             #options:
             #    my_option: 'my_option_value'
             status: 200 # customize the HTTP status code to send
         post:
             method: 'POST'
             path: '/message/create'
-            access_control: "is_granted('ROLE_MEMBER') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
+            security: "is_granted('ROLE_MEMBER') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
             schemes: ['https']
             controller: App\Controller\Message\CreateMessage::class
     itemOperations:
@@ -33,7 +33,7 @@ App\Entity\Message:
                 _format: 'json'
             # host: 'localhost'
             schemes: ['https']
-            access_control: "is_granted('ROLE_MEMBER') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
+            security: "is_granted('ROLE_MEMBER') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
             #options:
             #    my_option: 'my_option_value'
             status: 200 # customize the HTTP status code to send        
@@ -43,4 +43,4 @@ App\Entity\Message:
             requirements:
                 id: '\d+'
             schemes: ['https']
-            access_control: "is_granted('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
+            security: "is_granted('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_REMEMBERED')"

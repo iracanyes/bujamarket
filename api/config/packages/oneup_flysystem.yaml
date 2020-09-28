@@ -26,17 +26,28 @@ oneup_flysystem:
             local:
                 #directory: '%kernel.project_dir%/web/uploads/img/profile/admin'
                 directory: '%kernel.project_dir%/%env(UPLOAD_ADMIN_IMAGE_DIRECTORY)%'
+        private_downloads_bill_customer_adapter:
+            local:
+                directory: '%kernel.project_dir%/%env(DOWNLOAD_BILL_CUSTOMER_DIRECTORY)%'
     filesystems:
         default_filesystem:
             adapter: default_adapter
             #alias: League\Flysystem\Filesystem
         public_image_product_filesystem:
             adapter: public_uploads_image_product_adapter
+            alias: image_product.filesystem
         public_image_category_filesystem:
             adapter: public_uploads_image_category_adapter
+            alias: image_category.filesystem
         private_image_customer_filesystem:
             adapter: private_uploads_image_customer_adapter
+            alias: image_customer.filesystem
         private_image_supplier_filesystem:
             adapter: private_uploads_image_supplier_adapter
+            alias: image_supplier.filesystem
         private_image_admin_filesystem:
             adapter: private_uploads_image_admin_adapter
+            alias: image_admin.filesystem
+        private_bill_customer_filesystem:
+            adapter: private_downloads_bill_customer_adapter
+            alias: bill_customer.filesystem

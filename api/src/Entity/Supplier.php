@@ -99,7 +99,7 @@ class Supplier extends User
      * @var string $website Website URL of this supplier
      *
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Assert\Url()
+     * @Assert\Regex("/^[a-z\d]([a-z\d\-]{0,61}[a-z\d])?(\.[a-z\d]([a-z\d\-]{0,61}[a-z\d])?)*$/i")
      * @Groups({"profile:output","supplier:output"})
      */
     private $website;

@@ -12,6 +12,7 @@ use Doctrine\DBAL\Driver\PDOException;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityNotFoundException;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\UserNotFoundException;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Security;
 
@@ -32,11 +33,17 @@ class ShoppingCartHandler
      */
     private $security;
 
-    public function __construct(EntityManagerInterface $em, RequestStack $requestStack, Security $security)
+    /**
+     * @var LoggerInterface $logger
+     */
+    private $logger;
+
+    public function __construct(EntityManagerInterface $em, RequestStack $requestStack, Security $security, LoggerInterface $logger)
     {
         $this->em = $em;
         $this->security = $security;
         $this->request = $requestStack->getCurrentRequest();
+        $this->logger = $logger;
 
     }
 
@@ -44,63 +51,79 @@ class ShoppingCartHandler
     {
         /* Récupération des données de la requête */
         $data = $this->request->getContent();
-        dump($data);
+
+        /* Utilisateur authentifié */
+        $customer = $this->security->getUser();
+
+        dump($customer);
+        dump($customer instanceof Customer);
+
         $data = json_decode($data);
+        dump($data);
 
-
+        // Avant création du panier de commande on supprime le panier de commande précédent
+        if($customer instanceof Customer){
+            foreach($customer->getShoppingCartDetails() as $shoppingCartDetail){
+                $this->em->remove($shoppingCartDetail);
+            }
+            $customer->getShoppingCartDetails()->clear();
+            $this->em->persist($customer);
+            $this->em->flush();
+        }else{
+            throw new UserNotFoundException(`Customer (username=${$this->security->getUser()->getUsername()}) doesn't exist.`, 404);
+        }
 
         try{
             foreach ($data as $item)
             {
                 /* Récupération du produit  */
                 $supplier_product =  $this->em->getRepository(SupplierProduct::class)
-                    ->find($item->productId);
+                    ->getSupplierProductWithProductInfo((int) $item->productId);
 
-                /* Récupération du client */
-                $customer = $this->em->getRepository(Customer::class)
-                    ->findOneBy(['email' => $this->security->getUser()->getUsername()]);
+                dump($supplier_product);
 
-                dump($customer);
-
-
-
-                if($supplier_product !== null )
+                if($supplier_product instanceof SupplierProduct )
                 {
-                    /* Ajout du produit en tant que nouvel élément du panier de commande */
+                    // Ajout du produit en tant que nouvel élément du panier de commande
                     $shopping_cart_supplier_product = new ShoppingCartDetail();
-                    $shopping_cart_supplier_product->setSupplierProduct($supplier_product);
-                    $shopping_cart_supplier_product->setQuantity($item->quantity);
+                    $shopping_cart_supplier_product->setDateCreated(new \DateTime())
+                        ->setSupplierProduct($supplier_product)
+                        ->setQuantity($item->quantity);
+                    // Relation shopping cart supplier product - customer
+                    $shopping_cart_supplier_product->setCustomer($customer);
+                    // Sauvegarde
+                    $this->em->persist($shopping_cart_supplier_product);
+                    $this->em->flush();
 
-                    if($customer !== null)
-                    {
-                        $customer->addShoppingCartDetail($shopping_cart_supplier_product);
-                        $this->em->persist($customer);
-                    }else{
-                        throw new UserNotFoundException(`Customer (username=${$this->security->getUser()->getUsername()}) doesn't exist.`, 404);
-                    }
+                    // Ajout dans le panier de commande du client
+                    $customer->addShoppingCartDetail($shopping_cart_supplier_product);
+
                 }else{
                     throw new EntityNotFoundException(`Supplier product (id=${$item->productId}) doesn't exist.`, 404);
                 }
-
             }
 
-
-            $this->em->flush();
+            dump($customer);
 
         }catch (\Exception $exception){
-            ;
+            $this->logger->error($exception->getMessage(), ['context' => $exception]);
         }
 
 
-        return $customer->getShoppingCart();
+        return $customer->getShoppingCartDetails();
 
     }
 
-    public function getShoppingCart()
+    public function getShoppingCartDetails()
     {
+        $customer = $this->security->getUser();
+
         try{
-            $customer = $this->em->getRepository(Customer::class)
-                ->findOneBy(['email' => $this->security->getUser()->getUsername()]);
+            if($customer instanceof Customer){
+                $shoppingCartDetails = $this->em->getRepository(ShoppingCartDetail::class)
+                    ->findBy(['customer' => $customer]);
+            }
+
         }catch (PDOException $exception){
             throw new UserNotFoundException("email", $this->security->getUser()->getUsername() );
         }

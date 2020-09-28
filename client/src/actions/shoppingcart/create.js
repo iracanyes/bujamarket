@@ -1,17 +1,18 @@
 import { SubmissionError } from 'redux-form';
 import { fetch } from '../../utils/dataAccess';
 import {logout} from "../user/login";
+import {toastSuccess} from "../../layout/ToastMessage";
 
 export function error(error) {
-  return { type: 'ADDRESS_CREATE_ERROR', error };
+  return { type: 'SHOPPING_CART_CREATE_ERROR', error };
 }
 
 export function loading(loading) {
-  return { type: 'ADDRESS_CREATE_LOADING', loading };
+  return { type: 'SHOPPING_CART_CREATE_LOADING', loading };
 }
 
 export function success(created) {
-  return { type: 'ADDRESS_CREATE_SUCCESS', created };
+  return { type: 'SHOPPING_CART_CREATE_SUCCESS', created };
 }
 
 export function create(values, history, locationState) {
@@ -25,19 +26,17 @@ export function create(values, history, locationState) {
     }
 
 
-    return fetch('shopping_card/create', { method: 'POST', body: JSON.stringify(values), headers: headers })
+    return fetch('shopping_cart/create', { method: 'POST', body: JSON.stringify(values), headers: headers })
       .then(response => {
         dispatch(loading(false));
 
         return response.json();
       })
       .then(retrieved => {
-
-
-
         dispatch(success(retrieved));
 
         /* Redirection vers la page des informations de livraison */
+        toastSuccess('Panier de commande sauvegardé!');
         history.push('/delivery_address');
 
 
@@ -45,23 +44,21 @@ export function create(values, history, locationState) {
       .catch(e => {
         dispatch(loading(false));
 
-        console.log("Shopping card - create error",e.message);
-
-        if (e instanceof SubmissionError) {
-          dispatch(error(e.errors._error));
-          throw e;
+        switch(true){
+          case e.code === 401:
+            dispatch(logout());
+          case /Unauthorized/.test(e.message):
+            dispatch(logout());
+            history.push({pathname:'login', state: locationState });
+            break;
+          case typeof e['hydra:description'] === "string":
+            dispatch(error(e['hydra:description']));
+            break;
+          case typeof e.message === "string":
+            dispatch(error(e.message));
+            break;
         }
-
-        if(/Unauthorized/.test(e.message))
-        {
-          dispatch(logout());
-
-          sessionStorage.removeItem('flash-message-error');
-          sessionStorage.setItem('flash-message-error', JSON.stringify({message: "Rappel: Seul les clients de la plateforme peuvent effectuer des achats.\nUne re-connexion est nécessaire."}));
-          history.push({pathname:'login', state: locationState });
-        }
-
-        dispatch(error(e.message));
+        dispatch(error(null));
       });
   };
 }

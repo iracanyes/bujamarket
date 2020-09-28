@@ -11,7 +11,7 @@ App\Entity\ShoppingCartDetail:
                 _format: 'json'
             # host: 'localhost'
             schemes: ['https']
-            access_control: "is_granted('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_FULLY')"
+            security: "is_granted('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_FULLY')"
             #options:
             #    my_option: 'my_option_value'
             status: 200 # customize the HTTP status code to send
@@ -20,7 +20,7 @@ App\Entity\ShoppingCartDetail:
             path: '/shopping_cart/create'
             defaults:
                 _api_receive: false
-            access_control: "is_granted('ROLE_CUSTOMER') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
+            security: "is_granted('ROLE_CUSTOMER') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
             schemes: ['https']
             controller: App\Controller\ShoppingCart\CreateShoppingCartAction
     itemOperations:
@@ -34,7 +34,7 @@ App\Entity\ShoppingCartDetail:
                 _format: 'json'
             # host: 'localhost'
             schemes: ['https']
-            access_control: "is_granted('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_FULLY')"
+            security: "is_granted('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_FULLY')"
             #options:
             #    my_option: 'my_option_value'
             status: 200 # customize the HTTP status code to send        
@@ -43,13 +43,13 @@ App\Entity\ShoppingCartDetail:
             path: '/shopping_cart/{id}'
             requirements:
                 id: '\d+'
-            access_control: 'is_granted("ROLE_CUSTOMER")'
+            security: 'is_granted("ROLE_CUSTOMER")'
             schemes: ['https']
         delete:
             method: 'DELETE'
             path: '/shopping_cart/{id}'
             requirements:
                 id: '\d+'
-            access_control: 'is_granted("ROLE_CUSTOMER") and is_granted("IS_AUTHENTICATED_REMEMBERED")'
+            security: 'is_granted("ROLE_CUSTOMER") and is_granted("IS_AUTHENTICATED_REMEMBERED")'
             schemes: ['https']
     

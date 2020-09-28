@@ -55,8 +55,6 @@ class Show extends Component {
 
     const user = localStorage.getItem('token')  ? JSON.parse(atob(localStorage.getItem('token').split('.')[1])) : null;
 
-    if(user == null || !user.roles.contains('ROLE_PUBLISHER'))
-      return (<PublicationRules />);
 
     error && toastError(error);
 

@@ -1,7 +1,7 @@
 /**
  * Author: iracanyes
  * Date: 10/9/19
- * Description:
+ * Description: Page - Processus de paiement achevé
  */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
@@ -16,7 +16,8 @@ import {
 } from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FormattedMessage } from 'react-intl';
-import orderset from "../../routes/orderset";
+import { SpinnerLoading } from "../../layout/Spinner";
+import {toastError, toastInfo} from "../../layout/ToastMessage";
 
 class PaymentSuccess extends Component {
   static propTypes = {
@@ -51,6 +52,9 @@ class PaymentSuccess extends Component {
     // Suppression du panier de commande
     localStorage.removeItem('shopping_cart');
 
+    // Message d'information
+    toastInfo('Ceci est un prorata de facture. Visitez la section "facturation" pour consulter/télécharger la facture de cet achat.', { autoClose: false });
+
     // Vérification authentification
     if(localStorage.getItem('token') === null)
     {
@@ -71,20 +75,30 @@ class PaymentSuccess extends Component {
         this.props.retrieveOrderSet(this.props.match.params.sessionId, this.props.history, this.props.location);
         this.props.retrievePayment(this.props.match.params.sessionId, this.props.history, this.props.location);
       }else{
+        toastError('Wrong route!');
         this.props.history.push({
           pathname:'login',
-          state: {
-            from: this.props.location.pathname,
-            params: {
-              sessionId: this.props.match.params.sessionId
-            }
-          }
-
         });
       }
 
     }
   }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    const { errorDownload, retrievedPayment } = this.props;
+    if(typeof errorDownload === 'string'){
+      toastError(errorDownload);
+    }
+
+    if(!retrievedPayment)
+    {
+      setTimeout(
+        () => this.props.retrievePayment(this.props.match.params.sessionId, this.props.history, this.props.location),
+        10000
+      );
+    }
+  }
+
 
   componentWillUnmount() {
     this.props.resetOrderSet(this.props.eventSourceOrderSet);
@@ -95,31 +109,21 @@ class PaymentSuccess extends Component {
   {
     event.preventDefault();
     this.setState({loadingFile: true});
-    this.props.resetPayment && this.props.download(this.props.retrievedPayment.bill.url, this.props.history);
+    this.props.retrievedPayment && this.props.download(this.props.retrievedPayment.bill.url, this.props.history);
   }
 
 
   render() {
 
-
-    const orderSet = this.props.retrievedOrderSet && this.props.retrievedOrderSet;
-    const payment = this.props.retrievedPayment && this.props.retrievedPayment;
-
-    //console.log("Retrieved - payment ", this.props.retrievedPayment);
-    //console.log("Retrieved - order set ", this.props.retrievedOrderSet);
-
-    // Signal de chargement du fichier et erreur
-    const { loadingFile, errorFile } = this.state;
+    const {retrievedOrderSet: orderSet, retrievedPayment: payment, loadingPayment, loadingDownload } = this.props;
 
     /* Index de la liste de commande */
     let orderSetKey = 1;
 
     return (
-      <div className={"col-6 mx-auto"}>
+      <div className={"col-9 mx-auto"}>
         <div>
-
           <div className="col-12 px-0">
-
             <nav className="navbar navbar-expand-md navbar-dark bg-primary mb-5 no-content w-100">
               {/* Breadcrumb */}
               <div className="col-12 mr-auto">
@@ -131,29 +135,22 @@ class PaymentSuccess extends Component {
                                          description="App - Delivery address"
                       />
                       <FontAwesomeIcon icon={'angle-double-right'} className={'mx-2 text-white'} aria-hidden={'true'}/>
-
                     </li>
                     <li className="">
                       <span className="text-white">
-
                         <FormattedMessage  id={"app.delivery_address"}
                                            defaultMessage="Adresse de livraison"
                                            description="App - Delivery address"
                         />
-
                       </span>
                       <FontAwesomeIcon icon={'angle-double-right'} className={'mx-2 text-white'} aria-hidden={'true'}/>
-
                     </li>
                     <li className="">
                       <span className="text-white" >
-
                         <FormattedMessage  id={"app.payment"}
                                            defaultMessage="Paiement"
                                            description="App - Payment"
                         />
-
-
                       </span>
                       <FontAwesomeIcon icon={'angle-double-right'} className={'mx-2 text-white'} aria-hidden={'true'}/>
 
@@ -171,41 +168,43 @@ class PaymentSuccess extends Component {
                   </ol>
                 </nav>
               </div>
-
             </nav>
-
           </div>
 
         </div>
-        { (this.props.loadingOrderSet || this.props.loadingPayment) && (
-          <div className="alert alert-light col-lg-6 mx-auto" role="status">
-            <Spinner type={'grow'} color={'info'} className={'mx-auto'}/>
-            <strong className={'mx-2 align-baseline'} style={{fontSize: '1.75rem'}}>
-              <FormattedMessage id={'app.loading'}
-                                defaultMessage={'Chargement en cours'}
-                                description={'App - Loading'}
-              />
-            </strong>
-          </div>
-        )}
-        { payment && (
-          <div className="overflow-auto">
-            <div id={'download-button'}>
-              <Button outline
-                      color={"info"}
-                      type={'button'}
-                      style={{verticalAlign: "top"}}
-                      disabled={loadingFile}
-                      onClick={this.download}
-              >
-                Télécharger
-              </Button>
-              {loadingFile && (<Spinner type={'grow'} color="info" className={'ml-2'}/>)}
-              <Link to={'/'} type={'button'} className={'btn btn-outline-secondary float-right'}>Retour page d'accueil</Link>
-            </div>
+        { this.props.loadingOrderSet && (<SpinnerLoading message={'Chargement en cours'}/>)}
+        { orderSet && (
+          <div>
+            { payment && (
+              <div id={'download-button'}>
+                { loadingPayment
+                  ? (
+                     <Spinner type={'grow'} color={'info'}/>
+                  )
+                  : (
+                    <Button variant={'contained'}
+                            color={"primary"}
+                            type={'button'}
+                            style={{verticalAlign: "top"}}
+                            disabled={loadingDownload}
+                            onClick={this.download}
+                    >
+                      <FormattedMessage
+                        id={'app.button.download'}
+                        defaultMessage={'Télécharger'}
+                        description={'Button - Download'}
+                      />
+                    </Button>
+                  )
+                }
+
+                {loadingDownload && (<Spinner type={'grow'} color="info" className={'ml-2'}/>)}
+                <Link to={'/'} type={'button'} className={'btn btn-outline-secondary border-secondary float-right'}>Retour page d'accueil</Link>
+              </div>
+            )}
+
             <div className="col-12 mb-lg-2">
               <h2 className="text-center">Facture client</h2>
-
             </div>
 
             <div>
@@ -239,22 +238,24 @@ class PaymentSuccess extends Component {
                         />
                       </strong>
                     </div>
-                    <strong className="to">{payment.bill.customer.firstname + ' ' + payment.bill.customer.firstname}</strong>
+                    <strong className="to">
+                      {payment && (payment.bill.customer.firstname + ' ' + payment.bill.customer.firstname)}
+                    </strong>
                     <div className="">
                       {orderSet && orderSet.address.street + ' ' + orderSet.address.number + ","}<br/>
                       {orderSet && (orderSet.address.town + " " + orderSet.address.zipCode)}<br/>
                       {orderSet && orderSet.address.state + ", " + orderSet.address.country }
                     </div>
-                    <div className=""><a href="mailto:john@example.com">{payment.bill.customer.email}</a></div>
+                    <div className=""><a href="mailto:john@example.com">{payment && payment.bill.customer.email}</a></div>
                   </div>
                   <div className="col mb-0 text-right">
                     <div className="text-gray-light">
                       <strong>Référence :</strong>
                     </div>
-                    <strong className="">{ payment.bill.reference }</strong>
-                    <div className="">Date de facturation : { new Date(payment.dateCreated).toLocaleString('fr-FR') }</div>
+                    <strong className="">{ payment && payment.bill.reference }</strong>
+                    <div className="">Date de facturation : { payment && new Date(payment.dateCreated).toLocaleString('fr-FR') }</div>
 
-                    <div className="">Date d'échéance : { new Date(new Date(payment.dateCreated).getTime() + 864000000).toLocaleString('fr-FR') }</div>
+                    <div className="">Date d'échéance : { payment &&  new Date(new Date(payment.dateCreated).getTime() + 864000000).toLocaleString('fr-FR') }</div>
                   </div>
                 </div>
                 <table className={"table table-light my-2 p-0"} style={{fontSize: "0.8rem"}}>
@@ -317,12 +318,7 @@ class PaymentSuccess extends Component {
                   </p>
                 </div>
               </section>
-              <footer>
-
-              </footer>
             </div>
-            <div></div>
-
           </div>
         )}
 
@@ -356,6 +352,8 @@ const mapStateToProps = state => ({
   errorPayment: state.payment.show.error,
   loadingPayment: state.payment.show.loading,
   eventSourcePayment: state.orderset.show.eventSource,
+  loadingDownload: state.billcustomer.download.loading,
+  errorDownload: state.billcustomer.download.error,
 });
 
 const mapDispatchToProps = dispatch => ({

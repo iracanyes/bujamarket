@@ -52,6 +52,8 @@ RUN set -eux; \
 		# MySQL
 		mysql-dev \
 		zlib-dev \
+		# Add mbstring
+		oniguruma-dev \
 	; \
 	\
 	docker-php-ext-configure zip ; \
@@ -62,6 +64,7 @@ RUN set -eux; \
 		#pdo_pgsql \
 		# MySQL
 		mysqli pdo pdo_mysql \
+		fileinfo \
 		zip \
 	; \
 	pecl install \
@@ -72,6 +75,7 @@ RUN set -eux; \
     docker-php-ext-enable \
         mysqli \
         pdo_mysql \
+        fileinfo \
     ; \
 
 	docker-php-ext-enable \
@@ -101,6 +105,10 @@ RUN set -eux; \
 	composer global require "symfony/flex" --prefer-dist --no-progress --no-suggest --classmap-authoritative; \
 	composer clear-cache -vvv
 ENV PATH="${PATH}:/root/.composer/vendor/bin"
+
+# fix work iconv library with alphine
+RUN apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/community/ --allow-untrusted gnu-libiconv
+ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so php
 
 WORKDIR /srv/api
 

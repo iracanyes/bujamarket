@@ -1,10 +1,9 @@
 /*
-*  Page de liste par 4
+*  Slider - Page de liste par 4
 */
 div.card-img-custom{
     position: relative;
     width: 100%;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 
     img.image {
         opacity: 1;
@@ -33,7 +32,6 @@ div.card-img-custom{
     &:hover .middle {
         opacity: 1;
     }
-
     .text {
         //background-color: #4CAF50;
         //color: white;
@@ -214,26 +212,63 @@ div.list-categories{
 }
 /* End Page - Liste categories */
 
-/* Page - Liste favoris */
+/*----- Page - Liste favoris --------*/
+table.favorite-list{
+  .MuiTableCell-root{
+    font-family: "Nunito", "Carter One","Kanit","Dosis", "Lato", Arial,sans-serif;
+  }
+  thead{
+    th.MuiTableCell-head{
+      text-align: center;
+      span{
+        font-weight: bold;
+      }
+    }
+  }
+  tbody{
+    .MuiAvatar-root{
+      width: 10rem;
+      height: 10rem;
+    }
+
+  }
+}
 #my-favorites-buttons
 {
     button{
-        border-color: #F5A54C;
-        color: #F5A54C;
-        margin: 0.2rem;
-        width: 9rem;
+      border-color: #F5A54C !important;
+      color: #F5A54C;
+      margin: 0.2rem;
+      width: 9rem;
+      span{
+        font-size: 0.8rem;
+      }
+
     }
 
     button:hover{
-        color: white;
+      color: initial;
+      color: white;
     }
 
-    #toast-shopping-cart
-    {
-        width: 10rem;
-        z-index: 1;
-    }
+
 }
+
+#toast-shopping-cart
+{
+  div.MuiPaper-root{
+    position: absolute;
+    left: 30%;
+    top: 30%;
+    width: 20rem;
+  }
+
+
+  button.close>span{
+    text-align: right !important;
+  }
+}
+/*----- End Page - Liste favoris --------*/
 
 /*----- Page - My products (supplier table)  ------*/
 div#supplier-product-list{

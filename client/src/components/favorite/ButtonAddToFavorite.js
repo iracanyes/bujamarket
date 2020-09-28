@@ -85,7 +85,7 @@ export class ButtonAddToFavorite extends React.Component
         {item.length === 0 && !added && (
           <div>
             <span href="#" id="TooltipFavorite">
-              <FontAwesomeIcon icon="heart" className="menu-top-l1" style={{color: 'white'}} onClick={this.addToFavorite}/>
+              <FontAwesomeIcon icon="heart" className="menu-top-l1" style={{color: 'gray'}} onClick={this.addToFavorite}/>
             </span>
             <Tooltip placement="right" isOpen={tooltipOpen} target="TooltipFavorite" toggle={this.toggle}>
               Ajouter aux favoris

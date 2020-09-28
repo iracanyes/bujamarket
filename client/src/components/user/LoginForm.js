@@ -11,6 +11,9 @@ import { login, logout } from "../../actions/user/login";
 import { connect } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
 import { Field, reduxForm } from "redux-form";
+import {SpinnerLoading} from "../../layout/Spinner";
+import { Spinner } from "reactstrap";
+import {toastError} from "../../layout/ToastMessage";
 
 class LoginForm extends React.Component {
   constructor(props)
@@ -24,7 +27,7 @@ class LoginForm extends React.Component {
       password: '',
       submitted: false
     };
-    console.log("props location", this.props.location);
+
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -96,9 +99,10 @@ class LoginForm extends React.Component {
   };
 
   render() {
-    const { loggingIn, intl } = this.props;
+    const { loading, intl, errorLogin } = this.props;
     const { email } = this.state;
 
+    typeof errorLogin === 'string' && toastError(errorLogin);
 
     return (
       <Fragment>
@@ -142,16 +146,15 @@ class LoginForm extends React.Component {
               onChange={this.handleChange}
             />
 
+
             <div className="form-group">
-              <button className="btn btn-primary mx-2 my-3">
+              <button className="btn btn-primary login mx-2 my-3">
+                { loading === true && <Spinner color={'info'} className={'mr-2'}/> }
                 <FormattedMessage  id={"app.page.user.login.title"}
                                    defaultMessage="Connexion"
                                    description="Page User - login"
                 />
               </button>
-              {loggingIn &&
-              <CardImg />
-              }
               <Link to="/register" className="btn btn-outline-primary mx-2 my-3">
                 <FormattedMessage  id={"app.page.user.register.title"}
                                    defaultMessage="Inscription"
@@ -169,9 +172,9 @@ class LoginForm extends React.Component {
 }
 
 const mapStateToProps = state => {
-  const { loggingIn } = state.user.authentication;
+  const { login: authenticated, loading, error: errorLogin } = state.user.authentication;
 
-  return { loggingIn };
+  return { authenticated, loading, errorLogin };
 };
 
 const mapDispatchToProps = dispatch => ({

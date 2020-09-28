@@ -1,7 +1,6 @@
 /**
- * Author: iracanyes
- * Date: 23/06/19
- * Description:
+ * Date: 23/06/20
+ * Description: Header menu
  */
 import React, {Component, Fragment} from "react";
 import { connect } from 'react-redux';

@@ -73,8 +73,6 @@ export function search(searchParams= {}, history, locationState) {
         dispatch(loading(false));
         dispatch(error(e.message));
 
-        console.log("supplier search error", e);
-
         if(/Unauthorized/.test(e))
         {
           dispatch(logout());

@@ -1,0 +1,41 @@
+/*----- Dropzone ------------*/
+.dropzone-thumb{
+  display: inline-flex;
+  border-radius: 0.125rem;
+  margin-bottom: 0.5rem;
+  margin-right: 0.5rem;
+  padding: 0.25rem;
+  box-sizing: border-box;
+
+  button{
+    display:flex;
+    height: 1.725rem;
+    padding: 0.25rem;
+    color: $primary-color;
+  }
+}
+.dropzone-thumb-inner{
+  display: flex;
+  flex-direction: column;
+  max-width: 6.5rem;
+  overflow: hidden;
+
+
+}
+
+#dropzone-preview{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+
+  img{
+    max-width: 6.5rem;
+  }
+  .dropzone-preview-img-title{
+    font-size: 10px;
+  }
+
+
+}
+/*----- End Dropzone ------------*/

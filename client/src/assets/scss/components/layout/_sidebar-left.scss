@@ -1,8 +1,6 @@
 /**
- * Name: Iracanyes
  * Description: Sidebar Left
  */
-
 aside#aside-left{
   -ms-flex: 0 0 16.666667%;
   flex: 0 0 16.666667%;
@@ -15,79 +13,75 @@ aside#aside-left{
   min-height: 1px;
   background-color: transparent;
 
+  nav.navbar{
+    flex-direction: column;
+    padding: 0;
 
-  /* MENU LEFT */
-  div.menu{
-    background-color: white;
-    border-right: 2px solid $secondary-color;
-    ul.nav{
-      overflow-y: auto;
+    div.btn-group{
+      display:flex;
+      flex-direction: column;
+      //position: unset;
+      width: 100%;
+    }
 
-      li.nav-item{
+    picture{
+      width: 5rem;
+      height: 5rem;
 
-        .show{
-          display: contents !important;
-        }
-
-
-
-        a.nav-link{
-          i{
-            margin-right: 10px;
-          }
-        }
-
-        div.dropdown-menu{
-
-          ul{
-            padding-left: 0px;
-          }
-          span{
-            margin-right: 10px;
-          }
-
-
-          a{
-            color: $primary-color;
-            display: block;
-            width: 100%;
-            padding: 0.25rem 1.5rem;
-            clear: both;
-            font-weight: 400;
-            text-align: inherit;
-            white-space: nowrap;
-            background-color: transparent;
-            border: 0;
-          }
-
-          a.dropdown-toggle{
-            margin: 0.25rem 1.5rem;
-          }
-
-          div.dropdown-menu{
-            .dropdown-item{
-              color: $primary-color !important;
-              display: block;
-              width: 100%;
-              padding: 0.25rem 1.5rem !important;
-              clear: both;
-              font-weight: 400;
-              text-align: inherit;
-              white-space: nowrap;
-              background-color: transparent;
-              border: 0;
-              margin: 0.25rem 2rem;
-            }
-
-            .dropdown-item:hover{
-              color: $primary-color !important;
-            }
-          }
-        }
-
+      img{
+        margin: 0 auto;
       }
 
+    }
+    picture + div{
+      text-align: center;
+      color: $primary-color;
+    }
+
+    button, h6{
+      text-align:left;
+      padding: 0.5rem 1.5rem;
+      color: rgb(103,115,130) !important;
+    }
+
+    svg.fa-dollar-sign{
+      margin: 0 0.75rem 0 0.25rem;
+    }
+
+    div.dropdown-menu{
+      background-color: darken(rgb(52,58,64), 10%) !important;
+      position: unset !important;
+      left: unset !important;
+      top: unset !important;
+      transform: unset !important;
+      border: 2px solid $secondary-color;
+      border-right: unset;
+      border-left: unset;
+
+
+      button, h6{
+        padding-left: 2rem !important;
+
+        svg{
+          margin-right: 1rem;
+        }
+      }
+
+      button.dropdown-item{
+        padding: 0.5rem 1.5rem;
+      }
+
+      a, h6{
+        color: inherit;
+        font-size: 0.9rem;
+      }
+
+      .nav-link{
+        padding: 0;
+      }
 
     }
   }
+
+
 }

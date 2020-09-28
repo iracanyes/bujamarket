@@ -11,7 +11,7 @@ App\Entity\Favorite:
                 _format: 'json'
             # host: 'localhost'
             schemes: ['https']
-            access_control: "is_granted('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_FULLY')"
+            security: "is_granted('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_FULLY')"
             #options:
             #    my_option: 'my_option_value'
             status: 200 # customize the HTTP status code to send
@@ -24,7 +24,7 @@ App\Entity\Favorite:
                 _format: 'json'
             # host: 'localhost'
             schemes: ['https']
-            access_control: "is_granted('ROLE_CUSTOMER') and is_granted('IS_AUTHENTICATED_FULLY')"
+            security: "is_granted('ROLE_CUSTOMER') and is_granted('IS_AUTHENTICATED_FULLY')"
             #options:
             #    my_option: 'my_option_value'
             status: 200 # customize the HTTP status code to send
@@ -38,14 +38,14 @@ App\Entity\Favorite:
             defaults:
                 _format: 'json'
             schemes: ['https']
-            access_control: "is_granted('ROLE_CUSTOMER') and is_granted('IS_AUTHENTICATED_FULLY')"
+            security: "is_granted('ROLE_CUSTOMER') and is_granted('IS_AUTHENTICATED_FULLY')"
             controller: App\Controller\Favorite\GetFavoriteIdsAction
         post:
             method: 'POST'
             path: '/favorite/create'
             defaults:
                 _api_receive: false
-            access_control: "is_granted('ROLE_CUSTOMER') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
+            security: "is_granted('ROLE_CUSTOMER') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
             schemes: ['https']
             controller: App\Controller\Favorite\CreateFavoriteAction
     itemOperations:
@@ -59,7 +59,7 @@ App\Entity\Favorite:
                 _format: 'json'
             # host: 'localhost'
             schemes: ['https']
-            access_control: "is_granted('ROLE_CUSTOMER') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
+            security: "is_granted('ROLE_CUSTOMER') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
             #options:
             #    my_option: 'my_option_value'
             status: 200 # customize the HTTP status code to send
@@ -68,6 +68,6 @@ App\Entity\Favorite:
             path: '/favorite/{id}'
             requirements:
                 id: '\d+'
-            access_control: 'is_granted("ROLE_CUSTOMER") and is_granted("IS_AUTHENTICATED_REMEMBERED")'
+            security: 'is_granted("ROLE_CUSTOMER") and is_granted("IS_AUTHENTICATED_REMEMBERED")'
             schemes: ['https']
             controller: App\Controller\Favorite\DeleteFavoriteAction
