@@ -33,6 +33,7 @@
   "app.button.about_us": "A propos de nous",
   "app.button.add_favorite": "Ajouter au favoris",
   "app.button.add_product": "Ajouter un produit",
+  "app.page.shopping_card.shopping_card_validation": "Valider le panier de commande",
   "app.button.add_product_image": "Ajouter une image du produit",
   "app.button.add_shopping_cart": "Ajouter au panier",
   "app.button.all_orders": "Toutes les commandes",

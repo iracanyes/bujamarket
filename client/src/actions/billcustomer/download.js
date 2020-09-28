@@ -36,6 +36,7 @@ export function download(filename, history) {
         let url = window.URL.createObjectURL(retrieved);
         let a = document.createElement('a');
         a.href = url;
+        a.target = "_blank";
         a.download = 'sample.pdf';
 
         /* Ajout dans la page  */
@@ -50,7 +51,11 @@ export function download(filename, history) {
         }
 
         /* Ouvrir le fichier pdf  */
-        window.location.href = url;
+        //window.location.href = url;
+
+        // Activer le bouton - Télécharger le pdf
+        //a.click();
+        window.open(url, '_blank');
 
         /* Supprimer le lien  */
         a.parentNode.removeChild(a);
