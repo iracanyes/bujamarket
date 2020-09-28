@@ -4,6 +4,7 @@ import {
   normalize,
   mercureSubscribe as subscribe
 } from '../../utils/dataAccess';
+import authHeader from "../../utils/authHeader";
 
 export function error(error) {
   return { type: 'PAYMENT_SHOW_ERROR', error };
@@ -21,9 +22,7 @@ export function retrieve(id, history, location) {
   return dispatch => {
     dispatch(loading(true));
 
-    const userToken = JSON.parse(localStorage.getItem('token'));
-    let headers = new Headers();
-    headers.set('Authorization', 'Bearer ' + userToken.token);
+    let headers = authHeader(history, location);
 
     return fetch('payment_success', { method: 'POST', headers: headers, body: JSON.stringify({sessionId: id}) })
       .then(response =>
