@@ -1,6 +1,7 @@
 import { SubmissionError } from 'redux-form';
 import { fetch } from '../../utils/dataAccess';
 import {logout} from "../user/login";
+import authHeader from "../../utils/authHeader";
 
 
 export function error(error) {
@@ -19,14 +20,7 @@ export function create(values, history, location, stripe) {
   return dispatch => {
     dispatch(loading(true));
 
-    const userToken = JSON.parse(localStorage.getItem('token'));
-    let headers = new Headers();
-    headers.set('Authorization', 'Bearer ' + userToken.token);
-
-    /*  */
-    const user = JSON.parse(atob(userToken.token.split('.')[1]));
-    // Création du token Stripe
-    //let {token} = stripe.createToken({email: user.username});
+    const headers = authHeader(history, location);
 
     return fetch('payment/create', { method: 'POST', headers: headers, body: JSON.stringify({orderSet:values}) })
       .then(response => {
@@ -37,41 +31,37 @@ export function create(values, history, location, stripe) {
       .then(retrieved => {
         dispatch(success(retrieved));
 
-        console.log('success - retrieved ', retrieved);
-
-
         /* En cas de réussite  de la requête, on redirige le client vers la page Checkout à son identification de session  */
         stripe
           .redirectToCheckout({
             sessionId: retrieved.id
           })
           .then( result => {
-            sessionStorage.removeItem('flash-message-error');
-            sessionStorage.getItem('flash-message-error', JSON.stringify({message: result.error.message }));
+            if(result.error){
+              dispatch(error(result.error.message));
+              dispatch(error(null));
+            }
+
             history.push({pathname: 'validate_order', state: { from : location.pathname, params: location.state.params }});
           })
-
-
-
       })
       .catch(e => {
         dispatch(loading(false));
 
-        if (e instanceof SubmissionError) {
-          dispatch(error(e.errors._error));
-          throw e;
+        switch (true){
+          case e.code === 401:
+            dispatch(error('Authentification nécessaire!'));
+            dispatch(error(null));
+            history.push({pathname: '../../login', state: { from: location.pathname, params: location.state.params }});
+            break;
+          case typeof e['hydra:description'] === "string":
+          case typeof e.message === "string":
+            console.log("erreur : ", e);
+            dispatch(error( "Une erreur est survenue durant le processus de redirection vers la page de paiement Stripe! Contactez l'administrateur de la plateforme"));
+            break;
         }
+        dispatch(error(null));
 
-        console.log('error ', e);
-
-        if( /Unauthorized/.test(e))
-        {
-          sessionStorage.removeItem('flash-message-error');
-          sessionStorage.setItem('flash-message-error', JSON.stringify({message: "Authentification nécessaire avant de continuer!"}));
-          history.push({pathname: 'login', state: { from: location.pathname, params: location.state.params }});
-        }
-
-        dispatch(error(e.message));
       });
   };
 }

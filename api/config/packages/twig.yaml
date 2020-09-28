@@ -3,12 +3,11 @@ twig:
     debug: '%kernel.debug%'
     strict_variables: '%kernel.debug%'
     globals:
-        # This parameters are not available when Docker build the php container
-        # Error : EnvVarProcessor - Environment variable are not available 
-        # Uncomment after building the docker container 
-        # 
-        #APP_OWNER_ADDRESS: '%env(APP_OWNER_ADDRESS)%'
-        #APP_OWNER_PHONE_NUMBER: '%env(APP_OWNER_PHONE_NUMBER)%'
-        #APP_OWNER_CONTACT_EMAIL: '%env(APP_OWNER_CONTACT_EMAIL)%'
-        #APP_HOST_URL: '%env(APP_HOST_URL)%'
-        #APP_FULLNAME: '%env(APP_FULLNAME)%'
+        # Env variable used for invoice template
+        # In dev-mode, when build the docker images this parameter MUST be commented
+        # Uncomment this parameter after building the docker containers
+        APP_OWNER_ADDRESS: '%env(APP_OWNER_ADDRESS)%'
+        APP_OWNER_PHONE_NUMBER: '%env(APP_OWNER_PHONE_NUMBER)%'
+        APP_OWNER_CONTACT_EMAIL: '%env(APP_OWNER_CONTACT_EMAIL)%'
+        APP_HOST_URL: '%env(APP_HOST_URL)%'
+        APP_FULLNAME: '%env(APP_FULLNAME)%'

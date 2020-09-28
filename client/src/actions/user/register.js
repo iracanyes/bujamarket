@@ -3,6 +3,10 @@ import { fetch } from '../../utils/dataAccess';
 import React from "react";
 import { toastWelcome, toastError } from "../../layout/ToastMessage";
 
+export function notify(notification){
+  return { type: 'USER_REGISTER_NOTIFICATION', notification};
+}
+
 export function error(error) {
   return { type: 'USER_REGISTER_ERROR', error };
 }
@@ -43,11 +47,13 @@ export function register(values, history) {
       })
       .then(retrieved => {
         dispatch(success(retrieved));
+        dispatch(notify(`Bienvenue ${ retrieved.firstname + " " + retrieved.lastname }, visitez votre boîte de réception pour valider votre inscription!`));
 
         history.push('/');
       })
       .catch(e => {
         dispatch(loading(false));
+
 
         switch(true){
           case typeof e === 'string':
@@ -70,6 +76,5 @@ export function reset() {
   return dispatch => {
     dispatch(loading(false));
     dispatch(error(null));
-    //dispatch(success({}));
   };
 }

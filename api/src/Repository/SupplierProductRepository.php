@@ -80,6 +80,42 @@ class SupplierProductRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
+    public function getProductSuppliersByProductId(int $id)
+    {
+        $qb = $this->createQueryBuilder('sp')
+            ->select('sp')
+            ->leftJoin('sp.product', 'p')
+            ->addSelect('p')
+            ->leftJoin('sp.supplier', 's')
+            ->addSelect('s' )
+            ->leftJoin('sp.images', 'i')
+            ->addSelect('i');
+
+        if($id !== null){
+            $qb->andWhere('p.id = :id')
+                ->setParameter('id', $id);
+
+        }
+
+        return $qb->groupBy('sp.id')
+            ->getQuery()
+            ->getResult();
+
+    }
+
+    public function getSupplierProductWithProductInfo(int $id)
+    {
+        return $this->createQueryBuilder('sp')
+            ->select('sp')
+            ->leftJoin('sp.product', 'p')
+            ->addSelect('p')
+            ->andWhere('sp.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult();
+
+    }
+
     // /**
     //  * @return SupplierProduct[] Returns an array of SupplierProduct objects
     //  */

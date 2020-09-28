@@ -10,10 +10,7 @@ import * as homepageImages from "../assets/img/homepage";
 class HomepageSlider extends Component
 {
   render(){
-    const user = localStorage.getItem('token') ? JSON.parse(atob(localStorage.getItem('token').split('.')[1])) : null;
 
-    if( user !== null)
-      return (<div></div>);
 
     return (
       <Fragment>

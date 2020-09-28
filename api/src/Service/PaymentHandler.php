@@ -9,9 +9,11 @@ use App\Entity\OrderSet;
 use App\Entity\Customer;
 use App\Entity\Payment;
 use App\Exception\Payment\PaymentNotFoundException;
+use App\Exception\User\MemberNotFoundException;
 use Doctrine\DBAL\Driver\PDOException;
 use Doctrine\ORM\EntityNotFoundException;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\UserNotFoundException;
+use Psr\Log\LoggerInterface;
 use Stripe\Checkout\Session;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -38,6 +40,11 @@ class PaymentHandler
     private $em;
 
     /**
+     * @var LoggerInterface $logger
+     */
+    private $logger;
+
+    /**
      * @var OrderSetHandler $orderSetHandler
      */
     private $orderSetHandler;
@@ -52,16 +59,17 @@ class PaymentHandler
      */
     private $billCustomerHandler;
 
-    public function __construct(RequestStack $requestStack, EntityManagerInterface $em, OrderSetHandler $orderSetHandler, MemberHandler $memberHandler,BillCustomerHandler $billCustomerHandler)
+    private $stripeHandler;
+
+    public function __construct(RequestStack $requestStack, EntityManagerInterface $em, OrderSetHandler $orderSetHandler, MemberHandler $memberHandler,BillCustomerHandler $billCustomerHandler, StripeHandler $stripeHandler, LoggerInterface $logger)
     {
         $this->request = $requestStack->getCurrentRequest();
         $this->em = $em;
+        $this->logger = $logger;
         $this->orderSetHandler = $orderSetHandler;
         $this->memberHandler = $memberHandler;
         $this->billCustomerHandler= $billCustomerHandler;
-
-        /* Ajout de la clé API Stripe en */
-        \Stripe\Stripe::setApiKey(getenv('STRIPE_SECRET_KEY'));
+        $this->stripeHandler = $stripeHandler;
 
     }
 
@@ -75,47 +83,43 @@ class PaymentHandler
         /* Récupération du client */
         $customer = $this->memberHandler->getCustomer();
 
+        $line_items = [];
+
         /* Création de la liste de commande pour la session Stripe Checkout */
         foreach( $orderSet->getOrderDetails() as $item )
         {
-            $line_items = [];
-
             $images = [];
 
-            foreach($item->getSupplierProduct()->getProduct()->getImages() as $image)
+            foreach($item->getSupplierProduct()->getImages() as $image)
             {
-                $images[] = $image->getUrl();
+                if(getenv('APP_ENV') === "prod"){
+                    $images[] = getenv('API_ENTRYPOINT').'/'.getenv('UPLOAD_SUPPLIER_PRODUCT_IMAGE_DIRECTORY').'/'.$image->getUrl();
+                }else{
+                    $images[] = 'https://picsum.photos/1620/1080';
+                }
+
             }
 
             /*
              * Remarque: les prix sur Stripe sont transmis en entier. Ex: 1182.23 doit être transmis comme étant 118223
              * */
             $line_items[] = [
-                "name" => $item->getSupplierProduct()->getProduct()->getTitle(),
-                "description" => $item->getSupplierProduct()->getProduct()->getResume(),
-                "currency" => "EUR",
-                "amount" => round($item->getSupplierProduct()->getFinalPrice(), 2) * 100,
+                "price_data" => [
+                    "currency" => "EUR",
+                    "unit_amount" => round($item->getSupplierProduct()->getFinalPrice(), 2) * 100,
+                    "product_data" => [
+                        "name" => $item->getSupplierProduct()->getProduct()->getTitle(),
+                        "images" => [$images[0],$images[1]],
+                        "description" => $item->getSupplierProduct()->getProduct()->getResume(),
+                    ]
+                ],
                 "quantity" => $item->getQuantity(),
-                "images" => $images
             ];
         }
 
         dump($line_items);
 
-        /* Création d'une session Stripe Checkout */
-        $session = \Stripe\Checkout\Session::create([
-            "customer_email" => $customer->getEmail(),
-            "payment_method_types" => ['card'],
-            'line_items' => $line_items,
-            "success_url" => ''.getenv('APP_HOST_URL').'/payment_success/{CHECKOUT_SESSION_ID}',
-            "cancel_url" => ''.getenv('APP_HOST_URL').'/payment_failure',
-            "billing_address_collection" => "required",
-            // Seul une clé customer/client_reference_id est nécessaire
-            //"customer" => $customer->getCustomerKey(),
-            'client_reference_id' => $customer->getCustomerKey(),
-            'mode' => 'payment',
-            'submit_type' => 'pay'
-        ]);
+        $session = $this->stripeHandler->createCheckoutSession($customer, $orderSet, $line_items);
 
         dump($session);
 
@@ -126,6 +130,7 @@ class PaymentHandler
             $this->em->persist($orderSet);
             $this->em->flush();
         }catch(\PDOException $exception){
+            $this->logger->error($exception->getMessage(), ['context' => $exception]);
             throw new \Exception(sprintf("An error occured while persisting the order set %s associated with the new session", $orderSet->getId()));
         }
 
@@ -133,114 +138,172 @@ class PaymentHandler
 
     }
 
-    public function createPayment(Session $data)
-    {
-        if(!$data)
-        {
-            throw new \Exception('Payment Handler - Create payment : Unexpected data received from request');
+    public function validatePayment(){
+        /* Recupération des données de la requête */
+        $data = json_decode($this->request->getContent(), false);
+        if ($data === null) {
+            throw new \Exception('Bad JSON body from Stripe!');
         }
-
         dump($data);
 
+        /* Identifiant de l'événement  */
+        $eventId = $data->id;
+
+        /* Remarque de sécurité : Récupération de l'objet Event à partir des données reçues par le webhook Stripe */
+        $stripeEvent = $this->stripeHandler->findEvent($eventId);
+
+        $session = $this->stripeHandler->retrieveSession($stripeEvent->data->object->id);
+
+        dump($stripeEvent);
+        dump($session);
+
+        /* Si on reçoit un événement autre que "checkout.session.completed", on ne traite pas la requête */
+        if($stripeEvent->type !== 'checkout.session.completed' && $stripeEvent->data->object->payment_intent !== $session->payment_intent)
+        {
+            return new Response(sprintf('Unexpected request parameters '),204);
+        }
+
+        try
+        {
+            /*  */
+            $this->createPayment($session);
+        }catch(\Exception $exception){
+            return new Response(sprintf('Unexpected Webhook Stripe received : %s ', $stripeEvent->type), 404);
+        }
+
+        return new JsonResponse(sprintf('Stripe Webhook processed : %s ', $stripeEvent->type),200);
+    }
+
+    public function createPayment(Session $session)
+    {
         /* Création de la preuve de paiement */
         $payment = new Payment();
 
-        $payment->setSessionId($data->id);
+
+        $payment->setSessionId($session->id);
         $payment->setDateCreated(new \DateTime());
         $payment->setReference(
             date_format($payment->getDateCreated(), "Ymd-His")
             .'-'
-            .hexdec( explode('_', $data->payment_intent)[1] )
+            .explode('_', $session->payment_intent)[1]
         );
         $payment->setCurrency('EUR');
         $payment->setStatus('completed');
 
         $payment->setSource('credit');
 
+        dump($payment);
+
         /* Calcul du montant total htva du paiement */
         $somme = 0.0;
 
-        foreach($data->display_items as $item)
+        $line_items = $this->stripeHandler->retrieveCheckoutSessionLineItems($payment->getSessionId());
+        dump($line_items);
+
+        foreach($line_items->data as $item)
         {
             /* Rappel: les montants sur Stripe sont des entiers. Ex : 1182.23 sera 118223 */
-            $somme += ((((float)$item->amount) / 100) * $item->quantity);
+            $somme += ((((float)$item->amount_total) / 100) * $item->quantity);
         }
 
         $payment->setAmount($somme);
 
+        dump($payment);
+
         /* Création de la facture associé */
-        $bill = $this->billCustomerHandler->createBill($data);
+        $bill = $this->billCustomerHandler->createBill($session);
+        dump($bill);
 
         $bill->setReference($payment->getReference());
 
         /* Ajout des sommes associés au paiements dans la facture */
         $bill->setTotalExclTax($somme);
 
-
-
-
         // Récupérer le coût du transport
-        $orderSet = $this->orderSetHandler->getOrderSetBySessionId($data->id);
-        $bill->setTotalShippingCost($orderSet->getDeliverySet()->getTotalShippingCost());
+        $orderSet = $this->orderSetHandler->getOrderSetBySessionId($session->id);
+        dump($orderSet);
 
         // Association de la facture avec la commande effectuée
         $bill->setOrderSet($orderSet);
 
-
-
         // Somme total TVAC
-        $bill->setTotalInclTax(($somme * ( 1 + $bill->getVatRateUsed() )) + $bill->getTotalShippingCost());
-
-
+        $bill->setTotalInclTax(($somme * ( 1 + $bill->getVatRateUsed() )) + $orderSet->getDeliverySet()->getShippingCost());
 
         // Ajout de l'e-mail de facturation après la création de la facture
         $payment->setEmailReceipt($bill->getCustomer()->getEmail());
 
-
-
-        /* Association du paiement enregistré avec sa facture */
-        $payment->setBill($bill);
-
-        dump($bill);
-
-        /* Création d'une facture sous format pdf */
-        $pathname = $this->billCustomerHandler->createPdf($payment, $data);
-
-        dump($pathname);
-
-        $payment->getBill()->setUrl($pathname);
-
         /* Ajout de l'ID du paiement Stripe  */
-        $payment->setPaymentIntent($data->payment_intent);
+        $payment->setPaymentIntent($session->payment_intent);
 
         dump($payment);
 
         try{
+            // Mise à jour de l'ID Customer si celui-ci n'existe pas déjà
+            $customer = $this->em->getRepository(Customer::class)
+                ->findOneBy(['customerKey' => $session->customer]);
+
+            if($customer === null || !$customer instanceof Customer){
+                throw new MemberNotFoundException("Customer not found!", ['parameter' => $session->customer]);
+            }
+
+            // Association facture - client
+            $bill->setCustomer($customer);
+
+
+
+            /* Création d'une facture sous format pdf */
+            $pathname = $this->billCustomerHandler->createPdf($payment, $session, $orderSet, $line_items->data, $bill);
+
+            dump($pathname);
+
+            $bill->setUrl($pathname);
+
+            // Association payment - facture
+            $this->em->persist($bill);
+            $this->em->flush();
+
+            $payment->setBill($bill);
+
+            dump($bill);
+
+            dump($customer);
+            // Sauvegarde du paiement confirmé
             $this->em->persist($payment);
             $this->em->flush();
 
-        } catch (PDOException $exception){
+        } catch (\Exception $exception){
+            $this->logger->error($exception->getMessage(), ['context' => $exception]);
             throw new \Exception('An error '.$exception->getCode().' during persisting process of the payment. Message : '.$exception->getMessage());
         }
 
-
     }
 
-    public function handleCheckoutSessionCompleted(\Stripe\Event $event): void
+    /**
+     *
+     * @param \Stripe\Event $event
+     * @throws \Exception
+     */
+    public function handleCheckoutSessionCompleted(\Stripe\Event $event, $data): void
     {
-        /**/
+        /* Récupération des données reçues après confirmation d'un paiement */
         $eventObject = $event->data->object;
 
-        dump($eventObject);
 
+        /* Sauvegarde du paiement confirmé par Stripe */
         $this->createPayment($eventObject);
 
 
     }
 
+    /**
+     * Retrieve a succeeded payment
+     * @return object|null
+     * @throws PaymentNotFoundException
+     */
     public function getPaymentSuccess()
     {
         $data = json_decode($this->request->getContent());
+        dump($data);
 
         try{
             $payment = $this->em->getRepository(Payment::class)

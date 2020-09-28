@@ -7,28 +7,29 @@ import {
   useUnselectAll,
 } from 'react-admin';
 import { VisibilityOff } from '@material-ui/icons';
+import { toast } from "react-toastify";
 
-const ResetViewsButton = ({ selectedIds }) => {
+const ValidateButton = ({ label, selectedIds }) => {
   const refresh = useRefresh();
   const notify = useNotify();
   const unselectAll = useUnselectAll();
   const [updateMany, { loading }] = useUpdateMany(
-    'posts',
+    'categories',
     selectedIds,
-    { views: 0 },
+    { isValid: true },
     {
       onSuccess: () => {
         refresh();
-        notify('Posts updated');
-        unselectAll('posts');
+        toast('Catégories mis à jour');
+        unselectAll('categories');
       },
-      onFailure: error => notify('Error: posts not updated', 'warning'),
+      onFailure: error => toast.warning('Erreur: Catégories non mis à jour'),
     }
   );
 
   return (
     <Button
-      label="simple.action.resetViews"
+      label={label}
       disabled={loading}
       onClick={updateMany}
     >
@@ -37,4 +38,4 @@ const ResetViewsButton = ({ selectedIds }) => {
   );
 };
 
-export default ResetViewsButton;
+export default ValidateButton;

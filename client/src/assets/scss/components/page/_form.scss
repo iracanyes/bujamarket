@@ -1,6 +1,14 @@
 /**
  * Description: Style des formulaires
  */
+@import "form/add-shopping-cart";
+@import "form/delivery-address";
+@import "form/dropzone";
+@import "form/login";
+@import "form/update-address";
+@import "form/update-profile";
+@import "form/subscribe";
+
 /*---- Style général des formulaires -------*/
 textarea{
   width: 100%;
@@ -15,105 +23,44 @@ textarea[name="product[resume]"]{
 legend{
   text-align:center;
 }
-/*---- End Style général des formulaires -------*/
-/**
- * Formulaire adresse de livraison
- */
-form#delivery-address-form
-{
-    button#add-address{
-        position: absolute;
-        bottom: 0;
-    }
-}
-
-div#delivery-address-shopping-cart
-{
-    position : absolute;
-    right: 9rem;
-    top: 0;
-}
-
 input[type='file']
 {
-    padding: 0.375rem 0.75rem !important;
+  padding: 0.375rem 0.75rem !important;
 }
 
-// Bouton Ajouter au panier et commande immédiat
-form#add-shopping-cart
-{
-    button.btn-outline-success{
-        color: #F5A54C;
-        border-color: #F5A54C;
-    }
-
-    a.btn-outline-danger{
-        color: #F5A54C;
-        border-color: #F5A54C;
-    }
-}
-
-/* Dropzone */
-.dropzone-thumb{
-    display: inline-flex;
-    border-radius: 0.125rem;
-    margin-bottom: 0.5rem;
-    margin-right: 0.5rem;
-    padding: 0.25rem;
-    box-sizing: border-box;
-
-  button{
-    display:flex;
-    height: 1.725rem;
-    padding: 0.25rem;
-    color: $primary-color;
+// Button Success with Spinner
+button.border-success{
+  div.spinner{
+    width: 1.5rem;
+    height: 1.5rem;
+    color: $primary-color !important;
   }
 }
-.dropzone-thumb-inner{
-    display: flex;
-    flex-direction: column;
-    max-width: 6.5rem;
-    overflow: hidden;
+/*---- End Style général des formulaires -------*/
 
+/*---- Form : Add to Shopping Cart ----*/
+form#add-shopping-cart{
+  input.form-control{
+    border-radius: 0.5rem;
+  }
+  button.btn-sm, a.btn-sm{
+    background-color: $primary-color;
+    border: 1px solid $primary-color;
+    color: white;
+    border-radius: 0.5rem;
+    padding: 0.375rem 0.75rem;
+    text-align: center;
+    display: block;
+    font-size: 0.9rem !important;
 
-}
-
-#dropzone-preview{
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    margin-top: 1rem;
-
-    img{
-        max-width: 6.5rem;
-    }
-    .dropzone-preview-img-title{
-        font-size: 10px;
-    }
-
-
-}
-
-/*--- Profile info page - Update profile info ---*/
-form#update-profile-form{
-  label[for="userType"]{
-    display: flex;
-    align-items: center;
-    span{
-      display: inline-flex;
-    }
   }
 
-
-}
-/*--- End rofile info page - Update profile info ---*/
-/*--- Profile - Update address form ----*/
-form#update-address-form{}
-datalist{
-  font-family: "Kanit", "Dosis", "Lato", Arial, sans-serif;
-  font-size: 1rem;
-  option{
-    padding: 0.2rem;
+  button.btn-sm:hover, a.btn-sm:hover{
+    background-color: $light-color;
+    color: $dark-color;
+  }
+  a.btn-sm{
+    text-decoration: none;
   }
 }
-/*--- Profile - Update address form ----*/
+/*---- Form : Add to Shopping Cart ----*/

@@ -30,7 +30,6 @@ export function getProfileAddresses(history, location) {
 
     fetch('my_addresses', {headers: headers})
       .then(response => {
-        console.log(response);
 
         return response
                   .json()
@@ -54,7 +53,6 @@ export function getProfileAddresses(history, location) {
         dispatch(loading(false));
         dispatch(error(e.message));
 
-        console.log(e);
 
         /* Si une authentification est requise, redirection vers la page de connexion */
         if(e.code === 401)

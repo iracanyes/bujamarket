@@ -171,6 +171,7 @@ class User implements UserInterface
     /**
      * @var Collection $bankAccounts Bank accounts of this user
      * @ORM\OneToMany(targetEntity="App\Entity\BankAccount", mappedBy="user", orphanRemoval=true)
+     * @Groups({"profile:output"})
      */
     private $bankAccounts;
 

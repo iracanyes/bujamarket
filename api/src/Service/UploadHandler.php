@@ -13,6 +13,7 @@ use League\Flysystem\FilesystemInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use App\Exception\Image\DeleteImageException;
 
 class UploadHandler
 {
@@ -127,6 +128,7 @@ class UploadHandler
                     break;
             }
         }catch(\Exception $exception){
+            $this->logger->error($exception->getMessage(), ['context' => $exception]);
             throw new DeleteImageException(sprintf('Unable to delete profile image %s', $user->brandName()));
         }
 
@@ -136,6 +138,11 @@ class UploadHandler
 
     public function deleteSupplierProductImage(Image $image): void
     {
-        $this->imageProductFilesystem->delete('/'.$image->getUrl());
+        try{
+            $this->imageProductFilesystem->delete('/'.$image->getUrl());
+        }catch (\Exception  $e){
+            $this->logger->error($e->getMessage(), ['context' => $e]);
+        }
+
     }
 }

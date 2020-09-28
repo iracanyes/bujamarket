@@ -1,9 +1,19 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Link, Redirect } from 'react-router-dom';
+import { Link, Redirect, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import Form from './Form';
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
+import PaymentMethodForm from './PaymentMethodForm';
 import { create, reset } from '../../actions/bankaccount/create';
+import {SpinnerLoading} from "../../layout/Spinner";
+import {toastError} from "../../layout/ToastMessage";
+import BankAccountForm from "./BankAccountForm";
+import {FormattedMessage} from "react-intl";
+
+//const stripePromise = loadStripe(`${process.env.REACT_APP_STRIPE_PUBLIC_KEY}`);
+const stripePromise = loadStripe('pk_test_ByaWsXqgA9uZ4kAZ617IyrTE');
+
 
 class Create extends Component {
   static propTypes = {
@@ -19,33 +29,31 @@ class Create extends Component {
   }
 
   render() {
-    if (this.props.created)
-      return (
-        <Redirect
-          to={`edit/${encodeURIComponent(this.props.created['@id'])}`}
-        />
-      );
+    const { history, location, loadingClientSecret } = this.props;
+    const user = localStorage.getItem('token') !== null ? JSON.parse(atob(localStorage.getItem('token').split('.')[1])): null ;
+
+    typeof this.props.error === "string" && toastError(this.props.error);
+
+    if(!user)
+      history.push({pathname: '../../login', state: { from: location.pathname }});
 
     return (
       <div>
-        <h1>New BankAccount</h1>
+        <h1>
+          <FormattedMessage
+            id={"app.payment_method.add"}
+            defaultMessage={"Ajouter un moyen de paiement"}
+          />
+        </h1>
+        {loadingClientSecret && ( <SpinnerLoading message={'Chargement du formulaire'}/>)}
+        <Elements stripe={stripePromise}>
+          {
+            user && user.roles.includes('ROLE_SUPPLIER')
+              ? <BankAccountForm  onSubmit={this.props.create} />
+              : <PaymentMethodForm onSubmit={this.props.create} />
+          }
 
-        {this.props.loading && (
-          <div className="alert alert-info" role="status">
-            Loading...
-          </div>
-        )}
-        {this.props.error && (
-          <div className="alert alert-danger" role="alert">
-            <span className="fa fa-exclamation-triangle" aria-hidden="true" />{' '}
-            {this.props.error}
-          </div>
-        )}
-
-        <Form onSubmit={this.props.create} values={this.props.item} />
-        <Link to="." className="btn btn-primary">
-          Back to list
-        </Link>
+        </Elements>
       </div>
     );
   }
@@ -53,7 +61,8 @@ class Create extends Component {
 
 const mapStateToProps = state => {
   const { created, error, loading } = state.bankaccount.create;
-  return { created, error, loading };
+  const { loading: loadingClientSecret } = state.bankaccount.getClientSecret;
+  return { created, error, loading, loadingClientSecret };
 };
 
 const mapDispatchToProps = dispatch => ({
@@ -64,4 +73,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Create);
+)(withRouter(Create));

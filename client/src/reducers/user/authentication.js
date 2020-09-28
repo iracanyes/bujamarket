@@ -1,7 +1,17 @@
 import { combineReducers } from 'redux';
 
-let token = localStorage.getItem("token") || (localStorage.getItem("token") !== "undefined") && JSON.parse(localStorage.getItem("token"));
+let token = localStorage.getItem("token") !== null && JSON.parse(localStorage.getItem("token"));
 const initialState = token ? { loggingIn: true, token } : {};
+
+
+export function notify( state = initialState, action){
+  switch(action.type){
+    case 'USER_LOGIN_NOTIFICATION':
+      return action.notification;
+    default:
+      return state;
+  }
+}
 
 export function error(state = initialState, action) {
   switch (action.type) {
@@ -53,4 +63,4 @@ export function logout(state = initialState, action) {
   }
 }
 
-export default combineReducers({ error, loading, request, login, logout });
+export default combineReducers({ error, loading, request, login, logout, notify });

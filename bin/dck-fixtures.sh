@@ -1,10 +1,11 @@
 #!/bin/bash
 
 # Premier ajout contient un administrateur système
-#docker-compose exec php bin/console doctrine:fixtures:load --append --group=group1
+docker-compose exec php bin/console doctrine:fixtures:load --append --group=system_admin
+
 
 # Boucle sans administrateur système
-for i in `seq 1 20`;
+for i in `seq 1 40`;
 do
 	if docker-compose exec php bin/console doctrine:fixtures:load --append --group=group2 -vvv
 	then

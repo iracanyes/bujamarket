@@ -33,26 +33,17 @@ export function create(values, history, location) {
       .catch(e => {
         dispatch(loading(false));
 
-        if (e instanceof SubmissionError) {
-          dispatch(error(e.errors._error));
-        }
-
-        if(e.code === 401)
-        {
-          dispatch(error("Authentification nécessaire avant de poursuivre!"));
-          history.push({pathname: '../../login', state: { from : location.pathname }});
-        }
-
-        if(typeof e === 'string')
-        {
-          dispatch(error(e));
-        }else{
-          if(e['hydra:description'])
-          {
-            dispatch(error(e['hydra:title']));
-          }else{
+        switch (true){
+          case e.code === 401:
+            dispatch(error("Authentification nécessaire avant de poursuivre!"));
+            history.push({pathname: '../../login', state: { from : location.pathname }});
+            break;
+          case typeof e.message === 'string':
             dispatch(error(e.message));
-          }
+            break;
+          case typeof e['hydra:description'] === "string":
+            dispatch(error(e['hydra:description']));
+            break;
         }
         dispatch(error(null));
       });

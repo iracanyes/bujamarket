@@ -8,12 +8,16 @@ import {
   Col,
   Row,
   Card,
+  CardHeader,
   CardBody,
   CardFooter,
   CardText,
   Spinner
 } from "reactstrap";
 import { FormattedMessage } from "react-intl";
+import {SpinnerLoading} from "../../layout/Spinner";
+import {toastError} from "../../layout/ToastMessage";
+import Rating from "../../layout/Rating";
 
 class Show extends Component {
   static propTypes = {
@@ -34,68 +38,55 @@ class Show extends Component {
   }
 
   render() {
-    if (this.props.deleted) return <Redirect to=".." />;
+    const { retrieved, error, loading, deleted } = this.props;
 
-    const item = this.props.retrieved ? this.props.retrieved['hydra:member'][0] : null;
+    if (deleted) return <Redirect to=".." />;
 
-    item && console.log("Product retrieved", item);
+    const item = retrieved ? retrieved['hydra:member'][0] : null;
 
+    typeof error === "string" && toastError(error)
     return (
       <Fragment>
-        <div id={"category-show"} className={"col-lg-9 mx-auto"}>
-          <h1>
-            <FormattedMessage  id={"app.page.product.title"}
-                               defaultMessage="Produit"
-                               description=" Page product - title"
-            />
-            &nbsp;:&nbsp;
-            {item && item['title']}
-          </h1>
+        <div id={"product-show"} className={'mt-5'}>
 
-          {this.props.loading && (
+          {loading && (<SpinnerLoading message={"Chargement du produit"}/>)}
 
-            <div className="alert alert-light col-lg-3 mx-auto" role="status">
-              <Spinner type={'grow'} color={'info'} className={'mx-auto'}/>
-              <strong className={'mx-2 align-baseline'} style={{fontSize: '1.75rem'}}>
-                <FormattedMessage id={'app.loading'}
-                                  defaultMessage={'Chargement en cours'}
-                                  description={'App - Loading'}
-                />
-              </strong>
-            </div>
-
-          )}
-          {this.props.error && (
-            <div className="alert alert-danger" role="alert">
-              <span className="fa fa-exclamation-triangle" aria-hidden="true" />{' '}
-              {this.props.error}
-            </div>
-          )}
-          {this.props.deleteError && (
-            <div className="alert alert-danger" role="alert">
-              <span className="fa fa-exclamation-triangle" aria-hidden="true" />{' '}
-              {this.props.deleteError}
-            </div>
-          )}
-
-          <div className="category-detail">
+          <div className="show-detail">
             {item && (
               <Row>
                 <Col lg={"6"}>
                   <img className={"img-fluid"}  src={item['url']} alt={item["title"]}/>
                 </Col>
                 <Col lg={"6"}>
+
                   <Card>
+                    <CardHeader>
+                      <h3>
+                        {item && item['title']}
+                      </h3>
+                      <p>
+                        <span className="bold">Catégorie</span>
+                        &nbsp;:&nbsp;
+                        {item['category_name']}
+                      </p>
+                    </CardHeader>
                     <CardBody>
+                      <h6 className={'bold'}>Résumé</h6>
                       <CardText>
+                        {item['resume']}
+                      </CardText>
+                      <h6 className={'bold'}>Description détaillée</h6>
+                      <CardText className={'card-text-description'}>
                         {item['description']}
                       </CardText>
                     </CardBody>
                     <CardFooter>
-                      <FormattedMessage  id={"app.product.item.price_from"}
-                                         defaultMessage="À partir de"
-                                         description=" Product item - price from"
-                      />
+                      <span className="bold">
+                        <FormattedMessage  id={"app.product.item.price_from"}
+                                           defaultMessage="À partir de"
+                                           description=" Product item - price from"
+                        />
+                      </span>
                       &nbsp;:&nbsp;
                       {parseFloat(item['minimumPrice']).toFixed(2)} €
                     </CardFooter>
@@ -125,8 +116,7 @@ class Show extends Component {
             </div>
 
           </div>
-          <div className="category-detail-products">
-              {item && console.log('productID', item["id"])}
+          <div className="show-detail-list">
               { item  && <CarouselProductSuppliers productId={item["id"]}/>}
           </div>
 

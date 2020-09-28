@@ -19,7 +19,16 @@ App\Entity\SupplierProduct:
             path: '/my_products'
             schemes: ['https']
             security: "is_granted('ROLE_SUPPLIER') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
-            controller: App\Controller\SupplierProduct\GetMyProductsAction            
+            controller: App\Controller\SupplierProduct\GetMyProductsAction 
+        product_suppliers:
+            method: 'GET'
+            path: '/products/{id}/all_suppliers'
+            requirements:
+                id: '\d+'
+            #defaults:
+            #    _api_receive: false
+            schemes: [ 'https' ]
+            controller: App\Controller\Product\GetProductSuppliersAction
         post:
             method: 'POST'
             path: '/supplier_product/create'

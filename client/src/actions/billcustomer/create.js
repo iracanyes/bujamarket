@@ -36,7 +36,6 @@ export function create(values, history, location, stripe) {
       .then(retrieved => {
         dispatch(success(retrieved));
 
-        console.log('success - retrieved ', retrieved);
 
 
         /* En cas de réussite  de la requête, on redirige le client vers la page Checkout à son identification de session  */
@@ -60,8 +59,6 @@ export function create(values, history, location, stripe) {
           dispatch(error(e.errors._error));
           throw e;
         }
-
-        console.log('error ', e);
 
         if( /Unauthorized/.test(e))
         {

@@ -9,9 +9,10 @@ import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
 import { Col, Row } from "reactstrap";
 import { FormattedMessage, injectIntl } from "react-intl";
-import { register } from "../../actions/user/register";
+import { register, reset } from "../../actions/user/register";
 import PropTypes from 'prop-types';
 import {toastError} from "../../layout/ToastMessage";
+import { SpinnerLoading } from "../../layout/Spinner";
 
 class RegisterForm extends React.Component {
   static propTypes = {
@@ -35,6 +36,10 @@ class RegisterForm extends React.Component {
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  componentWillUnmount() {
+    this.props.reset();
   }
 
   handleChange(event) {
@@ -137,10 +142,13 @@ class RegisterForm extends React.Component {
   };
 
   render() {
-    const { intl, error, loading  } = this.props;
+    const { intl, errorRegister, loading, registering  } = this.props;
     const { user } = this.state;
 
-    error && typeof error === "string" && toastError(error);
+    errorRegister && typeof errorRegister === "string" && toastError(errorRegister);
+    console.log('render - erreur', errorRegister);
+    console.log('render - loading', loading);
+    console.log('render - registering', registering);
 
     return (
       <Fragment>
@@ -292,7 +300,13 @@ class RegisterForm extends React.Component {
                 </div>
               </Col>
             </Row>
-            <Row>
+            { loading === true && (
+              <Row className={'justify-content-center'}>
+                <SpinnerLoading color={'info'} message={'Inscription en cours'}/>
+              </Row>
+            )}
+
+            <Row className={'justify-content-center'}>
               <button type="submit" className="btn btn-success my-3 mx-2">
                 Envoyer
               </button>
@@ -311,13 +325,14 @@ class RegisterForm extends React.Component {
 }
 
 const mapStateToProps = state => {
-  const { registering, error, loading } = state.user.registration;
+  const { registering, error: errorRegister, loading } = state.user.registration;
 
-  return { registering, error, loading };
+  return { registering, errorRegister, loading };
 };
 
 const mapDispatchToProps = dispatch => ({
-  register: (user, history ) => dispatch( register(user, history))
+  register: (user, history ) => dispatch( register(user, history)),
+  reset: () => dispatch(reset())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(

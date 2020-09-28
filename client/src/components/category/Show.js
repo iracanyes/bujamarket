@@ -8,12 +8,15 @@ import {
   Col,
   Row,
   Card,
+  CardHeader,
   CardBody,
   CardFooter,
   CardText,
   Spinner
 } from "reactstrap";
 import { FormattedMessage } from "react-intl";
+import {SpinnerLoading} from "../../layout/Spinner";
+import {toastError} from "../../layout/ToastMessage";
 
 class Show extends Component {
   static propTypes = {
@@ -37,66 +40,59 @@ class Show extends Component {
   render() {
 
     const item = this.props.retrieved;
+    const user = localStorage.getItem('token') !== null ? JSON.parse(atob(localStorage.getItem('token').split('.')[1])) : null;
+
+
+    typeof this.props.error === "string" && toastError(this.props.error);
 
     return (
-      <div id={"category-show"} className={'col-lg-8 mx-auto'}>
-        <h1>
-          <FormattedMessage  id={"app.page.category.title"}
-                             defaultMessage="Catégorie"
-                             description=" Page category - title"
-          />
-           &nbsp;:&nbsp;
-          {item && item['name']}
-        </h1>
-
+      <div id={"category-show"} className={'mt-5'}>
         {this.props.loading && (
-
-          <Spinner color="primary" role={"status"} style={{ width: '3rem', height: '3rem',position: 'absolute', left: '50%', top: '50%' }} type={"grow"} />
-
-        )}
-        {this.props.error && (
-          <div className="alert alert-danger" role="alert">
-            <span className="fa fa-exclamation-triangle" aria-hidden="true" />{' '}
-            {this.props.error}
-          </div>
+          <SpinnerLoading message={'Chargement de la catégorie'} />
         )}
 
-
-        <div className="category-detail">
-          {item && (
+        {item && (
+          <div className="show-detail">
             <Row>
               <Col lg={"6"}>
                 <img className={"img-fluid"}  src={item['image']['url']} alt={item["name"]}/>
               </Col>
               <Col lg={"6"}>
+
                 <Card>
+                  <CardHeader>
+                    <h3>
+                      {item && item['name'] }
+                    </h3>
+                  </CardHeader>
                   <CardBody>
                     <CardText>
                         {item['description']}
                     </CardText>
                   </CardBody>
-                  <CardFooter>
-                    Platform fee &nbsp;:&nbsp;
-                    {item['platformFee']} %
-                  </CardFooter>
+                  { (user !== null && user.roles.includes('ROLE_SUPPLIER')) && (
+                    <CardFooter>
+                      Platform fee &nbsp;:&nbsp;
+                      {item['platformFee']} %
+                    </CardFooter>
+                  )}
+
                 </Card>
               </Col>
             </Row>
+            <div className="col-lg-4 mx-auto my-5 category-control-buttons">
+              <button onClick={() => this.props.history.goBack()} className="btn btn-outline-primary d-block mx-auto">
+                <FormattedMessage  id={"app.button.return"}
+                                   defaultMessage="Retour "
+                                   description="Button - Return "
+                />
 
-          )}
-          <div className="col-lg-4 mx-auto my-5 category-control-buttons">
-            <button onClick={() => this.props.history.goBack()} className="btn btn-outline-primary d-block mx-auto">
-              <FormattedMessage  id={"app.button.return"}
-                                 defaultMessage="Retour "
-                                 description="Button - Return "
-              />
+              </button>
 
-            </button>
-
+            </div>
           </div>
-
-        </div>
-        <div className="category-detail-products">
+        )}
+        <div className="show-detail-list">
           { item && <CarouselCategoryProducts id={item["id"]}/>}
         </div>
 

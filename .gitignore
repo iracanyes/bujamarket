@@ -20,8 +20,11 @@ api/public/assets/uploads/img/supplier_product/*
 api/private/uploads/img/profil/admin/*
 api/private/uploads/img/profil/customer/*
 api/private/uploads/img/profil/supplier/*
+api/private/downloads/bill/*
 # Documentation
 /docs
+# Doctrine Migrations
+api/src/Migrations
 ###< Custom ###
 
 ###> Security ###

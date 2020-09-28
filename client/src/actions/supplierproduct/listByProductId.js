@@ -24,9 +24,9 @@ export function success(retrieved) {
 export function retrieveByProductId(productId) {
   return dispatch => {
     dispatch(loading(true));
-    dispatch(error(''));
+    dispatch(error(null));
 
-    fetch('/products/'+productId+'/product_suppliers')
+    fetch('/products/'+productId+'/all_suppliers')
       .then(response =>
         response
           .json()
@@ -53,7 +53,14 @@ export function retrieveByProductId(productId) {
           <ToastError message={"Impossible de trouver les offres associées à ce produit !"} />,
           { type: "default" }
         );
-        dispatch(error(e.message));
+        switch (true){
+          case typeof e.message === "string":
+            dispatch(error(e.message));
+            break;
+          case typeof e['hydra:description'] === "string":
+            dispatch(error(e['hydra:description']));
+            break;
+        }
       });
   };
 }

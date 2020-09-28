@@ -11,14 +11,14 @@ App\Entity\OrderReturned:
                 _format: 'json'
             # host: 'localhost'
             schemes: ['https']
-            access_control: "is_granted('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
+            security: "is_granted('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
             #options:
             #    my_option: 'my_option_value'
             status: 200 # customize the HTTP status code to send
         post:
             method: 'POST'
             path: '/returned_order/create'
-            access_control: "is_granted('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
+            security: "is_granted('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
             schemes: ['https']
             controller: App\Controller\OrderReturned\CreateOrderReturned::class
     itemOperations:
@@ -32,7 +32,7 @@ App\Entity\OrderReturned:
                 _format: 'json'
             # host: 'localhost'
             schemes: ['https']
-            access_control: "is_granted('ROLE_MEMBER') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
+            security: "is_granted('ROLE_MEMBER') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
             #options:
             #    my_option: 'my_option_value'
             status: 200 # customize the HTTP status code to send        
@@ -41,12 +41,12 @@ App\Entity\OrderReturned:
             path: '/returned_order/{id}'
             requirements:
                 id: '\d+'
-            access_control: 'is_granted("ROLE_ADMIN") and is_granted("IS_AUTHENTICATED_REMEMBERED")'
+            security: 'is_granted("ROLE_ADMIN") and is_granted("IS_AUTHENTICATED_REMEMBERED")'
             schemes: ['https']
         delete:
             method: 'DELETE'
             path: '/returned_order/{id}'
             requirements:
                 id: '\d+'
-            access_control: 'is_granted("ROLE_ADMIN") and is_granted("IS_AUTHENTICATED_REMEMBERED")'
+            security: 'is_granted("ROLE_ADMIN") and is_granted("IS_AUTHENTICATED_REMEMBERED")'
             schemes: ['https']

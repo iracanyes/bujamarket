@@ -46,23 +46,23 @@ class OrderSetHandler
     private $addressHandler;
 
     /**
-     * @var ShoppingCartHandler $shoppingCardHandler
+     * @var ShoppingCartHandler $shoppingCartHandler
      */
-    private $shoppingCardHandler;
+    private $shoppingCartHandler;
 
     /**
      * @var ShipperHandler $shipperHandler
      */
     private $shipperHandler;
 
-    public function __construct(Security $security, RequestStack $requestStack, EntityManagerInterface $em, LoggerInterface $logger, AddressHandler $addressHandler, ShoppingCartHandler $shoppingCardHandler, ShipperHandler $shipperHandler)
+    public function __construct(Security $security, RequestStack $requestStack, EntityManagerInterface $em, LoggerInterface $logger, AddressHandler $addressHandler, ShoppingCartHandler $shoppingCartHandler, ShipperHandler $shipperHandler)
     {
         $this->security = $security;
         $this->request = $requestStack->getCurrentRequest();
         $this->em = $em;
         $this->logger = $logger;
         $this->addressHandler = $addressHandler;
-        $this->shoppingCardHandler = $shoppingCardHandler;
+        $this->shoppingCartHandler = $shoppingCartHandler;
         $this->shipperHandler = $shipperHandler;
     }
 
@@ -86,11 +86,11 @@ class OrderSetHandler
 
 
 
-        /* Récupération du panier de commande */
-        $shoppingCard = $this->shoppingCardHandler->getShoppingCard();
+        /* Récupération des éléments du panier de commande */
+        $shoppingCartDetails = $this->shoppingCartHandler->getShoppingCartDetails();
 
         /* Pour chaque élément du panier de commande, on crée un détail de commande qui sera ensuite intégré à l'ensemble de la commande */
-        foreach($shoppingCard->getShoppingCardSupplierProducts() as $item)
+        foreach($shoppingCartDetails as $item)
         {
             $orderDetail = new OrderDetail();
 
@@ -104,6 +104,8 @@ class OrderSetHandler
             /* Nombre de packet dans l'ensemble de commande */
             $orderSet->setNbPackage($orderSet->getNbPackage() + 1);
             /* Calcul du poids total de l'ensemble de commande */
+            dump($item);
+            dump($item->getSupplierProduct()->getProduct()->getWeight());
             $orderSet->setTotalWeight($orderSet->getTotalWeight() + $item->getSupplierProduct()->getProduct()->getWeight());
             $orderSet->addOrderDetail($orderDetail);
 
@@ -160,39 +162,45 @@ class OrderSetHandler
         }
 
         dump($data);
-        dump($data->sessionId);
 
         try{
             if($data !== null && isset($data->orderSet))
             {
                 $orderSet = $this->em->getRepository(OrderSet::class)
                     ->find($data->orderSet);
-
                 dump($orderSet);
             }
 
 
             if($data !== null && isset($data->sessionId) )
             {
+                dump($data->sessionId);
                 $orderSet = $this->em->getRepository(OrderSet::class)
                     ->findOneBy([ "sessionId" => $data->sessionId ]);
-
                 dump($orderSet);
             }
+
+
         }catch (PDOException $exception){
             throw new OrderSetNotFoundException("La commande n'existe pas!");
         }
 
-        return $orderSet;
+
+        return $orderSet ?? null;
     }
 
-    public function getOrderSetBySessionId($sessionId): OrderSet
+    /**
+     * @param string $sessionId
+     * @return OrderSet
+     * @throws OrderSetNotFoundException
+     */
+    public function getOrderSetBySessionId(string $sessionId): OrderSet
     {
         try{
             $orderSet = $this->em->getRepository(OrderSet::class)
                 ->findOneBy(['sessionId'=> $sessionId ]);
 
-            if(!$orderSet)
+            if(!$orderSet instanceof OrderSet)
             {
                 throw new OrderSetNotFoundException(sprintf("The order set associated to the checkout session %s does not exist!", $sessionId));
             }

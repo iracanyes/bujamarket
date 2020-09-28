@@ -10,11 +10,14 @@ import {
   ListGroup,
   ListGroupItem,
   ListGroupItemHeading,
-  ListGroupItemText
+  ListGroupItemText,
+  Spinner
 } from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FormattedMessage } from 'react-intl';
 import { create } from '../../actions/shoppingcart/create';
+import {SpinnerLoading} from "../../layout/Spinner";
+import {toastError} from "../../layout/ToastMessage";
 
 class Show extends React.Component {
   constructor(props)
@@ -31,11 +34,11 @@ class Show extends React.Component {
 
   componentDidMount() {
     this.setState({update: false});
-    if(localStorage.getItem('token'))
+    if(localStorage.getItem('token') !== null)
     {
       ;
     }else{
-      this.props.history.push('login');
+      this.props.history.push({ pathname: 'login', state: { from: this.props.location.pathname } });
     }
   }
 
@@ -61,17 +64,19 @@ class Show extends React.Component {
   }
 
   render() {
+    const { errorCreate, loadingCreate } = this.props;
     let shopping_cart = localStorage.getItem("shopping_cart") ? JSON.parse(localStorage.getItem("shopping_cart")) : [];
 
     let sum = 0;
     shopping_cart.forEach( item => sum += parseFloat(item.price) * item.quantity );
 
+    // Affichage des erreurs
+    typeof errorCreate === "string" && toastError(errorCreate);
+
     return (
-      <div className={"col-6 mx-auto"}>
+      <div className={"col-9 mx-auto"}>
         <div>
-
           <div className="col-12 px-0">
-
             <nav className="navbar navbar-expand-md navbar-dark bg-primary mb-5 no-content w-100">
               {/* Breadcrumb */}
               <div className="col-12 mr-auto">
@@ -83,7 +88,6 @@ class Show extends React.Component {
                                              defaultMessage="Validation du panier de commande"
                                              description="App - Delivery address"
                           />
-
                         </b>
                       <FontAwesomeIcon icon={'angle-double-right'} className={'mx-2 text-white'} aria-hidden={'true'}/>
 
@@ -94,10 +98,8 @@ class Show extends React.Component {
                                            defaultMessage="Adresse de livraison"
                                            description="App - Delivery address"
                         />
-
                       </span>
                       <FontAwesomeIcon icon={'angle-double-right'} className={'mx-2 text-white'} aria-hidden={'true'}/>
-
                     </li>
                     <li className="">
                       <span className="text-white" >
@@ -121,14 +123,11 @@ class Show extends React.Component {
                   </ol>
                 </nav>
               </div>
-
             </nav>
-
           </div>
-
         </div>
         <div className={"order-md-4 my-4"}>
-          <h4 className="d-flex justify-content-between align-items-center mb-3">
+          <h4 className="d-flex justify-content-between align-items-center mb-3 pl-1">
             <span className="text-muted">Vos choix</span>
             <span className="badge badge-secondary badge-pill">{shopping_cart.length}</span>
           </h4>
@@ -165,7 +164,8 @@ class Show extends React.Component {
           </ListGroup>
           <div className="col-4 d-flex mx-auto mt-3">
             {shopping_cart.length > 0 && (
-              <Button outline color={"success"} className={'mr-3'} onClick={this.onSubmit}>
+              <Button color={"success"} className={'mr-3 border-success'} onClick={this.onSubmit}>
+                {loadingCreate && <Spinner color={'info'} className={'spinner mr-2'}/>}
                 <FormattedMessage  id={"app.button.validate"}
                                    defaultMessage="Valider"
                                    description="Button - validate"
@@ -173,7 +173,7 @@ class Show extends React.Component {
               </Button>
             )}
 
-            <Button outline color={"danger"} onClick={() => this.props.history.goBack()}>
+            <Button outline color={"danger border-danger"} onClick={() => this.props.history.goBack()}>
               <FormattedMessage  id={"app.button.return"}
                                  defaultMessage="Retour"
                                  description="Button - return"
@@ -189,8 +189,14 @@ class Show extends React.Component {
   }
 }
 
+const mapStateToProps = state => {
+  const { error: errorCreate, loading: loadingCreate } = state.shoppingcart.create;
+
+  return { errorCreate, loadingCreate };
+};
+
 const mapDispatchToProps = dispatch => ({
   create: (values, history, currentRoute) => dispatch( create(values, history, currentRoute))
 });
 
-export default connect(null, mapDispatchToProps)(Show);
+export default connect(mapStateToProps, mapDispatchToProps)(Show);

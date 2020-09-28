@@ -47,7 +47,6 @@ export function download(filename, history) {
         function window_focus(){
           window.removeEventListener('focus', window_focus, false);
           URL.revokeObjectURL(url);
-          console.log('revoke ' + url);
         }
 
         /* Ouvrir le fichier pdf  */
@@ -60,20 +59,20 @@ export function download(filename, history) {
       .catch(e => {
         dispatch(loading(false));
 
-        if (e instanceof SubmissionError) {
-          dispatch(error(e.errors._error));
-          throw e;
+        switch (true){
+          case e.code === 401:
+            dispatch(error("Authentification obligatoire!"));
+            dispatch(error(null));
+            history.push({pathname: '../login', state: { from: window.location.pathname}});
+            break;
+          case typeof e['hydra:description'] === 'string':
+            dispatch(error(e['hydra:description']));
+            break;
+          case typeof e.message === "string":
+            dispatch(error(e.message));
+            break;
         }
-
-        if( /Unauthorized/.test(e))
-        {
-          sessionStorage.removeItem('flash-message-error');
-          sessionStorage.setItem('flash-message-error', JSON.stringify({message: "Authentification nécessaire avant de continuer!"}));
-          history.push('');
-          history.push({pathname: '../login', state: { from: window.location.pathname}});
-        }
-
-        dispatch(error(e.message));
+        dispatch(error(null));
       });
   };
 }

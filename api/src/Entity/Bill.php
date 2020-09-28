@@ -47,7 +47,7 @@ class Bill
     /**
      * @var string $reference Reference (unique) of this bill
      *
-     * @ORM\Column(type="string", length=30, unique=true)
+     * @ORM\Column(type="string", length=60, unique=true)
      * @Assert\NotBlank()
      * @Groups({"bill_customer:output","bill_refund:output","payment:output"})
      */

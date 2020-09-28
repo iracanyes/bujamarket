@@ -1,6 +1,6 @@
 /** React-toastify **/
 div.Toastify__toast-container{
-  top:unset !important;
+  top:5.5rem !important;
 
   div.Toastify__toast{
 
@@ -8,6 +8,11 @@ div.Toastify__toast-container{
       font-family: "Kanit", "Dosis", "Lato", Arial, sans-serif;
       font-size: 1rem;
       padding: 0.125rem 0.25rem 0.125rem 0.25rem;
+
+      div{
+        display: contents;
+        word-wrap: anywhere;
+      }
 
       svg{
         margin-right: 0.5rem;
@@ -18,6 +23,10 @@ div.Toastify__toast-container{
       }
       svg.fa-thumbs-up{
         color: green;
+      }
+
+      svg.toast-welcome-icon{
+        color: #F5A54C;
       }
     }
 

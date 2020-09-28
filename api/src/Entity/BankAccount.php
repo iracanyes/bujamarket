@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ApiResource()
@@ -17,6 +18,7 @@ class BankAccount
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"profile:output"})
      */
     private $id;
 
@@ -29,18 +31,28 @@ class BankAccount
     private $idCard;
 
     /**
-     * @var string $brand Brand of this card
+     * @var string $ownerFullname Bank account owner fullname
+     * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank
+     * @Groups({"profile:output"})
+     */
+    private $ownerFullname;
+
+    /**
+     * @var string $brand Brand of this card (Bank name)
      *
-     * @ORM\Column(type="string", length=50)
+     * @ORM\Column(type="string", length=50, nullable=true)
      * @Assert\NotBlank()
+     * @Groups({"profile:output"})
      */
     private $brand;
 
     /**
-     * @var string $countryCode Country code of the owner
+     * @var string $countryCode Country code of the owner (ISO3166-1Alpha2)
      *
      * @ORM\Column(type="string", length=4)
      * @Assert\NotBlank()
+     * @Groups({"profile:output"})
      */
     private $countryCode;
 
@@ -49,13 +61,14 @@ class BankAccount
      *
      * @ORM\Column(type="integer")
      * @Assert\Type("integer")
+     * @Groups({"profile:output"})
      */
     private $last4;
 
     /**
-     * @var integer $expiry_month Expiry month of this card
+     * @var integer $expiryMonth Expiry month of this card
      *
-     * @ORM\Column(type="smallint")
+     * @ORM\Column(type="smallint", nullable=true)
      * @Assert\Type("integer")
      * @Assert\Range(
      *     min=0,
@@ -63,13 +76,14 @@ class BankAccount
      *     minMessage="The minimum value for the expiry month is {{ limit }}. \n The current value is {{ value }}",
      *     maxMessage="The maximum value for the expiry month is {{ limit }}.\nThe current value is {{ value }}"
      * )
+     * @Groups({"profile:output"})
      */
-    private $expiry_month;
+    private $expiryMonth;
 
     /**
      * @var integer $expiryYear Expiry year of this card
      *
-     * @ORM\Column(type="smallint")
+     * @ORM\Column(type="smallint", nullable=true)
      * @Assert\Type("integer")
      * @Assert\Range(
      *     min=2019,
@@ -77,14 +91,15 @@ class BankAccount
      *     minMessage="The minimum value for the expiry year is {{ limit }}.\nThe current value is {{ value }}",
      *     maxMessage="The maximum value for the expiry year is {{ limit }}.\nThe current value is {{ value }}"
      * )
+     * @Groups({"profile:output"})
      */
     private $expiryYear;
 
     /**
      * @var string $fingerprint Fingerprint of this card
      *
-     * @ORM\Column(type="string", length=50)
-     * @Assert\NotBlank()
+     * @ORM\Column(type="string", length=50, nullable=true)
+     *
      */
     private $fingerprint;
 
@@ -93,6 +108,7 @@ class BankAccount
      *
      * @ORM\Column(type="string", length=50)
      * @Assert\Choice({"credit","debit"})
+     * @Groups({"profile:output"})
      */
     private $funding;
 
@@ -112,6 +128,11 @@ class BankAccount
      * @Assert\NotNull()
      */
     private $user;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $mandate;
 
     public function getId(): ?int
     {
@@ -135,7 +156,11 @@ class BankAccount
         return $this->brand;
     }
 
-    public function setBrand(string $brand): self
+    /**
+     * @param string|null $brand
+     * @return $this
+     */
+    public function setBrand($brand): self
     {
         $this->brand = $brand;
 
@@ -168,12 +193,16 @@ class BankAccount
 
     public function getExpiryMonth(): ?int
     {
-        return $this->expiry_month;
+        return $this->expiryMonth;
     }
 
-    public function setExpiryMonth(int $expiry_month): self
+    /**
+     * @param int|null $expiryMonth
+     * @return $this
+     */
+    public function setExpiryMonth($expiryMonth): self
     {
-        $this->expiry_month = $expiry_month;
+        $this->expiryMonth = $expiryMonth;
 
         return $this;
     }
@@ -183,7 +212,11 @@ class BankAccount
         return $this->expiryYear;
     }
 
-    public function setExpiryYear(int $expiryYear): self
+    /**
+     * @param int|null $expiryYear
+     * @return $this
+     */
+    public function setExpiryYear($expiryYear): self
     {
         $this->expiryYear = $expiryYear;
 
@@ -234,6 +267,30 @@ class BankAccount
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getOwnerFullname(): ?string
+    {
+        return $this->ownerFullname;
+    }
+
+    public function setOwnerFullname(string $ownerFullname): self
+    {
+        $this->ownerFullname = $ownerFullname;
+
+        return $this;
+    }
+
+    public function getMandate(): ?string
+    {
+        return $this->mandate;
+    }
+
+    public function setMandate(?string $mandate): self
+    {
+        $this->mandate = $mandate;
 
         return $this;
     }

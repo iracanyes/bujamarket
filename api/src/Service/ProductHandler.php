@@ -5,6 +5,7 @@ namespace App\Service;
 
 use App\Entity\Product;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use App\Exception\Product\ProductNotFoundException;
@@ -22,10 +23,16 @@ class ProductHandler
      */
     private $em;
 
-    public function __construct(RequestStack $requestStack, EntityManagerInterface $em)
+    /**
+     * @var LoggerInterface $logger
+     */
+    private $logger;
+
+    public function __construct(RequestStack $requestStack, EntityManagerInterface $em, LoggerInterface $logger)
     {
         $this->request = $requestStack->getCurrentRequest();
         $this->em = $em;
+        $this->logger = $logger;
     }
 
     public function getNames(): JsonResponse
@@ -39,6 +46,7 @@ class ProductHandler
     public function getProductsWithImages()
     {
         $options = [
+            "id" => $this->request->query->get('id') ?? null,
             "title" => $this->request->query->get("title") ?? null,
             "resume" => $this->request->query->get("resume") ?? null,
             "category" => $this->request->query->get('category') ?? null,
@@ -52,8 +60,17 @@ class ProductHandler
         $products = $this->em->getRepository(Product::class)
             ->getProductsWithImages($options);
 
+        $result = [];
+        foreach ($products as $product)
+        {
+            $product['img-src'] = getenv('API_ENTRYPOINT').'/'.getenv('UPLOAD_SUPPLIER_PRODUCT_IMAGE_DIRECTORY').'/'.$product['url'];
+            $result[] = $product;
+        }
 
-        return new JsonResponse(["products" => $products]);
+        dump($products);
+
+
+        return new JsonResponse(["products" => $result  ]);
     }
 
     public function getProductWithImage()
@@ -63,15 +80,21 @@ class ProductHandler
             "category" => $this->request->query->get('category') ?? null
         ];
 
-        dump($this->request->attributes->get('id'));
-        dump(intval($this->request->attributes->get('id')));
-        dump($this->request->query->get('id'));
-
         $product = $this->em->getRepository(Product::class)
             ->getProductWithImage($options);
 
+
+        dump($product);
+
+
+        $product[0]['url'] = getenv('API_ENTRYPOINT').'/'.getenv('UPLOAD_SUPPLIER_PRODUCT_IMAGE_DIRECTORY')."/".$product[0]['url'];
+
+
+        dump($product);
+
         return $product;
     }
+
 
     public function searchProducts()
     {

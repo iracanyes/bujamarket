@@ -63,7 +63,15 @@ class MemberHandler
      */
     private $security;
 
+    /**
+     * @var ImageHandler $imageHandler
+     */
     private $imageHandler;
+
+    /**
+     * @var StripeHandler $stripeHandler
+     */
+    private $stripeHandler;
 
     /**
      * MemberHandler constructor.
@@ -72,6 +80,7 @@ class MemberHandler
      * @param UserPasswordEncoderInterface $encoder
      * @param SerializerInterface $serializer
      * @param LoggerInterface $logger
+     * @param StripeHandler $stripeHandler
      */
     public function __construct(EntityManagerInterface $em,
                                 RequestStack $request,
@@ -79,7 +88,8 @@ class MemberHandler
                                 SerializerInterface $serializer,
                                 LoggerInterface $logger,
                                 Security $security,
-                                ImageHandler $imageHandler
+                                ImageHandler $imageHandler,
+                                StripeHandler $stripeHandler
     )
     {
         $this->em = $em;
@@ -89,6 +99,7 @@ class MemberHandler
         $this->logger = $logger;
         $this->security = $security;
         $this->imageHandler = $imageHandler;
+        $this->stripeHandler = $stripeHandler;
     }
 
     /**
@@ -126,13 +137,21 @@ class MemberHandler
             $member = $this->em->getRepository(User::class)
                 ->findOneBy(['email'  => $data->email]);
 
+            $newMember = $this->em->getRepository(UserTemp::class)
+                ->findOneBy(['email' => $data->email]);
+
             if($member){
-                throw new CreateMemberException("Username already used by an another user!");
+                throw new CreateMemberException("Username already used!");
+            }
+
+            if($newMember)
+            {
+                throw new CreateMemberException("Username already registered! Please check your email for validating your subscription.");
             }
 
         }catch (\Exception $e){
-            $this->logger->error("Error while persisting the new member", ['context' => $e]);
-            throw new CreateMemberException("Username already used by an another user!");
+            $this->logger->error($e->getMessage(), ['context' => $e]);
+            throw new CreateMemberException($e->getMessage());
         }
 
         /* Persistence de l'entité en DB */
@@ -529,8 +548,11 @@ class MemberHandler
      */
     public function setCustomerData(Customer $user): void
     {
+        /* Création du client sur la platforme Stripe */
+        $stripeCustomer = $this->stripeHandler->createCustomer($user);
+
         /* Création d'une clé client */
-        $user->setCustomerKey(bin2hex(random_bytes(64)));
+        $user->setCustomerKey($stripeCustomer->id);
         $user->setSigninConfirmed(true);
     }
 
@@ -562,7 +584,7 @@ class MemberHandler
         $address->setCountry($this->request->request->get('address')['country']);
         $user->addAddress($address);
 
-        /* Création d'une clé supplier */
+        /* Création d'une clé supplier sur Stripe */
         $user->setSupplierKey(bin2hex(random_bytes(64)));
     }
 
@@ -590,14 +612,6 @@ class MemberHandler
      */
     public function getCustomer($data = null): ?Customer
     {
-        /* Pr test webhook
-        if(getenv('DEBUG_WEBHOOK') === 1 && $data !== null)
-        {
-            $data->customer_email = 'guillaume52@pinto.com';
-        }
-        */
-
-        dump($data);
 
         try{
             switch(true)
@@ -623,13 +637,20 @@ class MemberHandler
                     break;
             }
 
+            dump($customer);
 
+            if(!$customer instanceof Customer){
+                throw new MemberNotFoundException("Error while retrieving the member");
+            }
+
+            return $customer;
 
         }catch(PDOException $exception){
-            throw new UserNotFoundException("email", $this->security->getUser()->getUsername());
+            $this->logger->error('Error while retrieving a member',  ['parameters' => $data, "context" => $exception]);
+            throw new MemberNotFoundException("Error while retrieving a member");
         }
 
-        return $customer;
+
     }
 
     /**

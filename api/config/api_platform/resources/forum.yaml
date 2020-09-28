@@ -12,14 +12,14 @@ App\Entity\Forum:
                 _format: 'json'
             # host: 'localhost'
             schemes: ['https']
-            access_control: "is_granted('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_FULLY')"
+            security: "is_granted('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_FULLY')"
             #options:
             #    my_option: 'my_option_value'
             status: 200 # customize the HTTP status code to send
         post:
             method: 'POST'
             path: '/forum/create'
-            access_control: "is_granted('ROLE_MEMBER') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
+            security: "is_granted('ROLE_MEMBER') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
             schemes: ['https']
             controller: App\Controller\Forum\CreateForum::class
     itemOperations:
@@ -33,7 +33,7 @@ App\Entity\Forum:
                 _format: 'json'
             # host: 'localhost'
             schemes: ['https']
-            access_control: "is_granted('ROLE_MEMBER') and is_granted('IS_AUTHENTICATED_FULLY')"
+            security: "is_granted('ROLE_MEMBER') and is_granted('IS_AUTHENTICATED_FULLY')"
             #options:
             #    my_option: 'my_option_value'
             status: 200 # customize the HTTP status code to send        
@@ -42,12 +42,12 @@ App\Entity\Forum:
             path: '/forum/{id}'
             requirements:
                 id: '\d+'
-            access_control: 'is_granted("ROLE_ADMIN") and is_granted("IS_AUTHENTICATED_REMEMBERED")'
+            security: 'is_granted("ROLE_ADMIN") and is_granted("IS_AUTHENTICATED_REMEMBERED")'
             schemes: ['https']
         delete:
             method: 'DELETE'
             path: '/forum/{id}'
             requirements:
                 id: '\d+'
-            access_control: 'is_granted("ROLE_ADMIN") and is_granted("IS_AUTHENTICATED_REMEMBERED")'
+            security: 'is_granted("ROLE_ADMIN") and is_granted("IS_AUTHENTICATED_REMEMBERED")'
             schemes: ['https']

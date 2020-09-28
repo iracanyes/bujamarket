@@ -43,15 +43,17 @@ export function retrieve(id, history, location) {
       })
       .catch(e => {
         dispatch(loading(false));
-        dispatch(error(e.message));
 
-        if( /Unauthorized/.test(e))
-        {
-          sessionStorage.removeItem('flash-message-error');
-          sessionStorage.setItem('flash-message-error', JSON.stringify({message: "Authentification nécessaire avant de continuer!"}));
-          history.push('');
-          history.push({pathname: '../login', state: { from: location.pathname }});
-          window.location.reload();
+        switch (true){
+          case e.code === 401:
+            dispatch(error('Authentification nécessaire!'));
+            history.push({pathname: '../../login', state: { from: location.pathname, params: { sessionId : id}  }});
+            break;
+          case typeof e['hydra:description'] === "string":
+          case typeof e.message === "string":
+            console.log("erreur : ", e);
+            dispatch(error("Une erreur est survenue durant la confirmation du paiement! Visitez vos commandes pour voir le statut de cette achat."));
+            break;
         }
 
       });
