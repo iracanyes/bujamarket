@@ -138,13 +138,13 @@ class SidebarLeftMenu extends Component
               <DropdownItem>
                 { user && user.roles.includes('ROLE_SUPPLIER')
                   ? (
-                    <NavLink tag={RRDNavLink} to={{pathname: "/supplier_orders", state: { from : window.location.pathname }}}>
+                    <NavLink tag={RRDNavLink} to={{pathname: "/supplier_orders/", state: { from : window.location.pathname }}}>
                       <FontAwesomeIcon icon={"shopping-cart"} className={"mr-2"}/>
                       <FormattedMessage id={"app.button.all_orders"} defaultMessage={"Toutes les commandes"} description={"Button - All orders"}/>
                     </NavLink>
                   )
                   : (
-                    <NavLink tag={RRDNavLink} to={{pathname: "/customer_orders", state: { from : window.location.pathname }}}>
+                    <NavLink tag={RRDNavLink} to={{pathname: "/customer_orders/", state: { from : window.location.pathname }}}>
                       <FontAwesomeIcon icon={"shopping-cart"} className={"mr-2"}/>
                       <FormattedMessage id={"app.button.all_orders"} defaultMessage={"Toutes les commandes"} description={"Button - All orders"}/>
                     </NavLink>

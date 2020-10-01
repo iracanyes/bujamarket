@@ -7,6 +7,7 @@ use App\Entity\DeliverySet;
 use App\Entity\OrderDetail;
 use App\Entity\OrderSet;
 use App\Entity\Customer;
+use App\Entity\Supplier;
 use Doctrine\DBAL\Driver\PDOException;
 use Doctrine\ORM\EntityNotFoundException;
 use App\Exception\OrderSet\OrderSetNotFoundException;
@@ -220,21 +221,29 @@ class OrderSetHandler
     {
         $orders = null;
         $user = $this->security->getUser();
+        dump($user);
 
         try{
-            if($user->getUserType() === 'customer')
-            {
-                $orders = $this->em->getRepository(OrderSet::class)
-                    ->getCustomerOrders($user->getUsername());
-            }else {
-                $orders = $this->em->getRepository(OrderDetail::class)
-                    ->getSupplierOrders($user->getUsername());
+            switch(true){
+                case $user instanceof Customer:
+                    $orders = $this->em->getRepository(OrderSet::class)
+                        ->getCustomerOrders($user->getEmail());
+                    break;
+                case $user instanceof Supplier:
+                    $orders = $this->em->getRepository(OrderDetail::class)
+                        ->getSupplierOrders($user->getEmail());
+                    break;
             }
+
+            dump($orders);
+
+            return $orders;
+
         }catch (\Exception $exception){
-            $this->logger->error(sprintf("Error while retrieving the user's (%s) order history", $user->getUsername()), ['context' => $exception]);
+            $this->logger->error($exception->getMessage(), ['context' => $exception]);
             throw new RetrieveUserOrdersException(sprintf("Error while retrieving the user's (%s) order history", $user->getUsername()));
         }
 
-        return $orders;
+
     }
 }

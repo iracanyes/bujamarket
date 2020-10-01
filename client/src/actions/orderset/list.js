@@ -22,12 +22,11 @@ export function success(retrieved) {
 export function list(page, history, location) {
   return dispatch => {
     dispatch(loading(true));
-    dispatch(error(''));
 
     /* Ajout du JWT authentication token de l'utilisateur connecté */
-    const headers = authHeader();
+    const headers = authHeader(history, location);
 
-    fetch('orders'+ (page ? '/'+page : ''), {method: 'GET', headers})
+    fetch('my_orders', {method: 'GET', headers})
       .then(response =>
         response
           .json()
@@ -50,24 +49,19 @@ export function list(page, history, location) {
       .catch(e => {
         dispatch(loading(false));
 
-        if(e.code === 401)
-        {
-          dispatch(error("Authentification nécessaire avant de poursuivre!"));
-          history.push({pathname: '../../login', state: { from : location.pathname }});
-        }
-
-        if(typeof e === 'string')
-        {
-          dispatch(error(e));
-        }else{
-          if(e['hydra:description'])
-          {
-            dispatch(error(e['hydra:description']));
-          }else{
+        switch (true){
+          case e.code === 401:
+            dispatch(error("Authentification nécessaire avant de poursuivre!"));
+            dispatch(error(null));
+            history.push({pathname: '../../login', state: { from : location.pathname }});
+            break;
+          case typeof e.message === "string":
             dispatch(error(e.message));
-          }
+            break;
+          case typeof e['hydra:description'] === "string":
+            dispatch(error(e['hydra:description']));
+            break;
         }
-        dispatch(error(null));
       });
   };
 }

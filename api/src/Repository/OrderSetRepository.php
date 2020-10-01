@@ -21,8 +21,11 @@ class OrderSetRepository extends ServiceEntityRepository
 
     public function getCustomerOrders(string $email)
     {
-        return $this->createQueryBuilder('o')
-            ->leftJoin('o.customer', 'c')
+        return $this->createQueryBuilder('os')
+            ->leftJoin('os.customer', 'c')
+            ->leftJoin('os.deliverySet', 'ds')
+            ->leftJoin('os.billCustomer', 'bc')
+            ->select('os', 'ds', 'c', 'bc')
             ->andWhere('c.email LIKE :email')
             ->setParameter('email', $email)
             ->getQuery()

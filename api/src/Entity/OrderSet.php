@@ -76,6 +76,7 @@ class OrderSet
      * @ORM\JoinColumn(nullable=false)
      * @Assert\Type("App\Entity\Customer")
      * @Assert\NotNull()
+     * @Groups({"order_set:output"})
      */
     private $customer;
 
@@ -84,6 +85,7 @@ class OrderSet
      *
      * @ORM\OneToOne(targetEntity="App\Entity\BillCustomer", mappedBy="orderSet", cascade={"persist", "remove"})
      * @Assert\Type("App\Entity\BillCustomer")
+     * @Groups({"order_set:output"})
      */
     private $billCustomer;
 
