@@ -40,7 +40,7 @@ class Bill
      *
      * @ORM\Column(type="string", length=100)
      * @Assert\Choice({"completed","paid","pending","failed","withdrawn"})
-     * @Groups({"bill_customer:output","bill_refund:output","payment:output"})
+     * @Groups({"bill_customer:output","bill_refund:output","payment:output","order_set:output"})
      */
     private $status;
 

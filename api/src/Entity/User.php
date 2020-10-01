@@ -43,7 +43,7 @@ class User implements UserInterface
      * @var string $email Email of this user
      * @ORM\Column(type="string", length=180, unique=true)
      * @Assert\Email()
-     * @Groups({"profile:output","user:input"})
+     * @Groups({"profile:output","user:input","order_set:output"})
      */
     private $email;
 

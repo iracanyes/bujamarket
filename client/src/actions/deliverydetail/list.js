@@ -45,7 +45,14 @@ export function list(page = 'delivery_details') {
       })
       .catch(e => {
         dispatch(loading(false));
-        dispatch(error(e.message));
+        switch (true){
+          case e.message.length > 0:
+            dispatch(error(e.message));
+            break;
+          case e['hydra:description'].length > 0:
+            dispatch(error(e['hydra:description']));
+            break;
+        }
       });
   };
 }

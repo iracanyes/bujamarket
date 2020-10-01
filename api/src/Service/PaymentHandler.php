@@ -224,7 +224,7 @@ class PaymentHandler
         dump($orderSet);
 
         // Association de la facture avec la commande effectuée
-        $bill->setOrderSet($orderSet);
+        $orderSet->setBillCustomer($bill);
 
         // Somme total TVAC
         $bill->setTotalInclTax(($somme * ( 1 + $bill->getVatRateUsed() )) + $orderSet->getDeliverySet()->getShippingCost());
@@ -259,6 +259,7 @@ class PaymentHandler
             $bill->setUrl($pathname);
 
             // Association payment - facture
+            $this->em->persist($orderSet);
             $this->em->persist($bill);
             $this->em->flush();
 

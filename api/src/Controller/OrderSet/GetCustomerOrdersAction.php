@@ -16,6 +16,6 @@ class GetCustomerOrdersAction
 
     public function __invoke()
     {
-        $this->orderSetHandler->getMyOrders();
+       return $this->orderSetHandler->getMyOrders();
     }
 }

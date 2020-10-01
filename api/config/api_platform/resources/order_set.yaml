@@ -18,7 +18,9 @@ App\Entity\OrderSet:
             status: 200 # customize the HTTP status code to send
         my_orders:
             method: 'GET'
-            path: '/orders'
+            path: '/my_orders'
+            requirements:
+                page: '\d+'
             defaults:
                 _api_receive: false
             schemes: ['https']
