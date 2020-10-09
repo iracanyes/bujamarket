@@ -23,19 +23,19 @@ App\Entity\Product:
                 _api_receive: false
                 _api_respond: false
             schemes: ['https']
-            controller: App\Controller\Product\GetProductsWithImageAction            
+            controller: App\Action\Product\GetProductsWithImageAction            
         getNames:
             method: 'GET'
             path: '/products_names.{_format}'
             schemes: ['https','http']  
-            controller: App\Controller\Product\GetNamesAction
+            controller: App\Action\Product\GetNamesAction
         search:
             method: 'GET'
             path: '/products/search'
             defaults:
                 _api_receive: false
             schemes: ['https']
-            controller: App\Controller\Product\SearchProductsAction        
+            controller: App\Action\Product\SearchProductsAction        
         post:
             method: 'POST'
             path: '/product/create'
@@ -43,7 +43,7 @@ App\Entity\Product:
                 product: App\Entity\Product
             security: "is_granted('ROLE_SUPPLIER') and is_granted('IS_AUTHENTICATED_FULLY')"
             schemes: ['https']
-            controller: App\Controller\Product\CreateProduct::class
+            controller: App\Action\Product\CreateProduct::class
     itemOperations:
         get:
             method: 'GET'
@@ -56,7 +56,7 @@ App\Entity\Product:
             # host: 'localhost'
             schemes: ['https']
             status: 200 # customize the HTTP status code to send
-            controller: App\Controller\Product\GetProductWithImageAction
+            controller: App\Action\Product\GetProductWithImageAction
         put:
             method: 'PUT'
             path: '/product/{id}'
@@ -80,6 +80,6 @@ App\Entity\Product:
         #    defaults:
         #        _api_receive: false
         #    schemes: ['https']
-        #    controller: App\Controller\Product\GetProductSuppliersAction
+        #    controller: App\Action\Product\GetProductSuppliersAction
         
         

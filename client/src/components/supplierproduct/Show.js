@@ -58,13 +58,16 @@ class Show extends Component {
 
     error && toastError(error);
 
+    if(this.props.loading){
+      return (
+        <div className="spinner-loading-page">
+          <SpinnerLoading message={'Chargement du produit'}/>
+        </div>
+      );
+    }
+
     return (
       <div>
-        {this.props.loading && (
-          <div className="spinner-loading-page">
-            <SpinnerLoading message={'Chargement du produit'}/>
-          </div>
-        )}
 
         {item && (
           <div id={'supplier-product-show'} className="container">
@@ -77,8 +80,15 @@ class Show extends Component {
                       <div className="container">
                         <div className="detail-banner-left">
                           <div className="detail-banner-info">
-                            <div className="detail-label">{item.product.category.name}</div>
-                            <div className="detail-verified">Verified</div>
+                            <div className="detail-label">
+                              {item.product.category.name}
+                            </div>
+                            <div className="detail-verified">
+                              <FormattedMessage
+                                id={'app.verified'}
+                                defaultMessage={"Vérifié"}
+                              />
+                            </div>
                           </div>
                           {/* /.detail-banner-info */}
 

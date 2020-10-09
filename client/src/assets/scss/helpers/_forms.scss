@@ -1,9 +1,11 @@
+/*
 label {
     color: $color-black-light;
     cursor: pointer;
     font-size: 13px;
     font-weight: 400;
 }
+*/
 
 .form-control {
     box-shadow: none;
@@ -78,9 +80,11 @@ button {
 }
 
 // Radios & Checkboxes
+/*
 input[type=checkbox], input[type=radio] {
     display:none;
 }
+
 
 input[type=checkbox] + label, input[type=radio] + label {
     display: block;
@@ -139,7 +143,7 @@ input[type=radio]:checked + label:before {
     border-color: $color-primary;
     border-width: 5px;
 }
-
+*/
 .input-rating {
     input[type=radio] {
         display: none;

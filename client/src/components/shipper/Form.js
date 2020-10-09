@@ -63,7 +63,7 @@ class Form extends Component {
           component={this.renderField}
           name="service"
           type="text"
-          placeholder="Service offered by this shipper"
+          placeholder="Domain offered by this shipper"
           required={true}
         />
         <Field

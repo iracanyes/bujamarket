@@ -216,7 +216,13 @@ export class App extends Component
 
                 <main>
                   <aside id="aside-left">
-                    { ( user && user.roles.includes('ROLE_MEMBER') ) && <SidebarLeftMenu /> }
+                    <Route
+                      path={'/'}
+                      strict={false}
+                      exact={false}
+                    >
+                      { ( user && user.roles.includes('ROLE_MEMBER') ) && <SidebarLeftMenu /> }
+                    </Route>
                   </aside>
                   <section id="main-content" className="col col-lg-8 mx-2">
                     <ToastContainer
@@ -234,7 +240,6 @@ export class App extends Component
                     />
                     <div id="search-results-component" className={'col-lg-9 mx-auto'}>
                       {results && (<SearchResults results={ results }/>)}
-
                     </div>
 
                     <div>
@@ -272,10 +277,7 @@ export class App extends Component
                         { pageRoutes }
 
                       </Switch>
-
-
                     </div>
-
                   </section>
                   <aside>
 

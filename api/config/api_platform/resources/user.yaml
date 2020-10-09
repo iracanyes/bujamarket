@@ -22,7 +22,7 @@ App\Entity\User:
             defaults:
                 _api_receive: false
             schemes: ['https']
-            controller: App\Controller\User\SubscribeMemberAction
+            controller: App\Action\User\SubscribeMemberAction
         getProfile:
             method: 'POST'
             path: '/profile'
@@ -31,21 +31,21 @@ App\Entity\User:
                 _api_response: false
             schemes: ['https']
             security: "is_granted('ROLE_MEMBER') and is_granted('IS_AUTHENTICATED_FULLY')"
-            controller: App\Controller\User\GetProfileAction
+            controller: App\Action\User\GetProfileAction
         unlock_account:
             method: 'POST'
             path: '/unlock_account'
             defaults:
                 _api_receive: false
             schemes: ['https']
-            controller: App\Controller\User\UnlockAccountAction
+            controller: App\Action\User\UnlockAccountAction
         update_password:
             method: 'POST'
             path: '/update_password'
             defaults:
                 _api_receive: false
             schemes: ['https']
-            controller: App\Controller\User\UpdatePasswordAction
+            controller: App\Action\User\UpdatePasswordAction
             security: "is_granted('ROLE_MEMBER') and is_granted('IS_AUTHENTICATED_FULLY')"
         update_profile:
             method: 'POST'
@@ -54,7 +54,7 @@ App\Entity\User:
                 _api_receive: false
             schemes: ["https"]
             security: "is_granted('ROLE_MEMBER') and is_granted('IS_AUTHENTICATED_FULLY')"
-            controller: App\Controller\User\UpdateProfileAction
+            controller: App\Action\User\UpdateProfileAction
         authorize_publishing:
             method: 'POST'
             path: '/authorize_publishing/{id}'
@@ -62,7 +62,7 @@ App\Entity\User:
                 id: '\d+'
             schemes: ['https']
             security: "is_granted('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_FULLY')"
-            controller: App\Controller\User\AuthorizePublishingAction                          
+            controller: App\Action\User\AuthorizePublishingAction                          
     itemOperations:
         get:
             method: 'GET'
@@ -92,7 +92,7 @@ App\Entity\User:
                 id: '\d+'
             security: 'is_granted("ROLE_ADMIN") and is_granted("IS_AUTHENTICATED_FULLY")'
             schemes: ['https']
-            controller: App\Controller\User\DeleteUserAction
+            controller: App\Action\User\DeleteUserAction
         unsubscribe:
             method: 'POST'
             path: '/unsubscribe'
@@ -100,4 +100,4 @@ App\Entity\User:
             defaults:
                 _api_receive: false
             security: "is_granted('ROLE_MEMBER') and is_granted('IS_AUTHENTICATED_FULLY')"
-            controller: App\Controller\User\UnsubscribeAction
+            controller: App\Action\User\UnsubscribeAction

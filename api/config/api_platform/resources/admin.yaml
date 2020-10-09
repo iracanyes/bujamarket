@@ -23,7 +23,7 @@ App\Entity\Admin:
                 admin: App\Entity\Admin
             security: "is_granted('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_FULLY')"
             schemes: ['https']
-            controller: App\Controller\Admin\CreateAdmin::class
+            controller: App\Action\Admin\CreateAdmin::class
     itemOperations:
         get:
             method: 'GET'

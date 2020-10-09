@@ -22,13 +22,13 @@ App\Entity\BankAccount:
             schemes: ['https']
             defaults:
                 _api_receive: false
-            controller: App\Controller\BankAccount\CreateBankAccountAction
+            controller: App\Action\BankAccount\CreateBankAccountAction
         delete:
             method: 'POST'
             path: '/bank_account/delete'
             security: "is_granted('IS_AUTHENTICATED_FULLY')"
             schemes: [ 'https' ]
-            controller: App\Controller\BankAccount\DeleteBankAccountAction
+            controller: App\Action\BankAccount\DeleteBankAccountAction
     itemOperations:
         get:
             method: 'GET'
@@ -51,7 +51,7 @@ App\Entity\BankAccount:
                 _api_receive: false
             schemes: ['https']
             security: "is_granted('IS_AUTHENTICATED_FULLY') and is_granted('ROLE_MEMBER')"
-            controller: App\Controller\BankAccount\GetClientSecretAction
+            controller: App\Action\BankAccount\GetClientSecretAction
         put:
             method: 'PUT'
             path: '/bank_account/{id}'

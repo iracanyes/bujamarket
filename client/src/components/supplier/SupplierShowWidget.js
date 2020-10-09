@@ -5,6 +5,8 @@ import {FormattedMessage} from "react-intl";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import { getSupplierImage, reset as resetImage } from "../../actions/image/supplier";
 import { SpinnerLoading } from "../../layout/Spinner";
+import {toastError} from "../../layout/ToastMessage";
+import SupplierImage from "../image/SupplierImage";
 
 class SupplierShowWidget extends Component{
   constructor(props) {
@@ -12,13 +14,10 @@ class SupplierShowWidget extends Component{
   }
 
   componentDidMount() {
-    if(localStorage.getItem("token") !== null)
+    if(localStorage.getItem("token") !== null){
       this.props.retrieve(this.props.supplierId, this.props.history);
-  }
+    }
 
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    if(this.props.retrieved && !this.props.retrievedImage)
-      this.props.getSupplierImage(this.props.retrieved.image.id);
   }
 
   componentWillUnmount() {
@@ -27,11 +26,11 @@ class SupplierShowWidget extends Component{
   }
 
   render() {
-    const { retrieved, error, loading, retrievedImage } = this.props;
+    const { retrieved, error, loading } = this.props;
 
     const supplier = retrieved && retrieved;
 
-    retrievedImage && console.log('image', retrievedImage);
+    (error && error.length > 0) && toastError(error);
 
     return (
       <Fragment>
@@ -39,11 +38,7 @@ class SupplierShowWidget extends Component{
           <div>
             <div className="detail-vcard">
               <div className="detail-logo">
-                {!this.props.retrievedImage
-                  ? <SpinnerLoading message={"Chargement de l'image"} />
-                  : <img src={this.props.retrievedImage} alt={supplier.image.alt} title={supplier.image.title}/>
-                }
-
+                <SupplierImage supplier={supplier}/>
               </div>
               {/* /.detail-logo */}
 
@@ -94,11 +89,9 @@ class SupplierShowWidget extends Component{
 
 const mapStateToProps = state => {
   const { retrieved, error, loading, eventSource } = state.supplier.show;
-  const { retrieved: retrievedImage, error: errorImage, loading: loadingImage, eventSource: eventSourceImage } = state.image.supplier;
 
   return {
     retrieved, error, loading, eventSource,
-    retrievedImage, loadingImage, errorImage, eventSourceImage
   };
 };
 

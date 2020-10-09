@@ -22,7 +22,7 @@ App\Entity\Customer:
             path: '/customer/create'
             security: "is_granted('ROLE_CUSTOMER') and is_granted('IS_AUTHENTICATED_FULLY')"
             schemes: ['https']
-            controller: App\Controller\Customer\CreateCustomer::class
+            controller: App\Action\Customer\CreateCustomer::class
     itemOperations:
         get:
             method: 'GET'

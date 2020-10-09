@@ -26,30 +26,33 @@ export function create(values, history) {
     return fetch('favorite/create', { method: 'POST', headers: headers, body: JSON.stringify(values) })
       .then(response => {
         dispatch(loading(false));
-
         return response.json();
       })
       .then(retrieved => {
-        dispatch(success(retrieved));
 
-        let favorites = JSON.parse(localStorage.getItem('favorites'));
-        favorites.favorites.push({id: retrieved.supplierProduct.id});
+
+        let favorites = localStorage.getItem('favorites') ? JSON.parse(localStorage.getItem('favorites')) : [];
+        favorites.push({id: retrieved.supplierProduct.id});
 
         localStorage.removeItem('favorites');
-        localStorage.setItem('favorites', JSON.stringify(favorites.favorites));
-
-
+        localStorage.setItem('favorites', JSON.stringify(favorites));
+        console.log("create - localStorage favorites", localStorage.getItem('favorites'));
+        dispatch(success(retrieved));
 
       })
       .catch(e => {
         dispatch(loading(false));
 
-        if (e instanceof SubmissionError) {
-          dispatch(error(e.errors._error));
-          throw e;
+        switch (true){
+          case typeof e.message === "string":
+            dispatch(error(e.message));
+            break;
+          case typeof e['hydra:description'] === "string":
+            dispatch(error(e['hydra:description']));
+            break;
         }
 
-        dispatch(error(e.message));
+
       });
   };
 }

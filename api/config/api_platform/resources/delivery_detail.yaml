@@ -20,7 +20,7 @@ App\Entity\DeliveryDetail:
             path: '/delivery_detail/create'
             security: "is_granted('ROLE_CUSTOMER') and is_granted('IS_AUTHENTICATED_FULLY')"
             schemes: ['https']
-            controller: App\Controller\DeliveryDetail\CreateDeliveryDetail::class
+            controller: App\Action\DeliveryDetail\CreateDeliveryDetail::class
     itemOperations:
         get:
             method: 'GET'

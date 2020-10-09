@@ -17,9 +17,6 @@ import {
   Spinner,
   FormGroup
 } from "reactstrap";
-import {
-  DatePicker
-} from "@material-ui/pickers";
 import { toastError, toastSuccess } from "../../layout/ToastMessage";
 import * as ISOCodeJson from "../../config/ISOCode/ISO3166-1Alpha2.json";
 import { ElementsConsumer, CardElement, IbanElement, IdealBankElement, FpxBankElement, AuBankAccountElement  } from "@stripe/react-stripe-js";

@@ -36,6 +36,7 @@ class CommentFixtures extends Fixture implements DependentFixtureInterface, Fixt
         /* Relations */
         $comment->setCustomer($this->getReference(CustomerFixtures::CUSTOMER_REFERENCE));
         $comment->setSupplierProduct($this->getReference(SupplierProductFixtures::SUPPLIER_PRODUCT_REFERENCE));
+        $comment->setOrderDetail($this->getReference(OrderDetailFixtures::ORDER_DETAIL_REFERENCE));
 
         $manager->persist($comment);
 
@@ -49,6 +50,7 @@ class CommentFixtures extends Fixture implements DependentFixtureInterface, Fixt
         return array(
             CustomerFixtures::class,
             SupplierProductFixtures::class,
+            OrderDetailFixtures::class
         );
     }
 

@@ -1,12 +1,13 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { Link, Redirect } from 'react-router-dom';
+import { Link, Redirect, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Form from './Form';
 import { create, reset } from '../../actions/comment/create';
 
 class Create extends Component {
   static propTypes = {
+    supplierProductId: PropTypes.number.isRequired,
     error: PropTypes.string,
     loading: PropTypes.bool.isRequired,
     created: PropTypes.object,
@@ -14,39 +15,21 @@ class Create extends Component {
     reset: PropTypes.func.isRequired
   };
 
+
   componentWillUnmount() {
     this.props.reset();
   }
 
+
+
   render() {
-    if (this.props.created)
-      return (
-        <Redirect
-          to={`edit/${encodeURIComponent(this.props.created['@id'])}`}
-        />
-      );
+    const { created, loading, error } = this.props;
 
     return (
-      <div>
-        <h1>New Comment</h1>
-
-        {this.props.loading && (
-          <div className="alert alert-info" role="status">
-            Loading...
-          </div>
-        )}
-        {this.props.error && (
-          <div className="alert alert-danger" role="alert">
-            <span className="fa fa-exclamation-triangle" aria-hidden="true" />{' '}
-            {this.props.error}
-          </div>
-        )}
-
-        <Form onSubmit={this.props.create} values={this.props.item} />
-        <Link to="." className="btn btn-primary">
-          Back to list
-        </Link>
-      </div>
+      <Fragment>
+        <h6>Votre avis nous intéresse</h6>
+        <Form supplierProductId={this.props.supplierProductId} orderDetailId={this.props.orderDetailId} values={this.props.item} />
+      </Fragment>
     );
   }
 }
@@ -64,4 +47,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Create);
+)(withRouter(Create));

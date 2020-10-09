@@ -1,6 +1,6 @@
 #index:
 #    path: /
-#    controller: App\Controller\DefaultController::index
+#    controller: App\Action\DefaultController::index
 
 authentication_token:
     path: /authentication_token

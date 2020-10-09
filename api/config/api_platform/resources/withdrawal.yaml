@@ -20,7 +20,7 @@ App\Entity\Withdrawal:
             path: '/withdrawal/create'
             security: "is_granted('ROLE_MEMBER') and is_granted('IS_AUTHENTICATED_FULLY')"
             schemes: ['https']
-            controller: App\Controller\Withdrawal\CreateWithdrawal::class
+            controller: App\Action\Withdrawal\CreateWithdrawal::class
     itemOperations:
         get:
             method: 'GET'

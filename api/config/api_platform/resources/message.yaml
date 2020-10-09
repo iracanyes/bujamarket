@@ -21,7 +21,7 @@ App\Entity\Message:
             path: '/message/create'
             security: "is_granted('ROLE_MEMBER') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
             schemes: ['https']
-            controller: App\Controller\Message\CreateMessage::class
+            controller: App\Action\Message\CreateMessage::class
     itemOperations:
         get:
             method: 'GET'

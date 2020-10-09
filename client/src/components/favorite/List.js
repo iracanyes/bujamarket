@@ -7,10 +7,6 @@ import { del } from "../../actions/favorite/delete";
 import {
   Button,
   ButtonGroup,
-  Spinner,
-  Form,
-  Label,
-  Input
 } from "reactstrap";
 import {
   Avatar,

@@ -1192,9 +1192,6 @@ const mapStateToProps = (state, ownProps) => {
     };
   }
 
-
-
-
   return {
     created,
     errorCreate,

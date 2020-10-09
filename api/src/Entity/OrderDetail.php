@@ -22,6 +22,7 @@ class OrderDetail
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"order_set:output"})
      */
     private $id;
 
@@ -40,7 +41,7 @@ class OrderDetail
      * @ORM\Column(type="integer")
      * @Assert\Range(
      *     min=0,
-     *     minMessage="The minimum value is {{ limit }}.\nThe current value is {{ value }}."
+     *     notInRangeMessage="The value's limit is {{ limit }}.\nThe current value is {{ value }}."
      * )
      * @Groups({"order_set:output","order_detail:output"})
      */
@@ -52,7 +53,7 @@ class OrderDetail
      * @ORM\Column(type="float")
      * @Assert\Range(
      *     min=0.0,
-     *     minMessage="The minimum value is {{ limit }}.\nThe current value is {{ value }}."
+     *     notInRangeMessage="The minimum value is {{ limit }}.\nThe current value is {{ value }}."
      * )
      * @Groups({"order_set:output","order_detail:output"})
      */
@@ -65,7 +66,7 @@ class OrderDetail
      * @Assert\NotNull()
      * @Assert\Range(
      *     min=0.0,
-     *     minMessage="The minimum value is {{ limit }}.\nThe current value is {{ value }}."
+     *     notInRangeMessage="The value's limit is {{ limit }}.\nThe current value is {{ value }}."
      * )
      * @Groups({"order_set:output","order_detail:output"})
      */
@@ -93,6 +94,7 @@ class OrderDetail
      *
      * @ORM\OneToOne(targetEntity="App\Entity\DeliveryDetail", mappedBy="orderDetail", cascade={"persist", "remove"})
      * @Assert\Type("App\Entity\DeliveryDetail")
+     * @Groups({"order_set:output"})
      */
     private $deliveryDetail;
 
@@ -115,6 +117,11 @@ class OrderDetail
      * @Groups({"order_set:output","order_detail:output"})
      */
     private $supplierProduct;
+
+    /**
+     * @ORM\OneToOne(targetEntity=Comment::class, mappedBy="orderDetail", cascade={"persist", "remove"})
+     */
+    private $comment;
 
     public function getId(): ?int
     {
@@ -245,6 +252,23 @@ class OrderDetail
     public function setSupplierProduct(?SupplierProduct $supplierProduct): self
     {
         $this->supplierProduct = $supplierProduct;
+
+        return $this;
+    }
+
+    public function getComment(): ?Comment
+    {
+        return $this->comment;
+    }
+
+    public function setComment(Comment $comment): self
+    {
+        $this->comment = $comment;
+
+        // set the owning side of the relation if necessary
+        if ($comment->getOrderDetail() !== $this) {
+            $comment->setOrderDetail($this);
+        }
 
         return $this;
     }

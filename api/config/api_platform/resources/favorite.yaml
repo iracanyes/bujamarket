@@ -28,7 +28,7 @@ App\Entity\Favorite:
             #options:
             #    my_option: 'my_option_value'
             status: 200 # customize the HTTP status code to send
-            controller: App\Controller\Favorite\GetMyFavoritesAction
+            controller: App\Action\Favorite\GetMyFavoritesAction
         getIds:
             method: 'GET'
             path: '/favorites/ids'
@@ -39,7 +39,7 @@ App\Entity\Favorite:
                 _format: 'json'
             schemes: ['https']
             security: "is_granted('ROLE_CUSTOMER') and is_granted('IS_AUTHENTICATED_FULLY')"
-            controller: App\Controller\Favorite\GetFavoriteIdsAction
+            controller: App\Action\Favorite\GetFavoriteIdsAction
         post:
             method: 'POST'
             path: '/favorite/create'
@@ -47,7 +47,7 @@ App\Entity\Favorite:
                 _api_receive: false
             security: "is_granted('ROLE_CUSTOMER') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
             schemes: ['https']
-            controller: App\Controller\Favorite\CreateFavoriteAction
+            controller: App\Action\Favorite\CreateFavoriteAction
     itemOperations:
         get:
             method: 'GET'
@@ -70,4 +70,4 @@ App\Entity\Favorite:
                 id: '\d+'
             security: 'is_granted("ROLE_CUSTOMER") and is_granted("IS_AUTHENTICATED_REMEMBERED")'
             schemes: ['https']
-            controller: App\Controller\Favorite\DeleteFavoriteAction
+            controller: App\Action\Favorite\DeleteFavoriteAction

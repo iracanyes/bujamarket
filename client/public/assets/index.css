@@ -892,14 +892,14 @@ footer div.footer-section-2 {
 .detail-gallery .owl-item .detail-gallery-list-item {
   display: inline-block;
 }
-
+/*
 label {
   color: #444;
   cursor: pointer;
   font-size: 13px;
   font-weight: 400;
 }
-
+*/
 .form-control {
   box-shadow: none;
   border-radius: 0px;
@@ -962,7 +962,7 @@ button i {
   position: relative;
   pointer-events: none;
 }
-
+/*
 input[type=checkbox], input[type=radio] {
   display: none;
 }
@@ -1023,7 +1023,7 @@ input[type=radio]:checked + label:before {
   border-color: #009f8b;
   border-width: 5px;
 }
-
+*/
 .input-rating input[type=radio] {
   display: none;
 }
@@ -1521,7 +1521,7 @@ main section#main-content img.sm-rounded-avatar {
 div.error_404 {
   width: 100%;
   height: 800px;
-  background-image: url("./../img/error-404-chat-fou.jpg");
+  background-image: url("./../../img/error-404-chat-fou.jpg");
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;

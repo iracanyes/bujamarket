@@ -21,7 +21,7 @@ App\Entity\Image:
             path: '/image/create'
             security: "is_granted('ROLE_MEMBER') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
             schemes: ['https']
-            controller: App\Controller\Image\CreateImageAction::class
+            controller: App\Action\Image\CreateImageAction::class
     itemOperations:
         get:
             method: 'GET'
@@ -43,14 +43,33 @@ App\Entity\Image:
                 _api_receive: false
             schemes: ['https']
             security: 'is_granted("ROLE_MEMBER") and is_granted("IS_AUTHENTICATED_REMEMBERED")'
-            controller: App\Controller\Image\GetProfileImageAction
-        get_supplier_image:
+            controller: App\Action\Image\GetProfileImageAction
+        # Get Supplier image by image id
+        getImageSupplier:
             method: 'GET'
+            # id de l'image
             path: '/image_supplier/{id}'
             requirements:
                 id: '\d+'
             schemes: ['https']
-            controller: App\Controller\Image\GetSupplierImageAction
+            controller: App\Action\Image\GetSupplierImageAction
+        getSupplierImage:
+            method: 'GET'
+            # {id} of the supplier
+            path: '/supplier/{id}/image'
+            requirements:
+                id: '\d+'
+            schemes: [ 'https' ]
+            security: "is_granted('ROLE_MEMBER')"
+            controller: App\Action\Supplier\GetSupplierImageAction
+        getCommentCustomerImage:
+            method: 'GET'
+            path: '/comment/{id}/customer_image'
+            requirements: 
+                id: '\d+'
+            schemes: ['https']
+            security: "is_granted('ROLE_MEMBER')"
+            controller: App\Action\Image\GetCommentCustomerImageAction
         #put:
         #    method: 'PUT'
         #    path: '/image/{id}'

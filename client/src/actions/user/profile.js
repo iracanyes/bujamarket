@@ -38,11 +38,10 @@ export function getProfile(history, location) {
           .then(retrieved => ({ retrieved, hubURL: extractHubURL(response) }))
       )
       .then(({ retrieved, hubURL }) => {
+        console.log('profile action - retrieved', retrieved);
         retrieved = normalize(retrieved);
 
         dispatch(loading(false));
-
-
         dispatch(success(retrieved));
 
         if (hubURL) dispatch(mercureSubscribe(hubURL, retrieved['@id']));
@@ -50,23 +49,20 @@ export function getProfile(history, location) {
       .catch(e => {
         dispatch(loading(false));
 
-        if(e.code === 401)
-        {
-          toastError('Authentification nécessaire!');
-          history.push({pathname: '/login', state: {from: location.pathname}});
-        }
-
-        if(typeof e == 'string')
-        {
-          dispatch(error(e));
-        }else{
-          if(e["hydra:description"])
-          {
+        switch(true){
+          case e.code === 401:
+            toastError('Authentification nécessaire!');
+            history.push({pathname: '/login', state: {from: location.pathname}});
+            break;
+          case typeof e === 'string':
+            dispatch(error(e));
+            break;
+          case typeof e["hydra:description"] === "string":
             dispatch(error(e["hydra:description"]));
-          }else{
+            break;
+          case typeof e.message === "string":
             dispatch(error(e.message));
-          }
-
+            break;
         }
         dispatch(error(null));
       });

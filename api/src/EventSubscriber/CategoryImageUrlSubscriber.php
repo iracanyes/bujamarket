@@ -52,7 +52,7 @@ class CategoryImageUrlSubscriber implements EventSubscriberInterface
         {
             foreach($result as $category){
                 if($category instanceof Category){
-                    if(strpos($category->getImage()->getUrl(), getenv("UPLOAD_CATEGORY_IMAGE_DIRECTORY")) === false){
+                    if(substr($category->getImage()->getUrl(), 0, 8) !== 'https://'){
                         $category->getImage()->setUrl( getenv("API_ENTRYPOINT").'/'.getenv("UPLOAD_CATEGORY_IMAGE_DIRECTORY").'/'.$category->getImage()->getUrl());
                     }
                 }else{
@@ -67,7 +67,7 @@ class CategoryImageUrlSubscriber implements EventSubscriberInterface
 
         if($result instanceof Category)
         {
-            if(strpos($result->getImage()->getUrl(), getenv("UPLOAD_CATEGORY_IMAGE_DIRECTORY")) === false){
+            if(substr($result->getImage()->getUrl(), 0, 8) !== 'https://'){
                 $result->getImage()->setUrl( getenv("API_ENTRYPOINT").'/'.getenv("UPLOAD_CATEGORY_IMAGE_DIRECTORY").'/'.$result->getImage()->getUrl());
             }
         }

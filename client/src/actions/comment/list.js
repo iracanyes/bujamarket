@@ -64,7 +64,7 @@ export function listBySupplierProductId(options={}, page = 'comments/supplier_pr
     {
       headers.set('Authorization', 'Bearer ' + userToken.token);
     }else{
-      history.push({pathname:"../../login", state: { from: window.location.pathname }})
+      history.push({pathname:"../../login", state: { from: window.location.pathname }});
     }
 
     if(options.supplier_product)
@@ -97,7 +97,15 @@ export function listBySupplierProductId(options={}, page = 'comments/supplier_pr
       })
       .catch(e => {
         dispatch(loading(false));
-        dispatch(error(e.message));
+
+        switch (true){
+          case typeof e.message === "string":
+            dispatch(error(e.message));
+            break;
+          case typeof e['hydra:description'] === "string":
+            dispatch(error(e['hydra:description']));
+            break;
+        }
       });
   };
 }

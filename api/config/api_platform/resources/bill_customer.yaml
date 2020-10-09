@@ -38,7 +38,7 @@ App\Entity\BillCustomer:
                 _api_receive: false
             schemes: ['https']
             security: "is_granted('IS_AUTHENTICATED_FULLY') and is_granted('ROLE_CUSTOMER')"
-            controller: App\Controller\BillCustomer\DownloadPdfAction
+            controller: App\Action\BillCustomer\DownloadPdfAction
         delete:
             method: 'DELETE'
             path: '/customer_bill/{id}'

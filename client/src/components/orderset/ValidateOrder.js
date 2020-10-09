@@ -33,8 +33,6 @@ class ValidateOrder extends Component {
   constructor(props)
   {
     super(props);
-
-
   }
 
   componentDidMount() {

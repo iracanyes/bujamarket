@@ -20,7 +20,7 @@ App\Entity\DeliverySet:
             path: '/delivery_set/create'
             security: "is_granted('ROLE_CUSTOMER') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
             schemes: ['https']
-            controller: App\Controller\DeliverySet\CreateDeliverySet::class
+            controller: App\Action\DeliverySet\CreateDeliverySet::class
     itemOperations:
         get:
             method: 'GET'

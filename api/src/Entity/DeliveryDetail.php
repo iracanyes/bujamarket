@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ApiResource()
@@ -51,6 +52,7 @@ class DeliveryDetail
      *
      * @ORM\Column(type="boolean")
      * @Assert\Type("boolean")
+     * @Groups({"order_set:output"})
      */
     private $isShipped;
 
@@ -59,6 +61,7 @@ class DeliveryDetail
      *
      * @ORM\Column(type="boolean")
      * @Assert\Type("boolean")
+     * @Groups({"order_set:output"})
      */
     private $isReceived;
 

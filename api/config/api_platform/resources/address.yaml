@@ -23,7 +23,7 @@ App\Entity\Address:
                 _api_receive: false
             security: "is_granted('ROLE_MEMBER') and is_granted('IS_AUTHENTICATED_FULLY')"
             schemes: ['https']
-            controller: App\Controller\Address\CreateAddressAction
+            controller: App\Action\Address\CreateAddressAction
     itemOperations:
         get:
             method: 'GET'
@@ -47,7 +47,7 @@ App\Entity\Address:
                 _api_receive: false
             schemes: ['https']
             security: 'is_granted("ROLE_MEMBER") and is_granted("IS_AUTHENTICATED_FULLY")'
-            controller: App\Controller\Address\GetAddressesAction
+            controller: App\Action\Address\GetAddressesAction
         put:
             method: 'PUT'
             path: '/address/{id}'
@@ -64,4 +64,4 @@ App\Entity\Address:
                 #_api_response: false
             security: "is_granted('IS_AUTHENTICATED_FULLY') and is_granted('ROLE_MEMBER')"
             schemes: ['https']
-            controller: App\Controller\Address\DeleteAddressAction
+            controller: App\Action\Address\DeleteAddressAction

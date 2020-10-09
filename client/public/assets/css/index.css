@@ -1521,7 +1521,7 @@ main section#main-content img.sm-rounded-avatar {
 div.error_404 {
   width: 100%;
   height: 800px;
-  background-image: url("./../img/error-404-chat-fou.jpg");
+  background-image: url("./../../img/error-404-chat-fou.jpg");
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;

@@ -28,7 +28,7 @@ class SupplierProduct
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"favorite:output","supplier_product:output","supplier_product_owner:output"})
+     * @Groups({"favorite:output","supplier_product:output","supplier_product_owner:output","order_set:output"})
      *
      */
     private $id;
@@ -39,7 +39,7 @@ class SupplierProduct
      * @ORM\Column(type="float")
      * @Assert\Range(
      *     min=0.0,
-     *     minMessage="The minimum value is {{ limit }}.\nThe current value is {{ value }}."
+     *     notInRangeMessage="The minimum value is {{ limit }}.\nThe current value is {{ value }}."
      * )
      * @Groups({"favorite:output","supplier_product:output","supplier_product_owner:output"})
      */
@@ -51,7 +51,7 @@ class SupplierProduct
      * @ORM\Column(type="integer", nullable=true)
      * @Assert\Range(
      *     min=0,
-     *     minMessage="The minimum value is {{ limit }}.\nThe current value is {{ value }}."
+     *     notInRangeMessage="The minimum value is {{ limit }}.\nThe current value is {{ value }}."
      * )
      * @Groups({"favorite:output","supplier_product:output","supplier_product_owner:output"})
      */
@@ -63,7 +63,7 @@ class SupplierProduct
      * @ORM\Column(type="float")
      * @Assert\Range(
      *     min=0,
-     *     minMessage="The minimum value is {{ limit }}.\nThe current value is {{ value }}."
+     *     notInRangeMessage="The minimum value is {{ limit }}.\nThe current value is {{ value }}."
      * )
      * @Groups({"favorite:output","supplier_product:output","supplier_product_owner:output"})
      */
@@ -159,8 +159,7 @@ class SupplierProduct
      * @Assert\Range(
      *      min = 0,
      *      max = 10,
-     *      minMessage = "L'évaluation minimale est {{ limit }} pour un produit!",
-     *      maxMessage = "L'évaluation maximale est {{ limit }} pour un produit!"
+     *      notInRangeMessage = "The rating's limit is {{ limit }}. Current value {{ value }}!"
      * )
      * @Groups({"supplier_product:output","supplier_product_owner:output"})
      */

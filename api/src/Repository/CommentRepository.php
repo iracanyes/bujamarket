@@ -22,10 +22,10 @@ class CommentRepository extends ServiceEntityRepository
     public function getCommentsBySupplierProduct(int $id = null)
     {
         $qb = $this->createQueryBuilder('c')
-            ->select('c.rating', 'c.content')
+            ->select('c.id','c.rating', 'c.content')
             ->leftJoin('c.supplierProduct', 'sp')
             ->leftJoin('c.customer', 'cu')
-            ->addSelect('cu.lastname')
+            ->addSelect('cu.id','cu.lastname')
             ->leftJoin('cu.image', 'i')
             ->addSelect('i.url','i.title','i.alt');
 
@@ -36,6 +36,19 @@ class CommentRepository extends ServiceEntityRepository
         }
 
         return $qb->getQuery()->getResult();
+    }
+
+    public function getCustomerImage(int $id)
+    {
+        return $this->createQueryBuilder('c')
+            ->leftJoin('c.customer', 'cu')
+            ->andWhere('cu INSTANCE OF App\Entity\Customer')
+            ->leftJoin('cu.image', 'i')
+            ->addSelect('c','cu','i')
+            ->andWhere('c.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
     // /**
