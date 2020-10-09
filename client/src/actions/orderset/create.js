@@ -73,5 +73,6 @@ export function reset() {
   return dispatch => {
     dispatch(loading(false));
     dispatch(error(null));
+    dispatch(success(null));
   };
 }

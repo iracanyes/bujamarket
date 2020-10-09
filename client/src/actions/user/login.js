@@ -86,8 +86,8 @@ export function login(email, password, history, locationState) {
             // Redirection page d'accueil
             history.push('/');
           }
-
         }
+
 
 
       })

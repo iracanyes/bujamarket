@@ -166,36 +166,56 @@ div.spinner-loading-page{
 }
 div#supplier-product-show{
 
-  div.detail-banner-btn.bookmark{
-    padding: 0.525rem;
-
-    button{
-      color: $primary-color;
-
-    }
-  }
-
   div.detail-banner-btn{
     border: none;
     button{
-      border-color: $primary-color;
+
       border-radius: 10%;
     }
+
+    &.bookmark{
+      button{
+        color: $primary-color;
+        border-color: $primary-color !important;
+        padding: 9px 15px;
+      }
+    }
+
+    button:hover{
+      background-color: white !important;
+      //border: unset;
+    }
+
   }
 
   div.detail-banner-btn:hover{
-    border: unset !important;
+    //border: unset !important;
     border-radius: 5%;
-    button{
-      background-color: unset;
-      border: unset;
-    }
+    background-color: unset;
   }
 
   div.detail-banner-btn.heart:hover{
+    background-color: white;
     svg{
       color: gray !important;
     }
+
+  }
+
+  div#review-comments{
+    border-radius: unset;
+  }
+
+  div.comment-image{
+    div.MuiAvatar-root{
+      width: 5rem;
+      height: 5rem;
+      margin: 1rem;
+    }
+  }
+
+  div.comment-message > svg{
+    font-size: 1.5rem;
   }
 
 }
@@ -226,7 +246,6 @@ div#toast-shopping-cart{
 }
 
 .review-image {
-
     img {
         height: 5rem;
     }

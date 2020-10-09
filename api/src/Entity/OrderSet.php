@@ -45,7 +45,7 @@ class OrderSet
      * @ORM\Column(type="float")
      * @Assert\Range(
      *     min=0.0,
-     *     minMessage="The minimum value is {{ limit }}.\nThe current value is {{ value }}."
+     *     notInRangeMessage="The minimum value is {{ limit }}.\nThe current value is {{ value }}."
      *
      * )
      * @Groups({"order_set:output"})

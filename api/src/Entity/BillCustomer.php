@@ -31,7 +31,7 @@ class BillCustomer extends  Bill
      * @Assert\Type("float")
      * @Assert\Range(
      *     min=0,
-     *     minMessage="The minimum value is {{ limit }}.\nThe current value is {{ value }}"
+     *     notInRangeMessage="The value's limit is {{ limit }}.\nThe current value is {{ value }}"
      * )
      * @Groups({"bill_customer:output","payment:output"})
      */
@@ -44,8 +44,7 @@ class BillCustomer extends  Bill
      * @Assert\Range(
      *     min=0.0,
      *     max=2.0,
-     *     minMessage="The minimum value is {{ limit }}.\nThe current value is {{ value }}",
-     *     maxMessage="The maximum value is {{ limit }}.\nThe current value is {{ value }}"
+     *     notInRangeMessage="The value's limit is {{ limit }}.\nThe current value is {{ value }}",
      * )
      * @Groups({"bill_customer:output","payment:output"})
      */

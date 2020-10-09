@@ -26,17 +26,12 @@ class Homepage extends Component
   welcome(){
     const { registerNotification, loginNotification } = this.props;
 
-    typeof registerNotification === 'string' && toastWelcome(registerNotification);
-
-    typeof loginNotification === 'string' && toastWelcome(loginNotification);
-
+    registerNotification.length > 0 && toastWelcome(registerNotification);
+    loginNotification.length > 0 && toastWelcome(loginNotification);
   }
 
   render(){
     const { registerNotification, loginNotification } = this.props;
-
-    console.log("registerNotification", registerNotification);
-    console.log("loginNotification", loginNotification);
 
     (registerNotification || loginNotification ) && this.welcome();
 
@@ -60,16 +55,8 @@ class Homepage extends Component
 
         {/* Parallax image 1 */}
         <div className="parallax parallax-main parallax1 parallax-plus-box">
-
           <UserAuth />
-
-
         </div>
-
-
-
-
-
       </section>
     </Fragment>
 
@@ -78,10 +65,6 @@ class Homepage extends Component
 
 const mapStateToProps = state => {
   const { notify: registerNotification } = state.user.registration;
-
-  console.log('mapStateToProps - registration',state.user.registration);
-  console.log('mapStateToProps - authentication',state.user.authentication);
-
   const { notify: loginNotification } = state.user.authentication;
   return { registerNotification, loginNotification };
 };

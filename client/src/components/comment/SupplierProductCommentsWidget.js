@@ -2,9 +2,14 @@ import React, {Component, Fragment} from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import {listBySupplierProductId, reset} from "../../actions/comment/list";
-import Rating from "../../layout/Rating";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import { faCommentDots } from "@fortawesome/free-solid-svg-icons";
+import {Rating} from "@material-ui/lab";
+import {
+  BiMessageCheck
+} from "react-icons/bi";
+import {
+  Avatar
+} from "@material-ui/core";
+import CommentCustomerImage from "../image/CommentCustomerImage";
 
 class SupplierProductCommentsWidget extends Component
 {
@@ -39,33 +44,33 @@ class SupplierProductCommentsWidget extends Component
         <div className="reviews">
 
           {comments && comments.map((item, index) => (
-            <div className="review bg-white" key={index}>
-              <div className="review-image" id={"review-comments"}>
-                <img src={item.url} alt={item.alt} />
+            <div className="d-flex flex-row bg-white" key={index}>
+              <div className="comment-image">
+                <CommentCustomerImage id={item.id} comment={item}/>
               </div>
-              {/* /.review-image */}
+              {/* comment-image */}
 
-              <div className="review-inner">
+              <div className="comment-inner w-100 ml-2">
                 <div className="review-title">
                   <h2>{item.lastname}</h2>
-
+                  {/*
                   <span className="report">
                       <span className="separator">&#8226;</span>
                     <i className="fa fa-flag" title="Report" data-toggle="tooltip" data-placement="top"></i>
                   </span>
-
+                  */}
                   <div className="review-overall-rating">
                     <span className="overall-rating-title">Avis client:</span>
-                    <Rating rating={item.rating}/>
+                    <Rating value={item.rating / 2} readOnly/>
                   </div>
                   {/* /.review-rating */}
                 </div>
                 {/* /.review-title */}
 
                 <div className="review-content-wrapper">
-                  <div className="review-content">
-                    <div className="review-pros">
-                      <FontAwesomeIcon icon={faCommentDots} id={"comment-icon"}/>
+                  <div>
+                    <div className="d-flex comment-message">
+                      <BiMessageCheck className={'mr-1'}/>
                       <p>{item.content}</p>
                     </div>
                     {/* /.cons */}

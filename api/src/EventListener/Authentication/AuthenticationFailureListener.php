@@ -12,7 +12,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Response\JWTAuthenticationFailureRespon
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Twig\Environment;
-use App\Service\MailerHandler;
+use App\Domain\MailerHandler;
 
 class AuthenticationFailureListener
 {

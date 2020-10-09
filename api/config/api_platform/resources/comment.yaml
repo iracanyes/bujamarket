@@ -24,13 +24,15 @@ App\Entity\Comment:
                 _api_receive: false
             schemes: ['https']
             accessControl: "is_granted('ROLE_MEMBER') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
-            controller: App\Controller\Comment\GetCommentsSupplierProductAction
+            controller: App\Action\Comment\GetCommentsSupplierProductAction
         post:
             method: 'POST'
             path: '/comment/create'
+            defaults:
+                _api_receive: false
             security: "is_granted('ROLE_CUSTOMER') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
             schemes: ['https']
-            controller: App\Controller\Comment\CreateComment::class
+            controller: App\Action\Comment\CreateCommentAction
     itemOperations:
         get:
             method: 'GET'

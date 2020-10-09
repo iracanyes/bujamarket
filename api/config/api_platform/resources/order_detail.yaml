@@ -22,13 +22,13 @@ App\Entity\OrderDetail:
                 _api_receive: false
             schemes: ['https']
             security: "is_granted('ROLE_SUPPLIER') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
-            controller: App\Controller\OrderDetail\GetSupplierOrdersAction
+            controller: App\Action\OrderDetail\GetSupplierOrdersAction
         post:
             method: 'POST'
             path: '/order_detail/create'
             security: "is_granted('ROLE_MEMBER') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
             schemes: ['https']
-            controller: App\Controller\OrderDetail\CreateOrderDetail::class
+            controller: App\Action\OrderDetail\CreateOrderDetail::class
     itemOperations:
         get:
             method: 'GET'

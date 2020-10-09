@@ -34,7 +34,7 @@ class DeliverySet
      * @Assert\NotBlank()
      * @Assert\Range(
      *     min=0,
-     *     minMessage="The minimum value is {{ limit }}.\nThe current value is {{ value }}."
+     *     notInRangeMessage="The value's limit for shoppingCost property is {{ limit }}.\nThe current value is {{ value }}."
      * )
      * @Groups({"order_set:output"})
      */

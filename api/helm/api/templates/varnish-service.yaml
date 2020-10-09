@@ -1,6 +1,6 @@
 {{- if .Values.varnish.enabled -}}
 apiVersion: v1
-kind: Service
+kind: Domain
 metadata:
   name: varnish
   labels:
@@ -8,7 +8,7 @@ metadata:
     app.kubernetes.io/part-of: {{ include "name" . }}
     helm.sh/chart: {{ include "chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/managed-by: {{ .Release.Domain }}
 spec:
   type: NodePort
   ports:

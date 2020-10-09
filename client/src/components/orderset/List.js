@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from "react-router-dom";
 import PropTypes from 'prop-types';
 import { list, reset } from '../../actions/orderset/list';
 import {FormattedMessage, injectIntl } from "react-intl";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Container } from "reactstrap";
 import {
   Paper
@@ -11,6 +11,8 @@ import {
 import {toastError} from "../../layout/ToastMessage";
 import TableSort from "./TableSort";
 import {SpinnerLoading} from "../../layout/Spinner";
+import { Rating } from "@material-ui/lab";
+import CustomizedRating from "../comment/CustomizedRating";
 
 class List extends Component {
   static propTypes = {
@@ -21,6 +23,12 @@ class List extends Component {
     list: PropTypes.func.isRequired,
     reset: PropTypes.func.isRequired
   };
+
+  constructor(props) {
+    super(props);
+
+    this.validateOrder = this.validateOrder.bind(this);
+  }
 
   componentDidMount() {
     this.props.list(
@@ -45,6 +53,14 @@ class List extends Component {
     this.props.reset(this.props.eventSource);
   }
 
+  validateOrder(order)
+  {
+    /* Redirection vers la page de paiement  */
+    sessionStorage.removeItem('my_order');
+    sessionStorage.setItem('my_order', JSON.stringify(order));
+    this.props.history.push({pathname:'../validate_order', state: {from: this.props.location.pathname ,  params : {orderSet: order}}});
+  }
+
 
   render() {
     const { loading, retrieved, error } = this.props;
@@ -62,11 +78,13 @@ class List extends Component {
               description={"Order - History"}
             />
           </h1>
+
+          {/*<Rating name='a' precision={1} defaultValue={2} />*/}
           { loading && <SpinnerLoading message={"Chargement de l'historique des commandes"}/>}
           { retrieved && retrieved['hydra:member'] && (
             <Paper>
               { console.log("List - retrieved ",retrieved)}
-              <TableSort my_orders={retrieved['hydra:member']} />
+              <TableSort my_orders={retrieved['hydra:member']} validateOrder={this.validateOrder} />
             </Paper>
 
           )}
@@ -98,4 +116,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(List);
+)(withRouter(List));

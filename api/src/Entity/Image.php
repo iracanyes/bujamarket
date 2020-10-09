@@ -36,8 +36,7 @@ class Image
      * @Assert\Range(
      *     min=1,
      *     max=10,
-     *     minMessage="The minimum value is {{ limit }}.\nThe current value is {{ value }}.",
-     *     maxMessage="The maximum value is {{ limit }}.\nThe current value is {{ value }}."
+     *     notInRangeMessage="The value's limit for place attribute is {{ limit }}.\nThe current value is {{ value }}."
      * )
      * @Groups({"profile:output","product:output","supplier:output","favorite:output","supplier_product:output","supplier_product_owner:output"})
      */

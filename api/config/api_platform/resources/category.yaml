@@ -18,7 +18,7 @@ App\Entity\Category:
             method: 'GET'
             path: '/categories_names'
             schemes: ["https"]
-            controller: App\Controller\Category\GetCategoriesNameAction
+            controller: App\Action\Category\GetCategoriesNameAction
         getNamesWithImages:
             method: 'GET'
             path: '/category_names_with_image'
@@ -27,13 +27,13 @@ App\Entity\Category:
                 _api_receive: false
                 _api_respond: false
             serialize: false 
-            controller: App\Controller\Category\GetNamesWithImageAction
+            controller: App\Action\Category\GetNamesWithImageAction
         post:
             method: 'POST'
             path: '/category/create'
             security: "is_granted('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
             schemes: ['https']
-            controller: App\Controller\Categry\CreateCategoryAction
+            controller: App\Action\Categry\CreateCategoryAction
     itemOperations:
         get:
             method: 'GET'

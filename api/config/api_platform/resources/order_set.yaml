@@ -25,13 +25,13 @@ App\Entity\OrderSet:
                 _api_receive: false
             schemes: ['https']
             security: "(is_granted('ROLE_CUSTOMER') or is_granted('ROLE_SUPPLIER') ) and is_granted('IS_AUTHENTICATED_REMEMBERED')"
-            controller: App\Controller\OrderSet\GetCustomerOrdersAction
+            controller: App\Action\OrderSet\GetCustomerOrdersAction
         post:
             method: 'POST'
             path: '/order_set/create'
             security: "is_granted('ROLE_MEMBER') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
             schemes: ['https']
-            controller: App\Controller\OrderSet\CreateOrderSetAction
+            controller: App\Action\OrderSet\CreateOrderSetAction
         getOrderSetSuccess:
             method: 'POST'
             path: '/order_set/success'
@@ -46,7 +46,7 @@ App\Entity\OrderSet:
             #options:
             #    my_option: 'my_option_value'
             status: 200 # customize the HTTP status code to send
-            controller: App\Controller\OrderSet\GetOrderSetSuccessAction
+            controller: App\Action\OrderSet\GetOrderSetSuccessAction
     itemOperations:
         get:
             method: 'GET'

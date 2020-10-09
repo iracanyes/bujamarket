@@ -31,6 +31,19 @@ class FavoriteRepository extends ServiceEntityRepository
             ->execute();
     }
 
+    public function getFavorite(int $idSupplierProduct,int $idCustomer)
+    {
+        return $this->createQueryBuilder('f')
+            ->leftJoin('f.customer', 'cu')
+            ->leftJoin('f.supplierProduct', 'sp')
+            ->addSelect('cu', "sp")
+            ->andWhere('cu.id = :id')
+            ->setParameter('id' , $idCustomer)
+            ->andWhere('sp.id = :idSP')
+            ->setParameter('idSP' , $idSupplierProduct)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
     // /**
     //  * @return Favorite[] Returns an array of Favorite objects
     //  */

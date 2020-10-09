@@ -124,60 +124,16 @@ class SidebarLeftMenu extends Component
             </DropdownMenu>
           </UncontrolledButtonDropdown>
           {/*-- Menu - orders --*/}
-          <UncontrolledButtonDropdown>
-            <DropdownToggle outline className={'text-primary'}>
+          <NavLink
+            tag={RRDNavLink}
+            to={{pathname: "/my_orders/", state: { from : window.location.pathname }}}
+            className={'w-100 p-0'}
+          >
+            <Button className={'btn btn-outline-secondary w-100'}>
               <FontAwesomeIcon icon={"shopping-cart"} className={"mr-2"}/>
-              <FormattedMessage id={"app.button.orders"} defaultMessage={"Commandes"} description={"Button - Orders"}/>
-            </DropdownToggle>
-            <DropdownMenu className={'bg-dark text-secondary'} >
-              <DropdownItem header>
-                <FontAwesomeIcon icon={"shopping-basket"} className={"mr-2"}/>
-                <FormattedMessage id={"app.button.product_orders"} defaultMessage={"Commandes de produit"} description={"Button - Product orders"}/>
-              </DropdownItem>
-              <DropdownItem divider></DropdownItem>
-              <DropdownItem>
-                { user && user.roles.includes('ROLE_SUPPLIER')
-                  ? (
-                    <NavLink tag={RRDNavLink} to={{pathname: "/supplier_orders/", state: { from : window.location.pathname }}}>
-                      <FontAwesomeIcon icon={"shopping-cart"} className={"mr-2"}/>
-                      <FormattedMessage id={"app.button.all_orders"} defaultMessage={"Toutes les commandes"} description={"Button - All orders"}/>
-                    </NavLink>
-                  )
-                  : (
-                    <NavLink tag={RRDNavLink} to={{pathname: "/customer_orders/", state: { from : window.location.pathname }}}>
-                      <FontAwesomeIcon icon={"shopping-cart"} className={"mr-2"}/>
-                      <FormattedMessage id={"app.button.all_orders"} defaultMessage={"Toutes les commandes"} description={"Button - All orders"}/>
-                    </NavLink>
-                  )}
-
-              </DropdownItem>
-              <DropdownItem>
-                <NavLink tag={RRDNavLink} to={{pathname: "/orders/recent", state: { from : window.location.pathname }}}>
-                  <FontAwesomeIcon icon={"cart-plus"} className={"mr-2"}/>
-                  <FormattedMessage id={"app.button.new_orders"} defaultMessage={"Nouvelles commandes"} description={"Button - New orders"}/>
-                </NavLink>
-              </DropdownItem>
-              <DropdownItem>
-                <NavLink tag={RRDNavLink} to={{pathname: "/orders/pending", state: { from : window.location.pathname }}}>
-                  <FontAwesomeIcon icon={"dolly-flatbed"} className={"mr-2"}/>
-                  <FormattedMessage id={"app.button.pending_orders"} defaultMessage={"Commandes en cours"} description={"Button - Pending orders"}/>
-                </NavLink>
-              </DropdownItem>
-              <DropdownItem>
-                <NavLink tag={RRDNavLink} to={{pathname: "/orders/delivered", state: { from : window.location.pathname }}}>
-                  <FontAwesomeIcon icon={"truck-loading"} className={"mr-2"}/>
-                  <FormattedMessage id={"app.button.delivered_orders"} defaultMessage={"Commandes livrées"} description={"Button - Delivered orders"}/>
-                </NavLink>
-              </DropdownItem>
-              <DropdownItem divider />
-              <DropdownItem>
-                <NavLink tag={RRDNavLink} to={{pathname: "/orders/complaint", state: { from : window.location.pathname }}}>
-                  <FontAwesomeIcon icon={"comments"}  className={"mr-2"}/>
-                  <FormattedMessage id={"app.button.orders_in_dispute"} defaultMessage={"Commandes en litiges"} description={"Button - Orders in dispute"}/>
-                </NavLink>
-              </DropdownItem>
-            </DropdownMenu>
-          </UncontrolledButtonDropdown>
+              <FormattedMessage id={"app.button.my_orders"} defaultMessage={"Mes commandes"} description={"Button - All orders"}/>
+            </Button>
+          </NavLink>
           {/*-- Menu - delivery --*/}
           <UncontrolledButtonDropdown>
             <DropdownToggle outline className={'text-primary'}>

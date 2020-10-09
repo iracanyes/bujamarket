@@ -41,7 +41,7 @@ class Shipper
     private $socialReason;
 
     /**
-     * @var string $service Service offered by this shipper
+     * @var string $service Domain offered by this shipper
      *
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank()

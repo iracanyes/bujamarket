@@ -73,8 +73,8 @@ class BankAccount
      * @Assert\Range(
      *     min=0,
      *     max=12,
-     *     minMessage="The minimum value for the expiry month is {{ limit }}. \n The current value is {{ value }}",
-     *     maxMessage="The maximum value for the expiry month is {{ limit }}.\nThe current value is {{ value }}"
+     *     notInRangeMessage="The expiry month limit is {{ limit }}. \n The current value is {{ value }}",
+     *
      * )
      * @Groups({"profile:output"})
      */
@@ -88,8 +88,8 @@ class BankAccount
      * @Assert\Range(
      *     min=2019,
      *     max=3000,
-     *     minMessage="The minimum value for the expiry year is {{ limit }}.\nThe current value is {{ value }}",
-     *     maxMessage="The maximum value for the expiry year is {{ limit }}.\nThe current value is {{ value }}"
+     *     notInRangeMessage="The expiry year limit is {{ limit }}.\nThe current value is {{ value }}",
+     *
      * )
      * @Groups({"profile:output"})
      */

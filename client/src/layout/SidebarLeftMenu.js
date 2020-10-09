@@ -25,6 +25,8 @@ class SidebarLeftMenu extends Component
   render()
   {
     const { connectedUser } = this.props;
+
+    console.log('connectedUser', connectedUser);
     //
     // const user = connectedUser.token ? JSON.parse(atob(connectedUser.token.split(".")[1])) : null;
 
@@ -33,7 +35,7 @@ class SidebarLeftMenu extends Component
     return <Fragment>
 
       {
-        user && user.roles.includes('ROLE_CUSTOMER') && <MenuCustomer/>
+        (connectedUser && (user && user.roles.includes('ROLE_CUSTOMER'))) && <MenuCustomer/>
       }
       {
         user && user.roles.includes('ROLE_SUPPLIER') && <MenuSupplier/>

@@ -41,6 +41,7 @@ export function retrieve(id, history, location) {
         if(e.code === 401)
         {
           dispatch(error("Authentification nécessaire avant de poursuivre!"));
+          dispatch(error(null));
           history.push({pathname: '../../login', state: { from : location.pathname }});
         }
 

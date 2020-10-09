@@ -29,8 +29,7 @@ class Comment
      * @Assert\Range(
      *     min=0,
      *     max=10,
-     *     minMessage="The minimum value is {{ limit }}.\nThe current value is {{ value }}",
-     *     maxMessage="he maximum value is {{ limit }}.\nThe current value is {{ value }}"
+     *     notInRangeMessage="The rating's limit is {{ limit }}.\nThe current value is {{ value }}"
      * )
      */
     private $rating;
@@ -68,6 +67,12 @@ class Comment
      * @Assert\NotNull()
      */
     private $supplierProduct;
+
+    /**
+     * @ORM\OneToOne(targetEntity=OrderDetail::class, inversedBy="comment", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $orderDetail;
 
     public function getId(): ?int
     {
@@ -130,6 +135,18 @@ class Comment
     public function setSupplierProduct(?SupplierProduct $supplierProduct): self
     {
         $this->supplierProduct = $supplierProduct;
+
+        return $this;
+    }
+
+    public function getOrderDetail(): ?OrderDetail
+    {
+        return $this->orderDetail;
+    }
+
+    public function setOrderDetail(OrderDetail $orderDetail): self
+    {
+        $this->orderDetail = $orderDetail;
 
         return $this;
     }

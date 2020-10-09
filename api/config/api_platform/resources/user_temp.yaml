@@ -19,8 +19,7 @@ App\Entity\UserTemp:
             defaults:
                 _api_receive: false
             schemes: ['https']
-            #controller: App\Controller\User\CreateMember::class
-            controller: App\Controller\User\CreateMemberAction
+            controller: App\Action\User\CreateMemberAction
         post_by_token:
             method: 'POST'
             path: '/user_temp.{_format}'
@@ -30,7 +29,7 @@ App\Entity\UserTemp:
                 _format: 'json'
             schemes: ['https']
             security: "is_granted('IS_AUTHENTICATED_ANONYMOUSLY')"
-            controller: App\Controller\User\GetUserTempAction
+            controller: App\Action\User\GetUserTempAction
     itemOperations:
         get: ~            
         delete:

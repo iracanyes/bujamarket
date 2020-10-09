@@ -91,7 +91,7 @@ class User implements UserInterface
      * @Assert\Range(
      *     min=0,
      *     max=5,
-     *     minMessage="The minimum value is {{ limit }}.\nThe current value is {{ value }}."
+     *     notInRangeMessage="The minimum value is {{ limit }}.\nThe current value is {{ value }}."
      * )
      */
     private $nbErrorConnection;

@@ -21,7 +21,7 @@ App\Entity\Forum:
             path: '/forum/create'
             security: "is_granted('ROLE_MEMBER') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
             schemes: ['https']
-            controller: App\Controller\Forum\CreateForum::class
+            controller: App\Action\Forum\CreateForum::class
     itemOperations:
         get:
             method: 'GET'

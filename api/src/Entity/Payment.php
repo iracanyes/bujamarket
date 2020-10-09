@@ -75,7 +75,7 @@ class Payment
      * @ORM\Column(type="float")
      * @Assert\Range(
      *     min=0.0,
-     *     minMessage="The minimum value is {{ limit }}.\nThe current value is {{ value }}"
+     *     notInRangeMessage="The minimum value is {{ limit }}.\nThe current value is {{ value }}"
      * )
      * @Groups({"payment:output"})
      */
@@ -87,7 +87,7 @@ class Payment
      * @ORM\Column(type="float")
      * @Assert\Range(
      *     min=0.0,
-     *     minMessage="The minimum value is {{ limit }}.\nThe current value is {{ value }}"
+     *     notInRangeMessage="The minimum value is {{ limit }}.\nThe current value is {{ value }}"
      * )
      * @Groups({"payment:output"})
      */

@@ -19,7 +19,7 @@ App\Entity\SupplierProduct:
             path: '/my_products'
             schemes: ['https']
             security: "is_granted('ROLE_SUPPLIER') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
-            controller: App\Controller\SupplierProduct\GetMyProductsAction 
+            controller: App\Action\SupplierProduct\GetMyProductsAction 
         product_suppliers:
             method: 'GET'
             path: '/products/{id}/all_suppliers'
@@ -28,7 +28,7 @@ App\Entity\SupplierProduct:
             #defaults:
             #    _api_receive: false
             schemes: [ 'https' ]
-            controller: App\Controller\Product\GetProductSuppliersAction
+            controller: App\Action\Product\GetProductSuppliersAction
         post:
             method: 'POST'
             path: '/supplier_product/create'
@@ -36,7 +36,7 @@ App\Entity\SupplierProduct:
                 _api_receive: false
             security: "is_granted('ROLE_SUPPLIER') and is_granted('ROLE_PUBLISHER') and is_granted('IS_AUTHENTICATED_FULLY')"            
             schemes: ['https']
-            controller: App\Controller\SupplierProduct\CreateSupplierProductAction
+            controller: App\Action\SupplierProduct\CreateSupplierProductAction
             deserialize: false
             validation_groups: ['Default']
             openapi_context:
@@ -63,7 +63,7 @@ App\Entity\SupplierProduct:
                 id: '\d+'
             security: "is_granted('ROLE_SUPPLIER') and is_granted('ROLE_PUBLISHER') and is_granted('IS_AUTHENTICATED_FULLY')"
             schemes: ['https']
-            controller: App\Controller\SupplierProduct\UpdateSupplierProductAction
+            controller: App\Action\SupplierProduct\UpdateSupplierProductAction
             deserialize: false
             validation_groups: ['Default']
             openapi_context:
@@ -98,7 +98,7 @@ App\Entity\SupplierProduct:
             #options:
             #    my_option: 'my_option_value'
             status: 200 # customize the HTTP status code to send
-            controller: App\Controller\SupplierProduct\GetSupplierProductAction
+            controller: App\Action\SupplierProduct\GetSupplierProductAction
         put:
             method: 'PUT'
             path: '/supplier_product/{id}'
@@ -113,7 +113,7 @@ App\Entity\SupplierProduct:
                 id: '\d+'
             security: "is_granted('ROLE_SUPPLIER') and is_granted('ROLE_PUBLISHER') and is_granted('IS_AUTHENTICATED_FULLY')"
             schemes: ['https']
-            controller: App\Controller\SupplierProduct\DeleteAction
+            controller: App\Action\SupplierProduct\DeleteAction
     subresourceOperations:
         supplier_get_subresource:
             method: 'GET'

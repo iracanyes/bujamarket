@@ -18,37 +18,36 @@ export function success(retrieved) {
   return { type: 'IMAGE_SUPPLIER_SUCCESS', retrieved };
 }
 
-export function getSupplierImage(id) {
+export function getSupplierImage(id, history, location) {
   return dispatch => {
     dispatch(loading(true));
 
-    const headers = authHeader();
+    const headers = authHeader(history, location);
 
-    return fetch('/image_supplier/'+ id , { method: 'GET', headers })
-      .then(response => response.body)
+    return fetch('/supplier/'+ id +'/image', { method: 'GET', headers })
+      .then(response => {
+        return response.body
+      })
       .then(stream => new Response(stream))
-      .then(response => response.blob())
+      .then(response => {
+        return response.blob()
+      })
       .then(blob => URL.createObjectURL(blob))
       .then(url => {
         dispatch(loading(false));
         dispatch(success(url));
-
       })
       .catch(e => {
         dispatch(loading(false));
 
-        if(typeof e == 'string')
-        {
-          dispatch(error(e));
-        }else{
-          if(e["hydra:description"])
-          {
+        switch (true){
+          case typeof e["hydra:description"] === "string":
             dispatch(error(e["hydra:description"]));
-          }else{
+            break;
+          case typeof e.message === "string":
             dispatch(error(e.message));
-          }
+            break;
         }
-        dispatch(error(null));
       });
   };
 }
@@ -59,7 +58,7 @@ export function reset(eventSource) {
     if (eventSource) eventSource.close();
 
     dispatch({ type: 'IMAGE_SUPPLIER_RESET' });
-    dispatch(error(null));
+    dispatch(error(""));
     dispatch(loading(false));
   };
 }

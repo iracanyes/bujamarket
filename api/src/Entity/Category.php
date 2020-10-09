@@ -74,8 +74,7 @@ class Category
      * @Assert\Range(
      *     min=0.0 ,
      *     max=0.95,
-     *     minMessage="The minimum value is {{ limit }}. Your value is {{ value }}",
-     *     maxMessage="The maximum value is {{ limit }}. Your value is {{ value }}"
+     *     notInRangeMessage="The value's limit is {{ limit }}. Your value is {{ value }}"
      * )
      * @Groups({"category:output"})
      *

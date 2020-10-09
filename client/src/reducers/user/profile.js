@@ -3,8 +3,6 @@ import { combineReducers } from 'redux';
 export function error(state = null, action) {
   switch (action.type) {
     case 'USER_PROFILE_ERROR':
-      console.log('reducer - action', action);
-      console.log("reducer state",state);
       return action.error;
 
     case 'USER_PROFILE_MERCURE_DELETED':

@@ -22,7 +22,7 @@ App\Entity\ShoppingCartDetail:
                 _api_receive: false
             security: "is_granted('ROLE_CUSTOMER') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
             schemes: ['https']
-            controller: App\Controller\ShoppingCart\CreateShoppingCartAction
+            controller: App\Action\ShoppingCart\CreateShoppingCartAction
     itemOperations:
         get:
             method: 'GET'

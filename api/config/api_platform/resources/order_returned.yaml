@@ -20,7 +20,7 @@ App\Entity\OrderReturned:
             path: '/returned_order/create'
             security: "is_granted('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
             schemes: ['https']
-            controller: App\Controller\OrderReturned\CreateOrderReturned::class
+            controller: App\Action\OrderReturned\CreateOrderReturned::class
     itemOperations:
         get:
             method: 'GET'

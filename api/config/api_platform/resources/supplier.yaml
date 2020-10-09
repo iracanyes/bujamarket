@@ -24,7 +24,7 @@ App\Entity\Supplier:
                 supplier: App\Entity\Supplier
             security: "is_granted('ROLE_SUPPLIER') and is_granted('IS_AUTHENTICATED_FULLY')"
             schemes: ['https']
-            controller: App\Controller\Supplier\CreateSupplier::class
+            controller: App\Action\Supplier\CreateSupplier::class
     itemOperations:
         get:
             method: 'GET'
@@ -63,3 +63,4 @@ App\Entity\Supplier:
             requirements:
                 id: '\d+'
                 _format: 'json\jsonld\html'
+        

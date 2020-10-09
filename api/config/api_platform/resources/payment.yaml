@@ -23,21 +23,21 @@ App\Entity\Payment:
                 _api_receive: false
             security: "is_granted('ROLE_CUSTOMER') and is_granted('IS_AUTHENTICATED_FULLY')"
             schemes: ['https']
-            controller: App\Controller\Payment\CreatePaymentAction
+            controller: App\Action\Payment\CreatePaymentAction
         checkoutSessionCompleted:
             method: 'POST'
             path: '/validate_payment'
             defaults:
                 _api_receive: false
             schemes: ['https']
-            controller: App\Controller\Stripe\Webhook\CheckoutSessionCompletedAction
+            controller: App\Action\Stripe\Webhook\CheckoutSessionCompletedAction
         paymentSuccess:
             method: 'POST'
             path: '/payment_success'
             defaults:
                 _api_receive: false
             schemes: ['https']
-            controller: App\Controller\Payment\GetPaymentSuccessAction
+            controller: App\Action\Payment\GetPaymentSuccessAction
     itemOperations:
         get:
             method: 'GET'

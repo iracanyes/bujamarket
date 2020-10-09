@@ -61,7 +61,7 @@ class Profile extends Component {
 
   componentDidMount() {
     this.props.getProfile(this.props.history, this.props.location);
-    if(this.props.retrievedImage === null)
+    if(this.props.retrievedImage == null)
       this.props.getProfileImage(this.props.history, this.props.location);
   }
 
@@ -72,13 +72,15 @@ class Profile extends Component {
 
   render() {
 
-    const item = this.props.retrieved && this.props.retrieved['hydra:member'][0];
+    const item = this.props.retrieved && this.props.retrieved;
     const { error, loading, retrievedImage, loadingImage } = this.props;
     const { activeTab } = this.state;
     const image = this.props.retrievedImage && this.props.retrievedImage;
 
     /* Affichage des erreurs */
-    error && toastError(error);
+    (error && error.length > 0 ) && toastError(error);
+
+    console.log('render - retrieved', item);
 
     return (
       <Fragment>
