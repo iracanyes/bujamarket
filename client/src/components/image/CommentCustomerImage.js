@@ -1,4 +1,4 @@
-import React, {Component } from "react";
+import React, {Component, Fragment } from "react";
 import { connect } from "react-redux";
 import { getCustomerImage, reset } from "../../actions/image/commentImage";
 import {toastError} from "../../layout/ToastMessage";
@@ -13,24 +13,37 @@ class CommentCustomerImage extends Component
   }
 
   componentWillUnmount() {
+    this.props.images.map(el => URL.revokeObjectURL(el.url));
     this.props.reset(this.props.eventSource);
   }
 
   render(){
-    const { retrieved, loading, error, comment } = this.props;
+    const { images, loading, error, comment } = this.props;
 
     (error && error.length > 0) && toastError(error);
 
-    if(loading)
-      return <SpinnerLoading message={'Chargement image client'}/>
-    else
-      return <Avatar src={retrieved} alt={comment.alt}/>
+    let retrieved = [];
+    retrieved = images !== [] ? images.filter(el => el.id === this.props.id) : [];
+    console.log('retrieved image', images);
+    console.log('retrieved image', retrieved);
+
+    return (
+      <Fragment>
+        {(retrieved !== [] && retrieved[0] && retrieved[0].id === this.props.id) ? (<Avatar src={retrieved[0].url} alt={comment.alt}/>) : (<Avatar src={null} alt={comment.alt}/>)}
+      </Fragment>
+    );
   }
 }
 
+let images = [];
+
 const mapStateToProps = state => {
   const { retrieved, loading, error } = state.image.commentImage;
-  return { retrieved, loading, error };
+  // Ajouter l'image récupérée dans le tableau des images de client qui ont commenté le produit
+  if(retrieved !== null && images.filter(el => el.id === retrieved.id).length === [].length)
+    images.push(retrieved);
+
+  return { images, loading, error };
 };
 
 const mapDispatchToProps = dispatch => ({

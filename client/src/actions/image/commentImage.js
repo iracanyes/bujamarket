@@ -24,7 +24,7 @@ export function getCustomerImage(id, history, location) {
 
     const headers = authHeader(history, location);
 
-    return fetch('/comment/'+ id +'/customer_image', { method: 'GET', headers })
+    return fetch('/comment/'+ id + '/customer_image', { method: 'GET', headers })
       .then(response => {
         return response.body
       })
@@ -35,7 +35,7 @@ export function getCustomerImage(id, history, location) {
       .then(blob => URL.createObjectURL(blob))
       .then(url => {
         dispatch(loading(false));
-        dispatch(success(url));
+        dispatch(success({'id': id, url}));
       })
       .catch(e => {
         dispatch(loading(false));
@@ -48,6 +48,7 @@ export function getCustomerImage(id, history, location) {
             dispatch(error(e.message));
             break;
         }
+        dispatch(error(null));
       });
   };
 }

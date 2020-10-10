@@ -60,14 +60,14 @@ class JsonResponder
         );
     }
 
-    public function arrayResult($entityContext,array $collection, $status = 200){
+    public function arrayResult(array $collection, array $context = [], $status = 200){
         $shortName = $this->getClassShortName($collection[0]);
         return new JsonResponse(
             [
                 '@context' => '/contexts/'.$shortName,
                 '@id' => '/'.$this->camelToUnderscore($shortName).'s',
                 '@type' => 'hydra:Collection',
-                'hydra:member' => $collection
+                'hydra:member' => $this->normalize($collection, $context !== [] ? $context : null)
             ],
             $status
         );

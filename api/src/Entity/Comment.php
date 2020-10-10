@@ -5,9 +5,13 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
+ * @ApiResource(attributes={
+ *     "normalization_context"={"groups"={"comment:output"}},
+ *     "denormalization_context"={"groups"={"comment:input"}}
+ * })
  * @ORM\Table(name="bjmkt_comment")
  * @ORM\Entity(repositoryClass="App\Repository\CommentRepository")
  */
@@ -19,6 +23,7 @@ class Comment
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"comment:output"})
      */
     private $id;
 
@@ -31,6 +36,7 @@ class Comment
      *     max=10,
      *     notInRangeMessage="The rating's limit is {{ limit }}.\nThe current value is {{ value }}"
      * )
+     * @Groups({"comment:output"})
      */
     private $rating;
 
@@ -39,6 +45,7 @@ class Comment
      *
      * @ORM\Column(type="text")
      * @Assert\NotBlank()
+     * @Groups({"comment:output"})
      */
     private $content;
 
@@ -47,6 +54,7 @@ class Comment
      *
      * @ORM\Column(type="datetime")
      * @Assert\Type("DateTime")
+     * @Groups({"comment:output"})
      */
     private $dateCreated;
 
@@ -56,6 +64,7 @@ class Comment
      * @ORM\ManyToOne(targetEntity="App\Entity\Customer", inversedBy="comments")
      * @ORM\JoinColumn(nullable=false)
      * @Assert\NotNull()
+     * @Groups({"comment:output"})
      */
     private $customer;
 

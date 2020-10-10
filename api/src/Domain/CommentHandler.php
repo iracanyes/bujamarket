@@ -49,13 +49,8 @@ class CommentHandler
 
         dump($comments);
 
-        foreach($comments as $comment){
-            $this->imageHandler->setCommentCustomerImagePublicDirectory($comment);
-        }
 
-        return $this->jsonResponder->success([
-            "hydra:member" => $comments
-        ]);
+        return $this->jsonResponder->arrayResult($comments, ["groups" => ['comment:output']]);
     }
 
     public function createComment()

@@ -71,7 +71,7 @@ class User implements UserInterface
      *
      * @ORM\Column(type="string", length=100)
      * @Assert\NotBlank()
-     * @Groups({"profile:output","user:output","admin:output","customer:output","supplier:output","user:input","payment:output"})
+     * @Groups({"profile:output","user:output","admin:output","customer:output","supplier:output","user:input","payment:output","comment:output"})
      *
      */
     private $firstname;
@@ -156,7 +156,7 @@ class User implements UserInterface
      * @ORM\OneToOne(targetEntity="App\Entity\Image", inversedBy="user", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=true)
      * @Assert\Type("App\Entity\Image")
-     * @Groups({"profile:output","user:output","admin:output","customer:output","supplier:output","user:input"})
+     * @Groups({"profile:output","user:output","admin:output","customer:output","supplier:output","user:input","comment:output"})
      */
     private $image;
 

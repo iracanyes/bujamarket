@@ -289,11 +289,13 @@ class ImageHandler
 
     public function getCommentCustomerImage()
     {
+        // comment id
         $id = $this->request->attributes->get('id');
+        dump($id);
 
         try{
             $comment = $this->em->getRepository(Comment::class)
-                ->getCustomerImage($id);
+                ->getCustomerImage((int) $id);
 
             dump($comment);
 
