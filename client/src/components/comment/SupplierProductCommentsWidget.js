@@ -14,6 +14,7 @@ import CommentCustomerImage from "../image/CommentCustomerImage";
 class SupplierProductCommentsWidget extends Component
 {
   static propTypes = {
+    id: PropTypes.number.isRequired,
     retrieved: PropTypes.object,
     loading: PropTypes.bool.isRequired,
     error: PropTypes.string,

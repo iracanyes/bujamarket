@@ -179,40 +179,6 @@ class SidebarLeftMenu extends Component
               </DropdownItem>
             </DropdownMenu>
           </UncontrolledButtonDropdown>
-          {/*-- Menu - bills --*/}
-          <UncontrolledButtonDropdown>
-            <DropdownToggle outline className={'text-primary'}>
-              <FontAwesomeIcon icon={"dollar-sign"}  className={"mr-2"}/>
-              <FormattedMessage id={"app.button.bills"} defaultMessage={"Factures"} description={"Button - Bills"}/>
-            </DropdownToggle>
-            <DropdownMenu className={'bg-dark text-secondary'} >
-              <DropdownItem header>
-                <FontAwesomeIcon icon={"money-check-alt"}  className={"mr-2"}/>
-                <FormattedMessage id={"app.button.received_payments"} defaultMessage={"Paiments perçus sur la plateforme"} description={"Button - Received payments"}/>
-              </DropdownItem>
-              <DropdownItem divider></DropdownItem>
-              <DropdownItem>
-                <NavLink tag={RRDNavLink} to={{pathname: "/payments", state: { from : window.location.pathname }}}>
-                  <FontAwesomeIcon icon={"hand-holding-usd"} className={"mr-2"}/>
-                  <FormattedMessage id={"app.button.all_payments_received"} defaultMessage={"Ensemble des paiements perçus"} description={"Button - All payments received"}/>
-                </NavLink>
-              </DropdownItem>
-              <DropdownItem>
-                <NavLink tag={RRDNavLink} to={{pathname: "/pending_payments", state: { from : window.location.pathname }}}>
-                  <FontAwesomeIcon icon={"hand-holding-usd"} className={"mr-2"}/>
-                  <FormattedMessage id={"app.button.pending_payments"} defaultMessage={"Paiments en cours de traitement"} description={"Button - Pending payment"}/>
-                </NavLink>
-              </DropdownItem>
-              <DropdownItem divider />
-              <DropdownItem>
-                <NavLink tag={RRDNavLink} to={{pathname: "/payments/conflict", state: { from : window.location.pathname }}}>
-                  <FontAwesomeIcon icon={"comments-dollar"} className={"mr-2"} />
-                  <FormattedMessage id={"app.button.disputed_payments"} defaultMessage={"Paiements en litiges"} description={"Button - Disputed payments"}/>
-                </NavLink>
-              </DropdownItem>
-            </DropdownMenu>
-          </UncontrolledButtonDropdown>
-          {/*-- End Menu - bills --*/}
           {/*-- Menu - Favorites --*/}
           <UncontrolledButtonDropdown>
             <DropdownToggle outline className={'text-primary'}>

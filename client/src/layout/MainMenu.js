@@ -16,8 +16,13 @@ import {
   DropdownMenu,
   DropdownItem
 } from 'reactstrap';
+import {
+  Tooltip,
+  IconButton
+} from "@material-ui/core";
+import {BsPeopleCircle, FcAbout, GiGlassHeart, SiWechat, TiShoppingCart} from "react-icons/all";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, injectIntl } from "react-intl";
 import { logout } from "../actions/user/login";
 
 
@@ -49,29 +54,32 @@ class MainMenu extends Component
 
   render()
   {
-
+    const { intl } = this.props;
     const  user  = localStorage.getItem('token') !== null ? JSON.parse(atob(localStorage.getItem('token').split('.')[1])) : null;
 
 
     return <Fragment>
-
       <NavbarToggler onClick={this.toggle} />
       <Collapse isOpen={this.state.isOpen} navbar>
         <Nav className="ml-auto w-100" navbar>
           <UncontrolledDropdown nav inNavbar>
             <DropdownToggle nav caret>
-
-                <FontAwesomeIcon icon="user-alt" className="menu-top-l1"/>
-                <span className="main-menu-top-level-text">
-                  { user !== null
+              <Tooltip
+                placement={'top'}
+                title={
+                  user !== null
                     ? (user.name[0].toUpperCase() + user.name.slice(1))
-                    : <FormattedMessage  id={"app.button.profile"}
-                                         defaultMessage="Profil"
-                                         description="Main menu profil navigation link"
-                                         className="main-menu-top-level-text"
-                    />
-                  }
-                </span>
+                    : intl.formatMessage({
+                      id:'app.button.profile',
+                      defaultMessage:"Profil",
+                      description:"Button - Profil"
+                    })
+                }
+              >
+                <IconButton color={'primary'}>
+                  <BsPeopleCircle />
+                </IconButton>
+              </Tooltip>
             </DropdownToggle>
             <DropdownMenu  >
               { user ===  null && (
@@ -143,52 +151,68 @@ class MainMenu extends Component
             <Fragment>
               <NavItem>
                 <NavLink tag={RRDNavLink} to={"/favorites"}>
-                  <FontAwesomeIcon icon="heart" className="menu-top-l1" />
-                  <FormattedMessage  id={"app.button.favorite"}
-                                     defaultMessage="Favoris"
-                                     description="Button - Favorite"
-                                     className="main-menu-top-level-text"
-                  />
+                  <Tooltip placement={'top'} title={intl.formatMessage({
+                    id:'app.button.favorite',
+                    defaultMessage:"Favoris",
+                    description:"Button - Favorite"
+                  })}>
+                    <IconButton color={'primary'}>
+                      <GiGlassHeart />
+                    </IconButton>
+                  </Tooltip>
                 </NavLink>
               </NavItem>
 
               <NavItem>
                 <NavLink tag={RRDNavLink} to={"/shopping_cart"}>
-                  <FontAwesomeIcon icon="shopping-cart" className="menu-top-l1" />
-                  <FormattedMessage  id={"app.button.shopping_cart"}
-                                     defaultMessage={"Panier de commande"}
-                                     description="Button - shopping cart"
-                                     className="main-menu-top-level-text"
-                  />
+                  <Tooltip placement={'top'} title={intl.formatMessage({
+                    id:'app.button.shopping_cart',
+                    defaultMessage:"Panier de commande",
+                    description:"Button - shopping cart"
+                  })}>
+                    <IconButton color={'primary'}>
+                      <TiShoppingCart />
+                    </IconButton>
+                  </Tooltip>
                 </NavLink>
               </NavItem>
             </Fragment>
           )}
           <NavItem>
             <NavLink tag={RRDNavLink} to={"/chat"}>
-              <FontAwesomeIcon icon="comments" className="menu-top-l1" />
-              <FormattedMessage  id={"app.button.chat"}
-                                 defaultMessage={"Chat"}
-                                 description="Button - Chat"
-                                 className="main-menu-top-level-text"
-              />
+              <Tooltip
+                placement={'top'}
+                title={intl.formatMessage({
+                  id:'app.button.chat',
+                  defaultMessage:"Chat",
+                  description:"Button - Chat"
+                })}
+              >
+                <IconButton color={'primary'}>
+                  <SiWechat />
+                </IconButton>
+              </Tooltip>
             </NavLink>
           </NavItem>
           <NavItem>
             <NavLink tag={RRDNavLink} to={"/about_us"}>
-              <FontAwesomeIcon icon="heart" className="menu-top-l1" />
-              <FormattedMessage  id={"app.button.about_us"}
-                                 defaultMessage={"A propos de nous"}
-                                 description="Button - About us"
-                                 className="main-menu-top-level-text"
-              />
+              <Tooltip
+                placement={'top'}
+                title={intl.formatMessage({
+                  id:'app.button.about_us',
+                  defaultMessage:"A propos de nous",
+                  description:"Button - About us"
+                })}
+              >
+                <IconButton color={'primary'}>
+                  <FcAbout />
+                </IconButton>
+              </Tooltip>
             </NavLink>
           </NavItem>
 
         </Nav>
       </Collapse>
-
-
     </Fragment>
   }
 }
@@ -197,4 +221,4 @@ const mapDispatchToProps = dispatch => ({
   logout: () => dispatch(logout())
 });
 
-export default withRouter(connect(null, mapDispatchToProps)(MainMenu));
+export default withRouter(connect(null, mapDispatchToProps)(injectIntl(MainMenu)));
