@@ -28,7 +28,7 @@ class Customer extends User
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"customer:output"})
+     * @Groups({"customer:output","comment:output"})
      */
     private $id;
 

@@ -52,7 +52,7 @@ class SupplierProductCommentsWidget extends Component
 
               <div className="comment-inner w-100 ml-2">
                 <div className="review-title">
-                  <h2>{item.lastname}</h2>
+                  <h2>{item.customer.firstname}</h2>
                   {/*
                   <span className="report">
                       <span className="separator">&#8226;</span>
