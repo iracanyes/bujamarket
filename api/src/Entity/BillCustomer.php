@@ -21,6 +21,7 @@ class BillCustomer extends  Bill
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"bill_customer:output", "order_set:output"})
      */
     private $id;
 

@@ -1,4 +1,5 @@
 import React, {Component, Fragment } from "react";
+import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { getCustomerImage, reset } from "../../actions/image/commentImage";
 import {toastError} from "../../layout/ToastMessage";
@@ -8,6 +9,14 @@ import { Avatar } from "@material-ui/core";
 
 class CommentCustomerImage extends Component
 {
+  static propTypes = {
+    id: PropTypes.number.isRequired,
+    comment: PropTypes.object.isRequired,
+    getCustomerImage: PropTypes.func,
+    images: PropTypes.object,
+    error: PropTypes.string,
+    loading: PropTypes.bool.isRequired
+  };
   componentDidMount() {
     this.props.getCustomerImage(this.props.id, this.props.history, this.props.location);
   }
@@ -24,8 +33,6 @@ class CommentCustomerImage extends Component
 
     let retrieved = [];
     retrieved = images !== [] ? images.filter(el => el.id === this.props.id) : [];
-    console.log('retrieved image', images);
-    console.log('retrieved image', retrieved);
 
     return (
       <Fragment>

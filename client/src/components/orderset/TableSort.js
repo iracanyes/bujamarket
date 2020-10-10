@@ -39,7 +39,10 @@ import {
   RiSecurePaymentLine,
   RiSlideshowLine,
   GiReturnArrow,
-  IoMdCheckboxOutline, FaBox, FcShipped
+  ImCloudDownload,
+  IoMdCheckboxOutline,
+  FaBox,
+  FcShipped
 } from "react-icons/all";
 import {
   BiMessageError,
@@ -49,6 +52,7 @@ import {
 import { Link } from 'react-router-dom';
 import {FormattedMessage} from "react-intl";
 import {Create} from "../comment";
+import DownloadBill from "../billcustomer/DownloadBill";
 
 function createData(id, dateCreated, paymentStatus, allShipped,  allReceived, nbPackage, totalWeight, totalCost, orderDetails) {
   return { id, dateCreated, paymentStatus, allShipped,  allReceived, nbPackage, totalWeight, totalCost, orderDetails};
@@ -334,7 +338,7 @@ function TableSubRow(props){
         <TableCell>
           {props.item.quantity}
         </TableCell>
-        <TableCell>
+        <TableCell style={{padding: 'unset'}}>
           {props.item.supplierProduct.finalPrice.toFixed(2) + ' €'}
         </TableCell>
         <TableCell style={{ display: 'flex'}}>
@@ -469,6 +473,9 @@ function TableRowItem(props){
                 <RiSecurePaymentLine className={classes.iconSecurePayment}/>
               </IconButton>
             </Tooltip>
+          )}
+          {(props.row.paymentStatus === "completed" && props.my_orders[props.index].billCustomer) && (
+            <DownloadBill url={props.my_orders[props.index].billCustomer.url} />
           )}
           <Tooltip title={'Contact'} placement={'top'}>
             <IconButton
@@ -619,6 +626,10 @@ function TableSort(props) {
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
+        <FormControlLabel
+          control={<Switch checked={dense} onChange={handleChangeDense} />}
+          label="Densité affichage"
+        />
         <EnhancedTableToolbar numSelected={selected.length} />
         <TableContainer>
           <Table
@@ -669,10 +680,7 @@ function TableSort(props) {
           onChangeRowsPerPage={handleChangeRowsPerPage}
         />
       </Paper>
-      <FormControlLabel
-        control={<Switch checked={dense} onChange={handleChangeDense} />}
-        label="Densité affichage"
-      />
+
     </div>
   );
 }

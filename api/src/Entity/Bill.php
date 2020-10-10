@@ -32,6 +32,7 @@ class Bill
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"order_set:output"})
      */
     private $id;
 
@@ -112,7 +113,7 @@ class Bill
      *
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank()
-     * @Groups({"bill_customer:output","bill_refund:output","payment:output"})
+     * @Groups({"bill_customer:output","bill_refund:output","payment:output","order_set:output"})
      */
     private $url;
 
