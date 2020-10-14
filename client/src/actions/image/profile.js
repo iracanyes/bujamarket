@@ -1,6 +1,5 @@
 import {
   fetch,
-  extractHubURL,
   normalize,
   mercureSubscribe as subscribe
 } from '../../utils/dataAccess';
@@ -52,6 +51,9 @@ export function getProfileImage(history, location) {
             dispatch(error(e.message));
             break;
           case typeof e === "string":
+            dispatch(error(e));
+            break;
+          default:
             dispatch(error(e));
             break;
         }

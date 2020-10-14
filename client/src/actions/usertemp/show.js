@@ -1,8 +1,4 @@
-import { SubmissionError } from 'redux-form';
 import {extractHubURL, fetch, normalize, mercureSubscribe as subscribe} from '../../utils/dataAccess';
-import React from "react";
-import { toast } from "react-toastify";
-import { toastSuccess, toastError } from "../../layout/ToastMessage";
 
 export function error(error) {
   return { type: 'USER_TEMP_SHOW_ERROR', error };
@@ -55,6 +51,9 @@ export function retrieve(token, history) {
             dispatch(error(e.message));
             break;
           case typeof e === "string":
+            dispatch(error(e));
+            break;
+          default:
             dispatch(error(e));
             break;
         }

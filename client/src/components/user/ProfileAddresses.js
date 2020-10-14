@@ -1,7 +1,7 @@
 import React, { Fragment, Component } from 'react';
 import { connect } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
-import { NavLink as RRDNavLink, withRouter } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import {
   Button,
   Card,
@@ -9,7 +9,6 @@ import {
   CardTitle,
   Table,
   Container,
-  NavLink,
   Modal,
   ModalHeader,
   ModalBody,
@@ -112,7 +111,7 @@ class ProfileAddresses extends  Component{
 
     const retrieved = this.props.retrieved && this.props.retrieved['hydra:member'];
 
-    const { isOpen, modal, addressToUpdate, addressToDelete, deletedAddress, intl } = this.state;
+    const { isOpen, modal, addressToUpdate, addressToDelete } = this.state;
 
     const addresses = this.updateTable(retrieved);
 

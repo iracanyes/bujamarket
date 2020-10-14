@@ -6,12 +6,10 @@
 import React, { Fragment } from 'react';
 import { Link } from "react-router-dom";
 //import { Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
-import CardImg from "reactstrap/es/CardImg";
 import { login, logout } from "../../actions/user/login";
 import { connect } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
 import { Field, reduxForm } from "redux-form";
-import {SpinnerLoading} from "../../layout/Spinner";
 import { Spinner } from "reactstrap";
 import {toastError} from "../../layout/ToastMessage";
 
@@ -107,7 +105,7 @@ class LoginForm extends React.Component {
     return (
       <Fragment>
 
-        <div id={'form-login'} className="col-md-6 mx-auto col-md-offset-3">
+        <div id={'form-login'} className="col-md-6 mx-auto col-md-offset-3" style={{height:"70vh"}}>
           <h1>
             <FormattedMessage  id={"app.page.user.login.title"}
                                defaultMessage="Connexion"

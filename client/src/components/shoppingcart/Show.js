@@ -16,7 +16,6 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FormattedMessage } from 'react-intl';
 import { create } from '../../actions/shoppingcart/create';
-import {SpinnerLoading} from "../../layout/Spinner";
 import {toastError} from "../../layout/ToastMessage";
 
 class Show extends React.Component {

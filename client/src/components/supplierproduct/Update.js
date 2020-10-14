@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Link, Redirect, withRouter } from 'react-router-dom';
-import { reduxForm, Field } from "redux-form";
+import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import SupplierProductForm from './SupplierProductForm';
-import { update, reset, retrieve } from '../../actions/supplierproduct/update';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { reset, retrieve } from '../../actions/supplierproduct/update';
 import { injectIntl, FormattedMessage } from "react-intl";
 import {toastError} from "../../layout/ToastMessage";
 import {SpinnerLoading} from "../../layout/Spinner";
@@ -30,7 +28,7 @@ class Update extends Component {
   }
 
   render() {
-    const { retrieved, retrieveError, retrieveLoading } = this.props;
+    const { retrieveError } = this.props;
 
     // Affichage des erreurs
     retrieveError && toastError(retrieveError);

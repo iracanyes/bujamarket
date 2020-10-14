@@ -14,7 +14,6 @@ import { update, retrieve, reset } from "../../actions/user/update";
 import DropzoneWithPreviews from "../image/dropzone/DropzoneWithPreviews";
 import PropTypes from 'prop-types';
 import { toastError } from "../../layout/ToastMessage";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import * as ISOCountryJson from "../../config/ISOCode/ISO3166-1Alpha2.json";
 
 class UpdateProfile extends React.Component {
@@ -59,8 +58,6 @@ class UpdateProfile extends React.Component {
     e.preventDefault();
 
     this.setState({ submitted: true });
-
-    const { retrieved } = this.props;
 
     // Récupération des données de formulaires
     const data = new FormData(document.getElementById('update-profile-form'));
@@ -109,7 +106,7 @@ class UpdateProfile extends React.Component {
 
 
   render() {
-    const { intl, retrieved, loading, errorRetrieve, loadingUpdate, errorUpdate  } = this.props;
+    const { intl, retrieved, errorRetrieve, errorUpdate  } = this.props;
 
 
     errorUpdate && typeof errorUpdate === "string" && toastError(errorUpdate);

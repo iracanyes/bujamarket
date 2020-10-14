@@ -95,7 +95,6 @@ class AddressHandler
         try{
             $user = $this->em->getRepository(User::class)
                         ->findOneBy(['email' => $user->getUsername()]);
-            dump($user);
             $address->setUser($user);
 
             $this->em->persist($address);
@@ -110,7 +109,6 @@ class AddressHandler
     public function createAddress(): Address
     {
         $data = json_decode($this->request->getContent(), false);
-        dump($data);
         $address = new Address();
         $address->setLocationName($data->locationName)
             ->setStreet($data->street)

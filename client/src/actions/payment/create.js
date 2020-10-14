@@ -1,6 +1,4 @@
-import { SubmissionError } from 'redux-form';
 import { fetch } from '../../utils/dataAccess';
-import {logout} from "../user/login";
 import authHeader from "../../utils/authHeader";
 
 
@@ -56,8 +54,10 @@ export function create(values, history, location, stripe) {
             break;
           case typeof e['hydra:description'] === "string":
           case typeof e.message === "string":
-            console.log("erreur : ", e);
             dispatch(error( "Une erreur est survenue durant le processus de redirection vers la page de paiement Stripe! Contactez l'administrateur de la plateforme"));
+            break;
+          default:
+            dispatch(error(e));
             break;
         }
         dispatch(error(null));

@@ -1,4 +1,4 @@
-import React, { Component,Fragment } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -6,7 +6,6 @@ import { retrieve, reset } from '../../actions/supplierproduct/show';
 import { listBySupplierProductId as listComments, reset as resetComments } from '../../actions/comment/list';
 import Rating from "../../layout/Rating";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Spinner } from "reactstrap";
 import { FormattedMessage } from "react-intl";
 import ButtonAddToFavorite2 from "../favorite/ButtonAddToFavorite2";
 import SupplierProductCommentsWidget from "../comment/SupplierProductCommentsWidget";
@@ -17,7 +16,7 @@ import {SpinnerLoading} from "../../layout/Spinner";
 import AwesomeSlider from "react-awesome-slider";
 import CoreStyles from "react-awesome-slider/src/core/styles.scss";
 import AwesomeSliderStyles from "react-awesome-slider/src/styled/cube-animation/cube-animation.scss";
-import PublicationRules from "./PublicationRules";
+import {IconButton} from "@material-ui/core";
 
 class Show extends Component {
   static propTypes = {
@@ -45,7 +44,7 @@ class Show extends Component {
   }
 
   render() {
-    const { loading, error, retrieved } = this.props;
+    const { error } = this.props;
 
     if (this.props.deleted) return <Redirect to=".." />;
 
@@ -304,11 +303,11 @@ class Show extends Component {
                           <h3>Moyens de paiement acceptés</h3>
 
                           <ul>
-                            <li><a href="#"><FontAwesomeIcon icon={['fab','paypal']}/></a></li>
-                            <li><a href="#"><FontAwesomeIcon icon={['fab',"cc-amex"]} /></a></li>
-                            <li><a href="#"><FontAwesomeIcon icon={['fab',"cc-mastercard"]} /></a></li>
-                            <li><a href="#"><FontAwesomeIcon icon={['fab',"cc-stripe"]} /></a></li>
-                            <li><a href="#"><FontAwesomeIcon icon={['fab',"cc-visa"]} /></a></li>
+                            <li><IconButton color={'primary'} component={'a'}><FontAwesomeIcon icon={['fab','paypal']}/></IconButton></li>
+                            <li><IconButton color={'primary'} component={'a'}><FontAwesomeIcon icon={['fab',"cc-amex"]} /></IconButton></li>
+                            <li><IconButton color={'primary'} component={'a'}><FontAwesomeIcon icon={['fab',"cc-mastercard"]} /></IconButton></li>
+                            <li><IconButton color={'primary'} component={'a'}><FontAwesomeIcon icon={['fab',"cc-stripe"]} /></IconButton></li>
+                            <li><IconButton color={'primary'} component={'a'}><FontAwesomeIcon icon={['fab',"cc-visa"]} /></IconButton></li>
                           </ul>
                         </div>
                       </div>

@@ -48,6 +48,9 @@ export function unsubscribe(history, location) {
           case typeof e === 'string':
             dispatch(error(e));
             break;
+          default:
+            dispatch(error(e));
+            break;
         }
         dispatch(error(null));
       });

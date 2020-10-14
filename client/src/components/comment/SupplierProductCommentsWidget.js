@@ -1,4 +1,4 @@
-import React, {Component, Fragment} from "react";
+import React, {Component} from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import {listBySupplierProductId, reset} from "../../actions/comment/list";
@@ -6,9 +6,6 @@ import {Rating} from "@material-ui/lab";
 import {
   BiMessageCheck
 } from "react-icons/bi";
-import {
-  Avatar
-} from "@material-ui/core";
 import CommentCustomerImage from "../image/CommentCustomerImage";
 
 class SupplierProductCommentsWidget extends Component
@@ -36,8 +33,6 @@ class SupplierProductCommentsWidget extends Component
   render()
   {
     const comments = this.props.retrieved && this.props.retrieved["hydra:member"] ;
-    console.log("comments", comments);
-
 
     return (
       <div>

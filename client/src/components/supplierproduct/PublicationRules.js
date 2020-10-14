@@ -1,7 +1,6 @@
 import React, { Component, Fragment } from "react";
-import { withRouter, NavLink } from "react-router";
+import { withRouter } from "react-router";
 import { injectIntl, FormattedMessage } from "react-intl";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 class PublicationRules extends Component
 {

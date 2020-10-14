@@ -70,8 +70,6 @@ class FavoriteHandler
     public function create()
     {
         $supplierProductId = json_decode($this->request->getContent());
-        dump($this->request->getContent());
-        dump(json_decode($this->request->getContent()));
 
         try{
             $customer = $this->em->getRepository(Customer::class)
@@ -108,7 +106,6 @@ class FavoriteHandler
     public function deleteFavorite()
     {
         $id =( int ) $this->request->attributes->get('id');
-        dump($id);
 
         try{
             $customer = $this->em->getRepository(Customer::class)
@@ -125,14 +122,13 @@ class FavoriteHandler
                 'hydra:description' => sprintf("Customer  not found", $id)
             ],403);
         }
-        dump($customer);
 
 
         try{
 
             $favorite = $this->em->getRepository(Favorite::class)
                 ->getFavorite( $id, $customer->getId() );
-            dump($favorite);
+
             if(!$favorite instanceof Favorite){
                 throw new FavoriteNotFoundException(sprintf("Favorite ID %d not found", $id),404);
             }
@@ -145,7 +141,6 @@ class FavoriteHandler
             ]);
         }
 
-        dump($favorite);
 
         try{
             $this->em->remove($favorite);

@@ -22,7 +22,6 @@ class StreamedResponder
     public function getSupplierImage(User $user, Image $image)
     {
         $uploadHandler = $this->uploadHandler;
-        dump($image);
 
         $response =  new StreamedResponse(function () use ($image, $user, $uploadHandler) {
             $outputStream = fopen('php://output', 'wb');
@@ -35,11 +34,8 @@ class StreamedResponder
 
         $disposition = HeaderUtils::makeDisposition(HeaderUtils::DISPOSITION_ATTACHMENT, $image->getUrl());
 
-        dump($disposition);
 
         $response->headers->set('Content-Disposition', $disposition);
-
-        dump($response);
 
         return $response;
     }

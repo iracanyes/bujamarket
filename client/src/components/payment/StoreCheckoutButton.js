@@ -13,7 +13,6 @@ import {
   Button,
   Spinner
 } from 'reactstrap';
-import { toast } from "react-toastify";
 import {toastError, toastStripePaymentInfo} from "../../layout/ToastMessage";
 import {create} from "../../actions/payment/create";
 
@@ -39,12 +38,10 @@ class CheckoutButton extends React.Component {
 
     if(this.props.location.state !== undefined){
       orderSet = this.props.location.state.params.orderSet;
-      console.log('location.state.order_set', orderSet);
     }else{
       if(sessionStorage.getItem('my_order'))
       {
         orderSet = JSON.parse(sessionStorage.getItem('my_order'));
-        //console.log('session_storage.my_order_set', item);
       }
     }
 

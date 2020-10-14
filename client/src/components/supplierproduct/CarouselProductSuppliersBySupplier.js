@@ -104,9 +104,6 @@ class CarouselProductSuppliers extends Component {
 
     const productSuppliers = this.props.retrieved && this.props.retrieved['hydra:member'];
 
-
-    console.log("Résultats produit-suppliers", productSuppliers);
-
     let rows = [];
 
     if(productSuppliers && productSuppliers.length > 1)
@@ -118,12 +115,6 @@ class CarouselProductSuppliers extends Component {
 
         for(let j = 0; j < 12 && productSuppliers[j]; j++)
         {
-          if(process.env.DEBUG === 1 )
-          {
-            console.log("Résultats produit" + j, productSuppliers[i * 12 + j]);
-          }
-
-
 
           if(j > 0 && productSuppliers[i * 12 + j])
           {
@@ -279,8 +270,6 @@ class CarouselProductSuppliers extends Component {
     const { activeIndex } = this.state;
 
     const items = this.props.retrieved  !== null ? this.showProductSuppliers() : {};
-
-    (process.env.DEBUG === 1) && console.log('Product suppliers', items);
 
     const styleCarouselInner = {
         margin: "0 40px"

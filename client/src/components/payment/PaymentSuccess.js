@@ -5,7 +5,7 @@
  */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Link, Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { retrieve as retrievePayment, reset as resetPayment } from '../../actions/payment/show';
 import { retrieve as retrieveOrderSet, reset as resetOrderSet } from '../../actions/orderset/show';
@@ -117,9 +117,6 @@ class PaymentSuccess extends Component {
 
     const {retrievedOrderSet: orderSet, retrievedPayment: payment, loadingPayment, loadingDownload } = this.props;
 
-    /* Index de la liste de commande */
-    let orderSetKey = 1;
-
     return (
       <div className={"col-9 mx-auto"}>
         <div>
@@ -129,7 +126,7 @@ class PaymentSuccess extends Component {
               <div className="col-12 mr-auto">
                 <nav aria-label="breadcrumb" className={"w-100 bg-primary text-white"}>
                   <ol className="breadcrumb clearfix d-none d-md-inline-flex p-0 w-100 mb-0 bg-primary">
-                    <li className="">
+                    <li>
                       <FormattedMessage  id={"app.page.shopping_card.shopping_card_validation"}
                                          defaultMessage="Validation du panier de commande"
                                          description="App - Delivery address"
@@ -211,13 +208,13 @@ class PaymentSuccess extends Component {
               <section className={'mb-lg-2'}>
                 <div className="row">
                   <div className="col">
-                    <a target="_blank" href="">
+                    <a target="_blank" href={process.env.REACT_APP_HOST_URL}  rel="noopener noreferrer">
                       <img src={"/assets/img/logo.png"} className="img-thumbnail rounded" data-holder-rendered="true" alt={"Buja Market"} />
                     </a>
                   </div>
                   <div className="col-sm text-right">
                     <h6 className="name">
-                      <a target="_blank" href={process.env.REACT_APP_HOST_URL}>
+                      <a target="_blank" href={process.env.REACT_APP_HOST_URL}  rel="noopener noreferrer">
                         Buja market
                       </a>
                     </h6>

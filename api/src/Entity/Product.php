@@ -16,7 +16,7 @@ use Symfony\Component\Serializer\Annotation\MaxDepth;
 
 /**
  * @ApiResource(attributes={
- *     "normalization_context"={"groups"={"favorite:output","product:output"}},
+ *     "normalization_context"={"groups"={"favorite:output","product:output","product_name:output"}},
  *     "denormalization_context"={"groups"={"product:input"}}
 
  * })
@@ -35,7 +35,7 @@ class Product
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"product:output","category:output","favorite:output","supplier_product_owner:output"})
+     * @Groups({"product:output","category:output","favorite:output","supplier_product_owner:output","product_name:output"})
      */
     private $id;
 
@@ -44,7 +44,7 @@ class Product
      *
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank()
-     * @Groups({"product:output","category:output","supplier_product:output","favorite:output","order_set:output","supplier_product_owner:output"})
+     * @Groups({"product:output","category:output","supplier_product:output","favorite:output","order_set:output","supplier_product_owner:output","product_name:output"})
      */
     private $title;
 
@@ -147,7 +147,7 @@ class Product
      *
      * @ORM\OneToMany(targetEntity="App\Entity\SupplierProduct", mappedBy="product", orphanRemoval=true)     *
      * @ApiSubresource()
-     * @ Groups({"product:output"})
+     * @ Groups({"product:output","product_name:output"})
      * @MaxDepth(2)
      */
     private $productSuppliers;

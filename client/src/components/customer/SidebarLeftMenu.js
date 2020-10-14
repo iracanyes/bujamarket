@@ -9,7 +9,6 @@ import { withRouter, NavLink as RRDNavLink } from "react-router-dom";
 import {FormattedMessage, injectIntl} from "react-intl";
 import {
   Button,
-  Nav,
   Navbar,
   NavLink,
   UncontrolledButtonDropdown,
@@ -18,10 +17,10 @@ import {
   DropdownItem, CardImg
 } from 'reactstrap';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { GiGlassHeart } from "react-icons/gi";
 import { logout } from "../../actions/user/login";
 import {SpinnerLoading} from "../../layout/Spinner";
 import { getProfileImage, reset } from "../../actions/image/profile";
+import {MdRateReview} from "react-icons/all";
 
 class SidebarLeftMenu extends Component
 {
@@ -48,13 +47,14 @@ class SidebarLeftMenu extends Component
 
   render()
   {
-    const { retrievedImage, loading, intl } = this.props;
+    const { retrievedImage, loading } = this.props;
 
     const user = localStorage.getItem('token') !== null ? JSON.parse(atob(localStorage.getItem('token').split(".")[1])) : null;
 
     return <Fragment>
       { user !== null  && (
         <Navbar dark color={"dark"} className={"bg-dark navbar-left"}>
+          {/*-- Menu - Profil --*/}
           <UncontrolledButtonDropdown>
             { retrievedImage && (
               <Button outline className={'py-3'}>
@@ -123,6 +123,7 @@ class SidebarLeftMenu extends Component
               </DropdownItem>
             </DropdownMenu>
           </UncontrolledButtonDropdown>
+          {/*-- End Menu - Profil --*/}
           {/*-- Menu - orders --*/}
           <NavLink
             tag={RRDNavLink}
@@ -134,136 +135,32 @@ class SidebarLeftMenu extends Component
               <FormattedMessage id={"app.button.my_orders"} defaultMessage={"Mes commandes"} description={"Button - All orders"}/>
             </Button>
           </NavLink>
-          {/*-- Menu - delivery --*/}
-          <UncontrolledButtonDropdown>
-            <DropdownToggle outline className={'text-primary'}>
-              <FontAwesomeIcon icon={"boxes"} className={"mr-2"}/>
-              <FormattedMessage id={"app.button.deliveries"} defaultMessage={"Livraisons"} description={"Button - Deliveries"}/>
-            </DropdownToggle>
-            <DropdownMenu className={'bg-dark text-secondary'} >
-              <DropdownItem header>
-                <FontAwesomeIcon icon={"boxes"} className={"mr-2"}/>
-                <FormattedMessage id={"app.button.product_deliveries"} defaultMessage={"Livraisons de vos produits"} description={"Button - Product deliveries"}/>
-              </DropdownItem>
-              <DropdownItem divider></DropdownItem>
-              <DropdownItem>
-                <NavLink tag={RRDNavLink} to={{pathname: "/deliveries", state: { from : window.location.pathname }}}>
-                  <FontAwesomeIcon icon={"boxes"} className={"mr-2"}/>
-                  <FormattedMessage id={"app.button.all_deliveries"} defaultMessage={"Toutes les livraisons"} description={"Button - All deliveries"}/>
-                </NavLink>
-              </DropdownItem>
-              <DropdownItem>
-                <NavLink tag={RRDNavLink} to={{pathname: "/delivery/pending", state: { from : window.location.pathname }}}>
-                  <FontAwesomeIcon icon={"shipping-fast"} className={"mr-2"}/>
-                  <FormattedMessage id={"app.button.pending_deliveries"} defaultMessage={"Livraisons en cours"} description={"Button - Pending deliveries"}/>
-                </NavLink>
-              </DropdownItem>
-              <DropdownItem>
-                <NavLink tag={RRDNavLink} to={{pathname: "/delivery/confirmed", state: { from : window.location.pathname }}}>
-                  <FontAwesomeIcon icon={"truck-loading"} className={"mr-2"}/>
-                  <FormattedMessage id={"app.button.confirmed_deliveries"} defaultMessage={"Livraisons confirmées"} description={"Button - Pending deliveries"}/>
-                </NavLink>
-              </DropdownItem>
-              <DropdownItem>
-                <NavLink tag={RRDNavLink} to={{pathname: "/delivery/tracking", state: { from : window.location.pathname }}}>
-                  <FontAwesomeIcon icon={"map-marker-alt"} className={"mr-2"} />
-                  <FormattedMessage id={"app.button.delivery_tracking"} defaultMessage={"Suivi des livraisons"} description={"Button - Shipper information"}/>
-                </NavLink>
-              </DropdownItem>
-              <DropdownItem divider />
-              <DropdownItem>
-                <NavLink tag={RRDNavLink} to={{pathname: "/delivery/complaint", state: { from : window.location.pathname }}}>
-                  <FontAwesomeIcon icon={"comments"} className={"mr-2"}/>
-                  <FormattedMessage id={"app.button.disputed_deliveries"} defaultMessage={"Livraisons en litiges"} description={"Button - Disputed deliveries"}/>
-                </NavLink>
-              </DropdownItem>
-            </DropdownMenu>
-          </UncontrolledButtonDropdown>
-          {/*-- Menu - Favorites --*/}
-          <UncontrolledButtonDropdown>
-            <DropdownToggle outline className={'text-primary'}>
-              <GiGlassHeart  className={"mr-2"} />
-              <FormattedMessage id={"app.button.favorites"} defaultMessage={"Favoris"} description={"Button - Favorites"}/>
-            </DropdownToggle>
-            <DropdownMenu className={'bg-dark text-secondary'} >
-              <DropdownItem header>
-                <FontAwesomeIcon icon={"shopping-basket"} className={"ml-2"}/>
-                <FormattedMessage id={"app.button.your_products"} defaultMessage={"Vos produits"} description={"Button - Your products"}/>
-              </DropdownItem>
-              <DropdownItem divider></DropdownItem>
-              <DropdownItem>
-                <NavLink tag={RRDNavLink} to={{pathname: "/my_products", state: { from : window.location.pathname }}}>
-                  <FontAwesomeIcon icon={"shopping-cart"} className={"mr-2"}/>
-                  <FormattedMessage id={"app.button.all_your_products"} defaultMessage={"Tous vos produits"} description={"Button - All your products"}/>
-                </NavLink>
-              </DropdownItem>
-              <DropdownItem>
-                <NavLink tag={RRDNavLink} to={{pathname: "/supplier_product/create", state: { from : window.location.pathname }}}>
-                  <FontAwesomeIcon icon={"cart-plus"} className={"mr-2"}/>
-                  <FormattedMessage id={"app.button.add_product"} defaultMessage={"Ajouter un produit"} description={"Button - Add product"}/>
-                </NavLink>
-              </DropdownItem>
-              <DropdownItem>
-                <NavLink tag={RRDNavLink} to={{pathname: "/orders/pending", state: { from : window.location.pathname }}}>
-                  <FontAwesomeIcon icon={"dolly-flatbed"} className={"mr-2"}/>
-                  <FormattedMessage id={"app.button.update_product"} defaultMessage={"Mettre à jour un produit"} description={"Button - Update product"}/>
-                </NavLink>
-              </DropdownItem>
-            </DropdownMenu>
-          </UncontrolledButtonDropdown>
-          <UncontrolledButtonDropdown>
-            <DropdownToggle outline className={'text-primary'}>
+          {/*-- End Menu - orders --*/}
+          {/*-- Menu - Shipper --*/}
+          <NavLink
+            tag={RRDNavLink}
+            to={{pathname: "/shippers/", state: { from : window.location.pathname }}}
+            className={'w-100 p-0'}
+          >
+            <Button className={'btn btn-outline-secondary w-100'}>
               <FontAwesomeIcon icon={"ship"} className={"mr-2"} />
               <FormattedMessage id={"app.button.shippers"} defaultMessage={"Expéditeurs"} description={"Button - Shippers"}/>
-            </DropdownToggle>
-            <DropdownMenu className={'bg-dark text-secondary'} >
-              <DropdownItem header>
-                <FontAwesomeIcon icon={"truck"} className={"mr-2"} />
-                <FormattedMessage id={"app.button.product_deliveries"} defaultMessage={"Livraisons de vos produits"} description={"Button - Product deliveries"}/>
-              </DropdownItem>
-              <DropdownItem divider></DropdownItem>
-              <DropdownItem>
-                <NavLink tag={RRDNavLink} to={{pathname: "/shippers", state: { from : window.location.pathname }}}>
-                  <FontAwesomeIcon icon={"comments-dollar"} className={"mr-2"} />
-                  <FormattedMessage id={"app.button.shipper_information"} defaultMessage={"Informations sur nos expéditeurs"} description={"Button - Shipper information"}/>
-                </NavLink>
-              </DropdownItem>
-            </DropdownMenu>
-          </UncontrolledButtonDropdown>
-          <UncontrolledButtonDropdown>
-            <DropdownToggle outline className={'text-primary'}>
-              <FontAwesomeIcon icon={"comments"} className={"mr-2"}/>
+            </Button>
+          </NavLink>
+          {/*-- End Menu - Shipper --*/}
+          {/*-- Menu - Comment --*/}
+          <NavLink
+            tag={RRDNavLink}
+            to={{pathname: "/my_comments/", state: { from : window.location.pathname }}}
+            className={'w-100 p-0'}
+          >
+            <Button className={'btn btn-outline-secondary w-100'}>
+              <MdRateReview  className={"mr-2"}/>
               <FormattedMessage id={"app.comments"} />
-            </DropdownToggle>
-            <DropdownMenu className={'bg-dark text-secondary'} >
-              <DropdownItem header>
-                <FontAwesomeIcon icon={"inbox"} className={"mr-2"}/>
-                <FormattedMessage id={"app.reviews_on_your_products"} />
-              </DropdownItem>
-              <DropdownItem divider></DropdownItem>
-              <DropdownItem>
-                <NavLink tag={RRDNavLink} to={{pathname: "/comments", state: { from : window.location.pathname }}}>
-                  <FontAwesomeIcon icon={"comments"} className={"mr-2"} />
-                  <FormattedMessage
-                    id={"app.comments"}
-                    defaultMessage={"Commentaires"}
-                    description={"App - Comments"}
-                  />
-                </NavLink>
-              </DropdownItem>
-              <DropdownItem divider />
-              <DropdownItem>
-                <NavLink tag={RRDNavLink} to={{pathname: "/rating", state: { from : window.location.pathname }}}>
-                  <FontAwesomeIcon icon={"comments-dollar"} className={"mr-2"} />
-                  <FormattedMessage
-                    id={"app.rating"}
-                    defaultMessage={"Évaluations"}
-                    description={"Product - Your products' rating"}
-                  />
-                </NavLink>
-              </DropdownItem>
-            </DropdownMenu>
-          </UncontrolledButtonDropdown>
+            </Button>
+          </NavLink>
+          {/*-- End Menu - Comment --*/}
+          {/*-- Menu - Chat --*/}
           <UncontrolledButtonDropdown>
             <DropdownToggle outline className={'text-primary'}>
               <FontAwesomeIcon icon={"comments"} className={"mr-2"}/>
@@ -274,11 +171,6 @@ class SidebarLeftMenu extends Component
               />
             </DropdownToggle>
             <DropdownMenu className={'bg-dark text-secondary'} >
-              <DropdownItem header>
-                <FontAwesomeIcon icon={"inbox"} className={"mr-2"}/>
-                <FormattedMessage id={"app.admin_relationship"} />
-              </DropdownItem>
-              <DropdownItem divider></DropdownItem>
               <DropdownItem>
                 <NavLink tag={RRDNavLink} to={{pathname: "/chat/admin", state: { from : window.location.pathname }}}>
                   <FontAwesomeIcon icon={"comments"} className={"mr-2"} />
@@ -289,12 +181,6 @@ class SidebarLeftMenu extends Component
                   />
                 </NavLink>
               </DropdownItem>
-              <DropdownItem divider />
-              <DropdownItem header>
-                <FontAwesomeIcon icon={"inbox"} className={"mr-2"}/>
-                <FormattedMessage id={"app.customer_relationship"} />
-              </DropdownItem>
-              <DropdownItem divider></DropdownItem>
               <DropdownItem>
                 <NavLink tag={RRDNavLink} to={{pathname: "/chat/customers", state: { from : window.location.pathname }}}>
                   <FontAwesomeIcon icon={"comments"} className={"mr-2"} />
@@ -307,6 +193,7 @@ class SidebarLeftMenu extends Component
               </DropdownItem>
             </DropdownMenu>
           </UncontrolledButtonDropdown>
+          {/*-- End Menu - Chat --*/}
         </Navbar>
       )}
     </Fragment>;

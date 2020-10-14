@@ -10,16 +10,12 @@ import { getClientSecret } from "../../actions/bankaccount/getClientSecret";
 import { connect } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
 import { Field, reduxForm } from "redux-form";
-import { SpinnerLoading } from "../../layout/Spinner";
 import {
-  Row,
-  Col,
   Spinner,
   FormGroup
 } from "reactstrap";
-import { toastError, toastSuccess } from "../../layout/ToastMessage";
-import * as ISOCodeJson from "../../config/ISOCode/ISO3166-1Alpha2.json";
-import { ElementsConsumer, CardElement, IbanElement, IdealBankElement, FpxBankElement, AuBankAccountElement  } from "@stripe/react-stripe-js";
+import { toastError } from "../../layout/ToastMessage";
+import { ElementsConsumer, IbanElement,  AuBankAccountElement  } from "@stripe/react-stripe-js";
 
 
 class AddBankAccountForm extends React.Component {
@@ -68,10 +64,6 @@ class AddBankAccountForm extends React.Component {
     const data = new FormData(document.getElementById('payment-method'));
 
 
-    console.log('card type', data.get('type'));
-    console.log('form data', data);
-    console.log('stripe',this.props.stripe);
-
     if( !data || !stripe || !elements )
     {
       return;
@@ -80,7 +72,6 @@ class AddBankAccountForm extends React.Component {
     switch(data.get('type')){
       case "iban":
         const ibanElement = elements.getElement(IbanElement);
-
 
         const { error, source } = await stripe.createSource(ibanElement, {
           type: 'sepa_debit',
@@ -96,10 +87,8 @@ class AddBankAccountForm extends React.Component {
         });
 
         if(error) {
-          console.log('[error]', error);
           toastError(error.message);
         }else{
-          console.log('IBAN - Source ', source);
           this.props.create(source, this.props.history, this.props.location);
         }
         break;
@@ -120,9 +109,11 @@ class AddBankAccountForm extends React.Component {
         if(result.error){
           toastError(result.error.message);
         }else{
-          console.log('result', result);
           this.props.create(result.setupIntent, history, location);
         }
+        break;
+      default:
+        toastError("La méthode de paiement n'est pas prise en charge!");
         break;
     }
 
@@ -166,7 +157,7 @@ class AddBankAccountForm extends React.Component {
   };
 
   render() {
-    const { loading, intl, error, errorClientSecret, created, history } = this.props;
+    const { loading, intl, error, errorClientSecret } = this.props;
 
 
     typeof error === 'string' && toastError(error);

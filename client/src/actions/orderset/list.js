@@ -19,14 +19,14 @@ export function success(retrieved) {
   return { type: 'ORDERSET_LIST_SUCCESS', retrieved };
 }
 
-export function list(page, history, location) {
+export function list(page = null, history, location) {
   return dispatch => {
     dispatch(loading(true));
 
     /* Ajout du JWT authentication token de l'utilisateur connecté */
     const headers = authHeader(history, location);
 
-    fetch('my_orders', {method: 'GET', headers})
+    fetch('my_orders' + (page ? ('/'+ page) : ''), {method: 'GET', headers})
       .then(response =>
         response
           .json()
@@ -61,7 +61,11 @@ export function list(page, history, location) {
           case typeof e['hydra:description'] === "string":
             dispatch(error(e['hydra:description']));
             break;
+          default:
+            dispatch(error(e));
+            break;
         }
+        dispatch(error(null));
       });
   };
 }

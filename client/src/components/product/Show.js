@@ -12,12 +12,10 @@ import {
   CardBody,
   CardFooter,
   CardText,
-  Spinner
 } from "reactstrap";
 import { FormattedMessage } from "react-intl";
 import {SpinnerLoading} from "../../layout/Spinner";
 import {toastError} from "../../layout/ToastMessage";
-import Rating from "../../layout/Rating";
 
 class Show extends Component {
   static propTypes = {
@@ -42,7 +40,7 @@ class Show extends Component {
 
     if (deleted) return <Redirect to=".." />;
 
-    const item = retrieved ? retrieved['hydra:member'][0] : null;
+    const item = retrieved ? retrieved : null;
 
     typeof error === "string" && toastError(error)
     return (
@@ -55,7 +53,7 @@ class Show extends Component {
             {item && (
               <Row>
                 <Col lg={"6"}>
-                  <img className={"img-fluid"}  src={item['url']} alt={item["title"]}/>
+                  <img className={"img-fluid"}  src={item['url'] !== null ? item['url'] : 'https://dummyimage.com/600x400/000/ff2b00&text=indisponible'} alt={item["title"]}/>
                 </Col>
                 <Col lg={"6"}>
 
@@ -96,25 +94,13 @@ class Show extends Component {
 
             )}
             <div className="col-lg-4 mx-auto my-5 category-control-buttons">
-              {/*
-              <Link to={`..`} className="btn btn-outline-primary d-block mx-auto">
-                <FormattedMessage  id={"app.button.return_to_List"}
-                                   defaultMessage="Retour à la liste"
-                                   description=" Button - Return to list"
-                />
-
-              </Link>
-              */}
               <button onClick={() => this.props.history.goBack()} className="btn btn-outline-primary d-block mx-auto">
                 <FormattedMessage  id={"app.button.return"}
                                    defaultMessage="Retour "
                                    description=" Button - Return "
                 />
-
               </button>
-
             </div>
-
           </div>
           <div className="show-detail-list">
               { item  && <CarouselProductSuppliers productId={item["id"]}/>}

@@ -37,7 +37,6 @@ export function del(item, history) {
       })
       .catch(e => {
         dispatch(loading(false));
-        console.log('exception', e);
         switch (true){
           case /not found/.test(e['hydra:description']):
             deleteLocalStorageFavorite(item);
@@ -52,6 +51,9 @@ export function del(item, history) {
             dispatch(error("Authentification nécessaire avant de continuer!"));
             dispatch(error(null));
             history.push({pathname: '../../login', state: { from: window.location.pathname}});
+            break;
+          default:
+            dispatch(error(e));
             break;
         }
         dispatch(error(null));
@@ -71,9 +73,7 @@ export function reset() {
 function deleteLocalStorageFavorite(id){
   /* On supprime l'élément des favorites */
   let favorites = localStorage.getItem("favorites") ? JSON.parse(localStorage.getItem("favorites")) : [];
-  console.log('deleteLocalStorageFavorite - favorites', favorites);
   let index = favorites.findIndex(value => value.id === id);
-  console.log('index', index);
   // Suppression du produit dans le panier de commande
   favorites.splice(index, 1);
   // Mise à jour du panier de commade
@@ -82,6 +82,5 @@ function deleteLocalStorageFavorite(id){
   {
     localStorage.setItem('favorites', JSON.stringify(favorites));
   }
-  console.log('localStorage - favorites', localStorage.getItem('favorites'));
 
 }

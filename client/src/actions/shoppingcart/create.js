@@ -1,4 +1,3 @@
-import { SubmissionError } from 'redux-form';
 import { fetch } from '../../utils/dataAccess';
 import {logout} from "../user/login";
 import {toastSuccess} from "../../layout/ToastMessage";
@@ -47,6 +46,7 @@ export function create(values, history, locationState) {
         switch(true){
           case e.code === 401:
             dispatch(logout());
+            break;
           case /Unauthorized/.test(e.message):
             dispatch(logout());
             history.push({pathname:'login', state: locationState });
@@ -56,6 +56,9 @@ export function create(values, history, locationState) {
             break;
           case typeof e.message === "string":
             dispatch(error(e.message));
+            break;
+          default:
+            dispatch(error(e));
             break;
         }
         dispatch(error(null));

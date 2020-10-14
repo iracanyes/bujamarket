@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { withRouter, NavLink } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import {injectIntl, FormattedMessage} from "react-intl";
 import AwesomeSlider from 'react-awesome-slider';
 import CoreStyles from 'react-awesome-slider/src/core/styles.scss';
@@ -21,8 +21,6 @@ class HomepageSlider extends Component
         >
           {Object.values(homepageImages.default).map( (url, index) => (
             <div data-src={url} key={index} className={'homepage-slider-content'}>
-              {console.log(index + ' => ' + url )}
-              {console.log(typeof index )}
               {index === 0 && (
                 <div className={'awssld__content'}>
                   <div className="title">

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { withRouter } from "react-router-dom";
 import PropTypes from 'prop-types';
 import { list, reset } from '../../actions/orderset/list';
-import {FormattedMessage, injectIntl } from "react-intl";
+import {FormattedMessage } from "react-intl";
 import { Container } from "reactstrap";
 import {
   Paper
@@ -11,8 +11,6 @@ import {
 import {toastError} from "../../layout/ToastMessage";
 import TableSort from "./TableSort";
 import {SpinnerLoading} from "../../layout/Spinner";
-import { Rating } from "@material-ui/lab";
-import CustomizedRating from "../comment/CustomizedRating";
 
 class List extends Component {
   static propTypes = {
@@ -83,7 +81,6 @@ class List extends Component {
           { loading && <SpinnerLoading message={"Chargement de l'historique des commandes"}/>}
           { retrieved && retrieved['hydra:member'] && (
             <Paper>
-              { console.log("List - retrieved ",retrieved)}
               <TableSort my_orders={retrieved['hydra:member']} validateOrder={this.validateOrder} />
             </Paper>
 

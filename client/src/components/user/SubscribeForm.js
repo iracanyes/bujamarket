@@ -10,7 +10,7 @@ import { Field, reduxForm } from 'redux-form';
 import { Col, Row } from "reactstrap";
 import { Box } from '@material-ui/core';
 import { FormattedMessage, injectIntl } from "react-intl";
-import { subscribe, reset as resetSubscribe } from "../../actions/user/subscribe";
+import { subscribe } from "../../actions/user/subscribe";
 import { retrieve, reset } from "../../actions/usertemp/show";
 import DropzoneWithPreviews from "../image/dropzone/DropzoneWithPreviews";
 import PropTypes from 'prop-types';
@@ -125,7 +125,7 @@ class SubscribeForm extends React.Component {
 
 
   render() {
-    const { intl, error, errorSubscribe, retrieved, loading, loadingSubscribe  } = this.props;
+    const { intl, error, errorSubscribe, loading, loadingSubscribe  } = this.props;
 
     error && typeof error === "string" && toastError(error);
     errorSubscribe && typeof errorSubscribe === "string" && toastError(errorSubscribe);

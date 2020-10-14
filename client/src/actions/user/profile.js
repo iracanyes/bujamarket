@@ -4,7 +4,7 @@ import {
   normalize,
   mercureSubscribe as subscribe
 } from '../../utils/dataAccess';
-import { toastError, toastSuccess } from "../../layout/ToastMessage";
+import { toastError } from "../../layout/ToastMessage";
 
 export function error(error) {
   return { type: 'USER_PROFILE_ERROR', error };
@@ -38,7 +38,6 @@ export function getProfile(history, location) {
           .then(retrieved => ({ retrieved, hubURL: extractHubURL(response) }))
       )
       .then(({ retrieved, hubURL }) => {
-        console.log('profile action - retrieved', retrieved);
         retrieved = normalize(retrieved);
 
         dispatch(loading(false));
@@ -62,6 +61,9 @@ export function getProfile(history, location) {
             break;
           case typeof e.message === "string":
             dispatch(error(e.message));
+            break;
+          default:
+            dispatch(error(e));
             break;
         }
         dispatch(error(null));

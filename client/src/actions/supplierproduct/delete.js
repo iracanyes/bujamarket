@@ -44,6 +44,9 @@ export function del(item, history, location) {
           case typeof e.message === "string":
             dispatch(error(e.message));
             break;
+          default:
+            dispatch(error(e));
+            break;
         }
 
         dispatch(error(null));

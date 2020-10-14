@@ -107,7 +107,7 @@ class UpdatePassword extends React.Component {
   };
 
   render() {
-    const { intl, error, loading } = this.props;
+    const { intl, loading } = this.props;
     const { password } = this.state;
 
     return (

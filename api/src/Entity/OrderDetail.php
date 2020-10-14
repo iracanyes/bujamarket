@@ -94,7 +94,7 @@ class OrderDetail
      *
      * @ORM\OneToOne(targetEntity="App\Entity\DeliveryDetail", mappedBy="orderDetail", cascade={"persist", "remove"})
      * @Assert\Type("App\Entity\DeliveryDetail")
-     * @Groups({"order_set:output"})
+     * @Groups({"order_set:output","order_detail:output"})
      */
     private $deliveryDetail;
 
@@ -104,6 +104,7 @@ class OrderDetail
      * @ORM\JoinColumn(nullable=false)
      * @Assert\Type("App\Entity\OrderSet")
      * @Assert\NotNull()
+     * @Groups({"order_detail:output"})
      */
     private $orderSet;
 
@@ -122,6 +123,16 @@ class OrderDetail
      * @ORM\OneToOne(targetEntity=Comment::class, mappedBy="orderDetail", cascade={"persist", "remove"})
      */
     private $comment;
+
+    /**
+     * @ORM\Column(type="boolean")
+     * @Groups({"order_set:output","order_detail:output"})
+     */
+    private $commented;
+
+    public function __construct(){
+        $this->commented = false;
+    }
 
     public function getId(): ?int
     {
@@ -269,6 +280,18 @@ class OrderDetail
         if ($comment->getOrderDetail() !== $this) {
             $comment->setOrderDetail($this);
         }
+
+        return $this;
+    }
+
+    public function getCommented(): ?bool
+    {
+        return $this->commented;
+    }
+
+    public function setCommented(bool $commented): self
+    {
+        $this->commented = $commented;
 
         return $this;
     }

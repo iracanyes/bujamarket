@@ -123,7 +123,7 @@ class SupplierProduct
      * @var Collection $images Images of the product
      * @ORM\OneToMany(targetEntity="App\Entity\Image", mappedBy="supplierProduct", cascade={"persist","remove"})
      * @ApiSubresource()
-     * @Groups({"supplier_product:output","favorite:output","order_set:output","supplier_product_owner:output"})
+     * @Groups({"supplier_product:output","favorite:output","order_set:output","supplier_product_owner:output","product_name:output"})
      * @MaxDepth(1)
      */
     private $images;
@@ -497,7 +497,7 @@ class SupplierProduct
     public function setFinalPrice(): self
     {
         $rate = $this->getProduct()->getCategory()->getPlatformFee();
-        $this->finalPrice = $this->getInitialPrice() + ($this->getInitialPrice() * $rate);
+        $this->finalPrice = $this->getInitialPrice() + ($this->getInitialPrice() * $rate) + ($this->getInitialPrice() * $this->getAdditionalFee());
         $this->updateMinimumPrice();
 
         return $this;

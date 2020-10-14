@@ -29,11 +29,6 @@ class CategoryImageUrlSubscriber implements EventSubscriberInterface
         $result = $event->getControllerResult();
         $method = $event->getRequest()->getMethod();
 
-        dump($result);
-        dump($result instanceof AbstractPaginator);
-        dump($result instanceof Category);
-        dump(!($result instanceof Category || $result instanceof AbstractPaginator) && !(Request::METHOD_GET === $method || Request::METHOD_PUT === $method || Request::METHOD_POST === $method));
-
         if(!($result instanceof Category || $result instanceof AbstractPaginator) && !(Request::METHOD_GET === $method || Request::METHOD_PUT === $method || Request::METHOD_POST === $method) ){
             return;
         }
@@ -58,7 +53,6 @@ class CategoryImageUrlSubscriber implements EventSubscriberInterface
                 }else{
                     return;
                 }
-                dump($category);
 
             }
         }

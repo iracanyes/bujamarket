@@ -97,7 +97,7 @@ class Category
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\Image", inversedBy="category", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"category:output"})
+     * @Groups({"category:output","supplier_product:output"})
      */
     private $image;
 

@@ -1,4 +1,3 @@
-import { SubmissionError } from 'redux-form';
 import { fetch } from '../../utils/dataAccess';
 import {toastSuccess} from "../../layout/ToastMessage";
 
@@ -49,6 +48,9 @@ export function create(values, history, location) {
             break;
           case typeof e['hydra:description'] === "string":
             dispatch(error(e['hydra:description']));
+            break;
+          default:
+            dispatch(error(e));
             break;
 
         }

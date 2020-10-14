@@ -20,6 +20,7 @@ class DeliveryDetail
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"order_detail:output"})
      */
     private $id;
 
@@ -44,6 +45,7 @@ class DeliveryDetail
      *
      * @ORM\Column(type="datetime")
      * @Assert\Type("DateTime")
+     * @Groups({"order_detail:output"})
      */
     private $dateCreated;
 
@@ -52,7 +54,7 @@ class DeliveryDetail
      *
      * @ORM\Column(type="boolean")
      * @Assert\Type("boolean")
-     * @Groups({"order_set:output"})
+     * @Groups({"order_set:output","order_detail:output"})
      */
     private $isShipped;
 
@@ -61,7 +63,7 @@ class DeliveryDetail
      *
      * @ORM\Column(type="boolean")
      * @Assert\Type("boolean")
-     * @Groups({"order_set:output"})
+     * @Groups({"order_set:output","order_detail:output"})
      */
     private $isReceived;
 

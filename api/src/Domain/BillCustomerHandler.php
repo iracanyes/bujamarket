@@ -87,8 +87,6 @@ class BillCustomerHandler
         $pdf = new Dompdf($options);
 
 
-        dump($pdf);
-
         /* Création du template HTML  */
         try{
             $htmlBill = $this->twig->render(
@@ -104,7 +102,6 @@ class BillCustomerHandler
 
             /* chemin du fichier pdf */
             $filename = $payment->getReference().'.pdf';
-            dump($filename);
 
 
         }catch(\Exception $exception){
@@ -115,23 +112,15 @@ class BillCustomerHandler
         try{
             $pdf->loadHtml($htmlBill);
 
-            dump('pdf loadHtml - ok');
             $pdf->setPaper('A4', 'portrait');
-            dump('pdf setPaper - ok');
             $pdf->render();
-            dump('pdf render - ok');
             $pdfBill = $pdf->output();
-            dump('pdf output - ok');
-            dump($pdfBill);
 
             // Déplacement du pdf créé dans le répertoire privé des factures
             $this->downloadHandler->movePdfToDirectory($filename, $pdfBill);
         }catch (\Exception $e){
             $this->logger->error($e->getMessage(), ['context' => $e]);
         }
-
-
-        dump('Déplacement du pdf achevé!');
 
         return $filename;
     }
@@ -140,20 +129,15 @@ class BillCustomerHandler
     {
         $data = $this->request->query->get('file');
 
-        dump($data);
-
         try{
             $customer = $this->em->getRepository(Customer::class)
                 ->findOneBy(['email' => $this->security->getUser()->getUsername()]);
-
-            dump($customer);
 
             if($customer !== null)
             {
                 $bill = $this->em->getRepository(BillCustomer::class)
                     ->findOneBy(['url' => $data, 'customer' => $customer->getId()]);
 
-                dump($bill);
             }
 
             if(!$bill instanceof Bill)

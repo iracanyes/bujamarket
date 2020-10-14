@@ -23,23 +23,19 @@ import {
   Tooltip,
   FormControlLabel,
   Switch,
-  Modal
 } from "@material-ui/core";
 import {
   MdDelete,
   MdFilterList,
-  MdAssignmentReturn
 } from 'react-icons/md';
 import {
   FaBoxOpen,
   FaShippingFast,
   FcPaid,
-  GoStop,
   IoMdCloseCircle,
   RiSecurePaymentLine,
   RiSlideshowLine,
   GiReturnArrow,
-  ImCloudDownload,
   IoMdCheckboxOutline,
   FaBox,
   FcShipped
@@ -49,7 +45,6 @@ import {
   BiCommentCheck,
   BiCommentX
 } from "react-icons/bi";
-import { Link } from 'react-router-dom';
 import {FormattedMessage} from "react-intl";
 import {Create} from "../comment";
 import DownloadBill from "../billcustomer/DownloadBill";
@@ -108,7 +103,7 @@ function stableSort(array, comparator) {
 
 const headCells = [
   { id: 'dateCreated', numeric: false, disablePadding: true, label: "Date d'achat" },
-  { id: 'status', numeric: false, disablePadding: false, label: 'Statut' },
+  { id: 'status', numeric: false, disablePadding: false, label: 'Statut paiement' },
   { id: 'nbPackage', numeric: true, disablePadding: false, label: 'Nombre de paquet' },
   { id: 'totalWeight', numeric: true, disablePadding: false, label: 'Poids total (g)' },
   { id: 'totalCost', numeric: true, disablePadding: false, label: 'Prix (g)' },
@@ -117,7 +112,7 @@ const headCells = [
 ];
 
 function EnhancedTableHead(props) {
-  const { classes, onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort, rows } = props;
+  const { classes, onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
@@ -293,7 +288,7 @@ function TableSubRow(props){
         <TableCell>
           {props.item.supplierProduct.product.title}
         </TableCell>
-        <TableCell style={{ display: 'flex'}}>
+        <TableCell align={'center'}>
           {!props.row.paymentStatus && (
             <Tooltip
               placement={'top'}
@@ -342,16 +337,19 @@ function TableSubRow(props){
           {props.item.supplierProduct.finalPrice.toFixed(2) + ' €'}
         </TableCell>
         <TableCell style={{ display: 'flex'}}>
-          <Tooltip
-            placement={'top'}
-            title={'Avis sur le produit'}
-          >
-            <IconButton onClick={() => setOpen(!open)}>
-              <BiCommentCheck
-                className={classes.iconGreen}
-              />
-            </IconButton>
-          </Tooltip>
+          {props.item.commented === false && (
+            <Tooltip
+              placement={'top'}
+              title={'Avis sur le produit'}
+            >
+              <IconButton onClick={() => setOpen(!open)}>
+                <BiCommentCheck
+                  className={classes.iconGreen}
+                />
+              </IconButton>
+            </Tooltip>
+          )}
+
           <Tooltip
             placement={'top'}
             title={'Retour produit'}
@@ -519,8 +517,8 @@ function TableRowItem(props){
                     </TableCell>
                     <TableCell align={'center'}>
                       <FormattedMessage
-                        id={'app.status'}
-                        defaultMessage={'Statut'}
+                        id={'app.delivery_status'}
+                        defaultMessage={'Statut livraison'}
                       />
                     </TableCell>
                     <TableCell align={'center'}>

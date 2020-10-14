@@ -67,10 +67,6 @@ class Search extends Component {
 
     const suppliers = this.props.retrieved['hydra:member'] && this.props.retrieved['hydra:member'];
 
-
-
-    console.log("Résultats suppliers", suppliers);
-
     let rows = [];
 
     for(let i = 0; i < Math.ceil(suppliers.length / 12 ); i++)
@@ -82,7 +78,6 @@ class Search extends Component {
 
         for(let k = 0; k < 4; k++)
         {
-          console.log("Résultats produits " + (i * 12 + j * 3 + k), suppliers[i * 10 + j * 3 + k]);
 
           if(suppliers[i * 10 + j * 3 + k])
           {

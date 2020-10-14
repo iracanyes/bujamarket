@@ -23,29 +23,42 @@ export function list(options={}, page = 'products_with_images') {
     dispatch(loading(true));
     dispatch(error(''));
 
-    if(options.category)
-    {
-      page += ('?category='+encodeURIComponent(options.category));
-    }
-
     if(options.page)
     {
-      if(page.charAt(page.length - 1) !== '?')
+      if(page.charAt(page.length - 1) === 's')
       {
+        page += '?'
+      }else{
         page += '&'
       }
-
       page += ('page='+encodeURIComponent(options.page));
     }
 
     if(options.itemsPerPage)
     {
-      if(page.charAt(page.length - 1) !== '?')
+      if(page.charAt(page.length - 1) === 's')
       {
+        page += '?'
+      }else{
         page += '&'
       }
       page += ('page='+encodeURIComponent(options.itemsPerPage));
     }
+
+    if(options.category)
+    {
+      if(page.charAt(page.length - 1) === 's')
+      {
+        page += '?'
+      }else{
+        page += '&'
+      }
+      page += ('category='+encodeURIComponent(options.category));
+    }
+
+
+
+
 
     fetch(page)
       .then(response => {
@@ -77,7 +90,11 @@ export function list(options={}, page = 'products_with_images') {
           case typeof e['hydra:description'] === "string":
             dispatch(error(e['hydra:description']));
             break;
+          default:
+            dispatch(error(e));
+            break;
         }
+        dispatch(error(null));
       });
   };
 }

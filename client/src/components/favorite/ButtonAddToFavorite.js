@@ -4,7 +4,7 @@
  * Description:
  */
 /* eslint react/no-multi-comp: 0, react/prop-types: 0 */
-import React, { useState } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { Tooltip } from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';

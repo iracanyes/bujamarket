@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Link, Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { retrieve, reset } from '../../actions/category/show';
 import CarouselCategoryProducts from "./CarouselCategoryProducts";
@@ -12,7 +12,6 @@ import {
   CardBody,
   CardFooter,
   CardText,
-  Spinner
 } from "reactstrap";
 import { FormattedMessage } from "react-intl";
 import {SpinnerLoading} from "../../layout/Spinner";

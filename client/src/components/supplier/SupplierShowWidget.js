@@ -4,14 +4,11 @@ import { retrieve, reset } from "../../actions/supplier/show";
 import {FormattedMessage} from "react-intl";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import { getSupplierImage, reset as resetImage } from "../../actions/image/supplier";
-import { SpinnerLoading } from "../../layout/Spinner";
 import {toastError} from "../../layout/ToastMessage";
 import SupplierImage from "../image/SupplierImage";
+import {IconButton} from "@material-ui/core";
 
 class SupplierShowWidget extends Component{
-  constructor(props) {
-    super(props);
-  }
 
   componentDidMount() {
     if(localStorage.getItem("token") !== null){
@@ -26,7 +23,7 @@ class SupplierShowWidget extends Component{
   }
 
   render() {
-    const { retrieved, error, loading } = this.props;
+    const { retrieved, error } = this.props;
 
     const supplier = retrieved && retrieved;
 
@@ -70,11 +67,11 @@ class SupplierShowWidget extends Component{
                 />
               </h5>
               <div className="follow-wrapper">
-                <a className="follow-btn facebook" href="#"><FontAwesomeIcon icon={['fab',"facebook"]}/></a>
-                <a className="follow-btn youtube" href="#"><FontAwesomeIcon icon={['fab',"youtube"]}/></a>
-                <a className="follow-btn twitter" href="#"><FontAwesomeIcon icon={['fab',"twitter"]}/></a>
-                <a className="follow-btn tripadvisor" href="#"><FontAwesomeIcon icon={['fab',"tripadvisor"]}/></a>
-                <a className="follow-btn google-plus" href="#"><FontAwesomeIcon icon={['fab',"google-plus"]}/></a>
+                <IconButton className="follow-btn facebook" component={'a'}><FontAwesomeIcon icon={['fab',"facebook"]}/></IconButton>
+                <IconButton className="follow-btn youtube" component={'a'}><FontAwesomeIcon icon={['fab',"youtube"]}/></IconButton>
+                <IconButton className="follow-btn twitter" component={'a'}><FontAwesomeIcon icon={['fab',"twitter"]}/></IconButton>
+                <IconButton component={'a'} className="follow-btn tripadvisor"><FontAwesomeIcon icon={['fab',"tripadvisor"]}/></IconButton>
+                <IconButton className="follow-btn google-plus" component={'a'}><FontAwesomeIcon icon={['fab',"google-plus"]}/></IconButton>
               </div>
               {/* /.follow-wrapper */}
             </div>

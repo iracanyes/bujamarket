@@ -86,9 +86,6 @@ class UploadHandler
     {
         $resource = null;
 
-        dump($user);
-        dump($filename);
-
         try{
             switch (true)
             {
@@ -96,7 +93,6 @@ class UploadHandler
                     $resource = $this->imageCustomerFilesystem->readStream('./'.$filename);
                     break;
                 case $user instanceof Supplier:
-                    dump('supplier');
                     $resource = $this->imageSupplierFilesystem->readStream('./'.$filename);
                     break;
                 case $user instanceof Admin:
@@ -111,8 +107,6 @@ class UploadHandler
             $this->logger->error($e->getMessage(), ['context' => $e]);
             $this->logger->error($e->getMessage(), ['exception' => $e]);
         }
-
-        dump($resource);
 
         return $resource;
 

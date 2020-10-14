@@ -9,15 +9,11 @@ import { create } from "../../actions/bankaccount/create";
 import { connect } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
 import { Field, reduxForm } from "redux-form";
-import {SpinnerLoading} from "../../layout/Spinner";
 import {
-  Row,
-  Col,
   Spinner,
   FormGroup
 } from "reactstrap";
 import {toastError, toastSuccess} from "../../layout/ToastMessage";
-import * as ISOCodeJson from "../../config/ISOCode/ISO3166-1Alpha2.json";
 import { ElementsConsumer, CardElement } from "@stripe/react-stripe-js";
 
 class AddPaymentMethodForm extends React.Component {
@@ -66,8 +62,6 @@ class AddPaymentMethodForm extends React.Component {
 
     const cardElement = elements.getElement(CardElement);
 
-    console.log("CardElement", cardElement);
-
     const { error, paymentMethod } = await stripe.createPaymentMethod({
       type: 'card',
       card: cardElement,
@@ -79,10 +73,8 @@ class AddPaymentMethodForm extends React.Component {
     });
 
     if(error) {
-      console.log('[error]', error);
       toastError(error.message);
     }else{
-      console.log("[success]", paymentMethod);
       this.props.create(paymentMethod, this.props.history, this.props.location);
     }
 

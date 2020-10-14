@@ -82,6 +82,7 @@ class SupplierProductHandler
         $data = $this->request->request->all();
         /* Récupération des fichiers envoyés ac le formulaire */
         $files = $this->request->files->all();
+
         /* Fournisseur
         */
         $user = $this->security->getUser();
@@ -99,23 +100,24 @@ class SupplierProductHandler
         $supplierProduct->setRating(5.0);
 
 
-
+        // Si la quantité du produit est limité, indiquer le nombre disponible
         if($supplierProduct->getIsLimited())
         {
             $supplierProduct->setQuantity((int) $data['quantity']);
         }
-
+        // Ajout des infos et taxes additionnels
         $supplierProduct->setAdditionalInformation($data['additionalInformation']);
-        $supplierProduct->setAdditionalFee((((float)$data['additionalFee'] )));
+        $supplierProduct->setAdditionalFee(((float)$data['additionalFee'] ) / 100);
 
         /* Ajout des informations du produits */
+        // Si un produit existant est selectionné, on la récupère en DB sinon on crée un nouveau produit
         if(!empty($data["product"]["id"]) && $data["product"]["id"] !== "")
         {
             try{
                 $product = $this->em->getRepository(Product::class)
-                    ->find((int) $data["product"]["id"]);
+                    ->findOneBy(['title' => $data["product"]["id"]]);
             }catch (\Exception $exception){
-                return new ProductNotFoundException(sprintf("The product with the id %s not found!", $data["product"]["id"]));
+                return new ProductNotFoundException(sprintf("The product with the title (%s) not found!", $data["product"]["id"]));
             }
 
 
@@ -124,65 +126,68 @@ class SupplierProductHandler
             // Nouveau produit
             $product = new Product();
 
-            $product->setTitle($data['product']['title']);
-            $product->setResume($data['product']['resume']);
-            $product->setDescription($data['product']['description']);
-            $product->setHeight((float) $data['product']['height']);
-            $product->setLength((float) $data['product']['length']);
-            $product->setWeight((float) $data['product']['weight']);
-            $product->setWidth((float) $data['product']['width']);
-            $product->setCountryOrigin($data['product']['countryOrigin']);
+            $product->setTitle($data['newProduct']['title']);
+            $product->setResume($data['newProduct']['resume']);
+            $product->setDescription($data['newProduct']['description']);
+            $product->setHeight((float) $data['newProduct']['height']);
+            $product->setLength((float) $data['newProduct']['length']);
+            $product->setWeight((float) $data['newProduct']['weight']);
+            $product->setWidth((float) $data['newProduct']['width']);
+            $product->setCountryOrigin($data['newProduct']['countryOrigin']);
 
 
             // Category du produit
-            if(!empty($data["product"]["category"]["id"]) && $data["product"]["category"]["id"] !== "")
+            if(!empty($data["newProduct"]["category"]["id"]) && $data["newProduct"]["category"]["id"] !== "")
             {
-                $idCateg = (int) $data["product"]["category"]["id"] ;
+                $idCateg = $data["newProduct"]["category"]["id"] ;
 
                 try{
                     $category = $this->em->getRepository(Category::class)
-                        ->find($idCateg);
+                        ->findOneBy(["name" =>$idCateg]);
                 }catch (\Exception $exception){
-                    return new CategoryNotFoundException(sprintf("Category with id %d not found!", $idCateg));
+                    $this->logger->error($exception->getMessage(), ['context' => $exception]);
+                    throw new CategoryNotFoundException(sprintf("Category with id %d not found!", $idCateg));
                 }
 
             }else{
                 // Nouvelle catégorie
                 $category = new Category();
-                $category->setName($data["product"]["category"]["name"]);
-                $category->setDescription($data["product"]["category"]["description"]);
+                $category->setName($data["newProduct"]["category"]["name"]);
+                $category->setDescription($data["newProduct"]["category"]["description"]);
                 $category->setDateCreated(new \DateTime());
                 $category->setIsValid(false);
                 $category->setPlatformFee(0.1);
 
                 // Image de la catégorie
                 $image = new Image();
-                $image->setTitle($data['product']['category']['name']);
-                $image->setAlt($data['product']['category']['name']);
+                $image->setTitle($data['newProduct']['category']['name']);
+                $image->setAlt($data['newProduct']['category']['name']);
                 $image->setPlace(1);
-                $image->setSize($files['product']['category']['image']->getSize());
+                $image->setSize($files['newProduct']['category']['image']->getSize());
 
-                $imageFile = $files['product']['category']['image'];
+                $imageFile = $files['newProduct']['category']['image'];
 
                 if($imageFile)
                 {
-
-                    $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $data["product"]["category"]["name"]);
+                    $image->setMimeType($imageFile->getMimeType());
+                    $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $data["newProduct"]["category"]["name"]);
                     $newFilename = $safeFilename.'-'.uniqid("_", true).'.'.$imageFile->guessExtension();
 
                     try{
-                        $imageFile->move($this->container->getParameter('categories_image_directory'), $newFilename);
+                        $imageFile->move(getenv('UPLOAD_CATEGORY_IMAGE_DIRECTORY'), $newFilename);
                     }catch (FileException $exception){
-                        return new UploadImageException(sprintf("Code: %d.\nMessage: %s", $exception->getCode(), $exception->getMessage()));
+                        throw new UploadImageException(sprintf("Code: %d.\nMessage: %s", $exception->getCode(), $exception->getMessage()));
                     }
 
                     $image->setUrl($newFilename);
-                    $image->setMimeType($imageFile->getMimeType());
+
 
                     try{
+
                         $this->em->persist($image);
                     }catch (\Exception $exception){
                         $this->em->rollback();
+                        $this->logger->error($exception->getMessage(), ['context' => $exception]);
                         throw new ImagePersistException(sprintf("Category image can't be persisted!"));
                     }
 
@@ -201,7 +206,6 @@ class SupplierProductHandler
 
             $product->setCategory($category);
         }
-        dump($files['product']['images']);
 
         // Traitement des images du produit
         foreach($files['product']['images'] as $key => $imageFile)
@@ -230,6 +234,7 @@ class SupplierProductHandler
                     /* Déplacement du fichier image dans le répertoire public des images de produits */
                     $imageFile->move(getenv('UPLOAD_SUPPLIER_PRODUCT_IMAGE_DIRECTORY'), $newFilename);
                 }catch (FileException $exception){
+                    $this->em->rollback();
                     return new UploadImageException(sprintf("Code: %d.\nMessage: %s", $exception->getCode(), $exception->getMessage()));
                 }
 
@@ -255,7 +260,8 @@ class SupplierProductHandler
             $supplier = $this->em->getRepository(Supplier::class)
                 ->findOneBy(['email' => $this->security->getUser()->getUsername()]);
         }catch (\Exception $exception){
-            throw new SupplierNotFoundException(sprintf(sprintf("Supplier not found !")));
+            $this->em->rollback();
+            throw new SupplierNotFoundException("Supplier not found !");
         }
 
         $supplierProduct->setSupplier($supplier);
@@ -277,16 +283,14 @@ class SupplierProductHandler
     {
         /* Récupération des données du formulaire */
         $data = $this->request->request->all();
-        $data2 = json_decode($this->request->getContent(), true);
-
         /* Récupération des fichiers envoyés ac le formulaire */
         $files = $this->request->files->all();
         /* Fournisseur
         */
         $user = $this->security->getUser();
 
-        // Id of the supplier product
-        $id = (int) $this->request->attributes->get('id');
+        // Name of the supplier product
+        $id = $this->request->attributes->get('id');
 
 
         /* Démarrage de la session de transaction ac la db */
@@ -295,7 +299,10 @@ class SupplierProductHandler
 
         try{
             $supplierProduct = $this->em->getRepository(SupplierProduct::class)
-                ->findOneBy(["id" => $id, "supplier" => $user ]);
+                ->getSupplierProductWithProductAndSupplierInfo($id, $user->getUsername());
+            if(!$supplierProduct instanceof SupplierProduct){
+                throw new SupplierProductNotFoundException(sprintf("Supplier's product (%d) not found!", $id));
+            }
 
         }catch(\Exception $e){
             $this->em->rollback();
@@ -303,9 +310,8 @@ class SupplierProductHandler
             throw new SupplierProductNotFoundException(sprintf("Error while retrieving the supplier's (%s) product (id = %d)", $user->getBrandName(), $id));
         }
 
-        dump($supplierProduct);
 
-        /* Ajout des informations fournisseurs sur le produit */
+        /* Mise à jour des informations fournisseurs sur le produit */
         $supplierProduct->setIsAvailable(isset($data['isAvailable']) ? $data['isAvailable'] : false)
             ->setInitialPrice((float) $data['initialPrice'])
             ->setIsLimited(isset($data['isLimited']) ? $data['isLimited'] : false );
@@ -318,19 +324,14 @@ class SupplierProductHandler
         }
 
         $supplierProduct->setAdditionalInformation($data['additionalInformation']);
-        $supplierProduct->setAdditionalFee((float)$data['additionalFee'] );
+        $supplierProduct->setAdditionalFee(((float)$data['additionalFee'] / 100 ));
 
 
         /* Mise à jour des informations du produit, sinon création d'un nouveau produit référence pour le produit proposé par le fournisseur
         */
-        if(empty($data["newProduct"]["title"]))
+        if(empty($data["newProduct"]["title"]) && $data["newProduct"]["title"] === "")
         {
-            try{
-                $product = $this->em->getRepository(Product::class)
-                    ->find((int) $data["product"]["id"]);
-            }catch (\Exception $exception){
-                return new ProductNotFoundException(sprintf("The product with the id %s not found!", $data["product"]["id"]));
-            }
+            $product = $supplierProduct->getProduct();
 
             $product->setTitle($data["product"]["title"])
                 ->setResume($data["product"]["resume"])
@@ -342,19 +343,18 @@ class SupplierProductHandler
                 ->setWidth($data["product"]["width"]);
 
             // Category du produit
-            if(!empty($data["product"]["category"]["id"]) )
+            if( $data["product"]["category"]["name"] !== $product->getCategory()->getName() ||  $data["product"]["category"]["description"] !== $product->getCategory()->getDescription())
             {
-                if(!empty($data["product"]["category"]["name"]))
-                {
-                    $category = $this->categoryHandler->updateExistingCategory($data["product"]["category"]);
-                }else{
-                    $category = $this->em->getRepository(Category::class)
-                        ->find($data["product"]["category"]["id"]);
-                }
 
+                if(!empty($files['product']['category']['image']))
+                {
+                    // Nouvelle catégorie
+                    $category = $this->categoryHandler->persistNewCategory($data["product"]["category"], $files['product']['category']['image']);
+                }else{
+                    $category = $this->categoryHandler->updateExistingCategory($data["product"]["category"]);
+                }
             }else{
-                // Nouvelle catégorie
-                $category = $this->categoryHandler->persistNewCategory($data["product"]["category"], $files['product']['category']['image']);
+                $category = $product->getCategory();
             }
 
             $product->setCategory($category);
@@ -372,13 +372,16 @@ class SupplierProductHandler
 
 
             // Category du produit
+            // Si un choix de catégorie est selectionné
             if(!empty($data["newProduct"]["category"]["id"]) )
             {
+                // Si une mise à jour du nom de catégorie est effectué, on met à jour la catégorie
                 if(!empty($data["newProduct"]["category"]["name"])){
                     $category = $this->categoryHandler->updateExistingCategory($data["newProduct"]["category"]);
                 }else{
+                    // Sinon, on récupère la catégorie existante en DB
                     $category = $this->em->getRepository(Category::class)
-                        ->find($data["newProduct"]["category"]["id"]);
+                        ->findOneBy(['name' => $data["newProduct"]["category"]["id"]]);
                 }
 
             }else{
@@ -517,7 +520,7 @@ class SupplierProductHandler
             $this->logger->error($exception->getMessage(), ['context' => $exception]);
             throw new SupplierProductNotFoundException("Error while retrieving the supplier's products");
         }
-        dump($products);
+
         return $products;
     }
 
@@ -526,14 +529,11 @@ class SupplierProductHandler
         $id = $this->request->attributes->get("id");
 
         $supplier = $this->security->getUser();
-        dump($supplier);
-        dump($id);
 
         try{
             $supplierProduct = $this->em->getRepository(SupplierProduct::class)
                 ->getOneSupplierProduct((int) $id, $supplier->getUsername());
 
-            dump($supplierProduct);
             if(!$supplierProduct instanceof SupplierProduct)
                 throw new SupplierProductNotFoundException(sprintf("Supplier product (id: %d) owned by this supplier not found!", $id));
 
@@ -556,25 +556,42 @@ class SupplierProductHandler
     {
         $id = $this->request->attributes->get('id') ?? null;
 
-        dump($this->request);
-        dump($id);
-
         try{
             $productSuppliers = $this->em->getRepository(SupplierProduct::class)
                 ->getProductSuppliersByProductId((int) $id);
 
-            dump($productSuppliers);
 
             foreach($productSuppliers as $value){
-                dump($value);
                 foreach($value->getImages() as $image){
-                    dump($image);
                     $image->setUrl( getenv('API_ENTRYPOINT')."/".getenv('UPLOAD_SUPPLIER_PRODUCT_IMAGE_DIRECTORY')."/".$image->getUrl() );
-                    dump($image);
+
                 }
             }
 
             return $productSuppliers;
+
+        }catch (\Exception $e){
+            $this->logger->error($e->getMessage(), ['context' => $e]);
+        }
+
+
+    }
+
+    public function getBestRatedSuppliersProduct()
+    {
+
+        try{
+            $bestRatedProducts = $this->em->getRepository(SupplierProduct::class)
+                ->getBestRatedSuppliersProduct();
+
+            foreach($bestRatedProducts as $value){
+                foreach($value->getImages() as $image){
+                    $image->setUrl( getenv('API_ENTRYPOINT')."/".getenv('UPLOAD_SUPPLIER_PRODUCT_IMAGE_DIRECTORY')."/".$image->getUrl() );
+
+                }
+            }
+
+            return $bestRatedProducts;
 
         }catch (\Exception $e){
             $this->logger->error($e->getMessage(), ['context' => $e]);

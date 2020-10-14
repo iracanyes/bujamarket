@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import { Field, reduxForm } from 'redux-form';
+import { reduxForm } from 'redux-form';
 import PropTypes from 'prop-types';
 import HalfRating from "./Rating";
 import {
@@ -26,10 +26,7 @@ class Form extends Component {
   createComment(e){
     e.preventDefault();
     const data = new FormData(document.getElementById("create-comment"));
-    // Display the key/value pairs
-    for (var pair of data.entries()) {
-      console.log(pair[0]+ ', ' + pair[1]);
-    }
+
     data.append('supplierProductId', this.props.supplierProductId.toString());
 
     const values = {
@@ -38,8 +35,6 @@ class Form extends Component {
       "content": data.get('content'),
       "rating": parseFloat(data.get('rating'))
     };
-
-    console.log('submit - values', values);
 
     if(this.props.supplierProductId)
       this.props.create(values, this.props.history, this.props.location);

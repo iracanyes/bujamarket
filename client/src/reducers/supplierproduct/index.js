@@ -7,5 +7,6 @@ import update from './update';
 import del from './delete';
 import show from './show';
 import listBySupplierId from "./listBySupplierId";
+import getBestRated from "./getBestRated";
 
-export default combineReducers({ list, listByProductId, listBySupplier, listBySupplierId, create, update, del, show });
+export default combineReducers({ list, listByProductId, listBySupplier, listBySupplierId, create, update, del, show, getBestRated });

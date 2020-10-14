@@ -1,8 +1,6 @@
-//import { SubmissionError } from 'redux-form';
+
 import { fetch } from '../../utils/dataAccess';
-import React from "react";
-import { toast } from "react-toastify";
-import { ToastSuccess, ToastError, ToastWelcome } from "../../layout/ToastMessage";
+
 
 export function notify(notification){
   return { type: 'USER_LOGIN_NOTIFICATION', notification};
@@ -98,6 +96,7 @@ export function login(email, password, history, locationState) {
         switch (true) {
           case e.code === 500:
             dispatch(error("Tentative de connexion avec l'adresse e-mail suivant est impossible! Contactez l'administrateur de la plateforme." ));
+            break;
           case /Bad Credentials/.test(e.message.message):
             dispatch(error("Connexion non-autorisé! Identifiant et/ou mot de passe incorrect."));
             break;
@@ -111,6 +110,9 @@ export function login(email, password, history, locationState) {
             dispatch(error(e.message));
             break;
           case typeof e === "string":
+            dispatch(error(e));
+            break;
+          default:
             dispatch(error(e));
             break;
         }

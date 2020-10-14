@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Link, Redirect, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import SupplierProductForm from './SupplierProductForm';
 import { reset } from '../../actions/supplierproduct/create';
 import {SpinnerLoading} from "../../layout/Spinner";
-import { injectIntl, FormattedMessage} from "react-intl";
+import { injectIntl} from "react-intl";
 import PublicationRules from "./PublicationRules";
 
 class Create extends Component {
@@ -22,8 +22,6 @@ class Create extends Component {
   }
 
   render() {
-    const { error, loading, created } = this.props;
-
     const user = localStorage.getItem('token')  ? JSON.parse(atob(localStorage.getItem('token').split('.')[1])) : null;
 
     if(user == null || !user.roles.includes('ROLE_PUBLISHER'))
@@ -32,11 +30,12 @@ class Create extends Component {
     return (
       <div>
         <h1>Proposer un produit à la vente</h1>
-
         {this.props.loading && (
           <SpinnerLoading message={"Création du produit en cours!"} />
         )}
-        <SupplierProductForm />
+        <div className="superlist">
+          <SupplierProductForm />
+        </div>
 
       </div>
     );

@@ -97,7 +97,6 @@ class ImageHandler
         $image = new Image();
 
         $uploadedFile = $this->request->files->get("images");
-        dump($uploadedFile);
 
         if(!$uploadedFile instanceof File)
             throw new \Exception("No file to upload");
@@ -248,11 +247,9 @@ class ImageHandler
 
         $disposition = HeaderUtils::makeDisposition(HeaderUtils::DISPOSITION_ATTACHMENT, $image->getUrl());
 
-        dump($disposition);
 
         $response->headers->set('Content-Disposition', $disposition);
 
-        dump($response);
 
         return $response;
 
@@ -291,13 +288,10 @@ class ImageHandler
     {
         // comment id
         $id = $this->request->attributes->get('id');
-        dump($id);
 
         try{
             $comment = $this->em->getRepository(Comment::class)
                 ->getCustomerImage((int) $id);
-
-            dump($comment);
 
             return $this->streamedResponder->getSupplierImage($comment->getCustomer(), $comment->getCustomer()->getImage());
         }catch (\Exception $e){
@@ -321,6 +315,7 @@ class ImageHandler
         if(substr($product['url'], 0, 8) !== 'https://'){
             $product['url'] = getenv('API_ENTRYPOINT').'/'.getenv('UPLOAD_SUPPLIER_PRODUCT_IMAGE_DIRECTORY')."/".$product['url'];
         }
+        return $product;
     }
 
     public function setCategoryImagePublicDirectory($category)

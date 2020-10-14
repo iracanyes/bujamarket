@@ -52,7 +52,7 @@ class ProductHandler
         $names = $this->em->getRepository(Product::class)
             ->getNames();
 
-        return $this->jsonResponder->success(["names" =>$names]);
+        return $this->jsonResponder->arrayResult($names,['groups' => ['product_name:output']]);
     }
 
     public function getProductsWithImages()
@@ -66,8 +66,6 @@ class ProductHandler
             "itemsPerPage" => $this->request->query->get('itemsPerPage') ?? null
         ];
 
-        dump($options);
-
 
         $products = $this->em->getRepository(Product::class)
             ->getProductsWithImages($options);
@@ -78,8 +76,6 @@ class ProductHandler
             $product['img-src'] = getenv('API_ENTRYPOINT').'/'.getenv('UPLOAD_SUPPLIER_PRODUCT_IMAGE_DIRECTORY').'/'.$product['url'];
             $result[] = $product;
         }
-
-        dump($products);
 
 
         return $this->jsonResponder->success(["products" => $result  ]);
@@ -96,9 +92,15 @@ class ProductHandler
             ->getProductWithImage($options);
 
 
-        $this->imageHandler->setProductImagePublicDirectory($product[0]);
+        $product = $this->imageHandler->setProductImagePublicDirectory($product[0]);
 
-        return $product;
+        return $this->jsonResponder->success(array_merge(
+            [
+                "@context" => "/context/Product",
+                "@type" => '/product/'.$product['id'],
+            ],
+            $product
+        ));
     }
 
 

@@ -1,4 +1,4 @@
-import React, {Fragment, Component} from "react";
+import React, { Component} from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { FormattedMessage, injectIntl } from "react-intl";

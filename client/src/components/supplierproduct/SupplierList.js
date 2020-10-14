@@ -48,7 +48,7 @@ class SupplierList extends Component {
   }
 
   render() {
-    const { retrieved, loading, error, deleted, deleteError, intl } = this.props;
+    const { error, deleted, deleteError, intl } = this.props;
 
     const user = localStorage.getItem('token')  ? JSON.parse(atob(localStorage.getItem('token').split('.')[1])) : null;
 

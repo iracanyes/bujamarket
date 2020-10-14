@@ -2,13 +2,6 @@ import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { withRouter, NavLink as RRDNavLink } from "react-router-dom";
 import { NavLink } from "reactstrap";
-import {
-  faCcAmex,
-  faCcMastercard,
-  faCcStripe,
-  faCcPaypal,
-  faCcVisa
-} from '@fortawesome/free-brands-svg-icons';
 
 function AddPaymentMethodButton(props){
   return (

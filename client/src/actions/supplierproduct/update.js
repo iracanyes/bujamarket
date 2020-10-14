@@ -6,7 +6,6 @@ import {
   mercureSubscribe as subscribe
 } from '../../utils/dataAccess';
 import { success as createSuccess } from './create';
-import { loading, error } from './delete';
 import authHeader from "../../utils/authHeader";
 
 export function retrieveError(retrieveError) {
@@ -44,16 +43,19 @@ export function retrieve(id) {
 
         switch (true) {
           case typeof e === "string":
-            dispatch(error(e));
+            dispatch(retrieveError(e));
             break;
-          case e['hydra:description']:
-            dispatch(error(e['hydra:description']));
+          case typeof e['hydra:description'] === "string":
+            dispatch(retrieveError(e['hydra:description']));
             break;
-          case e.message:
-            dispatch(error(e.message));
+          case typeof e.message === "string":
+            dispatch(retrieveError(e.message));
+            break;
+          default:
+            dispatch(retrieveError(e));
             break;
         }
-        dispatch(error(null));
+        dispatch(retrieveError(null));
       });
   };
 }
@@ -76,13 +78,7 @@ export function update(item, values, history, location) {
     dispatch(createSuccess(null));
     dispatch(updateLoading(true));
 
-    const headers = new Headers();
-    if(localStorage.getItem('token') !== null) {
-      headers.append('Authorization', "Bearer " + JSON.parse(localStorage.getItem('token')).token)
-    }else{
-      dispatch(updateError("Authentification nécessaire avant tout mise à jour de produit !"));
-      history.push({ pathname: "../../login", state: { from: location.pathname }});
-    }
+    const headers = authHeader(history, location);
 
     return fetch("supplier_product/update/" + item['id'], {
       method: 'POST',
@@ -112,6 +108,7 @@ export function update(item, values, history, location) {
         switch (true) {
           case e.code === 401:
             dispatch(updateError("Authentification nécessaire avant de supprimer l'image!"));
+            dispatch(updateError(null));
             history.push({ pathname: '../../login', state: { from: location.pathname }});
             break;
           case typeof e === "string":
@@ -122,6 +119,9 @@ export function update(item, values, history, location) {
             break;
           case typeof e.message === "string":
             dispatch(updateError(e.message));
+            break;
+          default:
+            dispatch(updateError(e));
             break;
         }
         dispatch(updateError(null));

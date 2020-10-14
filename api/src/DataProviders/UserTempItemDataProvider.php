@@ -38,12 +38,10 @@ final class UserTempItemDataProvider implements ItemDataProviderInterface, Restr
          * REMARQUE: ApiPlatform force l'utilisation du paramètre id pour la récupération de données
          *
          */
-        dump($id);
         // Récupération des données
         $data = $this->entityManager->getRepository(UserTemp::class)
             ->findOneBy(['id' => $id]);
 
-        dump($data);
 
         // Deserialize data using the Serializer
         //return $this->serializer->deserialize($data, UserTemp::class, 'user_temp:output');

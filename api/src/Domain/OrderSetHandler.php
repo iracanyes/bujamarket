@@ -103,8 +103,6 @@ class OrderSetHandler
             /* Nombre de packet dans l'ensemble de commande */
             $orderSet->setNbPackage($orderSet->getNbPackage() + 1);
             /* Calcul du poids total de l'ensemble de commande */
-            dump($item);
-            dump($item->getSupplierProduct()->getProduct()->getWeight());
             $orderSet->setTotalWeight($orderSet->getTotalWeight() + $item->getSupplierProduct()->getProduct()->getWeight());
             $orderSet->addOrderDetail($orderDetail);
 
@@ -160,23 +158,18 @@ class OrderSetHandler
             $data = json_decode($this->request->getContent());
         }
 
-        dump($data);
-
         try{
             if($data !== null && isset($data->orderSet))
             {
                 $orderSet = $this->em->getRepository(OrderSet::class)
                     ->find($data->orderSet);
-                dump($orderSet);
             }
 
 
             if($data !== null && isset($data->sessionId) )
             {
-                dump($data->sessionId);
                 $orderSet = $this->em->getRepository(OrderSet::class)
                     ->findOneBy([ "sessionId" => $data->sessionId ]);
-                dump($orderSet);
             }
 
 
@@ -209,8 +202,6 @@ class OrderSetHandler
             throw new OrderSetNotFoundException(sprintf("The order set associated to the checkout session %s can't be retrieved!", $sessionId));
         }
 
-        dump($orderSet);
-
         return $orderSet;
 
     }
@@ -219,7 +210,6 @@ class OrderSetHandler
     {
         $orders = null;
         $user = $this->security->getUser();
-        dump($user);
 
         try{
             switch(true){
@@ -232,8 +222,6 @@ class OrderSetHandler
                         ->getSupplierOrders($user->getEmail());
                     break;
             }
-
-            dump($orders);
 
             // Traitement des URL des images
             foreach($orders as $order)

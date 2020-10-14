@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { Link, Redirect, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Form from './Form';
 import { create, reset } from '../../actions/comment/create';
@@ -23,7 +23,6 @@ class Create extends Component {
 
 
   render() {
-    const { created, loading, error } = this.props;
 
     return (
       <Fragment>

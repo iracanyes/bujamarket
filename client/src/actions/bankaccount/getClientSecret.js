@@ -1,4 +1,3 @@
-import { SubmissionError } from 'redux-form';
 import { fetch } from '../../utils/dataAccess';
 
 export function error(error) {
@@ -42,6 +41,9 @@ export function getClientSecret(history, location){
             break;
           case typeof e['hydra:description'] === "string":
             dispatch(error(e['hydra:description']));
+            break;
+          default:
+            dispatch(error(e));
             break;
 
         }

@@ -318,7 +318,7 @@ class SearchResults extends  Component{
 
   render()
   {
-    const { results, retrievedProducts } = this.props;
+    const { results } = this.props;
 
     return (<Fragment>
       <div id="search-results-header">

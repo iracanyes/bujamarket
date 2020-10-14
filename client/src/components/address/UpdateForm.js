@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Link, Redirect, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { Field, reduxForm } from "redux-form";
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { retrieve, update, reset } from '../../actions/address/update';
+import { update, reset } from '../../actions/address/update';
 import { create, reset as resetCreate } from "../../actions/address/create";
 import { del } from '../../actions/address/delete';
 import { injectIntl, FormattedMessage } from "react-intl";
@@ -12,14 +12,9 @@ import {
   Col,
   Row,
   Button,
-  Modal,
-  ModalBody,
-  ModalFooter,
-  ModalHeader
 } from "reactstrap";
 import {toastError} from "../../layout/ToastMessage";
 import * as ISOCountryJson from "../../config/ISOCode/ISO3166-1Alpha2.json";
-import * as ISOCountryJsonFr from "../../config/ISOCode/ISO3166-1Alpha2French.json";
 
 
 class UpdateForm extends Component {
@@ -131,7 +126,7 @@ class UpdateForm extends Component {
   render() {
 
     const address = this.props.updated ? this.props.updated : this.props.address;
-    const { intl, updateError, deleteError, created } = this.props;
+    const { intl } = this.props;
 
     // Show errors
     this.props.updateError && toastError(this.props.updateError);

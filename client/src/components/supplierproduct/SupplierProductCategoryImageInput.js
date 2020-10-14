@@ -17,8 +17,7 @@ export default class SupplierProductCategoryImageInput  extends Component{
   }
 
   render(){
-    const { input: { name,value } } = this.props;
-    const {input,labelText, required, meta, } = this.props;
+    const { input,labelText } = this.props;
     return(
       <div className={"form-group"}>
         <label>{labelText}</label>

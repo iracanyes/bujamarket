@@ -25,7 +25,7 @@ class Image
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"product:output","supplier:output","profile:output","supplier_product_owner:output"})
+     * @Groups({"product:output","supplier:output","profile:output","supplier_product_owner:output","supplier_product:output"})
      */
     private $id;
 
@@ -72,7 +72,8 @@ class Image
      *     "favorite:output",
      *     "order_set:output",
      *     "supplier_product_owner:output",
-     *     "comment:output"
+     *     "comment:output",
+     *     "product_name:output"
      * })
      */
     private $url;

@@ -5,7 +5,7 @@ import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { injectIntl, FormattedMessage } from "react-intl";
 import 'bootstrap/dist/css/bootstrap.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Alert from "../../layout/Alert";
 import ButtonAddToFavorite from '../favorite/ButtonAddToFavorite';
 import { retrieveIds } from '../../actions/favorite/list';
 import { retrieveByProductId, reset  } from "../../actions/supplierproduct/listByProductId";
@@ -16,7 +16,6 @@ import {
   Row,
   Card,
   CardBody,
-  CardFooter,
   CardTitle
 } from "reactstrap";
 import {SpinnerLoading} from "../../layout/Spinner";
@@ -91,7 +90,6 @@ class CarouselProductSuppliers extends Component {
                   >
                     <div className="card-img-custom">
                       <img src={productSuppliers[i * 12 + j]["images"][0]["url"]} alt={productSuppliers[i * 12 + j]["images"][0]["alt"]} className="image img-fluid" style={{ width:"100%"}} />
-
                       <CardTitle>
                         <span className="font-weight-bold">
                           {productSuppliers[i * 12 + j]["title"]}
@@ -122,9 +120,7 @@ class CarouselProductSuppliers extends Component {
                         </p>
                         <ButtonAddToShoppingCart buttonLabel={"Ajouter au panier"} product={productSuppliers[i * 12 + j]} toggle={this.toggle}/>
                       </Col>
-
                     </Row>
-
                   </CardBody>
                 </Card>
               </Col>
@@ -166,13 +162,6 @@ class CarouselProductSuppliers extends Component {
                     <img src={productSuppliers[0]["images"][0]["url"]} alt={productSuppliers[0]["images"][0]["alt"]} className="image img-fluid" style={{ width:"100%"}} />
                     <CardTitle>
                         <span className="font-weight-bold">
-                          {/* Permet d'injecter la traduction d'une valeur reçu par une entité
-                            intl.formatMessage({
-                              id: "app.category.item"+productSuppliers[0]["id"]+".name",
-                              description: "category item - name for item "+productSuppliers[0]["id"],
-                              defaultMessage: productSuppliers[0]["name"]
-                            })
-                          */}
                           {productSuppliers[0]["product"]["title"].replace(/(([^\s]+\s\s*){8})(.*)/,"$1…")}
                         </span>
                     </CardTitle>
@@ -197,10 +186,7 @@ class CarouselProductSuppliers extends Component {
                       </p>
                       <ButtonAddToShoppingCart buttonLabel={"Ajouter au panier"} product={productSuppliers[0]} toggle={this.toggle}/>
                     </Col>
-
                   </Row>
-
-
                 </CardBody>
               </Card>
             </Col>
@@ -223,29 +209,41 @@ class CarouselProductSuppliers extends Component {
 
 
   render() {
-    const { activeIndex } = this.state;
     const { retrieved, loading, error, deletedItem } = this.props;
 
-    const items = retrieved  !== null ? this.showProductSuppliers() : {};
+    const items = retrieved  !== null && retrieved["hydra:member"].length > 0 ? this.showProductSuppliers() : {};
 
-
+    (error && error.length > 0 ) && (toastError(error));
     return <Fragment>
         <div id={'slider-product-suppliers'} className={"slider-container my-3 py-2"}>
           <h3 className={'text-center'}>Fournisseurs du produit</h3>
 
           {loading && <SpinnerLoading message={'Chargement des fournisseurs...'} />}
           {deletedItem && (toastSuccess(this.props.deletedItem['@id'] + "supprimé!"))}
-          {error && (toastError(error))}
 
-          {this.props.retrieved &&
-            <AwesomeSlider
-                id={'slider-product-suppliers'}
-                animation={'scaleOutAnimation'}
-                cssModule={AwesomeSliderStyles}
-            >
-                {this.props.retrieved && items}
-            </AwesomeSlider>
-          }
+          {!loading && (
+            (this.props.retrieved && this.props.retrieved["hydra:member"].length > 0)
+              ? (
+                <AwesomeSlider
+                  id={'slider-product-suppliers'}
+                  animation={'scaleOutAnimation'}
+                  cssModule={AwesomeSliderStyles}
+                >
+                  {this.props.retrieved && items}
+                </AwesomeSlider>
+              )
+              : (
+                <Alert severity={'error'}>
+                  <FormattedMessage
+                    id={'app.supplier_product.not_available'}
+                    defaultMessage={"Aucun fournisseur de la plateforme ne propose ce produit pour l'instant"}
+                    description={"Supplier product - Not available"}
+                  />
+                </Alert>
+              )
+
+          )}
+
       </div>
     </Fragment>;
   }

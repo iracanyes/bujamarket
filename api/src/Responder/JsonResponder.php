@@ -48,8 +48,6 @@ class JsonResponder
     }
 
     public function oneResult($entity, $status = 200, $context = []){
-        dump($entity);
-        dump($this->normalize($entity,$context !== [] ? $context : null , null));
         return new JsonResponse(
             array_merge([
                 '@context' => '/contexts/'.$this->getClassShortName($entity),
@@ -61,7 +59,7 @@ class JsonResponder
     }
 
     public function arrayResult(array $collection, array $context = [], $status = 200){
-        $shortName = $this->getClassShortName($collection[0]);
+        $shortName = !empty($collection) ? $this->getClassShortName($collection[0]) : "";
         return new JsonResponse(
             [
                 '@context' => '/contexts/'.$shortName,

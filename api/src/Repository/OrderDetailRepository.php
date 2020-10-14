@@ -24,6 +24,8 @@ class OrderDetailRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('od')
             ->leftJoin('od.supplierProduct', 'sp')
             ->leftJoin('sp.supplier', 's')
+            ->leftJoin('od.deliveryDetail', 'dd')
+            ->addSelect('sp','s','dd')
             ->andWhere('s.email LIKE :email')
             ->setParameter('email', $email)
             ->getQuery()

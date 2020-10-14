@@ -1,4 +1,3 @@
-import { SubmissionError } from 'redux-form';
 import { fetch } from '../../utils/dataAccess';
 
 export function error(error) {
@@ -36,7 +35,6 @@ export function create(values, history) {
 
         localStorage.removeItem('favorites');
         localStorage.setItem('favorites', JSON.stringify(favorites));
-        console.log("create - localStorage favorites", localStorage.getItem('favorites'));
         dispatch(success(retrieved));
 
       })
@@ -50,8 +48,11 @@ export function create(values, history) {
           case typeof e['hydra:description'] === "string":
             dispatch(error(e['hydra:description']));
             break;
+          default:
+            dispatch(error(e));
+            break;
         }
-
+        dispatch(error(null));
 
       });
   };
