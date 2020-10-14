@@ -127,8 +127,6 @@ class DeliveryAddressForm extends React.Component {
   handleChange(e)
   {
     let value = e.target.value;
-    console.log('value', value);
-    console.log('retrievedShipper', this.props.retrievedShipper );
 
     let shipper =  this.props.retrievedShipper && this.props.retrievedShipper['hydra:member'].filter(item => item.id === parseInt(value) )[0];
 
@@ -155,11 +153,6 @@ class DeliveryAddressForm extends React.Component {
     /* Récupération des données du formulaire */
     const data = new FormData(document.getElementById('delivery-address-form'));
 
-    for(let [key, value] of data){
-      console.log("Form-data - value : ", key + " => " + value);
-    }
-
-
     const delivery_address = {
       shipper: data.get('shipper') ? data.get('shipper') : 0,
       existingAddress: data.get('existingAddress') ? data.get('existingAddress') : 0,
@@ -185,8 +178,6 @@ class DeliveryAddressForm extends React.Component {
 
     if(delivery_address.shipper !== 0 && ( delivery_address.existingAddress !== 0 || (delivery_address.newAddress.street !== "" && delivery_address.newAddress.town !== "" && delivery_address.newAddress.state !== "" && delivery_address.newAddress.zipCode !== "" && delivery_address.newAddress.country !== "" )))
     {
-
-      console.log('handle submit - submitted', delivery_address);
       this.props.create(delivery_address, this.props.history, this.props.location.pathname);
     }
 

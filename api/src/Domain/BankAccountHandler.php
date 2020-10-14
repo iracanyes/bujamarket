@@ -71,7 +71,6 @@ class BankAccountHandler
     {
         $requestContent = $this->request->getContent();
         $data = json_decode($requestContent);
-        dump($data);
 
         switch($data->object){
             case "payment_method":
@@ -113,7 +112,6 @@ class BankAccountHandler
 
         try{
             $user = $this->security->getUser();
-            dump($user);
             /*
             $member = $this->em->getRepository(User::class)
                 ->findOneBy(['email' => $user->getUsername()]);
@@ -195,13 +193,11 @@ class BankAccountHandler
          * Retrieve the setup intent (mandate expanded)
          */
         $setupIntent = $this->stripeHandler->retrieveSetupIntent($data->id);
-        dump($setupIntent);
 
         /**
          * Retrieve the payment method (contains a card info)
          */
         $paymentMethod = $this->stripeHandler->retrievePaymentMethod($data->payment_method);
-        dump($paymentMethod);
 
         $bankAccount = new BankAccount();
         $bankAccount->setIdCard($data->id)
@@ -235,13 +231,12 @@ class BankAccountHandler
          * Retrieve the setup intent (mandate expanded)
          */
         $setupIntent = $this->stripeHandler->retrieveSetupIntent($data->id);
-        dump($setupIntent);
 
         /**
          * Retrieve the payment method (contains a card info)
          */
         $paymentMethod = $this->stripeHandler->retrievePaymentMethod($setupIntent->payment_method);
-        dump($paymentMethod);
+
 
         return $paymentMethod;
     }
@@ -252,7 +247,6 @@ class BankAccountHandler
         $data = json_decode($data);
         $user = $this->security->getUser();
 
-        dump($data);
 
         try{
             $bankAccount = $this->em->getRepository(BankAccount::class)

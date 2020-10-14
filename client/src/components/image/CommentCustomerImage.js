@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { getCustomerImage, reset } from "../../actions/image/commentImage";
 import {toastError} from "../../layout/ToastMessage";
-import {SpinnerLoading} from "../../layout/Spinner";
 import {withRouter} from "react-router-dom";
 import { Avatar } from "@material-ui/core";
 
@@ -13,7 +12,7 @@ class CommentCustomerImage extends Component
     id: PropTypes.number.isRequired,
     comment: PropTypes.object.isRequired,
     getCustomerImage: PropTypes.func,
-    images: PropTypes.object,
+    images: PropTypes.array,
     error: PropTypes.string,
     loading: PropTypes.bool.isRequired
   };
@@ -27,7 +26,7 @@ class CommentCustomerImage extends Component
   }
 
   render(){
-    const { images, loading, error, comment } = this.props;
+    const { images, error, comment } = this.props;
 
     (error && error.length > 0) && toastError(error);
 

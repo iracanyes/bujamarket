@@ -26,8 +26,6 @@ class SidebarLeftMenu extends Component
   {
     const { connectedUser } = this.props;
 
-    console.log('connectedUser', connectedUser);
-    //
     // const user = connectedUser.token ? JSON.parse(atob(connectedUser.token.split(".")[1])) : null;
 
     const user = localStorage.getItem('token') !== null ? JSON.parse(atob(localStorage.getItem('token').split('.')[1])): null;

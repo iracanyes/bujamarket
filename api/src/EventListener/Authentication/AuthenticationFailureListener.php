@@ -34,10 +34,8 @@ class AuthenticationFailureListener
         if( 0 === strpos($this->request->headers->get('Content-Type'), 'application/json'))
             $data = json_decode($this->request->getContent(), true);
 
-        dump($data);
 
         $email = $data["email"];
-        dump($email);
 
         try{
             $user = $this->em->getRepository(User::class)

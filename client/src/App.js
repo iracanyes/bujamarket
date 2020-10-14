@@ -3,7 +3,7 @@
  * Date: 29/07/2019
  * Description:
  */
-import React , { Component, Fragment } from 'react';
+import React , { Component } from 'react';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
@@ -110,6 +110,7 @@ import MainMenu from "./layout/MainMenu";
 import SearchResults from "./components/search/SearchResults";
 import SidebarLeftMenu from "./layout/SidebarLeftMenu";
 import HomepageSlider from "./page/HomepageSlider";
+import Footer from "./layout/Footer";
 
 /* chargement des données locales */
 addLocaleData();
@@ -178,15 +179,13 @@ export class App extends Component
     const { results } = this.state;
 
     const user = localStorage.getItem("token") !== null ? JSON.parse(atob(localStorage.getItem("token").split('.')[1])) : null;
-    console.log("token exists",localStorage.getItem("token") !== null);
-
 
     return (
       <Provider store={store}>
         <IntlProvider locale={language} messages={messages[language]}>
           <ConnectedRouter history={history}>
             <Router history={history}>
-              <div>
+              <div  style={{minHeight: "100vh"}}>
                 <header>
                   <Navbar color={"bg-primary"} dark expand={"lg"}   id="navbar-primary" className="navbar navbar-expand-lg navbar-dark bg-primary">
                     {/* Navbar brand*/}
@@ -210,10 +209,7 @@ export class App extends Component
                     </div>
                   </Route>
                 ) }
-
-
-
-
+                {/* Main section  */}
                 <main>
                   <aside id="aside-left">
                     <Route
@@ -283,7 +279,11 @@ export class App extends Component
 
                   </aside>
                 </main>
+                <footer className={"pt-5 pb-3 bg-primary"}>
+                  <Footer />
+                </footer>
               </div>
+
             </Router>
           </ConnectedRouter>
         </IntlProvider>

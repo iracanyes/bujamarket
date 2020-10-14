@@ -42,9 +42,6 @@ class List extends Component {
 
     const customers = this.props.retrieved && this.props.retrieved["hydra:member"];
 
-
-    console.log("Résultats clients", customers);
-
     let rows = [];
 
     for(let i = 0; i < Math.ceil(customers.length / 12 ); i++)
@@ -54,7 +51,6 @@ class List extends Component {
 
       for(let j = 0; j < 12; j++)
       {
-        console.log("Résultats produits " + j, customers[i * 12 + j]);
 
         if(customers[i * 12 + j])
         {

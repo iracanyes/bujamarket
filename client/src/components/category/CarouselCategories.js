@@ -16,7 +16,6 @@ import {
   Card,
   CardTitle,
 } from "reactstrap";
-import { FormattedMessage } from "react-intl";
 import {SpinnerLoading} from "../../layout/Spinner";
 import AwesomeSlider from "react-awesome-slider";
 import AwesomeSliderStyles from "react-awesome-slider/src/styled/fold-out-animation/fold-out-animation.scss";
@@ -108,11 +107,6 @@ class CarouselCategories extends Component {
 
       for(let j = 0; (i !== 0) ? (j <= 12) : (j < 11); j++)
       {
-        if(process.env.DEBUG === 1 )
-        {
-          console.log("Résultats catégorie" + j, categories[i * 12 + j]);
-        }
-
 
         if(j === 0 && i === 0)
         {
@@ -122,9 +116,8 @@ class CarouselCategories extends Component {
               <Card body className={" text-white bg-dark"}>
                 <Link to={"/products"}>
                   <div className="card-img-custom">
-                    <img src={BackgroundImageItems} className="image img-fluid" style={{ width:"100%"}} />
+                    <img src={BackgroundImageItems} alt={""} className="image img-fluid" style={{ width:"100%"}} />
                     <CardTitle className={"image-bottom-left-title"}>
-
                       <span className="font-weight-bold">
                         {intl.formatMessage({
                           id: "app.page.category.all_category.title",
@@ -132,20 +125,16 @@ class CarouselCategories extends Component {
                           defaultMessage: "Toutes les catégories"
                         })}
                       </span>
-
-
                     </CardTitle>
                   </div>
                 </Link>
-
-
               </Card>
             </Col>
           );
 
           // Ajout de la première catégorie de produit
           resultsPer12.push(
-            <Col key={"categories" + (i * 12 + j + 1)} xs={"12"} sm="6" md="4" lg="3">
+            <Col key={"category" + (i * 12 + j)} xs={"12"} sm="6" md="4" lg="3">
               <Card body className={" text-white bg-dark"}>
                 <Link
 
@@ -173,11 +162,11 @@ class CarouselCategories extends Component {
 
         }
 
-        if(j > 0 && categories[i * 12 + j + 2])
+        if(j > 0 && categories[i * 12 + j])
         {
 
           resultsPer12.push(
-            <Col key={"categories" + (i * 12 + j + 2)} xs={"12"} sm="6" md="4" lg="3">
+            <Col key={"categories" + (i * 12 + j)} xs={"12"} sm="6" md="4" lg="3">
               <Card body className={" text-white bg-dark"}>
                 <Link
 
@@ -193,10 +182,6 @@ class CarouselCategories extends Component {
                     </CardTitle>
                   </div>
                 </Link>
-
-
-
-
               </Card>
             </Col>
           );
@@ -225,13 +210,6 @@ class CarouselCategories extends Component {
   }
 
   render() {
-    const { activeIndex } = this.state;
-
-    const items = this.props.retrieved && this.props.retrieved["hydra:member"] ? this.showCategories() : {};
-
-    const styleCarouselInner = {
-        margin: "0 40px"
-    };
 
     this.props.error && toast(<ToastError message={this.props.error} />);
 

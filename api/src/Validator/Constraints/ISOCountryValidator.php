@@ -26,12 +26,9 @@ class ISOCountryValidator extends ConstraintValidator
         if(!is_string($value))
             throw new UnexpectedValueException($value, 'string');
 
-        dump(getcwd());
         $isoCountryJson = file_get_contents("./../src/Validator/Constraints/ISOCountry/ISO3166-1Alpha2.json");
-        dump($isoCountryJson);
 
         $countries = json_decode($isoCountryJson, true);
-        dump($countries);
 
         if(!in_array($value, $countries)){
             $this->context->buildViolation($constraint->message)

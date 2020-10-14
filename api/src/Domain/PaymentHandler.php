@@ -100,6 +100,7 @@ class PaymentHandler
 
             foreach($item->getSupplierProduct()->getImages() as $image)
             {
+                // Accès aux images impossible par Stripe Api car aucune adresse IP et nom de domaine disponible
                 if(getenv('APP_ENV') === "prod"){
                     $images[] = getenv('API_ENTRYPOINT').'/'.getenv('UPLOAD_SUPPLIER_PRODUCT_IMAGE_DIRECTORY').'/'.$image->getUrl();
                 }else{
@@ -125,11 +126,8 @@ class PaymentHandler
             ];
         }
 
-        dump($line_items);
-
         $session = $this->stripeHandler->createCheckoutSession($customer, $orderSet, $line_items);
 
-        dump($session);
 
         try{
             /* Association de la session Stripe Checkout avec la commande */
@@ -152,7 +150,6 @@ class PaymentHandler
         if ($data === null) {
             throw new \Exception('Bad JSON body from Stripe!');
         }
-        dump($data);
 
         /* Identifiant de l'événement  */
         $eventId = $data->id;
@@ -161,9 +158,6 @@ class PaymentHandler
         $stripeEvent = $this->stripeHandler->findEvent($eventId);
 
         $session = $this->stripeHandler->retrieveSession($stripeEvent->data->object->id);
-
-        dump($stripeEvent);
-        dump($session);
 
         /* Si on reçoit un événement autre que "checkout.session.completed", on ne traite pas la requête */
         if($stripeEvent->type !== 'checkout.session.completed' && $stripeEvent->data->object->payment_intent !== $session->payment_intent)
@@ -197,16 +191,12 @@ class PaymentHandler
         );
         $payment->setCurrency('EUR');
         $payment->setStatus('completed');
-
         $payment->setSource('credit');
-
-        dump($payment);
 
         /* Calcul du montant total htva du paiement */
         $somme = 0.0;
 
         $line_items = $this->stripeHandler->retrieveCheckoutSessionLineItems($payment->getSessionId());
-        dump($line_items);
 
         foreach($line_items->data as $item)
         {
@@ -216,11 +206,8 @@ class PaymentHandler
 
         $payment->setAmount($somme);
 
-        dump($payment);
-
         /* Création de la facture associé */
         $bill = $this->billCustomerHandler->createBill($session);
-        dump($bill);
 
         $bill->setReference($payment->getReference());
 
@@ -229,7 +216,6 @@ class PaymentHandler
 
         // Récupérer le coût du transport
         $orderSet = $this->orderSetHandler->getOrderSetBySessionId($session->id);
-        dump($orderSet);
 
         // Association de la facture avec la commande effectuée
         $orderSet->setBillCustomer($bill);
@@ -242,8 +228,6 @@ class PaymentHandler
 
         /* Ajout de l'ID du paiement Stripe  */
         $payment->setPaymentIntent($session->payment_intent);
-
-        dump($payment);
 
         try{
             // Mise à jour de l'ID Customer si celui-ci n'existe pas déjà
@@ -262,7 +246,6 @@ class PaymentHandler
             /* Création d'une facture sous format pdf */
             $pathname = $this->billCustomerHandler->createPdf($payment, $session, $orderSet, $line_items->data, $bill);
 
-            dump($pathname);
 
             $bill->setUrl($pathname);
 
@@ -273,9 +256,6 @@ class PaymentHandler
 
             $payment->setBill($bill);
 
-            dump($bill);
-
-            dump($customer);
             // Sauvegarde du paiement confirmé
             $this->em->persist($payment);
             $this->em->flush();
@@ -312,7 +292,6 @@ class PaymentHandler
     public function getPaymentSuccess()
     {
         $data = json_decode($this->request->getContent());
-        dump($data);
 
         try{
             $payment = $this->em->getRepository(Payment::class)

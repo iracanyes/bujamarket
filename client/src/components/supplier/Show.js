@@ -1,16 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Link, Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { retrieve, reset } from '../../actions/supplier/show';
 import {
   Col,
   Row,
-  Button,
   Card,
   CardTitle,
   CardText,
-  CardFooter,
   Spinner
 } from 'reactstrap';
 import { FormattedMessage } from 'react-intl';
@@ -122,7 +120,7 @@ class Show extends Component {
                       E-mail: <br/> <strong>{item['contactEmail']}</strong>
                     </p>
                     <p>
-                      Site web : <a href={item['website']} target={'_blank'}>{item['website']}</a>
+                      Site web : <a href={item['website']} target={'_blank'} rel="noopener noreferrer">{item['website']}</a>
                     </p>
                   </CardText>
                 </Card>
@@ -171,7 +169,7 @@ class Show extends Component {
         <div key={i}>{this.renderLinks(type, item)}</div>
       ));
     }
-    console.log("item - "+ type, items);
+
     return (
       <Link to={`../../${type}/show/${encodeURIComponent(items['id'])}`}>
         {items['title'] && items['title']}

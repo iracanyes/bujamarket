@@ -31,16 +31,20 @@ export function del(item, history, location) {
         switch (true) {
           case e.code === 401:
             dispatch(error("Authentification nécessaire avant de supprimer l'image!"));
+            dispatch(error(null));
             history.push({ pathname: '../../login', state: { from: location.pathname }});
             break;
           case typeof e === "string":
             dispatch(error(e));
             break;
-          case e['hydra:description']:
+          case typeof e['hydra:description'] === "string":
             dispatch(error(e['hydra:description']));
             break;
-          case e.message:
+          case typeof e.message === "string":
             dispatch(error(e.message));
+            break;
+          default:
+            dispatch(error(e));
             break;
         }
         dispatch(error(null));

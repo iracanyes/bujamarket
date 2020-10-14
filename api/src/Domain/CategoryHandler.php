@@ -62,20 +62,15 @@ class CategoryHandler
             throw new RetrieveCategoriesException("Error while retrieving categories' of product!");
         }
 
-        dump($categories);
 
         $myCategories = [];
         /* Mise à jour de l'emplacement du fichier image */
         foreach($categories as $category)
         {
-            dump($category);
             $category['url'] = getenv('API_ENTRYPOINT').'/'.getenv('UPLOAD_CATEGORY_IMAGE_DIRECTORY').'/'.$category['url'];
-            dump($category);
+
             array_push($myCategories, $category);
         }
-
-        dump($categories);
-        dump($myCategories);
 
         return $this->jsonResponder->success([
             '@context' => '/contexts/Category',
@@ -95,24 +90,18 @@ class CategoryHandler
         $category->setIsValid(false);
         $category->setPlatformFee(0.1);
 
-        dump($data);
-        dump($file);
         // Image de la catégorie
         $image = new Image();
         $image->setTitle($data['name']);
         $image->setAlt($data['name']);
         $image->setPlace(1);
         $image->setSize($file->getSize());
-        dump($image);
 
         try{
             // Déplacement du fichier image de la catégorie dans le répertoire public associé
             $this->imageHandler->uploadCategoryImage($image, $data["name"], $file);
-            dump($image);
-            dump($category);
             $category->setImage($image);
 
-            dump($category);
             $this->em->persist($category);
             $this->em->flush();
         }catch (\Exception $exception){

@@ -65,6 +65,7 @@ class Payment
      *
      * @ORM\Column(type="string", length=50)
      * @Assert\NotBlank()
+     * @Assert\Choice({"confirmed", "completed", "failed", "pending","processing"})
      * @Groups({"payment:output"})
      */
     private $status;

@@ -1,13 +1,11 @@
-import { SubmissionError } from 'redux-form';
 import {
   fetch,
   extractHubURL,
   normalize,
   mercureSubscribe as subscribe
 } from '../../utils/dataAccess';
-import authHeader from "../../utils/authHeader";
 import { success as registerSuccess } from './register';
-import { loading, error } from './delete';
+import authHeader from "../../utils/authHeader";
 
 export function retrieveError(retrieveError) {
   return { type: 'USER_UPDATE_RETRIEVE_ERROR', retrieveError };
@@ -25,9 +23,7 @@ export function retrieve(history, location) {
   return dispatch => {
     dispatch(retrieveLoading(true));
 
-    const headers = new Headers();
-    if(localStorage.getItem('token') !== null)
-      headers.set('Authorization', 'Bearer '+ JSON.parse(localStorage.getItem('token')).token);
+    const headers = authHeader(history, location);
 
     return fetch('profile', {method: 'POST', headers})
       .then(response =>
@@ -109,25 +105,24 @@ export function update(values, history, location) {
       .catch(e => {
         dispatch(updateLoading(false));
 
-        if (e instanceof SubmissionError) {
-          dispatch(updateError(e.errors._error));
-          throw e;
+        switch(true){
+          case e.code  === 401:
+            dispatch(updateError("Authentification nécessaire!"));
+            dispatch(updateError("null"));
+            history.push({pathname: "../../login", state: { from: location.pathname } });
+            break;
+          case typeof e['hydra:description'] === "string":
+            dispatch(updateError(e['hydra:description']));
+            break;
+          case typeof e === 'string':
+            dispatch(updateError(e));
+            break;
+          default:
+            dispatch(updateError(e));
+            break;
         }
-
-        if (e.code  === 401) {
-          dispatch(error("Authentification nécessaire!"));
-          history.push({pathname: "../../login", state: { from: location.pathname } });
-        }else{
-
-          if(typeof e === 'string')
-          {
-            dispatch(error(e));
-          }else{
-            dispatch(error(e['hydra:description']));
-          }
-          history.push({pathname: '/profile/update'});
-        }
-        dispatch(error(null));
+        dispatch(updateError(null));
+        history.push({pathname: '/profile/update'});
       });
   };
 }
@@ -137,8 +132,8 @@ export function reset(eventSource) {
     if (eventSource) eventSource.close();
 
     dispatch({ type: 'USER_UPDATE_RESET' });
-    dispatch(error(null));
-    dispatch(loading(false));
+    dispatch(updateError(null));
+    dispatch(updateLoading(false));
     dispatch(registerSuccess(null));
   };
 }

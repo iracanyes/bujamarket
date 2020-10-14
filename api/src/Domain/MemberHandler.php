@@ -165,7 +165,6 @@ class MemberHandler
             $this->em->persist($user);
             $this->em->flush();
         }catch(\Exception $e){
-            dump($e);
             $this->logger->error("Error while persisting the new member", ['context' => $e]);
             throw new CreateMemberException("Error while persisting the new member!");
         }
@@ -186,9 +185,7 @@ class MemberHandler
     {
         $data = $this->request->getContent();
 
-        dump($data);
         $data = json_decode($data);
-        dump($data);
 
         /* Récupération de l'utilisateur inscrit via son token */
         $user = $this->em->getRepository(UserTemp::class)
@@ -208,8 +205,6 @@ class MemberHandler
 
         /* Création du nouveau objet User (member) */
         $user = $this->createMember();
-
-        dump($user);
 
         /* Données client */
         if($user instanceof Customer)
@@ -250,8 +245,6 @@ class MemberHandler
             $user->setLocked(false);
             $user->setPassword($this->encoder->encodePassword($user, $data['password']));
 
-            dump($user);
-
             $this->em->persist($user);
             $this->em->flush();
         }catch (\Exception $exception){
@@ -274,10 +267,10 @@ class MemberHandler
 
         try{
             $connectedUser = $this->security->getUser();
-            dump($connectedUser);
+
             $user = $this->em->getRepository(User::class)
                 ->findOneBy(["email" => $connectedUser->getUsername()]);
-            dump($user);
+
             // Vérification de l'ancien mot de passe
             $validPassword = $this->encoder->isPasswordValid($user, $data['password']);
 
@@ -306,8 +299,6 @@ class MemberHandler
     {
         try{
             $connectedUser = $this->security->getUser();
-            dump($connectedUser);
-            dump($connectedUser->getUsername());
 
             if(!$connectedUser)
                 throw new MemberNotFoundException("Authenticated user not found");
@@ -325,12 +316,8 @@ class MemberHandler
                 default:
                     $user = $this->em->getRepository(Customer::class)
                         ->getProfile( $connectedUser->getUsername());
-                    dump("default");
-                    dump($user);
                     break;
             }
-
-            dump($user);
 
         }catch (\Exception $exception){
             $this->logger->error(
@@ -355,10 +342,8 @@ class MemberHandler
     public function updateProfile()
     {
         $connectedUser = $this->security->getUser();
-        dump($connectedUser);
 
         $data = $this->request->request->all();
-        dump($data);
 
         $image = $this->request->files->get('images');
 
@@ -387,7 +372,6 @@ class MemberHandler
         try{
             $user = $this->em->getRepository(User::class)
                 ->findOneBy(['email' => $connectedUser->getUsername()]);
-            dump($user);
 
             if(!$connectedUser instanceof User)
                 throw new MemberNotFoundException(sprintf("User %s not found", $data["firstname"]." ".$data["lastname"]));
@@ -418,8 +402,6 @@ class MemberHandler
                     ->setContactEmail($data['contactEmail'])
                     ->setWebsite($data['website']);
             }
-
-            dump($user);
 
             $this->em->persist($user);
             $this->em->flush();
@@ -636,8 +618,6 @@ class MemberHandler
                     throw new \Exception('Customer not found for this checkout session');
                     break;
             }
-
-            dump($customer);
 
             if(!$customer instanceof Customer){
                 throw new MemberNotFoundException("Error while retrieving the member");

@@ -1,4 +1,3 @@
-import React from "react";
 import { SubmissionError } from 'redux-form';
 import { fetch, extractHubURL, normalize, mercureSubscribe } from '../../utils/dataAccess';
 
@@ -77,6 +76,9 @@ export function create(values, history, location) {
               dispatch(error("Serveur temporairement indisponible! Veuillez ré-essayer plus tard."))
             else
               dispatch(error(e));
+            break;
+          default:
+            dispatch(error(e));
             break;
         }
         dispatch(error(null));

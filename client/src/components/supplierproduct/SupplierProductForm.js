@@ -3,15 +3,13 @@
  * Date: 22/09/2019
  * Description: Formulaire d'ajout de produits par un fournisseur
  */
-import React,{ Fragment } from 'react';
+import React, {Fragment} from 'react';
 import {Link, Redirect, withRouter} from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
 import {
-  Button,
   Col,
   Row,
-  Fieldset,
   Collapse
 } from "reactstrap";
 import { FormattedMessage, injectIntl } from "react-intl";
@@ -25,6 +23,13 @@ import { toastError } from "../../layout/ToastMessage";
 import {SpinnerLoading} from "../../layout/Spinner";
 import * as ISOCountryJson from "../../config/ISOCode/ISO3166-1Alpha2.json";
 import * as _ from 'lodash';
+import AutoCompleteProductNamesInput from "../product/AutoCompleteProductNamesInput";
+import AutoCompleteCategoryNamesInput from "../category/AutoCompleteCategoryNamesInput";
+import { Button } from '@material-ui/core';
+import {
+  IoIosCreate,
+} from "react-icons/all";
+import { RiFolderAddFill } from "react-icons/ri";
 
 class SupplierProductForm extends React.Component {
   static propTypes = {
@@ -57,7 +62,6 @@ class SupplierProductForm extends React.Component {
 
     this.auth = this.auth.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleChangeImage= this.handleChangeImage.bind(this);
     this.showNewProductForm = this.showNewProductForm.bind(this);
     this.showExistingProductForm = this.showExistingProductForm.bind(this);
     this.showProductCategoryForm = this.showProductCategoryForm.bind(this);
@@ -102,61 +106,22 @@ class SupplierProductForm extends React.Component {
     }
   }
 
-  handleChangeImage(event, input)
-  {
-
-    let images = [];
-
-    if(event.target.files.length === 1)
-    {
-      let imageFile = event.target.files[0];
-      if(imageFile) {
-        const localImageUrl = URL.createObjectURL(imageFile);
-        let imageObject = new window.Image();
-
-        imageFile.file = localImageUrl;
-
-        URL.revokeObjectURL(imageFile);
-
-      }
-
-    }else{
-      event.target.files.map((image, index) => {
-        let imageFile = event.target.files[index];
-        if(imageFile){
-          const localImageUrl = URL.createObjectURL(imageFile);
-
-
-          imageFile.file = localImageUrl;
-
-          URL.revokeObjectURL(imageFile);
-
-        }
-      })
-    }
-
-
-  }
-
   handleSubmit(e)
   {
     e.preventDefault();
-
     this.setState({ submitted: true });
 
     // Récupération des données de formulaires
     const data = new FormData(document.getElementById('supplier-product-form'));
 
     // Ajout de l'id du produit
-    this.props.product && data.append("product[id]", this.props.product.product.id);
+    //this.props.product && data.append("product[id]", this.props.product.product.id);
 
     // Ajout des images aux données du formulaire
     const images = document.getElementsByName('images')[0].files;
-    console.log("images", images);
-
 
     const nbImages = (this.props.product && this.props.product.images) ? (this.props.product.images.length + images.length) : images.length;
-    console.log("nbImages", nbImages);
+
     // Si plus de 10 images, on refuse l'envoi du formulaire
     if(nbImages > 10){
       toastError(`Maximum 10 images! (${images.length} images présentes)`);
@@ -210,7 +175,7 @@ class SupplierProductForm extends React.Component {
     if(document.getElementById('existing-product-form').classList.contains('d-none'))
     {
       /* Ré-initialisation du choix de catégorie */
-      document.getElementById('existing-product-name-select').selectedIndex = 0;
+      //document.getElementById('existing-product-name-select').value = "";
       /* Désactivation du champ de sélection de catégorie de produit */
       document.getElementById('existing-product-name-select').setAttribute('disabled', 'disabled');
       /* Affichage du formulaire  */
@@ -347,7 +312,7 @@ class SupplierProductForm extends React.Component {
   };
 
   render() {
-    const { intl, product, created, updated, updateError, loadingCreate,  updateLoading  } = this.props;
+    const { intl, product, loadingCreate,  updateLoading  } = this.props;
 
     // Affichage des erreurs
     this.showErrors();
@@ -365,7 +330,7 @@ class SupplierProductForm extends React.Component {
     return (
       <Fragment>
         <div className={"supplier-product-form my-3"}>
-          <h4 className={'text-center mb-5'}>
+          <h5 className={'text-center mb-5'}>
             {!this.props.product
               ? <FormattedMessage  id={"app.page.supplier_product.title.add_product"}
                                    defaultMessage="Ajouter à un produit"
@@ -375,20 +340,19 @@ class SupplierProductForm extends React.Component {
 
             }
             { this.props.product && this.props.product.product.title}
-
-          </h4>
+          </h5>
 
           <form
             id="supplier-product-form"
             name="supplier-product"
-            className={"col-lg-6 mx-auto px-3"}
+            className={"col-lg-8 mx-auto px-3"}
             onSubmit={this.handleSubmit}
-            autoComplete={"on"}
+            //autoComplete={"on"}
           >
             <fieldset className={"mb-2"}>
               <legend>Information sur le produit</legend>
               <Row className={'mb-3'}>
-                <Col className={'col-8 mb-3'}>
+                <Col className={'mb-3'}>
                   <label
                     htmlFor={'product[id]'}
                     className="form-control-label"
@@ -400,29 +364,29 @@ class SupplierProductForm extends React.Component {
                     />
                   </label>
                   &nbsp;:&nbsp;
-                  <Field
-                    component={"select"}
-                    name="product[id]"
-                    id={"existing-product-name-select"}
-                    type="select"
-                    className={'custom-select w-100 col-2'}
-                    style={{minWidth: "100%"}}
-                    onChange={this.handleChange}
-                  >
-                    <option value="">--- Choisir parmi les produits existants ---</option>
-                    {this.props.retrievedProducts !== null && this.props.retrievedProducts.names.map(item => (
-                      <option value={item.id} key={item.id}>
-                        { item.title }
-                      </option>
-                    ))}
+                  {this.props.retrievedProducts && (
+                    <AutoCompleteProductNamesInput
+                      name="product[id]"
+                      id={"existing-product-name-select"}
+                      label={intl.formatMessage({
+                        id:"app.product.item.existingProducts",
+                        defaultMessage:"Produits existants",
+                        description:"Product item - existing product"
+                      })}
+                      //defaultValue={this.props.product ? { title: this.props.product.product.title, id: this.props.product.product.id} : null }
+                      defaultValue={this.props.retrievedProducts['hydra:member'].find(el => el.title === this.props.product.product.title)}
+                      data={this.props.retrievedProducts ? this.props.retrievedProducts['hydra:member'] : []}
+                    />
+                  )}
 
-                  </Field>
                 </Col>
-                <div className={'btn-actions d-flex flex-row mx-auto'}>
+                <div className={'btn-actions d-flex flex-column align-items-center'}>
                   { this.props.product && (
                     <Button
-                      color={'success'}
-                      className={"mr-3"}
+                      variant={'contained'}
+                      color={'primary'}
+                      className={"mr-3 mb-3 text-success"}
+                      startIcon={<IoIosCreate />}
                       onClick={() => this.showExistingProductForm()}
                     >
                       <FormattedMessage
@@ -432,16 +396,22 @@ class SupplierProductForm extends React.Component {
                       />
                     </Button>
                   )}
-                  <Button outline
-                          color={'primary'}
-                          onClick={() => this.showNewProductForm()}
-                  >
-                    <FormattedMessage
-                      id={"app.button.associate_with_new_product"}
-                      defaultMessage={"Associer à un nouveau produit"}
-                      description={'Product - associate with a new product'}
-                    />
-                  </Button>
+                  {this.props.retrievedProducts && (
+                    <Button
+                      variant={'contained'}
+                      color={'primary'}
+                      className={"mr-3"}
+                      startIcon={<IoIosCreate />}
+                      onClick={() => this.showNewProductForm()}
+                    >
+                      <FormattedMessage
+                        id={"app.button.associate_with_new_product"}
+                        defaultMessage={"Associer à un nouveau produit"}
+                        description={'Product - associate with a new product'}
+                      />
+                    </Button>
+                  )}
+
 
                 </div>
 
@@ -529,7 +499,6 @@ class SupplierProductForm extends React.Component {
                         type="select"
                         className={'custom-select ml-2 col-2'}
                         style={{minWidth: "100%"}}
-                        onChange={this.handleChange}
                       >
                         <option value="">--- Choisir parmi les pays d'orgine autorisés ---</option>
                         {
@@ -629,34 +598,31 @@ class SupplierProductForm extends React.Component {
                         />
                       </label>
                       &nbsp;:&nbsp;
-                      <Field
-                        component={"select"}
-                        name="product[category][id]"
-                        id={"product-category-select"}
-                        type="select"
-                        className={'custom-select w-100 ml-2 col-2'}
-                        style={{minWidth: "max-content"}}
-                        onChange={this.handleChange}
-                      >
-                        <option value="">--- Choisir une catégorie de produit ---</option>
-                        {this.props.retrievedCategories && this.props.retrievedCategories.map(item => (
-                          <option value={item.id} key={item.id}>
-                            { item.name }
-                          </option>
-                        ))}
+                      {this.props.retrievedCategories && (
+                        <AutoCompleteCategoryNamesInput
+                          name="product[category][id]"
+                          id={"product-category-select"}
+                          label={intl.formatMessage({
+                            id:"app.product.item.category",
+                            defaultMessage:"Catégorie du produit",
+                            description:"Product item - category"
+                          })}
+                          defaultValue={this.props.product ? { name: this.props.product.product.category.name, id: this.props.product.product.category.id} : null }
+                          data={this.props.retrievedCategories ? this.props.retrievedCategories : []}
+                        />
+                      )}
 
-                      </Field>
                     </Col>
-                    <Col>
-                      <Button outline
-                              color={'primary'}
-                              style={{position:"absolute", bottom:"1rem", right: '0'}}
-                              onClick={() => this.showProductCategoryForm("1")}
+                    <Col className={'d-flex align-items-center'}>
+                      <Button
+                        variant={'outlined'}
+                        color={'primary'}
+                        startIcon={<RiFolderAddFill />}
+                        onClick={() => this.showProductCategoryForm("1")}
                       >
                         Proposer une catégorie
                       </Button>
                     </Col>
-
                   </Row>
                   <Collapse isOpen={this.state.toggleCategory === "1"}>
                     <div id={"product-category-form"}>
@@ -795,7 +761,6 @@ class SupplierProductForm extends React.Component {
                         type="select"
                         className={'custom-select ml-2 col-2'}
                         style={{minWidth: "100%"}}
-                        onChange={this.handleChange}
                       >
                         <option value="">--- Choisir parmi les pays d'orgine autorisés ---</option>
                         {
@@ -884,7 +849,7 @@ class SupplierProductForm extends React.Component {
                   <Row>
                     <Col className={'mb-3'}>
                       <label
-                        htmlFor={'newProduct[category]'}
+                        htmlFor={'product[category]'}
                         className="form-control-label"
                       >
                         <FormattedMessage  id={"app.product.item.category"}
@@ -894,35 +859,75 @@ class SupplierProductForm extends React.Component {
                         />
                       </label>
                       &nbsp;:&nbsp;
-                      <Field
-                        component={"select"}
-                        name="newProduct[category][id]"
-                        id={"product-category-select"}
-                        type="select"
-                        className={'custom-select w-100 ml-2 col-2'}
-                        style={{minWidth: "max-content"}}
-                        onChange={this.handleChange}
-                      >
-                        <option value="">--- Choisir une catégorie de produit ---</option>
-                        {this.props.retrievedCategories && this.props.retrievedCategories.map(item => (
-                          <option value={item.id} key={item.id}>
-                            { item.name }
-                          </option>
-                        ))}
+                      {this.props.retrievedCategories && (
+                        <AutoCompleteCategoryNamesInput
+                          name="newProduct[category][id]"
+                          id={"newProduct[category][id]"}
+                          label={intl.formatMessage({
+                            id:"app.product.item.category",
+                            defaultMessage:"Catégorie du produit",
+                            description:"Product item - category"
+                          })}
+                          data={this.props.retrievedCategories ? this.props.retrievedCategories : []}
+                        />
+                      )}
 
-                      </Field>
                     </Col>
-                    <Col>
-                      <Button outline
-                              color={'primary'}
-                              style={{position:"absolute", bottom:"1rem", right: '0'}}
-                              onClick={() => this.showProductCategoryForm("2")}
+                    <Col className={'d-flex align-items-center'}>
+                      <Button
+                        variant={'contained'}
+                        color={'primary'}
+                        startIcon={<RiFolderAddFill />}
+                        onClick={() => this.showProductCategoryForm("2")}
                       >
                         Proposer une catégorie
                       </Button>
                     </Col>
-
                   </Row>
+                  {/*
+                    <Row>
+                        <Col className={'mb-3'}>
+                          <label
+                            htmlFor={'newProduct[category]'}
+                            className="form-control-label"
+                          >
+                            <FormattedMessage  id={"app.product.item.category"}
+                                               defaultMessage="Catégorie du produit"
+                                               description="Product item - category"
+
+                            />
+                          </label>
+                          &nbsp;:&nbsp;
+                          <Field
+                            component={"select"}
+                            name="newProduct[category][id]"
+                            id={"newProduct[category][id]"}
+                            type="select"
+                            className={'custom-select w-100 ml-2 col-2'}
+                            style={{minWidth: "max-content"}}
+                          >
+                            <option value="">--- Choisir une catégorie de produit ---</option>
+                            {this.props.retrievedCategories && this.props.retrievedCategories.map(item => (
+                              <option value={item.id} key={item.id}>
+                                { item.name }
+                              </option>
+                            ))}
+
+                          </Field>
+                        </Col>
+                        <Col className={'d-flex align-items-center'}>
+                          <Button
+                            variant={'contained'}
+                            color={'primary'}
+                            startIcon={<RiFolderAddFill />}
+                            onClick={() => this.showProductCategoryForm("2")}
+                          >
+                            Proposer une catégorie
+                          </Button>
+                        </Col>
+                      </Row>
+                  */}
+
                   <Collapse isOpen={this.state.toggleCategory === "2"}>
                     <div id={"product-category-form"}>
                       <Row >
@@ -999,7 +1004,7 @@ class SupplierProductForm extends React.Component {
                       htmlFor={`isAvailable`}
                       className="form-control-label ml-2 mb-0"
                     >
-                      Produits disponible immédiatement
+                      Produits disponible immédiatement (Requis)
                     </label>
 
 
@@ -1030,7 +1035,6 @@ class SupplierProductForm extends React.Component {
                       type="checkbox"
                       className={'mx-2'}
                       id={`isLimited`}
-                      onChange={this.handleChange}
                     />
                     <label
                       htmlFor={`isLimited`}
@@ -1055,7 +1059,6 @@ class SupplierProductForm extends React.Component {
                       defaultMessage: "Quantité",
                       description: "Supplier product item - quantity"
                     })}
-                    onChange={this.handleChange}
                     value={0}
                   />
                 </Col>
@@ -1068,7 +1071,7 @@ class SupplierProductForm extends React.Component {
                     type="number"
                     step="1"
                     min="0"
-                    max={"100 "}
+                    max={"100"}
                     placeholder="21"
                     required={true}
                     labelText={intl.formatMessage({
@@ -1077,6 +1080,7 @@ class SupplierProductForm extends React.Component {
                       description: "Supplier product item - additional fee"
                     })}
                     normalize={v => parseFloat(v)}
+
                   />
                 </Col>
                 <Col>
@@ -1111,7 +1115,6 @@ class SupplierProductForm extends React.Component {
                       style={{position: 'absolute', top: '0.25rem'}}
                       required={true}
                       id={`user_termsAccepted`}
-                      onChange={this.handleChange}
                       value={true}
                     />
                     <label
@@ -1137,17 +1140,14 @@ class SupplierProductForm extends React.Component {
             </div>
             <Row>
               <div className="mx-auto">
-                <button type="submit" className="btn btn-success my-3 mx-2">
+                <button type="submit" name={'submit'} className="btn btn-success my-3 mx-2">
                   Envoyer
                 </button>
-
                 <Link to={".."} className={"btn btn-outline-danger my-3 mx-2"}>
                   Annuler
                 </Link>
               </div>
             </Row>
-
-
           </form>
         </div>
       </Fragment>
@@ -1177,14 +1177,20 @@ const mapStateToProps = (state, ownProps) => {
         height: ownProps.product.product.height,
         countryOrigin: ownProps.product.product.countryOrigin,
         category: {
-          id: ownProps.product.product.category.id
+          id: ownProps.product.product.category.id,
+          name: ownProps.product.product.category.name,
+          description: ownProps.product.product.category.description,
+          image: {
+            id: ownProps.product.product.category.image.id,
+            url: ownProps.product.product.category.image.url
+          }
         }
       },
       initialPrice: ownProps.product.initialPrice,
       quantity: ownProps.product.quantity,
       isAvailable: ownProps.product.isAvailable,
       isLimited: ownProps.product.isLimited,
-      additionalFee: ownProps.product.additionalFee,
+      additionalFee: ownProps.product.additionalFee * 100,
       additionalInformation: ownProps.product.additionalInformation,
       images: ownProps.product.images,
       category: ownProps.product.product.category.id,

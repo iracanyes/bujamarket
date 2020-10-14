@@ -4,6 +4,9 @@
  * Description:
  */
 import React, { Component } from 'react';
+import {FormattedMessage} from "react-intl";
+import {IconButton, Tooltip} from "@material-ui/core";
+import {FaDribbble, FaFacebook, FaGooglePlus, FaInstagram, FaLinkedin, FaPinterest, FaTwitter} from "react-icons/all";
 
 class Footer extends Component
 {
@@ -16,10 +19,16 @@ class Footer extends Component
           <div className="container">
             <div className="row">
               <div className="col-sm-4">
-                <h2>About Superlist</h2>
+                <h2>
+                  <FormattedMessage
+                    id={'app.about'}
+                    defaultMessage={"À propos de"}
+                    description={"About"}
+                  />
+                  {String(process.env.REACT_APP_NAME).replace(/"/g, "")}
+                </h2>
 
-                <p>Superlist is directory template built upon Bootstrap and SASS to bring great experience in
-                  creation of directory.</p>
+                <p>{String(process.env.REACT_APP_DESCRIPTION).replace(/"/g, "")}</p>
               </div>
               {/* /.col-* */}
 
@@ -27,23 +36,64 @@ class Footer extends Component
                 <h2>Contact Information</h2>
 
                 <p>
-                  Your Street 123, Melbourne, Australia<br/>
-                  +1-123-456-789, <a href="#">sample@example.com</a>
+                  {String(process.env.REACT_APP_OWNER_ADDRESS).replace(/"/g, "")}
+                  <br/>
+                  {String(process.env.REACT_APP_OWNER_PHONE_NUMBER).replace(/"/g, "") +', '}
+                  <br/>
+                  <span>
+                    {String(process.env.REACT_APP_OWNER_CONTACT_EMAIL).replace(/"/g, "")}
+                  </span>
                 </p>
               </div>
               {/* /.col-* */}
 
               <div className="col-sm-4">
-                <h2>Stay Connected</h2>
+                <h2>Suivez-nous</h2>
 
                 <ul className="social-links nav nav-pills">
-                  <li><a href="#"><i className="fa fa-twitter"></i></a></li>
-                  <li><a href="#"><i className="fa fa-facebook"></i></a></li>
-                  <li><a href="#"><i className="fa fa-google-plus"></i></a></li>
-                  <li><a href="#"><i className="fa fa-linkedin"></i></a></li>
-                  <li><a href="#"><i className="fa fa-dribbble"></i></a></li>
-                  <li><a href="#"><i className="fa fa-instagram"></i></a></li>
-                  <li><a href="#"><i className="fa fa-pinterest-p"></i></a></li>
+                  <li>
+                    <Tooltip title={"Twitter"} placement={'top'}>
+                      <IconButton>
+                        <FaTwitter />
+                      </IconButton>
+                    </Tooltip>
+                  </li>
+                  <li>
+                    <Tooltip title={"Facebook"} placement={'top'}>
+                      <IconButton>
+                        <FaFacebook />
+                      </IconButton>
+                    </Tooltip>
+                  </li>
+                  <li>
+                    <Tooltip title={'Google+'} placement={'top'}>
+                      <IconButton>
+                        <FaGooglePlus/>
+                      </IconButton>
+                    </Tooltip>
+                  </li>
+                  <li>
+                    <Tooltip title={"Linkedin"} placement={'top'}>
+                      <IconButton>
+                        <FaLinkedin/>
+                      </IconButton>
+                    </Tooltip>
+                  </li>
+                  <li>
+                    <Tooltip title={"Dribbble"} placement={'top'}>
+                      <IconButton><FaDribbble/></IconButton>
+                    </Tooltip>
+                  </li>
+                  <li>
+                    <Tooltip title={"Instagram"} placement={'top'}>
+                      <IconButton><FaInstagram /></IconButton>
+                    </Tooltip>
+                  </li>
+                  <li>
+                    <Tooltip title={"Pinterest"} placement={'top'}>
+                      <IconButton><FaPinterest /></IconButton>
+                    </Tooltip>
+                  </li>
                 </ul>
                 {/* /.header-nav-social */}
               </div>
@@ -58,7 +108,7 @@ class Footer extends Component
         <div className="footer-bottom">
           <div className="container">
             <div className="footer-bottom-left">
-              &copy; 2015 All rights reserved. Created by <a href="#">Aviators</a>.
+              &copy; 2020 All rights reserved. Created by <a className={'text-white ml-1'} href="https://iracanyes.com" target={"_blank"} rel="noopener noreferrer">Iracanyes</a>.
             </div>
             {/* /.footer-bottom-left */}
 
@@ -66,7 +116,7 @@ class Footer extends Component
               <ul className="nav nav-pills">
                 <li><a href="index.html">Home</a></li>
                 <li><a href="pricing.html">Pricing</a></li>
-                <li><a href="terms-conditions.html">Terms &amp; Conditions</a></li>
+                <li><a href="terms-conditions.html">Termes &amp; Conditions</a></li>
                 <li><a href="contact-1.html">Contact</a></li>
               </ul>
               {/* /.nav */}

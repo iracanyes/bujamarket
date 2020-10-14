@@ -1,9 +1,8 @@
-import React, {Fragment} from "react";
+import React from "react";
 
 export function CountryFlag(props)
 {
   let retour = null;
-  console.log("Language", props.isoCountry)
   switch(props.isoCountry)
   {
     case "BI":

@@ -64,9 +64,6 @@ export function unlockAccount(values, history) {
     dispatch(loading(true));
     dispatch(request(values));
 
-    const headers = new Headers({
-      'Content-Type': 'application/json',
-    });
 
     return fetch('unlock_account', { method: 'POST', body: values })
       .then(response => {

@@ -1,4 +1,3 @@
-import { SubmissionError } from 'redux-form';
 import {extractHubURL, fetch, normalize} from '../../utils/dataAccess';
 import {logout} from "../user/login";
 import {mercureSubscribe} from "./show";
@@ -62,6 +61,9 @@ export function create(values, history, locationState) {
             break;
           case typeof e['hydra:description'] === "string":
             dispatch(error(e['hydra:description']));
+            break;
+          default:
+            dispatch(error(e));
             break;
         }
         dispatch(error(null));

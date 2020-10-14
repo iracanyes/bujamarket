@@ -4,13 +4,12 @@
  * Description: Button - Add to shopping cart
  */
 import React, { Component } from 'react';
-import { Button, Toast, ToastBody, ToastHeader } from 'reactstrap';
+import { Button } from 'reactstrap';
 import {
   Modal,
   Paper,
   Card,
   CardContent,
-  CardActions,
   Typography
 } from "@material-ui/core";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";

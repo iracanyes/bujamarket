@@ -37,11 +37,11 @@ class Bill
     private $id;
 
     /**
-     * @var string $status Status of this bill
+     * @var string $status Status of this bill ["pending","completed","failed","withdrawn"]
      *
      * @ORM\Column(type="string", length=100)
      * @Assert\Choice({"completed","paid","pending","failed","withdrawn"})
-     * @Groups({"bill_customer:output","bill_refund:output","payment:output","order_set:output"})
+     * @Groups({"bill_customer:output","bill_refund:output","payment:output","order_set:output","order_detail:output"})
      */
     private $status;
 

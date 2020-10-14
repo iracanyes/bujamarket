@@ -1,7 +1,6 @@
-import { SubmissionError } from 'redux-form';
+
 import { fetch } from '../../utils/dataAccess';
-import React from "react";
-import { toastWelcome, toastError } from "../../layout/ToastMessage";
+
 
 export function notify(notification){
   return { type: 'USER_REGISTER_NOTIFICATION', notification};
@@ -64,6 +63,9 @@ export function register(values, history) {
             break;
           case typeof e.message === "string":
             dispatch(error(e.message));
+            break;
+          default:
+            dispatch(error(e));
             break;
         }
         dispatch(error(null));

@@ -1,8 +1,5 @@
-import { SubmissionError } from 'redux-form';
 import {extractHubURL, fetch, normalize} from '../../utils/dataAccess';
-import React from "react";
-import { toast } from "react-toastify";
-import { toastSuccess, toastError } from "../../layout/ToastMessage";
+import { toastSuccess } from "../../layout/ToastMessage";
 
 export function error(error) {
   return { type: 'USER_SUBSCRIBE_ERROR', error };
@@ -61,6 +58,9 @@ export function retrieve(token, history) {
           case typeof e === "string":
             dispatch(error(e));
             break;
+          default:
+            dispatch(error(e));
+            break;
         }
         dispatch(error(null));
 
@@ -74,9 +74,6 @@ export function subscribe(values, history) {
     dispatch(loading(true));
     dispatch(request(values));
 
-    const headers = new Headers({
-      'Content-Type': 'multipart/form-data',
-    });
 
     return fetch('subscribe/'+values.get("token"), { method: 'POST', body: values })
       .then(response => {
@@ -109,6 +106,9 @@ export function subscribe(values, history) {
             dispatch(error(e.message));
             break;
           case typeof e === "string":
+            dispatch(error(e));
+            break;
+          default:
             dispatch(error(e));
             break;
         }

@@ -3,8 +3,6 @@
  * Description: Authentication
  * Ajouter l'en-tête Authorization : Bearer $token
  */
-import React from 'react';
-import { withRouter } from "react-router-dom";
 import {toastError} from "../layout/ToastMessage";
 
 function authHeader(history, location) {

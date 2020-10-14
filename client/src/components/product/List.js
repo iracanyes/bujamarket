@@ -42,19 +42,25 @@ class List extends Component {
     // Récupération des produits
     if(this.props.retrieved === null)
     {
-      this.props.list({'page':
-        params.get('page') &&  params.get('page') !== null &&
-        decodeURIComponent(params.get('page'))}
+      this.props.list(
+        {
+          'page': params.get('page') &&  params.get('page') !== null && decodeURIComponent(params.get('page')),
+          'itemsPerPage': params.get('itemsPerPage') &&  params.get('itemsPerPage') !== null && decodeURIComponent(params.get('itemsPerPage')),
+          'category': params.get('category') &&  params.get('category') !== null && decodeURIComponent(params.get('category')),
+        }
       );
     }
 
   }
 
   componentDidUpdate(nextProps) {
-    if (this.props.match.params.page !== nextProps.match.params.page)
+    if (this.props.match.params.page !== nextProps.match.params.page || this.props.match.params.itemsPerPage !== nextProps.match.params.itemsPerPage || this.props.match.params.category !== nextProps.match.params.category)
       nextProps.list(
-        nextProps.match.params.page &&
-          decodeURIComponent(nextProps.match.params.page)
+        {
+          'page': nextProps.match.params.get('page') &&  nextProps.match.params.get('page') !== null && decodeURIComponent(nextProps.match.params.get('page')),
+          'itemsPerPage': nextProps.match.params.get('itemsPerPage') &&  nextProps.match.params.get('itemsPerPage') !== null && decodeURIComponent(nextProps.match.params.get('itemsPerPage')),
+          'category': nextProps.match.params.get('category') &&  nextProps.match.params.get('category') !== null && decodeURIComponent(nextProps.match.params.get('category')),
+        }
       );
   }
 
@@ -70,12 +76,9 @@ class List extends Component {
 
     const products = this.props.retrieved && this.props.retrieved.products;
 
-    console.log('products', products);
-
-
     let rows = [];
 
-    for(let i = 0; i < Math.ceil(products.length / 12 ); i++)
+    for(let i = 0; i < Math.ceil(products.length / 12); i++)
     {
 
       let resultsPer4 = [];
@@ -88,14 +91,18 @@ class List extends Component {
         {
 
           resultsPer4.push(
-            <Col key={"products" + (i * 10 + j)} xs={"12"} sm="6" md="4" lg="3">
+            <Col key={"products" + (i * 12 + j)} xs={"12"} sm="6" md="4" lg="3">
               <Card body>
                 <div className="card-img-custom">
-                  <img src={products[i * 10 + j]['url']} alt={products[i * 10 + j]["alt"]} className="image img-fluid" style={{ width:"100%"}} />
+                  <img
+                    src={products[i * 12 + j]['url'] !== null ? products[i * 12 + j]['img-src'] : 'https://dummyimage.com/600x400/000/ff2b00&text=indisponible'}
+                    alt={products[i * 12 + j]["alt"]}
+                    className="image img-fluid"
+                    style={{ width:"100%"}} />
                     <div className="middle">
 
                       <Link
-                        to={`products/show/${encodeURIComponent(products[i * 10 + j]['id'])}`}
+                        to={`products/show/${encodeURIComponent(products[i * 12 + j]['id'])}`}
                         className="btn btn-outline-info"
                       >
                           <FormattedMessage  id={"app.page.customer.list.button.see_more"}
@@ -105,13 +112,13 @@ class List extends Component {
                       </Link>
                     </div>
                 </div>
-                <CardTitle>{products[i * 10 + j]["title"]}</CardTitle>
+                <CardTitle>{products[i * 12 + j]["title"]}</CardTitle>
                 <CardText>
                   <FormattedMessage  id={"app.product.item.price_from"}
                                      defaultMessage="À partir de"
                                      description="Products item - price from"
                   /> &nbsp;: &nbsp;
-                  {products[i * 10 + j]["minimumPrice"].toFixed(2)} &euro;
+                  {products[i * 12 + j]["minimumPrice"].toFixed(2)} &euro;
                 </CardText>
 
               </Card>
@@ -128,6 +135,8 @@ class List extends Component {
           {resultsPer4}
         </Row>
       );
+
+
     }
 
     let index = 0;
@@ -145,7 +154,7 @@ class List extends Component {
   render() {
 
     return (
-      <div className={"col-lg-8 mx-auto"}>
+      <div className={"col-lg-9 mx-auto"}>
         <h1>
           Nos produits
         </h1>

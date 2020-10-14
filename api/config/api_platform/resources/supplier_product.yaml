@@ -13,7 +13,7 @@ App\Entity\SupplierProduct:
             # host: 'localhost'
             #options:
             #    my_option: 'my_option_value'
-            status: 200 # customize the HTTP status code to send
+            status: 200 # customize the HTTP status code to send            
         supplier_products:
             method: 'GET'
             path: '/my_products'
@@ -29,6 +29,13 @@ App\Entity\SupplierProduct:
             #    _api_receive: false
             schemes: [ 'https' ]
             controller: App\Action\Product\GetProductSuppliersAction
+        best_rated:
+            method: 'GET'
+            path: '/supplier_product/best_rated'
+            #defaults:
+            #    _api_receive: false
+            schemes: [ 'https' ]
+            controller: App\Action\SupplierProduct\GetBestRatedSuppliersProductAction
         post:
             method: 'POST'
             path: '/supplier_product/create'

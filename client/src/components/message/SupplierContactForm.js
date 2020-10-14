@@ -3,7 +3,7 @@
  * Date: 02/09/2019
  * Description:
  */
-import React,{ Fragment } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
@@ -46,7 +46,6 @@ class SupplierContactForm extends React.Component {
       }
     });
 
-    console.log("HandleChange - New state ", this.state);
   }
 
   handleSubmit(e)
@@ -56,8 +55,6 @@ class SupplierContactForm extends React.Component {
     this.setState({ submitted: true });
 
     const { message } = this.state;
-
-    console.log('handleSubmit', user);
 
     if( message.content )
     {

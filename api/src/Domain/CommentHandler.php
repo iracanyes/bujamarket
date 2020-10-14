@@ -8,11 +8,13 @@ use App\Entity\Comment;
 use App\Entity\Customer;
 use App\Entity\OrderDetail;
 use App\Entity\SupplierProduct;
+use App\Exception\OrderDetail\OrderDetailNotFoundException;
 use App\Exception\SupplierProduct\SupplierProductNotFoundException;
 use App\Exception\User\MemberNotFoundException;
 use App\Responder\JsonResponder;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
+use Stripe\Order;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Security;
 
@@ -47,8 +49,6 @@ class CommentHandler
         $comments = $this->em->getRepository(Comment::class)
             ->getCommentsBySupplierProduct($id);
 
-        dump($comments);
-
 
         return $this->jsonResponder->arrayResult($comments, ["groups" => ['comment:output']]);
     }
@@ -56,7 +56,7 @@ class CommentHandler
     public function createComment()
     {
         $data = json_decode($this->request->getContent());
-        dump($data);
+
         $comment = new Comment();
         $comment->setDateCreated(new \DateTime())
             ->setContent($data->content)
@@ -82,15 +82,20 @@ class CommentHandler
                 throw new SupplierProductNotFoundException(sprintf("The supplier product (id=%s) not found", $data->supplierProductId));
             }
 
-            //$comment->setCustomer($customer);
-            //$comment->setSupplierProduct($supplierProduct);
+            if(!$orderDetail instanceof OrderDetail){
+                throw new OrderDetailNotFoundException("The order corresponding to this comment is not found!");
+            }
+
+
             $customer->addComment($comment);
             $supplierProduct->addComment($comment);
             $comment->setOrderDetail($orderDetail);
+            $orderDetail->setCommented(true);
 
             $this->em->persist($comment);
             $this->em->persist($customer);
             $this->em->persist($supplierProduct);
+            $this->em->persist($orderDetail);
             $this->em->flush();
 
             return $comment;

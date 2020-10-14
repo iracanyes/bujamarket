@@ -1,6 +1,5 @@
 import React from 'react';
 import { Rating } from '@material-ui/lab';
-import {MdStarBorder} from 'react-icons/md';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({

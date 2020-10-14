@@ -1,6 +1,4 @@
-import { SubmissionError } from 'redux-form';
 import { fetch } from '../../utils/dataAccess';
-import {updateError} from "./update";
 
 export function error(error) {
   return { type: 'ADDRESS_CREATE_ERROR', error };
@@ -43,6 +41,9 @@ export function create(values, history, location) {
             break;
           case typeof e['hydra:description'] === "string":
             dispatch(error(e['hydra:description']));
+            break;
+          default:
+            dispatch(error(e));
             break;
         }
         dispatch(error(null));

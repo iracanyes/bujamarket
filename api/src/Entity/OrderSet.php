@@ -27,7 +27,7 @@ class OrderSet
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"order_set:output"})
+     * @Groups({"order_set:output","order_detail:output"})
      */
     private $id;
 
@@ -85,7 +85,7 @@ class OrderSet
      *
      * @ORM\OneToOne(targetEntity="App\Entity\BillCustomer", mappedBy="orderSet", cascade={"persist", "remove"})
      * @Assert\Type("App\Entity\BillCustomer")
-     * @Groups({"order_set:output"})
+     * @Groups({"order_set:output","order_detail:output"})
      */
     private $billCustomer;
 
@@ -109,7 +109,7 @@ class OrderSet
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Address", inversedBy="orderSets")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"order_set:output"})
+     * @Groups({"order_set:output","order_detail:output"})
      */
     private $address;
 

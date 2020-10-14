@@ -24,7 +24,9 @@ class ProductRepository extends ServiceEntityRepository
     public function getNames()
     {
         return $this->createQueryBuilder('p')
-            ->addSelect('p.id, p.title')
+            ->leftJoin('p.productSuppliers', 'sp')
+            ->leftJoin('sp.images', 'i')
+            ->addSelect('p', "sp", "i")
             ->orderBy('p.title', 'ASC')
             ->getQuery()
             ->getResult();
@@ -123,7 +125,6 @@ class ProductRepository extends ServiceEntityRepository
             ->groupBy("p.id")
             ->orderBy("score", "DESC");
 
-        dump($qb->getQuery());
 
         return $qb->getQuery()
             ->getResult();

@@ -9,7 +9,7 @@ import { reset as resetConnectedUser } from "../actions/user/login";
 import UserAuth from "../layout/UserAuth";
 import {FormattedMessage} from "react-intl";
 import {toastWelcome} from "../layout/ToastMessage";
-import {toast} from "react-toastify";
+import {LovedByCustomers} from "../components/supplierproduct";
 
 
 class Homepage extends Component
@@ -57,6 +57,18 @@ class Homepage extends Component
         <div className="parallax parallax-main parallax1 parallax-plus-box">
           <UserAuth />
         </div>
+        {/*--- Best rated products ---*/}
+        <section className={'my-5'}>
+          <h1>
+            <FormattedMessage
+              id={"app.supplier_product.best_rated"}
+              defaultMessage={"Produits préférés par nos clients"}
+              description={"Supplier Product - Best rated"}
+            />
+          </h1>
+          <LovedByCustomers />
+        </section>
+        {/*--- Best rated products ---*/}
       </section>
     </Fragment>
 

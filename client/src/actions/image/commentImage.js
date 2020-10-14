@@ -1,6 +1,5 @@
 import {
   fetch,
-  extractHubURL,
   normalize,
   mercureSubscribe as subscribe
 } from '../../utils/dataAccess';
@@ -46,6 +45,9 @@ export function getCustomerImage(id, history, location) {
             break;
           case typeof e.message === "string":
             dispatch(error(e.message));
+            break;
+          default:
+            dispatch(error(e));
             break;
         }
         dispatch(error(null));

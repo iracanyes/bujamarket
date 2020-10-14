@@ -52,7 +52,11 @@ export function list(page = 'delivery_details') {
           case e['hydra:description'].length > 0:
             dispatch(error(e['hydra:description']));
             break;
+          default:
+            dispatch(error(e));
+            break;
         }
+        dispatch(error(null));
       });
   };
 }

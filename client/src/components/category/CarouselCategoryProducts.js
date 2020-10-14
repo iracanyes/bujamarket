@@ -14,7 +14,6 @@ import {
   CardTitle,
 } from "reactstrap";
 import AwesomeSlider from "react-awesome-slider";
-import CoreStyles from 'react-awesome-slider/src/core/styles.scss';
 import AwesomeSliderStyles from "react-awesome-slider/src/styled/cube-animation";
 import {SpinnerLoading} from "../../layout/Spinner";
 import { toastError, toastInfo } from "../../layout/ToastMessage";
@@ -94,10 +93,6 @@ class CarouselCategoryProducts extends Component {
 
         for(let j = 0; j < 12 && products[j]; j++)
         {
-          if(process.env.DEBUG === 1 )
-          {
-            console.log("Résultats produit" + j, products[i * 12 + j]);
-          }
 
           if(j >= 0 && products[i * 12 + j])
           {
@@ -132,9 +127,8 @@ class CarouselCategoryProducts extends Component {
 
         rows.push(
           <div
-            className={'col-10'}
+            className={'col-10 slider-page'}
             key={i}
-            className={'slider-page'}
           >
             <Row
               key={"rows" + (i)}

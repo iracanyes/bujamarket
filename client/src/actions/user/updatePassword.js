@@ -1,13 +1,10 @@
-import { SubmissionError } from 'redux-form';
 import {
   extractHubURL,
   fetch,
   normalize,
   mercureSubscribe as subscribe
 } from '../../utils/dataAccess';
-import React from "react";
-import { toast } from "react-toastify";
-import {toastError, ToastSuccess, ToastError, toastSuccess} from "../../layout/ToastMessage";
+import {toastError, toastSuccess} from "../../layout/ToastMessage";
 
 export function error(error) {
   return { type: 'USER_UPDATE_PASSWORD_ERROR', error };

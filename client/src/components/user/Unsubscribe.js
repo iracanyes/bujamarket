@@ -38,8 +38,6 @@ class Unsubscribe extends Component
   }
 
   render() {
-    const { unsubscribed } = this.props;
-    const { modal } = this.state;
     const user = localStorage.getItem('token')
                   ? JSON.parse(atob(localStorage.getItem('token').split('.')[1]))
                   : null;

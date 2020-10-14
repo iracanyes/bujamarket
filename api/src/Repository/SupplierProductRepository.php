@@ -23,11 +23,11 @@ class SupplierProductRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('sp')
             ->leftJoin('sp.product', 'p')
-            ->addSelect('p')
+            ->leftJoin('p.category', 'c')
+            ->leftJoin('c.image', 'ic')
             ->leftJoin('sp.images', 'i')
-            ->addSelect('i')
             ->leftJoin('sp.supplier', 's')
-            ->addSelect('s')
+            ->addSelect('sp','p','c','ic','i','s')
             ->andWhere('sp.id = :id')
             ->setParameter('id', $id)
             ->getQuery()
@@ -52,6 +52,21 @@ class SupplierProductRepository extends ServiceEntityRepository
             ->groupBy('sp.id')
             ->andWhere('s.id = :id')
             ->setParameter('id', $id)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function getBestRatedSuppliersProduct()
+    {
+        return $this->createQueryBuilder('sp')
+            ->leftJoin('sp.product', 'p')
+            ->addSelect('p')
+            ->leftJoin('sp.images', 'i','sp.id = i.supplier_product_id')
+            ->addSelect('i')
+            ->leftJoin('sp.supplier', 's')
+            ->addSelect('s')
+            ->orderBy('sp.rating','DESC')
+            ->setMaxResults(30)
             ->getQuery()
             ->getResult();
     }
@@ -114,6 +129,24 @@ class SupplierProductRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult();
 
+    }
+
+    public function getSupplierProductWithProductAndSupplierInfo(int $id, string $email)
+    {
+        return $this->createQueryBuilder('sp')
+            ->select('sp')
+            ->leftJoin('sp.images', 'i')
+            ->leftJoin('sp.product', 'p')
+            ->leftJoin('sp.supplier', 's')
+            ->leftJoin('p.category', 'c')
+            ->leftJoin('c.image', 'ic')
+            ->addSelect('i','p', 's','c','ic')
+            ->andWhere('sp.id = :id')
+            ->setParameter('id', $id)
+            ->andWhere('s.email LIKE :email')
+            ->setParameter('email', $email)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
     // /**

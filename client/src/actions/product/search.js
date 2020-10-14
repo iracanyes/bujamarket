@@ -80,6 +80,9 @@ export function search(searchParams = {}) {
           case typeof e['hydra:description'] === "string":
             dispatch(error(e['hydra:description']));
             break;
+          default:
+            dispatch(error(e));
+            break;
         }
         dispatch(error(''));
 

@@ -1,17 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Link, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { FormattedMessage, injectIntl } from "react-intl";
 import PropTypes from 'prop-types';
 import { list, reset } from '../../actions/orderdetail/list';
-import { toastError, toastSuccess } from "../../layout/ToastMessage";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { toastError } from "../../layout/ToastMessage";
+import Alert from "../../layout/Alert";
 import {
-  Button,
   Container,
-  Table,
 } from "reactstrap";
 import { SpinnerLoading } from "../../layout/Spinner";
+import TableSupplierOrders from "./TableSupplierOrders";
 
 class List extends Component {
   static propTypes = {
@@ -72,121 +71,26 @@ class List extends Component {
               })}
             />
           )}
-          {this.props.error && (
-            <div className="alert alert-danger">{this.props.error}</div>
+          {!loading && (
+            (retrieved && retrieved['hydra:member'].length > 0)
+              ? (
+                <TableSupplierOrders my_orders={retrieved['hydra:member']}/>
+              )
+              : (
+                <Alert severity={'info'}>
+                  <FormattedMessage
+                    id={'app.message.supplier_orders.not_found'}
+                    defaultMessage={"Aucune commande client pour vos produits n'a été effectué"}
+                    description={"Message - Supplier product's orders not found"}
+                  />
+                </Alert>
+              )
           )}
-          <table className="table table-responsive table-striped table-hover">
-            <thead>
-            <tr>
-              <th>#</th>
-              <th>status</th>
-              <th>quantity</th>
-              <th>unitCost</th>
-              <th>totalCost</th>
-              <th>orderReturned</th>
-              <th>withdrawal</th>
-              <th>supplierBill</th>
-              <th>deliveryDetail</th>
-              <th>supplierProduct</th>
-              <th colSpan={2} > Actions </th>
-            </tr>
-            </thead>
-            <tbody>
-            {this.props.retrieved &&
-            this.props.retrieved['hydra:member'].map(item => (
-              <tr key={item['@id']}>
-                <th scope="row">
-                  <Link to={`show/${encodeURIComponent(item['@id'])}`}>
-                    {item['@id']}
-                  </Link>
-                </th>
-                <td>{item['status']}</td>
-                <td>{item['quantity']}</td>
-                <td>{item['unitCost']}</td>
-                <td>{item['totalCost']}</td>
-                <td>{this.renderLinks('order_returned', item['orderReturned'])}</td>
-                <td>{this.renderLinks('withdrawals', item['withdrawal'])}</td>
-                <td>{this.renderLinks('bills', item['supplierBill'])}</td>
-                <td>{this.renderLinks('delivery_details', item['deliveryDetail'])}</td>
-                <td>{this.renderLinks('supplier_products', item['supplierProduct'])}</td>
-                <td>
-                  <Link to={`show/${encodeURIComponent(item['@id'])}`}>
-                    <span className="fa fa-search" aria-hidden="true" />
-                    <span className="sr-only">Show</span>
-                  </Link>
-                </td>
-                <td>
-                  <Link to={`edit/${encodeURIComponent(item['@id'])}`}>
-                    <span className="fa fa-pencil" aria-hidden="true" />
-                    <span className="sr-only">Edit</span>
-                  </Link>
-                </td>
-              </tr>
-            ))}
-            </tbody>
-          </table>
-
-          {this.pagination()}
         </Container>
-
       </div>
     );
   }
 
-  pagination() {
-    const view = this.props.retrieved && this.props.retrieved['hydra:view'];
-    if (!view) return;
-
-    const {
-      'hydra:first': first,
-      'hydra:previous': previous,
-      'hydra:next': next,
-      'hydra:last': last
-    } = view;
-
-    return (
-      <nav aria-label="Page navigation">
-        <Link
-          to="."
-          className={`btn btn-primary${previous ? '' : ' disabled'}`}
-        >
-          <span aria-hidden="true">&lArr;</span> First
-        </Link>
-        <Link
-          to={
-            !previous || previous === first ? '.' : encodeURIComponent(previous)
-          }
-          className={`btn btn-primary${previous ? '' : ' disabled'}`}
-        >
-          <span aria-hidden="true">&larr;</span> Previous
-        </Link>
-        <Link
-          to={next ? encodeURIComponent(next) : '#'}
-          className={`btn btn-primary${next ? '' : ' disabled'}`}
-        >
-          Next <span aria-hidden="true">&rarr;</span>
-        </Link>
-        <Link
-          to={last ? encodeURIComponent(last) : '#'}
-          className={`btn btn-primary${next ? '' : ' disabled'}`}
-        >
-          Last <span aria-hidden="true">&rArr;</span>
-        </Link>
-      </nav>
-    );
-  }
-
-  renderLinks = (type, items) => {
-    if (Array.isArray(items)) {
-      return items.map((item, i) => (
-        <div key={i}>{this.renderLinks(type, item)}</div>
-      ));
-    }
-
-    return (
-      <Link to={`../${type}/show/${encodeURIComponent(items)}`}>{items}</Link>
-    );
-  };
 }
 
 const mapStateToProps = state => {

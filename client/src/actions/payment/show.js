@@ -50,11 +50,13 @@ export function retrieve(id, history, location) {
             break;
           case typeof e['hydra:description'] === "string":
           case typeof e.message === "string":
-            console.log("erreur : ", e);
             dispatch(error("Une erreur est survenue durant la confirmation du paiement! Visitez vos commandes pour voir le statut de cette achat."));
             break;
+          default:
+            dispatch(error(e));
+            break;
         }
-
+        dispatch(error(null));
       });
   };
 }

@@ -1,6 +1,6 @@
 import React, {Component, Fragment} from 'react';
 import { connect } from 'react-redux';
-import { Link, Redirect, NavLink as RRDNavLink, withRouter } from 'react-router-dom';
+import { Link, NavLink as RRDNavLink, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { getProfile , reset } from '../../actions/user/profile';
 import { getProfileImage } from "../../actions/image/profile";
@@ -13,25 +13,14 @@ import {
   CardHeader,
   CardBody,
   CardImg,
-  Button,
-  UncontrolledCollapse,
   NavLink,
-  Nav,
-  NavItem,
-  TabContent,
-  TabPane
 } from 'reactstrap';
-import classnames from "classnames";
 import { CountryFlag } from "../../layout/CountryFlag.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { FormattedMessage, injectIntl } from "react-intl";
 import ProfileAddressesWidget from "../address/ProfileAddressesWidget";
 import ProfileBankAccountsWidget from "../bankaccount/ProfileBankAccountsWidget";
-import ProfileForumsWidget from "../forum/ProfileForumsWidget";
-import { loadStripe } from "@stripe/stripe-js";
-import { Elements } from "@stripe/react-stripe-js";
 
-const stripePromise = loadStripe(`${process.env.REACT_APP_STRIPE_PUBLIC_KEY}`);
 
 class Profile extends Component {
   static propTypes = {
@@ -74,13 +63,9 @@ class Profile extends Component {
 
     const item = this.props.retrieved && this.props.retrieved;
     const { error, loading, retrievedImage, loadingImage } = this.props;
-    const { activeTab } = this.state;
-    const image = this.props.retrievedImage && this.props.retrievedImage;
 
     /* Affichage des erreurs */
     (error && error.length > 0 ) && toastError(error);
-
-    console.log('render - retrieved', item);
 
     return (
       <Fragment>

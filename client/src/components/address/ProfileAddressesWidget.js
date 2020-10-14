@@ -4,9 +4,6 @@ import { withRouter } from "react-router-dom";
 import { Table } from 'reactstrap';
 
 class ProfileAddressesWidget extends  Component{
-  constructor(props) {
-    super(props);
-  }
 
   render(){
     const { user } = this.props;

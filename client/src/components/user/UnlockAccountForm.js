@@ -6,7 +6,6 @@
 import React, { Fragment } from 'react';
 import { Link } from "react-router-dom";
 //import { Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
-import CardImg from "reactstrap/es/CardImg";
 import { unlockAccount } from "../../actions/user/unlockAccount";
 import { logout } from "../../actions/user/login";
 import { connect } from "react-redux";
@@ -102,7 +101,7 @@ class UnlockAccountForm extends React.Component {
 
   render() {
     const { unlocking, intl } = this.props;
-    const { password, confirmPassword } = this.state;
+    const { password } = this.state;
     return (
       <Fragment>
 

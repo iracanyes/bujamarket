@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import { withRouter } from "react-router";
 import {connect} from "react-redux";
 import Dropzone from 'react-dropzone';
@@ -6,15 +6,15 @@ import {
   Col,
   Button
 } from "reactstrap";
-import { Box } from '@material-ui/core';
 import {toastError, toastSuccess} from "../../../layout/ToastMessage";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getProfileImage, reset  } from "../../../actions/image/profile";
 import { del } from "../../../actions/image/delete";
-import {injectIntl, FormattedMessage } from "react-intl";
+import {injectIntl } from "react-intl";
 import _ from "lodash";
-import {BsImages, GiClick} from "react-icons/all";
-import { RiImageAddLine } from "react-icons/all";
+import {
+  GiClick
+} from "react-icons/all";
 import { IoIosImages } from "react-icons/all";
 
 
@@ -92,7 +92,7 @@ class DropzoneWithPreviews extends React.Component
     // Revoke data uris for images given by the client
     this.state.newFiles.forEach(file => URL.revokeObjectURL(file.preview));
     // Revoke data uris for all images received from API
-    this.props.data && this.props.data.map((file) => {
+    this.props.data && this.props.data.forEach((file) => {
       URL.revokeObjectURL(file.src);
     });
 
@@ -130,7 +130,7 @@ class DropzoneWithPreviews extends React.Component
   }
 
   render (){
-    const { retrieved, loading, error, data, deleted, deleteImageError, deleteImageLoading, intl } = this.props;
+    const { retrieved,  deleted, deleteImageError, intl } = this.props;
 
     deleteImageError && toastError(deleteImageError);
     deleted && toastSuccess(intl.formatMessage({
@@ -143,7 +143,7 @@ class DropzoneWithPreviews extends React.Component
       <div id={"uploadedImage"} className={"dropzone-thumb"} key={item.filename}>
         <div className={"dropzone-thumb-inner"}>
           <div>
-            <img src={retrieved} />
+            <img src={retrieved} alt={""}/>
           </div>
           <div className={"dropzone-preview-img-title"}>
             { item.filename }
@@ -161,7 +161,7 @@ class DropzoneWithPreviews extends React.Component
       <div className={"dropzone-thumb"} key={index}>
         <div className={"dropzone-thumb-inner"}>
           <div>
-            <img src={file.url ? file.url : URL.createObjectURL(file)} />
+            <img src={file.url ? file.url : URL.createObjectURL(file)} alt={""} />
           </div>
           <div className={"dropzone-preview-img-title"}>
             {_.truncate(file.title ? file.title : file.name, {length: 24, separator: " "}) }
@@ -179,7 +179,7 @@ class DropzoneWithPreviews extends React.Component
       <div className={"dropzone-thumb"} key={index}>
         <div className={"dropzone-thumb-inner"}>
           <div>
-            <img src={file.url ? file.url : URL.createObjectURL(file)} />
+            <img src={file.url ? file.url : URL.createObjectURL(file)} alt={''} />
           </div>
           <div className={"dropzone-preview-img-title"}>
             {_.truncate(file.title ? file.title : file.name, {length: 24, separator: " "}) }
@@ -207,7 +207,7 @@ class DropzoneWithPreviews extends React.Component
               <input {...getInputProps()} name={this.props.inputName ? this.props.inputName : 'images'}/>
               <div className="d-flex flex-column">
                 <div className="d-inline-flex justify-content-center">
-                  <IoIosImages classname={'mr-2'}/>
+                  <IoIosImages className={'mr-2'}/>
                   <p className={'mb-0'}>Glisser et Déposer vo(tre|s) image ici.</p>
 
                 </div>
@@ -215,7 +215,7 @@ class DropzoneWithPreviews extends React.Component
                   <p className={'mb-0'}>Ou</p>
                 </div>
                 <div className="d-inline-flex justify-content-center">
-                  <GiClick classname={'mr-2'}/>
+                  <GiClick className={'mr-2'}/>
                   <p className={'mb-0'}>Cliquer pour choisir vo(tre|s) image(s)</p>
                 </div>
               </div>

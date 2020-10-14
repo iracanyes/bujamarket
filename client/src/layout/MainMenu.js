@@ -76,7 +76,7 @@ class MainMenu extends Component
                     })
                 }
               >
-                <IconButton color={'primary'}>
+                <IconButton color={'primary'} className={'text-white'}>
                   <BsPeopleCircle />
                 </IconButton>
               </Tooltip>
@@ -156,7 +156,7 @@ class MainMenu extends Component
                     defaultMessage:"Favoris",
                     description:"Button - Favorite"
                   })}>
-                    <IconButton color={'primary'}>
+                    <IconButton color={'primary'} className={'text-white'}>
                       <GiGlassHeart />
                     </IconButton>
                   </Tooltip>
@@ -170,7 +170,7 @@ class MainMenu extends Component
                     defaultMessage:"Panier de commande",
                     description:"Button - shopping cart"
                   })}>
-                    <IconButton color={'primary'}>
+                    <IconButton color={'primary'} className={'text-white'}>
                       <TiShoppingCart />
                     </IconButton>
                   </Tooltip>
@@ -188,7 +188,7 @@ class MainMenu extends Component
                   description:"Button - Chat"
                 })}
               >
-                <IconButton color={'primary'}>
+                <IconButton color={'primary'} className={'text-white'}>
                   <SiWechat />
                 </IconButton>
               </Tooltip>
@@ -204,7 +204,7 @@ class MainMenu extends Component
                   description:"Button - About us"
                 })}
               >
-                <IconButton color={'primary'}>
+                <IconButton color={'primary'} className={'text-white'}>
                   <FcAbout />
                 </IconButton>
               </Tooltip>

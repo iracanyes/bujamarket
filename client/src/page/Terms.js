@@ -4,15 +4,10 @@
  * Description:
  */
 import React, { Component, Fragment } from "react";
-import ReactDOM from "react-dom";
-import { FormattedMessage, injectIntl } from "react-intl";
+import { injectIntl } from "react-intl";
 
 class Terms extends Component
 {
-  constructor(props)
-  {
-    super(props);
-  }
 
   render(){
     return <Fragment>

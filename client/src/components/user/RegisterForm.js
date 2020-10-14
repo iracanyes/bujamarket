@@ -53,7 +53,6 @@ class RegisterForm extends React.Component {
       }
     });
 
-    console.log("HandleChange - New state ", this.state);
   }
 
   handleSubmit(e)
@@ -63,8 +62,6 @@ class RegisterForm extends React.Component {
     this.setState({ submitted: true });
 
     const { user } = this.state;
-
-    console.log('handleSubmit', user);
 
     if( user.email && user.password && user.firstname && user.lastname && user.userType )
     {
@@ -142,13 +139,10 @@ class RegisterForm extends React.Component {
   };
 
   render() {
-    const { intl, errorRegister, loading, registering  } = this.props;
+    const { intl, errorRegister, loading  } = this.props;
     const { user } = this.state;
 
     errorRegister && typeof errorRegister === "string" && toastError(errorRegister);
-    console.log('render - erreur', errorRegister);
-    console.log('render - loading', loading);
-    console.log('render - registering', registering);
 
     return (
       <Fragment>

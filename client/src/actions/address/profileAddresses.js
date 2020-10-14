@@ -51,26 +51,27 @@ export function getProfileAddresses(history, location) {
       })
       .catch(e => {
         dispatch(loading(false));
-        dispatch(error(e.message));
 
 
-        /* Si une authentification est requise, redirection vers la page de connexion */
-        if(e.code === 401)
-        {
-          history.push({pathname: '../../login', state: {from: location.pathname }});
-        }
-
-        if(typeof e === 'string')
-        {
-          dispatch(error(e));
-        }else{
-          if(e['hydra:description'])
-          {
-            dispatch(error(e['hydra:title']));
-          }else{
+        switch (true){
+          /* Si une authentification est requise, redirection vers la page de connexion */
+          case e.code === 401:
+            dispatch(error('Authentification nécessaire'));
+            dispatch(error(null));
+            history.push({pathname: '../../login', state: {from: location.pathname }});
+            break;
+          case typeof e['hydra:description'] === "string":
+            dispatch(error(e['hydra:description']));
+            break;
+          case typeof e.message === "string":
             dispatch(error(e.message));
-
-          }
+            break;
+          case typeof e === 'string':
+            dispatch(error(e));
+            break;
+          default:
+            dispatch(error(e));
+            break;
         }
         dispatch(error(null));
       });

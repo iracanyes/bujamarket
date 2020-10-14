@@ -4,10 +4,9 @@
  * Description:
  */
 /* eslint react/no-multi-comp: 0, react/prop-types: 0 */
-import React, { useState } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { Tooltip } from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { del, reset as resetDelete } from '../../actions/favorite/delete';
 import { create, reset } from '../../actions/favorite/create';
@@ -71,7 +70,6 @@ export class ButtonAddToFavorite2 extends React.Component
 
   render()
   {
-    let { tooltipOpen, added } = this.state;
     const { notification, created, deleted } = this.props;
 
     (notification && notification.length > 0 ) && toastSuccess(notification);
@@ -92,16 +90,6 @@ export class ButtonAddToFavorite2 extends React.Component
         item = favorites.filter( el => el.id === this.props.supplierProductId);
       }
     }
-
-
-
-
-    console.log('render - this.props.supplierProductId', this.props.supplierProductId);
-    console.log('render - notification', notification);
-    console.log('render - created', created);
-    console.log('render - deleted', deleted);
-    console.log('render - favorites', favorites);
-    console.log('render - favorite exist', item);
 
     return (
       <div>
@@ -156,7 +144,7 @@ const mapDispatchToProps = dispatch => ({
   resetDelete: () => dispatch(resetDelete()),
   resetCreate: () => dispatch(reset()),
   list: (history, location) => dispatch(retrieveIds( history, location )),
-  resetList: eventSourceList => dispatch(reset(eventSourceList))
+  resetList: eventSourceList => dispatch(resetList(eventSourceList))
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ButtonAddToFavorite2));

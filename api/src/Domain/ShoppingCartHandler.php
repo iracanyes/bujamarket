@@ -54,11 +54,8 @@ class ShoppingCartHandler
         /* Utilisateur authentifié */
         $customer = $this->security->getUser();
 
-        dump($customer);
-        dump($customer instanceof Customer);
 
         $data = json_decode($data);
-        dump($data);
 
         // Avant création du panier de commande on supprime le panier de commande précédent
         if($customer instanceof Customer){
@@ -79,7 +76,6 @@ class ShoppingCartHandler
                 $supplier_product =  $this->em->getRepository(SupplierProduct::class)
                     ->getSupplierProductWithProductInfo((int) $item->productId);
 
-                dump($supplier_product);
 
                 if($supplier_product instanceof SupplierProduct )
                 {
@@ -101,8 +97,6 @@ class ShoppingCartHandler
                     throw new EntityNotFoundException(`Supplier product (id=${$item->productId}) doesn't exist.`, 404);
                 }
             }
-
-            dump($customer);
 
         }catch (\Exception $exception){
             $this->logger->error($exception->getMessage(), ['context' => $exception]);

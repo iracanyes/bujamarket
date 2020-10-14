@@ -19,11 +19,11 @@ import {
   TablePagination,
   TableRow
 } from "@material-ui/core";
-import {FormattedMessage} from "react-intl";
 import ButtonAddToShoppingCart2 from "../shoppingcart/ButtonAddToShoppingCart2";
 import {SpinnerLoading} from "../../layout/Spinner";
 import {toastError, toastInfo} from "../../layout/ToastMessage";
 import { GiBuyCard, RiDeleteBin5Line } from "react-icons/all";
+
 class List extends Component {
   static propTypes = {
     retrieved: PropTypes.object,
@@ -104,7 +104,6 @@ class List extends Component {
     /* Si le panier de commande existe */
     if( shopping_cart.length > 0 )
     {
-      console.log("addToShoppingCart item", item);
       /* mise à jour de la quantité pour le produit */
       let index  = shopping_cart.findIndex( value => value.productId === item.supplierProduct.id);
       /* Si le produit existe, on met à jour la quantité */
@@ -157,8 +156,6 @@ class List extends Component {
   render() {
     const { retrieved, error, loading } = this.props;
     const { page, rowsPerPage } = this.state.table;
-
-    const favorites = retrieved && retrieved['hydra:member'];
 
     typeof error === "string" && toastError(error);
 

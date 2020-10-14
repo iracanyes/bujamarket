@@ -8,9 +8,8 @@ import AddPaymentMethodButton from "./AddPaymentMethodButton";
 import { MdDeleteForever } from "react-icons/all";
 import {
   Button,
-  Icon
 } from '@material-ui/core';
-import {toastError, toastSuccess} from "../../layout/ToastMessage";
+import {toastSuccess} from "../../layout/ToastMessage";
 
 class ProfileBankAccountsWidget extends  Component{
   constructor(props) {
@@ -22,7 +21,7 @@ class ProfileBankAccountsWidget extends  Component{
   }
 
   delete(account){
-    const { user, history, location } =this.props;
+    const { history, location } =this.props;
 
     this.props.delete(account, history, location);
 

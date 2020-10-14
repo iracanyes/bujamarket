@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Link, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { retrieve, reset } from '../../actions/orderset/show';
 import { create } from '../../actions/payment/create';
 import {
-  Button,
   ListGroup,
   ListGroupItem,
   ListGroupItemHeading,
@@ -13,7 +11,6 @@ import {
 } from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FormattedMessage } from 'react-intl';
-import EuVat from '../../config/EuVat/rate.json';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import StoreCheckoutButton from "../payment/StoreCheckoutButton";
@@ -29,11 +26,6 @@ class ValidateOrder extends Component {
     retrieve: PropTypes.func.isRequired,
     reset: PropTypes.func.isRequired,
   };
-
-  constructor(props)
-  {
-    super(props);
-  }
 
   componentDidMount() {
     if(localStorage.getItem('token') === null  )
@@ -69,12 +61,10 @@ class ValidateOrder extends Component {
     /* Récupération de l'ensemble de commande */
     if(this.props.location.state && this.props.location.state.params !== null){
       item = this.props.location.state.params.orderSet;
-      console.log('render - props location state', item);
     }else{
       if(sessionStorage.getItem('my_order'))
       {
         item = JSON.parse(sessionStorage.getItem('my_order'));
-        console.log('render - session_storage.my_order_set', item);
       }else{
         this.props.history.push({pathname: 'shopping_cart', state:{from: this.props.location.pathname, params: this.props.location.state.params}});
       }

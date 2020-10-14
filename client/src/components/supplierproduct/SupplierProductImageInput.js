@@ -13,8 +13,7 @@ export default class SupplierProductImageInput  extends Component{
   }
 
   render(){
-    const { input: { name, value } } = this.props;
-    const {input,labelText, required, meta, } = this.props;
+    const {input,labelText } = this.props;
 
 
     return(

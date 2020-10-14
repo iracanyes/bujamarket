@@ -1,4 +1,3 @@
-import { SubmissionError } from 'redux-form';
 import { fetch } from '../../utils/dataAccess';
 
 export function error(error) {
@@ -75,6 +74,9 @@ export function download(filename, history) {
             break;
           case typeof e.message === "string":
             dispatch(error(e.message));
+            break;
+          default:
+            dispatch(error(e));
             break;
         }
         dispatch(error(null));

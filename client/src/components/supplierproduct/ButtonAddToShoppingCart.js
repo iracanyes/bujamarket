@@ -6,7 +6,6 @@
 /* eslint react/no-multi-comp: 0, react/prop-types: 0 */
 
 import React from 'react';
-import { connect } from 'react-redux';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, Label, Form, FormGroup } from 'reactstrap';
 import { FormattedMessage } from "react-intl";
 import { Link, withRouter } from 'react-router-dom';
@@ -96,7 +95,6 @@ class ButtonAddToShoppingCart extends React.Component {
     localStorage.removeItem('shopping_cart');
     localStorage.setItem('shopping_cart', JSON.stringify(shopping_cart));
 
-    console.log("props",this.props);
     // fermeture du modal
     this.props.toggle();
 
