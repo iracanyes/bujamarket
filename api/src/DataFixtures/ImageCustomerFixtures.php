@@ -26,7 +26,7 @@ class ImageCustomerFixtures extends Fixture implements FixtureGroupInterface
         $image->setPlace(1);
         $image->setTitle($this->faker->sentence(7, true));
         $image->setAlt($this->faker->sentence(7, true));
-        $image->setUrl('qsdfsdf-5ee1a8694d13a.jpeg');
+        $image->setUrl('qsdfsdf-5ee1a8694d13a.jpg');
         $image->setSize($this->faker->numberBetween(3000,8000));
         $image->setMimeType($this->faker->randomElement(['image/jpeg','image/png','image/jpg']));
 
