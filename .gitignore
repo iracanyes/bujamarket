@@ -1,6 +1,6 @@
 /docker-compose.override.yaml
 /docker-compose.override.yml
-
+master.tar.gz
 
 ###> Custom ###
 # Variables d'environnement
