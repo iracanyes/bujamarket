@@ -12,9 +12,9 @@ use App\Entity\Admin;
 use \Faker\Factory;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-class SuperAdminFixtures extends Fixture implements DependentFixtureInterface, FixtureGroupInterface
+class AdminGroupTestFixtures extends Fixture implements DependentFixtureInterface, FixtureGroupInterface
 {
-    public const SUPER_ADMIN_REFERENCE = 'superAdmin';
+    public const ADMIN_REFERENCE = 'admin';
 
     /**
      * @var \Faker\Generator
@@ -57,31 +57,32 @@ class SuperAdminFixtures extends Fixture implements DependentFixtureInterface, F
         $manager->persist($admin);
         $manager->flush();
 
-        $this->addReference(self::SUPER_ADMIN_REFERENCE, $admin);
+        $this->addReference(self::ADMIN_REFERENCE, $admin);
     }
 
     public function setUserInfo(User $user)
     {
-        $user->setEmail("sys-admin-test@gmail.com");
+        $user->setEmail("admin-test@gmail.com");
 
-        $password = $this->encoder->encodePassword($user, getenv('FIXTURE_SUPER_ADMIN_PASSWORD'));
+        $password = $this->encoder->encodePassword($user, getenv('FIXTURE_ADMIN_PASSWORD'));
         $user->setPassword($password);
         $user->setFirstname($this->faker->firstName);
         $user->setLastname($this->faker->lastName);
         $user->setNbErrorConnection(0);
         $user->setBanned(false);
-        $user->setSigninConfirmed(false);
+        $user->setSigninConfirmed(true);
+        $user->setLocked(false);
         $user->setDateRegistration($this->faker->dateTimeAd('now', 'Europe/Paris'));
         $user->setLanguage($this->faker->languageCode);
         $user->setCurrency($this->faker->currencyCode);
 
         // Création du token
         $user->setToken(bin2hex(random_bytes(64)));
-        $user->setRoles(["ROLE_SYSTEM_ADMIN","ROLE_ADMIN","ROLE_SUPPLIER","ROLE_CUSTOMER","ROLE_MEMBER","ROLE_ALLOWED_TO_SWICTH"]);
+        $user->setRoles(["ROLE_ADMIN","ROLE_SUPPLIER","ROLE_CUSTOMER","ROLE_MEMBER","ROLE_ALLOWED_TO_SWICTH"]);
 
         /* Relations */
 
-        $user->setImage($this->getReference(ImageSuperAdminFixtures::IMAGE_SUPER_ADMIN_REFERENCE));
+        $user->setImage($this->getReference(ImageAdminFixtures::IMAGE_ADMIN_REFERENCE));
 
     }
 
@@ -92,7 +93,7 @@ class SuperAdminFixtures extends Fixture implements DependentFixtureInterface, F
     public function getDependencies()
     {
         return array(
-            ImageSuperAdminFixtures::class,
+            ImageAdminFixtures::class
         );
     }
 
@@ -100,5 +101,4 @@ class SuperAdminFixtures extends Fixture implements DependentFixtureInterface, F
     {
         return ["group1"];
     }
-
 }

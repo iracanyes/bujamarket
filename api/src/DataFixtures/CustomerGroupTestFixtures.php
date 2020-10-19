@@ -2,19 +2,18 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Supplier;
+use App\Entity\Customer;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use App\Entity\User;
-use App\Entity\Admin;
 use \Faker\Factory;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-class SuperAdminFixtures extends Fixture implements DependentFixtureInterface, FixtureGroupInterface
+class CustomerGroupTestFixtures extends Fixture implements DependentFixtureInterface, FixtureGroupInterface
 {
-    public const SUPER_ADMIN_REFERENCE = 'superAdmin';
+    public const CUSTOMER_REFERENCE = 'customer';
 
     /**
      * @var \Faker\Generator
@@ -40,48 +39,46 @@ class SuperAdminFixtures extends Fixture implements DependentFixtureInterface, F
      */
     public function load(ObjectManager $manager)
     {
-        $admin = new Admin();
+        $customer = new Customer();
 
         /* User data */
-        $this->setUserInfo($admin);
-        $admin->setUserType('admin');
+        $this->setUserInfo($customer);
+        $customer->setUserType('customer');
 
-        /* Admin data  */
-        $admin->setAdminKey($this->faker->unique()->sha1());
-        $admin->setNbRefundValidated(count($admin->getBillRefunds()));
-        $admin->setNbIssueResolved(0);
+        /* Customer data  */
+        $customer->setCustomerKey($this->faker->unique()->sha1);
+        $customer->setNbAbuseIdentified(0);
+        $customer->setAverageRating($this->faker->randomFloat(1,0,10));
+        $customer->setNbOrderCompleted(count($customer->getOrderSets()));
+        $customer->setNbOrderWithdrawn(0);
 
-
-
-
-        $manager->persist($admin);
+        $manager->persist($customer);
         $manager->flush();
 
-        $this->addReference(self::SUPER_ADMIN_REFERENCE, $admin);
+        $this->addReference(self::CUSTOMER_REFERENCE, $customer);
     }
 
     public function setUserInfo(User $user)
     {
-        $user->setEmail("sys-admin-test@gmail.com");
+        $user->setEmail('customer-test@gmail.com');
 
-        $password = $this->encoder->encodePassword($user, getenv('FIXTURE_SUPER_ADMIN_PASSWORD'));
-        $user->setPassword($password);
+        $user->setPassword($this->encoder->encodePassword($user, getenv('FIXTURE_CUSTOMER_PASSWORD')));
         $user->setFirstname($this->faker->firstName);
         $user->setLastname($this->faker->lastName);
         $user->setNbErrorConnection(0);
         $user->setBanned(false);
-        $user->setSigninConfirmed(false);
+        $user->setSigninConfirmed(true);
+        $user->setLocked(false);
         $user->setDateRegistration($this->faker->dateTimeAd('now', 'Europe/Paris'));
         $user->setLanguage($this->faker->languageCode);
         $user->setCurrency($this->faker->currencyCode);
-
         // Création du token
         $user->setToken(bin2hex(random_bytes(64)));
-        $user->setRoles(["ROLE_SYSTEM_ADMIN","ROLE_ADMIN","ROLE_SUPPLIER","ROLE_CUSTOMER","ROLE_MEMBER","ROLE_ALLOWED_TO_SWICTH"]);
 
+        $user->setRoles(["ROLE_CUSTOMER","ROLE_MEMBER","ROLE_ALLOWED_TO_SWICTH"]);
         /* Relations */
 
-        $user->setImage($this->getReference(ImageSuperAdminFixtures::IMAGE_SUPER_ADMIN_REFERENCE));
+        $user->setImage($this->getReference(ImageCustomerFixtures::IMAGE_CUSTOMER_REFERENCE));
 
     }
 
@@ -92,7 +89,7 @@ class SuperAdminFixtures extends Fixture implements DependentFixtureInterface, F
     public function getDependencies()
     {
         return array(
-            ImageSuperAdminFixtures::class,
+            ImageCustomerFixtures::class
         );
     }
 
@@ -100,5 +97,4 @@ class SuperAdminFixtures extends Fixture implements DependentFixtureInterface, F
     {
         return ["group1"];
     }
-
 }
