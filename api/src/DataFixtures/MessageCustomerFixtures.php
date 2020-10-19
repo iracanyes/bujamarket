@@ -47,7 +47,7 @@ class MessageCustomerFixtures extends Fixture implements DependentFixtureInterfa
 
 
 
-        $this->addReference(self::MESSAGE_CUSTOMER_REFERENCE, $message);
+        $this->setReference(self::MESSAGE_CUSTOMER_REFERENCE, $message);
     }
 
     public function getDependencies()

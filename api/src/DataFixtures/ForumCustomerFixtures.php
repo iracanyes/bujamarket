@@ -41,7 +41,7 @@ class ForumCustomerFixtures extends Fixture implements FixtureGroupInterface, De
 
         $manager->flush();
 
-        $this->addReference(self::FORUM_CUSTOMER_REFERENCE, $forum);
+        $this->setReference(self::FORUM_CUSTOMER_REFERENCE, $forum);
     }
 
     public function getDependencies()

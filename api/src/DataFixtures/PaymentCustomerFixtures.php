@@ -47,7 +47,7 @@ class PaymentCustomerFixtures extends Fixture implements DependentFixtureInterfa
 
         $manager->flush();
 
-        $this->addReference(self::PAYMENT_CUSTOMER_REFERENCE, $payment);
+        $this->setReference(self::PAYMENT_CUSTOMER_REFERENCE, $payment);
 
     }
 

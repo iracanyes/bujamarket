@@ -44,7 +44,7 @@ class WithdrawalFixtures extends Fixture implements DependentFixtureInterface, F
 
         $manager->flush();
 
-        $this->addReference(self::WITHDRAWAL_REFERENCE, $withdrawal);
+        $this->setReference(self::WITHDRAWAL_REFERENCE, $withdrawal);
     }
 
     public function getDependencies()

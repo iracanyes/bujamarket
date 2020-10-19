@@ -13,7 +13,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class CustomerGroupTestFixtures extends Fixture implements DependentFixtureInterface, FixtureGroupInterface
 {
-    public const CUSTOMER_REFERENCE = 'customer';
+    public const CUSTOMER_GROUP_TEST_REFERENCE = 'customerGroupTest';
 
     /**
      * @var \Faker\Generator
@@ -55,7 +55,7 @@ class CustomerGroupTestFixtures extends Fixture implements DependentFixtureInter
         $manager->persist($customer);
         $manager->flush();
 
-        $this->addReference(self::CUSTOMER_REFERENCE, $customer);
+        $this->setReference(self::CUSTOMER_GROUP_TEST_REFERENCE, $customer);
     }
 
     public function setUserInfo(User $user)
@@ -95,6 +95,6 @@ class CustomerGroupTestFixtures extends Fixture implements DependentFixtureInter
 
     public static function getGroups(): array
     {
-        return ["group1"];
+        return ["system_admin"];
     }
 }

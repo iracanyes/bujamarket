@@ -13,7 +13,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class SupplierGroupTestFixtures extends Fixture implements DependentFixtureInterface, FixtureGroupInterface
 {
-    public const SUPPLIER_REFERENCE = 'supplier';
+    public const SUPPLIER_GROUP_TEST_REFERENCE = 'supplierGroupTest';
 
     /**
      * @var \Faker\Generator
@@ -63,7 +63,7 @@ class SupplierGroupTestFixtures extends Fixture implements DependentFixtureInter
         $manager->persist($supplier);
         $manager->flush();
 
-        $this->addReference(self::SUPPLIER_REFERENCE, $supplier);
+        $this->setReference(self::SUPPLIER_GROUP_TEST_REFERENCE, $supplier);
     }
 
     public function setUserInfo(User $user)
@@ -108,7 +108,7 @@ class SupplierGroupTestFixtures extends Fixture implements DependentFixtureInter
 
     public static function getGroups(): array
     {
-        return ["group1"];
+        return ["system_admin"];
     }
 
 }

@@ -40,7 +40,7 @@ class ForumSupplierFixtures extends Fixture implements FixtureGroupInterface, De
 
         $manager->flush();
 
-        $this->addReference(self::FORUM_SUPPLIER_REFERENCE, $forum);
+        $this->setReference(self::FORUM_SUPPLIER_REFERENCE, $forum);
     }
 
 

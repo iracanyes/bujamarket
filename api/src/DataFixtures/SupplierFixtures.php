@@ -63,7 +63,7 @@ class SupplierFixtures extends Fixture implements DependentFixtureInterface, Fix
         $manager->persist($supplier);
         $manager->flush();
 
-        $this->addReference(self::SUPPLIER_REFERENCE, $supplier);
+        $this->setReference(self::SUPPLIER_REFERENCE, $supplier);
     }
 
     public function setUserInfo(User $user)

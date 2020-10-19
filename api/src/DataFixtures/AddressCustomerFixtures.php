@@ -46,7 +46,7 @@ class AddressCustomerFixtures extends Fixture implements DependentFixtureInterfa
         $manager->persist($address);
         $manager->flush();
 
-        $this->addReference(self::ADDRESS_CUSTOMER_REFERENCE, $address);
+        $this->setReference(self::ADDRESS_CUSTOMER_REFERENCE, $address);
     }
 
     /**

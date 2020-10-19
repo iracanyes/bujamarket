@@ -42,7 +42,7 @@ class DeliverySetFixtures extends Fixture implements DependentFixtureInterface, 
 
         $manager->flush();
 
-        $this->addReference(self::DELIVERY_SET_REFERENCE, $deliverySet);
+        $this->setReference(self::DELIVERY_SET_REFERENCE, $deliverySet);
     }
 
     public function getDependencies()

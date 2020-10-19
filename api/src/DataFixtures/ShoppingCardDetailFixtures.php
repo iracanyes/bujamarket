@@ -35,7 +35,7 @@ class ShoppingCardDetailFixtures extends Fixture implements DependentFixtureInte
 
         $manager->flush();
 
-        $this->addReference(self::SHOPPING_CARD_DETAIL_REFERENCE, $shopping_card_detail);
+        $this->setReference(self::SHOPPING_CARD_DETAIL_REFERENCE, $shopping_card_detail);
     }
 
     public function getDependencies()

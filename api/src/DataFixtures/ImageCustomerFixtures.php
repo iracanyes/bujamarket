@@ -26,7 +26,20 @@ class ImageCustomerFixtures extends Fixture implements FixtureGroupInterface
         $image->setPlace(1);
         $image->setTitle($this->faker->sentence(7, true));
         $image->setAlt($this->faker->sentence(7, true));
-        $image->setUrl('qsdfsdf-5ee1a8694d13a.jpg');
+        $image->setUrl($this->faker->randomElement([
+            'emotions-371238_1920.jpg',
+            'hijab-3064633_1920.jpg',
+            'lonely-814631_1920.jpg',
+            'people-2605526_1920.jpg',
+            'qsdfsdf-5ee1a8694d13a.jpg',
+            'Skavar-5f6d8c405722d.jpeg',
+            'Skoll-5f7d425f1b035.jpeg',
+            'Skull-5ef4440403024.jpeg',
+            'Skully-5f3c431b16c8f.jpeg',
+            'Skully-5f7f9f2318a8b.jpeg',
+            'sunset-570881_1920.jpg',
+            'woman-586185_1920.jpg'
+        ]));
         $image->setSize($this->faker->numberBetween(3000,8000));
         $image->setMimeType($this->faker->randomElement(['image/jpeg','image/png','image/jpg']));
 
@@ -34,12 +47,12 @@ class ImageCustomerFixtures extends Fixture implements FixtureGroupInterface
 
         $manager->flush();
 
-        $this->addReference(self::IMAGE_CUSTOMER_REFERENCE, $image);
+        $this->setReference(self::IMAGE_CUSTOMER_REFERENCE, $image);
     }
 
     public static function getGroups(): array
     {
-        return ["group1","group2"];
+        return ["system_admin","group2"];
     }
 
 

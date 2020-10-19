@@ -46,7 +46,7 @@ class AddressSupplierFixtures extends Fixture implements DependentFixtureInterfa
         $manager->persist($address);
         $manager->flush();
 
-        $this->addReference(self::ADDRESS_SUPPLIER_REFERENCE, $address);
+        $this->setReference(self::ADDRESS_SUPPLIER_REFERENCE, $address);
     }
 
     /**

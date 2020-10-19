@@ -25,9 +25,10 @@ class Homepage extends Component
 
   welcome(){
     const { registerNotification, loginNotification } = this.props;
+    const user = localStorage.getItem('token') ? JSON.parse(atob(localStorage.getItem('token').split('.')[1])) :  null;
 
-    registerNotification.length > 0 && toastWelcome(registerNotification);
-    loginNotification.length > 0 && toastWelcome(loginNotification);
+    (user !== null && registerNotification.length > 0) && toastWelcome(registerNotification);
+    (user !== null && loginNotification.length > 0) && toastWelcome(loginNotification);
   }
 
   render(){

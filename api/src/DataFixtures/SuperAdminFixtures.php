@@ -57,7 +57,7 @@ class SuperAdminFixtures extends Fixture implements DependentFixtureInterface, F
         $manager->persist($admin);
         $manager->flush();
 
-        $this->addReference(self::SUPER_ADMIN_REFERENCE, $admin);
+        $this->setReference(self::SUPER_ADMIN_REFERENCE, $admin);
     }
 
     public function setUserInfo(User $user)
@@ -98,7 +98,7 @@ class SuperAdminFixtures extends Fixture implements DependentFixtureInterface, F
 
     public static function getGroups(): array
     {
-        return ["group1"];
+        return ["system_admin"];
     }
 
 }

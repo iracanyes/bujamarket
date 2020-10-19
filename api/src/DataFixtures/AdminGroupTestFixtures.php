@@ -14,7 +14,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class AdminGroupTestFixtures extends Fixture implements DependentFixtureInterface, FixtureGroupInterface
 {
-    public const ADMIN_REFERENCE = 'admin';
+    public const ADMIN_GROUP_TEST_REFERENCE = 'adminGroupTest';
 
     /**
      * @var \Faker\Generator
@@ -57,7 +57,7 @@ class AdminGroupTestFixtures extends Fixture implements DependentFixtureInterfac
         $manager->persist($admin);
         $manager->flush();
 
-        $this->addReference(self::ADMIN_REFERENCE, $admin);
+        $this->setReference(self::ADMIN_GROUP_TEST_REFERENCE, $admin);
     }
 
     public function setUserInfo(User $user)
@@ -99,6 +99,6 @@ class AdminGroupTestFixtures extends Fixture implements DependentFixtureInterfac
 
     public static function getGroups(): array
     {
-        return ["group1"];
+        return ["system_admin"];
     }
 }

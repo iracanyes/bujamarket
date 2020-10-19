@@ -45,7 +45,7 @@ class BillCustomerFixtures extends Fixture implements DependentFixtureInterface,
         $manager->persist($billCustomer);
         $manager->flush();
 
-        $this->addReference(self::BILL_CUSTOMER_REFERENCE, $billCustomer);
+        $this->setReference(self::BILL_CUSTOMER_REFERENCE, $billCustomer);
     }
 
     public function setBillInfo(Bill $bill): void
