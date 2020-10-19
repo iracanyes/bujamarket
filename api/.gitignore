@@ -16,6 +16,7 @@
 ###> Custom ###
 /**/*.*.save
 /public/download/**/*.pdf
+/migrations/*
 ###< Custom ###
 
 ###> lexik/jwt-authentication-bundle ###
