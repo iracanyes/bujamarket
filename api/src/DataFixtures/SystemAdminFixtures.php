@@ -57,7 +57,7 @@ class SystemAdminFixtures extends Fixture implements DependentFixtureInterface, 
         $manager->persist($admin);
         $manager->flush();
 
-        $this->addReference(self::SYSTEM_ADMIN_REFERENCE, $admin);
+        $this->setReference(self::SYSTEM_ADMIN_REFERENCE, $admin);
     }
 
     public function setUserInfo(User $user)
@@ -82,7 +82,7 @@ class SystemAdminFixtures extends Fixture implements DependentFixtureInterface, 
 
         /* Relations */
 
-        $user->setImage($this->getReference(ImageAdminFixtures::IMAGE_ADMIN_REFERENCE));
+        $user->setImage($this->getReference(ImageSystemAdminFixtures::IMAGE_SYSTEM_ADMIN_REFERENCE));
 
     }
 
@@ -93,7 +93,7 @@ class SystemAdminFixtures extends Fixture implements DependentFixtureInterface, 
     public function getDependencies()
     {
         return array(
-            ImageAdminFixtures::class
+            ImageSystemAdminFixtures::class
         );
     }
 

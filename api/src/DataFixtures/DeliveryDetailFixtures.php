@@ -48,7 +48,7 @@ class DeliveryDetailFixtures extends Fixture implements DependentFixtureInterfac
 
         $manager->flush();
 
-        $this->addReference(self::DELIVERY_DETAIL_REFERENCE, $deliveryDetail);
+        $this->setReference(self::DELIVERY_DETAIL_REFERENCE, $deliveryDetail);
     }
 
     public function getDependencies()

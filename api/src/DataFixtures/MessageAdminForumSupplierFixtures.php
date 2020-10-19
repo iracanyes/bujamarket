@@ -48,7 +48,7 @@ class MessageAdminForumSupplierFixtures extends Fixture implements DependentFixt
 
 
 
-        $this->addReference(self::MESSAGE_ADMIN_FORUM_SUPPLIER_REFERENCE, $message);
+        $this->setReference(self::MESSAGE_ADMIN_FORUM_SUPPLIER_REFERENCE, $message);
     }
 
     public function getDependencies()

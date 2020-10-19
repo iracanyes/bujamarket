@@ -24,6 +24,7 @@ class SupplierProductFixtures extends Fixture implements DependentFixtureInterfa
 
     public function load(ObjectManager $manager): void
     {
+
         $supplierProduct = new SupplierProduct();
 
         $supplierProduct->setInitialPrice($this->faker->randomFloat(4,10,2000));
@@ -42,17 +43,17 @@ class SupplierProductFixtures extends Fixture implements DependentFixtureInterfa
         $supplierProduct->setProduct($this->getReference(ProductFixtures::PRODUCT_REFERENCE));
         $supplierProduct->setSupplier($this->getReference(SupplierFixtures::SUPPLIER_REFERENCE));
 
-        for($i=0; $i < $this->faker->numberBetween(3,10); $i++ ){
-            $supplierProduct->addImage($this->getReference(ImageFixtures::IMAGE_REFERENCE));
+        for($j=0; $j < 2; $j++ ){
+            $supplierProduct->addImage($this->getReference(ImageSupplierProductFixtures::IMAGE_SUPPLIER_PRODUCT_REFERENCE));
         }
-
-
-
         $manager->persist($supplierProduct);
-
         $manager->flush();
 
-        $this->addReference(self::SUPPLIER_PRODUCT_REFERENCE, $supplierProduct);
+
+        $this->setReference(self::SUPPLIER_PRODUCT_REFERENCE, $supplierProduct);
+
+
+
     }
 
     public function getDependencies()
@@ -62,13 +63,13 @@ class SupplierProductFixtures extends Fixture implements DependentFixtureInterfa
             SupplierFixtures::class,
             ProductFixtures::class,
             CategoryFixtures::class,
-            ImageFixtures::class
+            ImageSupplierProductFixtures::class
         );
 
     }
 
     public static function getGroups(): array
     {
-        return ["group1","group2"];
+        return ["group1","group2","multiple"];
     }
 }

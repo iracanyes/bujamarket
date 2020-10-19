@@ -46,7 +46,7 @@ class PaymentRefundFixtures extends Fixture implements DependentFixtureInterface
 
         $manager->flush();
 
-        $this->addReference(self::PAYMENT_REFUND_REFERENCE, $payment);
+        $this->setReference(self::PAYMENT_REFUND_REFERENCE, $payment);
 
     }
 

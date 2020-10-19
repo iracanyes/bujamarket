@@ -35,12 +35,12 @@ class ImageSuperAdminFixtures extends Fixture implements FixtureGroupInterface
 
         $manager->flush();
 
-        $this->addReference(self::IMAGE_SUPER_ADMIN_REFERENCE, $image);
+        $this->setReference(self::IMAGE_SUPER_ADMIN_REFERENCE, $image);
     }
 
     public static function getGroups(): array
     {
-        return ["group1"];
+        return ["system_admin"];
     }
 
 

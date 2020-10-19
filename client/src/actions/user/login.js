@@ -97,13 +97,13 @@ export function login(email, password, history, locationState) {
           case e.code === 500:
             dispatch(error("Tentative de connexion avec l'adresse e-mail suivant est impossible! Contactez l'administrateur de la plateforme." ));
             break;
-          case /Bad Credentials/.test(e.message.message):
+          case e.message && typeof e.message.message === "string" && /Bad Credentials/.test(e.message.message):
             dispatch(error("Connexion non-autorisé! Identifiant et/ou mot de passe incorrect."));
             break;
-          case /Account locked/.test(e.message.message):
+          case e.message && typeof e.message.message === "string" && /Account locked/.test(e.message.message):
             dispatch(error("Connexion non-autorisé! Ce compte a été bloqué, un e-mail vous a été envoyé pour débloquer le compte."));
             break;
-          case /Account banned/.test(e.message.message):
+          case e.message && typeof e.message.message === "string" && /Account banned/.test(e.message.message):
             dispatch(error("Connexion non-autorisé! Ce compte a été banni de la plateforme."))
             break;
           case typeof e.message === "string":

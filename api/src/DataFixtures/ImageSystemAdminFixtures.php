@@ -9,11 +9,11 @@ use \Faker\Factory;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
-class ImageAdminFixtures extends Fixture implements FixtureGroupInterface
+class ImageSystemAdminFixtures extends Fixture implements FixtureGroupInterface
 {
     private $faker;
 
-    public const IMAGE_ADMIN_REFERENCE = 'imageAdmin';
+    public const IMAGE_SYSTEM_ADMIN_REFERENCE = 'imageSystemAdmin';
 
     public function __construct()
     {
@@ -35,12 +35,12 @@ class ImageAdminFixtures extends Fixture implements FixtureGroupInterface
 
         $manager->flush();
 
-        $this->setReference(self::IMAGE_ADMIN_REFERENCE, $image);
+        $this->setReference(self::IMAGE_SYSTEM_ADMIN_REFERENCE, $image);
     }
 
     public static function getGroups(): array
     {
-        return ["system_admin","group1","group2"];
+        return ["system_admin"];
     }
 
 

@@ -190,10 +190,10 @@ api_platform:
             client_items_per_page: true
 
             # The default number of items per page
-            items_per_page: 20
+            items_per_page: 30
 
             # The maximum number of items per page
-            maximum_items_per_page: 20
+            maximum_items_per_page: 30
 
             # The default name of the parameter handling the page number
             page_parameter_name: 'page'

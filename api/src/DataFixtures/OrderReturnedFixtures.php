@@ -40,7 +40,7 @@ class OrderReturnedFixtures extends Fixture implements DependentFixtureInterface
 
         $manager->flush();
 
-        $this->addReference(self::ORDER_RETURNED_REFERENCE, $orderReturned);
+        $this->setReference(self::ORDER_RETURNED_REFERENCE, $orderReturned);
     }
 
     public function getDependencies()

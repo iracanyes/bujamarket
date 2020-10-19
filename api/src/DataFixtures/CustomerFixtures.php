@@ -55,7 +55,7 @@ class CustomerFixtures extends Fixture implements DependentFixtureInterface, Fix
         $manager->persist($customer);
         $manager->flush();
 
-        $this->addReference(self::CUSTOMER_REFERENCE, $customer);
+        $this->setReference(self::CUSTOMER_REFERENCE, $customer);
     }
 
     public function setUserInfo(User $user)

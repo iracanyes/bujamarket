@@ -42,7 +42,7 @@ class CommentFixtures extends Fixture implements DependentFixtureInterface, Fixt
 
         $manager->flush();
 
-        $this->addReference(self::COMMENT_REFERENCE, $comment);
+        $this->setReference(self::COMMENT_REFERENCE, $comment);
     }
 
     public function getDependencies()

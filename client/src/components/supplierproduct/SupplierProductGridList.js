@@ -35,7 +35,7 @@ function formatData(suppliersProduct){
   let rows = [];
   suppliersProduct.forEach((el, index) => rows.push({
     id:el.id,
-    img: el.images[0].url,
+    img: (el.images && el.images.length >= 1) ? el.images[0].url : "",
     title: el.product.title,
     author: el.supplier.brandName,
     featured: ((index + 1) % 5 === 0) ,

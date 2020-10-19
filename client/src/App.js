@@ -180,6 +180,12 @@ export class App extends Component
 
     const user = localStorage.getItem("token") !== null ? JSON.parse(atob(localStorage.getItem("token").split('.')[1])) : null;
 
+    console.log('store', store);
+    const state = store.getState();
+    console.log('state', state);
+    console.log('user connected', state.user.authentication.login.token);
+    const userConnected = user === null && state.user.authentication.login.token !== null ? JSON.parse(atob(state.user.authentication.login.token.token.split('.')[1])) : null;
+
     return (
       <Provider store={store}>
         <IntlProvider locale={language} messages={messages[language]}>
@@ -202,7 +208,7 @@ export class App extends Component
                   </Navbar>
                 </header>
                 {/* HomepageSlider */}
-                { user === null && (
+                { user === null && userConnected === null && (
                   <Route path={'/'} exact={true}>
                     <div id="homepage-slider">
                       <HomepageSlider />
@@ -217,7 +223,7 @@ export class App extends Component
                       strict={false}
                       exact={false}
                     >
-                      { ( user && user.roles.includes('ROLE_MEMBER') ) && <SidebarLeftMenu /> }
+                      { ( (user !== null || userConnected !== null) && user.roles.includes('ROLE_MEMBER') ) && <SidebarLeftMenu /> }
                     </Route>
                   </aside>
                   <section id="main-content" className="col col-lg-8 mx-2">

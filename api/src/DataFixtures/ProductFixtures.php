@@ -23,6 +23,7 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface, Fixt
 
     public function load(ObjectManager $manager)
     {
+
         $product = new Product();
 
         $product->setTitle($this->faker->sentence(10, true));
@@ -39,10 +40,13 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface, Fixt
 
 
         $manager->persist($product);
-
         $manager->flush();
 
-        $this->addReference(self::PRODUCT_REFERENCE, $product);
+
+        $this->setReference(self::PRODUCT_REFERENCE, $product);
+
+
+
     }
 
     public function getDependencies()
@@ -56,7 +60,7 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface, Fixt
 
     public static function getGroups(): array
     {
-        return ["group1","group2"];
+        return ["group1","group2","multiple"];
     }
 
 }

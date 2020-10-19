@@ -47,7 +47,7 @@ class MessageSupplierFixtures extends Fixture implements DependentFixtureInterfa
 
 
 
-        $this->addReference(self::MESSAGE_SUPPLIER_REFERENCE, $message);
+        $this->setReference(self::MESSAGE_SUPPLIER_REFERENCE, $message);
     }
 
     public function getDependencies()

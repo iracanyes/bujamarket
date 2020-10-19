@@ -41,7 +41,7 @@ class ShipperFixtures extends Fixture implements FixtureGroupInterface
 
         $manager->flush();
 
-        $this->addReference(self::SHIPPER_REFERENCE, $shipper);
+        $this->setReference(self::SHIPPER_REFERENCE, $shipper);
     }
 
     public static function getGroups(): array

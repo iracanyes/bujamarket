@@ -41,7 +41,7 @@ class BankAccountCustomerFixtures extends Fixture implements DependentFixtureInt
         $manager->persist($bankAccount);
         $manager->flush();
 
-        $this->addReference(self::BANK_ACCOUNT_CUSTOMER_REFERENCE, $bankAccount);
+        $this->setReference(self::BANK_ACCOUNT_CUSTOMER_REFERENCE, $bankAccount);
     }
 
     /**

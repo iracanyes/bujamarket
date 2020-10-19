@@ -57,7 +57,7 @@ class AdminFixtures extends Fixture implements DependentFixtureInterface, Fixtur
         $manager->persist($admin);
         $manager->flush();
 
-        $this->addReference(self::ADMIN_REFERENCE, $admin);
+        $this->setReference(self::ADMIN_REFERENCE, $admin);
     }
 
     public function setUserInfo(User $user)

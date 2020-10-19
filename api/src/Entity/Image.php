@@ -96,7 +96,7 @@ class Image
 
     /**
      * @var SupplierProduct $supplierProduct Supplier's product represented by this image
-     * @ORM\ManyToOne(targetEntity="App\Entity\SupplierProduct", inversedBy="images")
+     * @ORM\ManyToOne(targetEntity="App\Entity\SupplierProduct", inversedBy="images", cascade={"persist"})
      */
     private $supplierProduct;
 

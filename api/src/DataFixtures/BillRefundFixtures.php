@@ -53,7 +53,7 @@ class BillRefundFixtures extends Fixture implements DependentFixtureInterface, F
         $manager->persist($billRefund);
         $manager->flush();
 
-        $this->addReference(self::BILL_REFUND_REFERENCE, $billRefund);
+        $this->setReference(self::BILL_REFUND_REFERENCE, $billRefund);
     }
 
     public function setBillInfo(Bill $bill): void

@@ -29,7 +29,8 @@ class StripeHandler
         return \Stripe\Customer::create([
             "email" => $user->getEmail(),
             "name" => $user->getLastname()." ".$user->getFirstname(),
-            "preferred_locales" => [$user->getLanguage(), "fr"]
+            "preferred_locales" => [$user->getLanguage(), "fr"],
+            "description" => $user->getLastname()." ".$user->getFirstname()
         ]);
     }
 
@@ -85,7 +86,9 @@ class StripeHandler
                 "success_url" => ''.getenv('APP_HOST_URL').'/payment_success/{CHECKOUT_SESSION_ID}',
                 "cancel_url" => ''.getenv('APP_HOST_URL').'/payment_failure',
                 "billing_address_collection" => "required",
-                "customer" => $customer->getCustomerKey() !== null ? $customer->getCustomerKey() : null,
+                "customer" => $customer->getCustomerKey() !== null && substr( $customer->getCustomerKey(), 0, 3 ) === "cs_"
+                    ? $customer->getCustomerKey() : null,
+                "customer_email" => substr( $customer->getCustomerKey(), 0, 3 ) !== "cs_" ? $customer->getEmail() : null,
                 'client_reference_id' => $orderSet->getId(),
                 'mode' => 'payment',
                 'submit_type' => 'pay'

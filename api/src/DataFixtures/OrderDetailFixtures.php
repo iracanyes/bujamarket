@@ -22,6 +22,7 @@ class OrderDetailFixtures extends Fixture implements DependentFixtureInterface, 
 
     public function load(ObjectManager $manager)
     {
+
         $orderDetail = new OrderDetail();
 
         $orderDetail->setStatus($this->faker->randomElement(['pending','in progress','shipped','finalized','blocked']));
@@ -33,13 +34,14 @@ class OrderDetailFixtures extends Fixture implements DependentFixtureInterface, 
         $orderDetail->setSupplierProduct($this->getReference(SupplierProductFixtures::SUPPLIER_PRODUCT_REFERENCE));
         $orderDetail->setOrderSet($this->getReference(OrderSetFixtures::ORDER_SET_REFERENCE));
 
-
-
         $manager->persist($orderDetail);
-
         $manager->flush();
 
-        $this->addReference(self::ORDER_DETAIL_REFERENCE, $orderDetail);
+
+
+        $this->setReference(self::ORDER_DETAIL_REFERENCE, $orderDetail);
+
+
     }
 
     public function getDependencies()
@@ -52,7 +54,7 @@ class OrderDetailFixtures extends Fixture implements DependentFixtureInterface, 
 
     public static function getGroups(): array
     {
-        return ["group1","group2"];
+        return ["group1","group2","multiple"];
     }
 
 

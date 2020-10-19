@@ -146,13 +146,15 @@ services:
     depends_on:
       - client
       - admin
+      - adminer
       - api
       - cache-proxy
     ports:
       - "443:443"
       - "444:444"
+      - "8383:8383"
       - "8443:8443"
       - "8444:8444"
 
 volumes:
-  db-data: {}
+  db-data: { driver: local }

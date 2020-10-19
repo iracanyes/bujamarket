@@ -24,7 +24,7 @@ class FavoriteFixtures extends Fixture implements DependentFixtureInterface, Fix
 
         $manager->flush();
 
-        $this->addReference(self::FAVORITE_REFERENCE, $favorite);
+        $this->setReference(self::FAVORITE_REFERENCE, $favorite);
     }
 
     public function getDependencies()

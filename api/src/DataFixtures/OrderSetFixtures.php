@@ -48,13 +48,11 @@ class OrderSetFixtures extends Fixture implements DependentFixtureInterface, Fix
         $orderSet->setCustomer($this->getReference(CustomerFixtures::CUSTOMER_REFERENCE));
         $orderSet->setAddress($this->getReference(AddressCustomerFixtures::ADDRESS_CUSTOMER_REFERENCE));
 
-
-
         $manager->persist($orderSet);
 
         $manager->flush();
 
-        $this->addReference(self::ORDER_SET_REFERENCE, $orderSet);
+        $this->setReference(self::ORDER_SET_REFERENCE, $orderSet);
     }
 
     public function getDependencies()
@@ -67,7 +65,7 @@ class OrderSetFixtures extends Fixture implements DependentFixtureInterface, Fix
 
     public static function getGroups(): array
     {
-        return ["group1","group2"];
+        return ["group1","group2","multiple"];
     }
 
 

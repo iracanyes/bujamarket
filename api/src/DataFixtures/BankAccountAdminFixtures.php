@@ -41,7 +41,7 @@ class BankAccountAdminFixtures extends Fixture implements DependentFixtureInterf
         $manager->persist($bankAccount);
         $manager->flush();
 
-        $this->addReference(self::BANK_ACCOUNT_ADMIN_REFERENCE, $bankAccount);
+        $this->setReference(self::BANK_ACCOUNT_ADMIN_REFERENCE, $bankAccount);
     }
 
     /**

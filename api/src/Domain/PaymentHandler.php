@@ -118,7 +118,7 @@ class PaymentHandler
                     "unit_amount" => round($item->getSupplierProduct()->getFinalPrice(), 2) * 100,
                     "product_data" => [
                         "name" => $item->getSupplierProduct()->getProduct()->getTitle(),
-                        "images" => [$images[0],$images[1]],
+                        "images" => [$images[0]],
                         "description" => $item->getSupplierProduct()->getProduct()->getResume(),
                     ]
                 ],
