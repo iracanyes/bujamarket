@@ -69,7 +69,7 @@ services:
     env_file:
       - ./.env
     volumes:
-      - ./shared/mysql/db/data:/var/lib/mysql/data:rw
+      - ../shared/mysql/db/data:/var/lib/mysql/data:rw
       - ./api/docker/db/conf.d/default.conf:/etc/mysql/conf.d/myConf.conf:rw
     # Port d'accés au container MySQL (3306) via le port interne d'accès à l'instance MySQL (3306)
     # Attention le port d'accés au container MySQL devra être modifié si une instance sur la machine locale utilise le même port 3306
@@ -113,6 +113,7 @@ services:
     image: ${CONTAINER_REGISTRY_BASE}/client
     build:
       context: ./client
+      target: api_platform_client_nginx
       cache_from:
         - ${CONTAINER_REGISTRY_BASE}/client
     env_file:
@@ -129,6 +130,7 @@ services:
     image: ${CONTAINER_REGISTRY_BASE}/admin    
     build:
       context: ./admin
+      target: api_platform_admin_nginx
       cache_from:
         - ${CONTAINER_REGISTRY_BASE}/admin
     volumes:

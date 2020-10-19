@@ -1,7 +1,7 @@
 ARG NODE_VERSION=13
 ARG NGINX_VERSION=1.17
 
-FROM node:${NODE_VERSION}-alpine
+FROM node:${NODE_VERSION}-alpine AS api_platform_admin_nginx
 
 RUN mkdir -p /usr/src/admin
 

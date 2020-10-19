@@ -15,11 +15,16 @@ services:
       - MERCURE_JWT_SECRET=${MERCURE_JWT_SECRET:?MERCURE_JWT_SECRET is not set or empty}
       - MERCURE_SUBSCRIBE_URL=${MERCURE_SUBSCRIBE_URL:?MERCURE_SUBSCRIBE_URL is not set or empty}
       - TRUSTED_HOSTS=${TRUSTED_HOSTS:?TRUSTED_HOSTS is not set or empty}
-      - TRUSTED_PROXIES=${TRUSTED_PROXIES:-10.0.0.0/8,172.16.0.0/12,192.168.0.0/16}
+      - TRUSTED_PROXIES=${TRUSTED_PROXIES:-10.0.0.0/8,172.16.0.0/12,192.168.0.0/16} 
 
   api:
     image: ${NGINX_IMAGE:?NGINX_IMAGE is not set or empty}
     restart: always
+    environment:
+      - VIRTUAL_HOST=${API_HOST:?API_HOST is not set or empty}
+      - LETSENCRYPT_HOST=${API_HOST:?API_HOST is not set or empty}
+    networks:
+      - nginx-proxy
     depends_on:
       - php
 
@@ -35,15 +40,23 @@ services:
 
   db:
     # in production, we may want to use a managed database service
-    image: postgres:10-alpine
+    image: mariadb:latest
     restart: always
+    command: --default-authentication-plugin=mysql_native_password
     environment:
-      - POSTGRES_DB=${POSTGRES_DB:-api}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is not set or empty}
-      - POSTGRES_USER=${POSTGRES_USER:-api-platform}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_ROOT_HOST: ${MYSQL_ROOT_HOST}
+      MYSQL_HOST: ${MYSQL_HOST}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_PORT: ${MYSQL_PORT}
+    env_file:
+      - ../.env
     volumes:
+      - ./shared/mysql/db/data:/var/lib/mysql/data:rw
       # use a bind-mounted host directory, because we never want to lose our data!
-      - ../api/docker/db/data:/var/lib/postgresql/data:rw
+      - ../api/docker/db/data:/var/lib/mysql/data:rw
 
   mercure:
     # in production, we may want to use the managed version of Mercure
@@ -55,7 +68,8 @@ services:
       - CORS_ALLOWED_ORIGINS=${MERCURE_CORS_ALLOWED_ORIGINS:?MERCURE_CORS_ALLOWED_ORIGINS is not set or empty}
       - JWT_KEY=${MERCURE_JWT_KEY:?MERCURE_JWT_KEY is not set or empty}
       - VIRTUAL_HOST=${MERCURE_HOST:?MERCURE_HOST is not set or empty}
-
+    networks:
+      - nginx-proxy
   client:
     # in production, we may want to use a static website hosting service
     # https://facebook.github.io/create-react-app/docs/deployment
@@ -63,7 +77,9 @@ services:
     restart: always
     environment:
       - VIRTUAL_HOST=${CLIENT_HOST:?CLIENT_HOST is not set or empty}
-
+      - LETSENCRYPT_HOST=${CLIENT_HOST:?CLIENT_HOST is not set or empty}
+    networks:
+      - nginx-proxy
   admin:
     # in production, we may want to use a static website hosting service
     # https://facebook.github.io/create-react-app/docs/deployment
@@ -71,7 +87,17 @@ services:
     restart: always
     environment:
       - VIRTUAL_HOST=${ADMIN_HOST:?ADMIN_HOST is not set or empty}
-
+      - LETSENCRYPT_HOST=${ADMIN_HOST:?ADMIN_HOST is not set or empty}
+    networks:
+      - nginx-proxy
+  nginx-proxy-letsencrypt:
+    image: jrcs/letsencrypt-nginx-proxy-companion
+    restart: always
+    environment:
+      - DEFAULT_EMAIL=iracanyes@gmail.com
+    volumes_from: nginx-proxy
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro 
   nginx-proxy:
     image: jwilder/nginx-proxy:alpine
     restart: always
@@ -86,3 +112,5 @@ services:
       - ./docker/nginx-proxy/certs:/etc/nginx/certs:ro
       - ./docker/nginx-proxy/vhost.d:/etc/nginx/vhost.d:ro
       - /var/run/docker.sock:/tmp/docker.sock:ro
+networks:
+  nginx-proxy:
