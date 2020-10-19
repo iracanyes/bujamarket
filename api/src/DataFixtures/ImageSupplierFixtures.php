@@ -26,7 +26,7 @@ class ImageSupplierFixtures extends Fixture implements FixtureGroupInterface
         $image->setPlace(1);
         $image->setTitle($this->faker->sentence(7, true));
         $image->setAlt($this->faker->sentence(7, true));
-        $image->setUrl('Delta-S-P-R-L-5ef0753edcecb.jpeg');
+        $image->setUrl('Delta-S-P-R-L-5ef0753edcecb.jpg');
         $image->setSize($this->faker->numberBetween(3000,8000));
         $image->setMimeType($this->faker->randomElement(['image/jpeg','image/png','image/jpg']));
 
