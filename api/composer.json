@@ -37,7 +37,7 @@
     },
     "require-dev": {
         "api-platform/schema-generator": "^2.1",
-        "doctrine/doctrine-fixtures-bundle": "3.3.0",
+        "doctrine/doctrine-fixtures-bundle": "^3.3",
         "fzaninotto/faker": "^1.8",
         "roave/security-advisories": "dev-master",
         "symfony/debug-pack": "^1.0",

@@ -8,13 +8,12 @@ use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use App\Entity\User;
-use App\Entity\Admin;
 use \Faker\Factory;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-class SuperAdminFixtures extends Fixture implements DependentFixtureInterface, FixtureGroupInterface
+class SupplierGroupTestFixtures extends Fixture implements DependentFixtureInterface, FixtureGroupInterface
 {
-    public const SUPER_ADMIN_REFERENCE = 'superAdmin';
+    public const SUPPLIER_REFERENCE = 'supplier';
 
     /**
      * @var \Faker\Generator
@@ -40,50 +39,61 @@ class SuperAdminFixtures extends Fixture implements DependentFixtureInterface, F
      */
     public function load(ObjectManager $manager)
     {
-        $admin = new Admin();
+        $supplier = new Supplier();
 
         /* User data */
-        $this->setUserInfo($admin);
-        $admin->setUserType('admin');
+        $this->setUserInfo($supplier);
+        $supplier->setUserType('supplier');
 
-        /* Admin data  */
-        $admin->setAdminKey($this->faker->unique()->sha1());
-        $admin->setNbRefundValidated(count($admin->getBillRefunds()));
-        $admin->setNbIssueResolved(0);
+        /* Supplier data  */
+        $supplier->setSupplierKey($this->faker->sha1);
+        $supplier->setSocialReason($this->faker->company." ".$this->faker->companySuffix);
+        $supplier->setBrandName($this->faker->company);
+        $supplier->setTradeRegistryNumber($this->faker->ean13);
+        $supplier->setVatNumber($this->faker->ean8);
+        $supplier->setContactFullname($this->faker->firstName." ".$this->faker->name);
+        $supplier->setContactEmail($this->faker->companyEmail);
+        $supplier->setContactPhoneNumber($this->faker->phoneNumber);
+        $supplier->setWebsite($this->faker->domainName);
+
+        /* Relations */
+        $supplier->setImage($this->getReference(ImageSupplierFixtures::IMAGE_SUPPLIER_REFERENCE));
 
 
-
-
-        $manager->persist($admin);
+        $manager->persist($supplier);
         $manager->flush();
 
-        $this->addReference(self::SUPER_ADMIN_REFERENCE, $admin);
+        $this->addReference(self::SUPPLIER_REFERENCE, $supplier);
     }
 
     public function setUserInfo(User $user)
     {
-        $user->setEmail("sys-admin-test@gmail.com");
+        /* user informations */
+        $user->setEmail('supplier-test@gmail.com');
 
-        $password = $this->encoder->encodePassword($user, getenv('FIXTURE_SUPER_ADMIN_PASSWORD'));
+        $password = $this->encoder->encodePassword($user, getenv('FIXTURE_SUPPLIER_PASSWORD'));
+
         $user->setPassword($password);
         $user->setFirstname($this->faker->firstName);
         $user->setLastname($this->faker->lastName);
         $user->setNbErrorConnection(0);
         $user->setBanned(false);
-        $user->setSigninConfirmed(false);
+        $user->setSigninConfirmed(true);
+        $user->setLocked(false);
         $user->setDateRegistration($this->faker->dateTimeAd('now', 'Europe/Paris'));
         $user->setLanguage($this->faker->languageCode);
         $user->setCurrency($this->faker->currencyCode);
-
         // Création du token
         $user->setToken(bin2hex(random_bytes(64)));
-        $user->setRoles(["ROLE_SYSTEM_ADMIN","ROLE_ADMIN","ROLE_SUPPLIER","ROLE_CUSTOMER","ROLE_MEMBER","ROLE_ALLOWED_TO_SWICTH"]);
 
-        /* Relations */
+        $user->setRoles(["ROLE_SUPPLIER","ROLE_MEMBER","ROLE_ALLOWED_TO_SWICTH"]);
 
-        $user->setImage($this->getReference(ImageSuperAdminFixtures::IMAGE_SUPER_ADMIN_REFERENCE));
+
+
 
     }
+
+
 
     /**
      * Permet de définir un ordre de chargement des fixtures ainsi les dépendances sont chargés avant
@@ -92,7 +102,7 @@ class SuperAdminFixtures extends Fixture implements DependentFixtureInterface, F
     public function getDependencies()
     {
         return array(
-            ImageSuperAdminFixtures::class,
+            ImageSupplierFixtures::class
         );
     }
 
