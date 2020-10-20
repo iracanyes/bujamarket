@@ -10,7 +10,7 @@ use App\Entity\Address;
 use App\DataFixtures\CustomerFixtures;
 use \Faker\Factory;
 
-class AddressSupplierFixtures extends Fixture implements DependentFixtureInterface, FixtureGroupInterface
+class AddressSupplierFixtures extends Fixture implements FixtureGroupInterface
 {
     public const ADDRESS_SUPPLIER_REFERENCE = 'addressSupplier';
 
@@ -41,7 +41,7 @@ class AddressSupplierFixtures extends Fixture implements DependentFixtureInterfa
         $address->setCountry($this->faker->country);
 
         /* Relation */
-        $address->setUser($this->getReference(SupplierFixtures::SUPPLIER_REFERENCE));
+        //$address->setUser($this->getReference(SupplierFixtures::SUPPLIER_REFERENCE));
 
         $manager->persist($address);
         $manager->flush();
@@ -53,13 +53,14 @@ class AddressSupplierFixtures extends Fixture implements DependentFixtureInterfa
      * Permet de définir un ordre de chargement des fixtures ainsi les dépendances sont chargés avant
      * @return array
      */
+    /*
     public function getDependencies()
     {
         return array(
             SupplierFixtures::class
         );
     }
-
+    */
     public static function getGroups(): array
     {
         return ["system_admin","group2"];

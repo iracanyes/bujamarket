@@ -82,17 +82,19 @@ services:
     restart: always
     depends_on:
       - db
-    environment:
-      PMA_HOST: mysql
-      PMA_USER: root
-      PMA_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      PMA_ARBITRARY: 1
-    env_file:
-      - ./.env
+      - php
+    network_mode: host
+    #environment:
+    #  PMA_HOST: mysql
+    #  PMA_USER: root
+    #  PMA_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    #  PMA_ARBITRARY: 1
+    #env_file:
+    #  - ./.env
     ports:
-      - "8083:8083"
-    expose:
-      - 8083
+      - "8083:8080"
+    #expose:
+    #  - 8083
 
   mercure:
     # In production, you may want to use the managed version of Mercure, https://mercure.rocks
@@ -152,7 +154,7 @@ services:
     ports:
       - "443:443"
       - "444:444"
-      - "8383:8383"
+      - "8383:8083"
       - "8443:8443"
       - "8444:8444"
 
