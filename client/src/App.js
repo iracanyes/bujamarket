@@ -184,7 +184,7 @@ export class App extends Component
     const state = store.getState();
     console.log('state', state);
     console.log('user connected', state.user.authentication.login.token);
-    const userConnected = user === null && state.user.authentication.login.token !== null ? JSON.parse(atob(state.user.authentication.login.token.token.split('.')[1])) : null;
+    const userConnected = user === null && state.user.authentication.login.token ? JSON.parse(atob(state.user.authentication.login.token.token.split('.')[1])) : null;
 
     return (
       <Provider store={store}>
