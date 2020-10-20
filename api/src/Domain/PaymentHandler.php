@@ -112,13 +112,17 @@ class PaymentHandler
             /*
              * Remarque: les prix sur Stripe sont transmis en entier. Ex: 1182.23 doit être transmis comme étant 118223
              * */
+            $productImages = [];
+            for($i = 0; $i < count($images); $i++){
+                $productImages[] = $images[$i];
+            }
             $line_items[] = [
                 "price_data" => [
                     "currency" => "EUR",
                     "unit_amount" => round($item->getSupplierProduct()->getFinalPrice(), 2) * 100,
                     "product_data" => [
                         "name" => $item->getSupplierProduct()->getProduct()->getTitle(),
-                        "images" => [$images[0]],
+                        "images" => $productImages,
                         "description" => $item->getSupplierProduct()->getProduct()->getResume(),
                     ]
                 ],
@@ -228,14 +232,21 @@ class PaymentHandler
 
         /* Ajout de l'ID du paiement Stripe  */
         $payment->setPaymentIntent($session->payment_intent);
-
+        dump($session);
         try{
             // Mise à jour de l'ID Customer si celui-ci n'existe pas déjà
-            $customer = $this->em->getRepository(Customer::class)
-                ->findOneBy(['customerKey' => $session->customer]);
+            if(strpos($session->customer, 0, 3) === 'cs_'){
+                $customer = $this->em->getRepository(Customer::class)
+                    ->findOneBy(['customerKey' => $session->customer]);
+            }else{
+                $customer = $this->em->getRepository(Customer::class)
+                    ->findOneBy(['email' => $session->customer_email]);
+
+            }
+
 
             if($customer === null || !$customer instanceof Customer){
-                throw new MemberNotFoundException("Customer not found!", ['parameter' => $session->customer]);
+                throw new MemberNotFoundException("Customer not found!");
             }
 
             // Association facture - client

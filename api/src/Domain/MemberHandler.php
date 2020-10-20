@@ -622,7 +622,7 @@ class MemberHandler
             if(!$customer instanceof Customer){
                 throw new MemberNotFoundException("Error while retrieving the member");
             }
-
+            dump($customer);
             return $customer;
 
         }catch(\Exception $exception){

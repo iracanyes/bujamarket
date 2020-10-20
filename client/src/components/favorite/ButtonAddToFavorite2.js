@@ -74,7 +74,7 @@ export class ButtonAddToFavorite2 extends React.Component
 
     (notification && notification.length > 0 ) && toastSuccess(notification);
 
-
+    console.log('created', created);
     // Création de la liste des favoris à partir des données DB
     if(deleted === null && created === null)
       this.props.retrieved && localStorage.setItem('favorites', JSON.stringify(this.props.retrieved.favorites));

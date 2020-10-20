@@ -364,7 +364,7 @@ class SupplierProductForm extends React.Component {
                     />
                   </label>
                   &nbsp;:&nbsp;
-                  {this.props.retrievedProducts && (
+                  {this.props.retrievedProducts  && (
                     <AutoCompleteProductNamesInput
                       name="product[id]"
                       id={"existing-product-name-select"}
@@ -374,7 +374,7 @@ class SupplierProductForm extends React.Component {
                         description:"Product item - existing product"
                       })}
                       //defaultValue={this.props.product ? { title: this.props.product.product.title, id: this.props.product.product.id} : null }
-                      defaultValue={this.props.retrievedProducts['hydra:member'].find(el => el.title === this.props.product.product.title)}
+                      defaultValue={this.props.product && this.props.retrievedProducts['hydra:member'].find(el => el.title === this.props.product.product.title)}
                       data={this.props.retrievedProducts ? this.props.retrievedProducts['hydra:member'] : []}
                     />
                   )}
@@ -1073,6 +1073,7 @@ class SupplierProductForm extends React.Component {
                     min="0"
                     max={"100"}
                     placeholder="21"
+                    defaultValue={0}
                     required={true}
                     labelText={intl.formatMessage({
                       id: "app.supplier_product.item.additional_fee",

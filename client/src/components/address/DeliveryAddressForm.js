@@ -178,7 +178,7 @@ class DeliveryAddressForm extends React.Component {
 
     if(delivery_address.shipper !== 0 && ( delivery_address.existingAddress !== 0 || (delivery_address.newAddress.street !== "" && delivery_address.newAddress.town !== "" && delivery_address.newAddress.state !== "" && delivery_address.newAddress.zipCode !== "" && delivery_address.newAddress.country !== "" )))
     {
-      this.props.create(delivery_address, this.props.history, this.props.location.pathname);
+      this.props.create(delivery_address, this.props.history, this.props.location);
     }
 
 
@@ -296,9 +296,9 @@ class DeliveryAddressForm extends React.Component {
                           onChange={this.handleChange}
                           value={this.state.existingAddress}
                         >
-                          <option value="">--Choisir parmi nos expéditeurs--</option>
-                          {this.props.retrievedShipper && this.props.retrievedShipper['hydra:member'].map(item => (
-                            <option value={ item.id } key={item.id}>
+                          <option value="" key={'-1'}>--Choisir parmi nos expéditeurs--</option>
+                          {this.props.retrievedShipper && this.props.retrievedShipper['hydra:member'].map((item, index) => (
+                            <option value={ item.id } key={index}>
                               { item.socialReason }
                             </option>
                           ))}
@@ -335,15 +335,14 @@ class DeliveryAddressForm extends React.Component {
                           value={this.state.existingAddress}
                           disabled={this.state.toggleNewAddressForm}
                         >
-                          <option value="">--Choisir parmi les adresses déjà enregistrées--</option>
-                          {this.props.retrievedAddresses && this.props.retrievedAddresses['hydra:member'] && this.props.retrievedAddresses['hydra:member'].map(item => (
-                            <option value={ item.id } key={item.id}>
+                          <option value="" key={"-1"}>--Choisir parmi les adresses déjà enregistrées--</option>
+                          {this.props.retrievedAddresses && this.props.retrievedAddresses['hydra:member'] && this.props.retrievedAddresses['hydra:member'].map((item, index) => (
+                            <option value={ item.id } key={index}>
                               { item.street.toLowerCase().trim().split(' ')
                                 .map(w => w[0].toUpperCase() + w.substr(1).toLowerCase())
                                 .join(' ') + " " + item.number + " "
                               + item.town +" " + item.state + " "
                               + item.zipCode + " " + item.country }
-
                             </option>
                           ))}
 

@@ -11,6 +11,7 @@ import {
   Button,
   Spinner
 } from 'reactstrap';
+import SuppliersImage from "../image/SuppliersImage";
 
 class SearchResults extends  Component{
   static propTypes = {
@@ -118,7 +119,7 @@ class SearchResults extends  Component{
                 <Col key={"products" + (i * 12 + j)} xs={"12"} sm="6" md="4" lg="3">
                   <Card body>
 
-                    <CardImg top width="100%" src={products[i * 12 + j].url} alt={products[i * 12 + j].alt} />
+                    <CardImg top width="100%" src={products[i * 12 + j]['img-src']} alt={products[i * 12 + j].alt} />
                     <CardTitle>{products[i * 12 + j]["title"]}</CardTitle>
                     <CardText>
                       <FormattedMessage  id={"app.product.item.price_from"}
@@ -128,7 +129,7 @@ class SearchResults extends  Component{
                       {products[i * 10 + j]["minimumPrice"].toFixed(2)} &euro;
                     </CardText>
                     <Link
-                      to={`../../products/show/${encodeURIComponent(products[i * 12 + j]['id'])}`}
+                      to={`../../supplier_product/show/${encodeURIComponent(products[i * 12 + j]['id'])}`}
                       className={"btn btn-outline-primary"}
                     >
                       Voir le détail
@@ -219,9 +220,10 @@ class SearchResults extends  Component{
             {
 
               resultsPer4.push(
-                <Col key={"products" + (i * 10 + j)} xs={"12"} sm="6" md="4" lg="3">
+                <Col key={"supplier" + (i * 10 + j)} xs={"12"} sm="6" md="4" lg="3">
                   <Card body>
-                    <CardImg top width="100%" src={suppliers[i * 12 + j].url} alt={suppliers[i * 12 + j].image.alt} />
+                    <SuppliersImage index={i * 12 + j} supplier={suppliers[i * 12 + j]}/>
+                    {/*<CardImg top width="100%" src={suppliers[i * 12 + j]['img-src']} alt={suppliers.image.alt} />*/}
                     <CardTitle>{suppliers[i * 12 + j]["socialReason"]}</CardTitle>
                     <CardText>{suppliers[i * 12 + j]["contactPhoneNumber"]}</CardText>
                     <Link to={`../../suppliers/show/${encodeURIComponent(suppliers[i * 12 + j]['id'])}`}>

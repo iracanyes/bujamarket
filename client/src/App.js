@@ -208,7 +208,9 @@ export class App extends Component
                   </Navbar>
                 </header>
                 {/* HomepageSlider */}
-                { user === null && userConnected === null && (
+
+                { (user === null && this.state.results.length === 0) && (
+
                   <Route path={'/'} exact={true}>
                     <div id="homepage-slider">
                       <HomepageSlider />
@@ -216,7 +218,7 @@ export class App extends Component
                   </Route>
                 ) }
                 {/* Main section  */}
-                <main>
+                <main style={{minHeight:"70vh"}}>
                   <aside id="aside-left">
                     <Route
                       path={'/'}

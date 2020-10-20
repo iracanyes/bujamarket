@@ -1,6 +1,7 @@
 import {extractHubURL, fetch, normalize} from '../../utils/dataAccess';
 import {logout} from "../user/login";
 import {mercureSubscribe} from "./show";
+import authHeader from "../../utils/authHeader";
 
 export function error(error) {
   return { type: 'ORDERSET_CREATE_ERROR', error };
@@ -14,15 +15,13 @@ export function success(created) {
   return { type: 'ORDERSET_CREATE_SUCCESS', created };
 }
 
-export function create(values, history, locationState) {
+export function create(values, history, location) {
   return dispatch => {
     dispatch(loading(true));
 
-    let headers = new Headers();
-    if(localStorage.getItem('token') !== null)
-      headers.set('Authorization', 'Bearer '+ JSON.parse(localStorage.getItem('token')).token);
+    const headers = authHeader(history, location);
 
-    return fetch('order_set/create', { method: 'POST', headers: headers, body: JSON.stringify(values) })
+    return fetch('order_set/create', { method: 'POST', headers, body: JSON.stringify(values) })
       .then(response =>
         response
           .json()
@@ -40,7 +39,7 @@ export function create(values, history, locationState) {
         /* Redirection vers la page de paiement  */
         sessionStorage.removeItem('my_order');
         sessionStorage.setItem('my_order', JSON.stringify(retrieved));
-        history.push({pathname:'validate_order', state: {from: locationState ,  params : {orderSet: retrieved}}});
+        history.push({pathname:'validate_order', state: {from: location.pathname ,  params : {orderSet: retrieved}}});
       })
       .catch(e => {
         dispatch(loading(false));
@@ -48,13 +47,13 @@ export function create(values, history, locationState) {
         switch (true){
           case e.code === 401:
             dispatch(error("Authentification nécessaire avant de poursuivre!"));
-            history.push({pathname: '../../login', state: { from : locationState.from }});
+            history.push({pathname: '../../login', state: { from : location.pathname }});
             break;
           case /Unauthorized/.test(e):
             dispatch(logout());
             dispatch(error("Accès non-autorisé! Authentification obligatoire"));
             dispatch(error(null));
-            history.push({pathname:'login', state: {from: locationState.from }});
+            history.push({pathname:'login', state: {from: location.pathname }});
             break;
           case typeof e.message === 'string':
             dispatch(error(e.message));

@@ -112,7 +112,15 @@ class UpdateProfile extends React.Component {
     errorUpdate && typeof errorUpdate === "string" && toastError(errorUpdate);
     errorRetrieve && typeof errorRetrieve === "string" && toastError(errorRetrieve);
 
-    const user = retrieved && retrieved['hydra:member'][0];
+    let user = null;
+    if(retrieved){
+      if(retrieved['hydra:member']) {
+        user = retrieved['hydra:member'][0];
+      }else {
+        user = retrieved;
+      }
+    }
+
 
     return (
       <Fragment>
@@ -123,7 +131,7 @@ class UpdateProfile extends React.Component {
                                description="Page User - Update profile's information"
             />
           </h1>
-          { user !== null && (
+          { user && user !== null && (
             <form
               id="update-profile-form"
               name="update-profile"
@@ -659,7 +667,7 @@ class UpdateProfile extends React.Component {
 const mapStateToProps = state => {
   const { updating, errorUpdate, loadingUpdate, retrieved, error, loading, eventSource } = state.user.update;
 
-  const profile = retrieved ? retrieved['hydra:member'][0]: {};
+  const profile = retrieved ? ( retrieved['hydra:member'] ? retrieved['hydra:member'][0] : retrieved ) : {};
 
   /* Retourner les données récupèrés en DB sous le nom "initialValues" permet à redux-form d'initialiser le formulaire à ces valeurs */
   return { updating, errorUpdate, loadingUpdate, retrieved, initialValues: profile, errorRetrieve: error, loading, eventSource };

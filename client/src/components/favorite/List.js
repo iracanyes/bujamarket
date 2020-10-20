@@ -69,6 +69,8 @@ class List extends Component {
         nextProps.match.params.page &&
           decodeURIComponent(nextProps.match.params.page)
       );
+
+    this.props.deletedItem && this.setState(state => ({}));
   }
 
   componentWillUnmount() {
@@ -154,7 +156,7 @@ class List extends Component {
   }
 
   render() {
-    const { retrieved, error, loading } = this.props;
+    const { retrieved, error, loading, deletedItem } = this.props;
     const { page, rowsPerPage } = this.state.table;
 
     typeof error === "string" && toastError(error);
@@ -228,7 +230,7 @@ class List extends Component {
                           <Button
                             outline
                             color={"danger"}
-                            onClick={() => this.deleteProduct(item.id)}
+                            onClick={() => this.deleteProduct(item.supplierProduct.id)}
                             className={'d-inline-block'}
                           >
                             <RiDeleteBin5Line/>
@@ -255,67 +257,10 @@ class List extends Component {
           </Paper>
         )}
 
-
-
-        {this.pagination()}
       </div>
     );
   }
 
-  pagination() {
-    const view = this.props.retrieved && this.props.retrieved['hydra:view'];
-    if (!view) return;
-
-    const {
-      'hydra:first': first,
-      'hydra:previous': previous,
-      'hydra:next': next,
-      'hydra:last': last
-    } = view;
-
-    return (
-      <nav aria-label="Page navigation">
-        <Link
-          to="."
-          className={`btn btn-primary${previous ? '' : ' disabled'}`}
-        >
-          <span aria-hidden="true">&lArr;</span> First
-        </Link>
-        <Link
-          to={
-            !previous || previous === first ? '.' : encodeURIComponent(previous)
-          }
-          className={`btn btn-primary${previous ? '' : ' disabled'}`}
-        >
-          <span aria-hidden="true">&larr;</span> Previous
-        </Link>
-        <Link
-          to={next ? encodeURIComponent(next) : '#'}
-          className={`btn btn-primary${next ? '' : ' disabled'}`}
-        >
-          Next <span aria-hidden="true">&rarr;</span>
-        </Link>
-        <Link
-          to={last ? encodeURIComponent(last) : '#'}
-          className={`btn btn-primary${next ? '' : ' disabled'}`}
-        >
-          Last <span aria-hidden="true">&rArr;</span>
-        </Link>
-      </nav>
-    );
-  }
-
-  renderLinks = (type, items) => {
-    if (Array.isArray(items)) {
-      return items.map((item, i) => (
-        <div key={i}>{this.renderLinks(type, item)}</div>
-      ));
-    }
-
-    return (
-      <Link to={`../${type}/show/${encodeURIComponent(items["id"])}`}>{items["id"]}</Link>
-    );
-  };
 }
 
 const mapStateToProps = state => {
