@@ -73,7 +73,6 @@ class OrderSetHandler
 
         /* Récupération du body de la requête POST */
         $data = json_decode($this->request->getContent());
-        dump($data);
         /* Gestion de l'adresse de livraison  */
         $address = $this->addressHandler->getDeliveryAddress($data);
 
