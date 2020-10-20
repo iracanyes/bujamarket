@@ -58,7 +58,7 @@ class SupplierGroupTestFixtures extends Fixture implements DependentFixtureInter
 
         /* Relations */
         $supplier->setImage($this->getReference(ImageSupplierFixtures::IMAGE_SUPPLIER_REFERENCE));
-
+        $supplier->addAddress($this->getReference(AddressSupplierFixtures::ADDRESS_SUPPLIER_REFERENCE));
 
         $manager->persist($supplier);
         $manager->flush();
@@ -86,7 +86,7 @@ class SupplierGroupTestFixtures extends Fixture implements DependentFixtureInter
         // Création du token
         $user->setToken(bin2hex(random_bytes(64)));
 
-        $user->setRoles(["ROLE_SUPPLIER","ROLE_MEMBER","ROLE_ALLOWED_TO_SWICTH"]);
+        $user->setRoles(["ROLE_PUBLISHER","ROLE_SUPPLIER","ROLE_MEMBER","ROLE_ALLOWED_TO_SWICTH"]);
 
 
 
@@ -102,7 +102,8 @@ class SupplierGroupTestFixtures extends Fixture implements DependentFixtureInter
     public function getDependencies()
     {
         return array(
-            ImageSupplierFixtures::class
+            ImageSupplierFixtures::class,
+            AddressSupplierFixtures::class
         );
     }
 

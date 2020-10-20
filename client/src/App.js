@@ -209,7 +209,7 @@ export class App extends Component
                 </header>
                 {/* HomepageSlider */}
 
-                { (user === null && this.state.results.length === 0) && (
+                { (user === null && userConnected === null) && (
 
                   <Route path={'/'} exact={true}>
                     <div id="homepage-slider">
