@@ -5,6 +5,8 @@ master.tar.gz
 ###> Custom ###
 # Variables d'environnement
 .env
+.env.local
+**/.env.local
 # Documentation du développement
 # docs
 .idea
@@ -22,7 +24,7 @@ api/private/uploads/img/profil/customer/*
 api/private/uploads/img/profil/supplier/*
 api/private/downloads/bill/*
 # Documentation
-/docs
+/docs/SQL/*
 # Doctrine Migrations
 api/src/Migrations
 ###< Custom ###

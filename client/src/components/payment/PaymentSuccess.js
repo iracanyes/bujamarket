@@ -85,12 +85,12 @@ class PaymentSuccess extends Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    const { errorDownload, retrievedPayment } = this.props;
+    const { errorDownload, retrievedPayment, loadingPayment } = this.props;
     if(typeof errorDownload === 'string'){
       toastError(errorDownload);
     }
 
-    if(!retrievedPayment)
+    if(!retrievedPayment && loadingPayment === false && typeof errorPayment === "string"  )
     {
       setTimeout(
         () => this.props.retrievePayment(this.props.match.params.sessionId, this.props.history, this.props.location),

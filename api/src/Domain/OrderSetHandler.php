@@ -8,6 +8,7 @@ use App\Entity\OrderDetail;
 use App\Entity\OrderSet;
 use App\Entity\Customer;
 use App\Entity\Supplier;
+use App\Exception\OrderSet\CreateOrderSetException;
 use Doctrine\ORM\EntityNotFoundException;
 use App\Exception\OrderSet\OrderSetNotFoundException;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\UserNotFoundException;
@@ -72,7 +73,7 @@ class OrderSetHandler
 
         /* Récupération du body de la requête POST */
         $data = json_decode($this->request->getContent());
-
+        dump($data);
         /* Gestion de l'adresse de livraison  */
         $address = $this->addressHandler->getDeliveryAddress($data);
 
@@ -143,7 +144,8 @@ class OrderSetHandler
             $this->em->getConnection()->commit();
         }catch (\Exception $exception){
             $this->em->getConnection()->rollBack();
-            throw new UserNotFoundException('email', $this->security->getUser()->getUsername());
+            throw new CreateOrderSetException($exception->getMessage() );
+            //throw new UserNotFoundException('email', $this->security->getUser()->getUsername());
         }
 
         return $orderSet;

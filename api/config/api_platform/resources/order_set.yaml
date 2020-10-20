@@ -29,7 +29,9 @@ App\Entity\OrderSet:
         post:
             method: 'POST'
             path: '/order_set/create'
-            security: "is_granted('ROLE_MEMBER') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
+            defaults:
+                _api_receive: false
+            security: "is_granted('ROLE_CUSTOMER') and is_granted('IS_AUTHENTICATED_REMEMBERED')"
             schemes: ['https']
             controller: App\Action\OrderSet\CreateOrderSetAction
         getOrderSetSuccess:

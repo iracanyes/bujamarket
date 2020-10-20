@@ -62,7 +62,7 @@ class AddressSupplierFixtures extends Fixture implements DependentFixtureInterfa
 
     public static function getGroups(): array
     {
-        return ["group1","group2"];
+        return ["system_admin","group2"];
     }
 
 }
