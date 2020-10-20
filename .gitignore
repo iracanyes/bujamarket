@@ -12,6 +12,7 @@ master.tar.gz
 .idea
 # Volumes DB
 shared
+docs/iracanyes_tfe_2020_db.rar
 #les fichiers de développement
 **/*.*.save
 *.*.save
