@@ -59,13 +59,13 @@ services:
     # Pour l'image MySQL
     command: --default-authentication-plugin=mysql_native_password
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_ROOT_HOST: ${MYSQL_ROOT_HOST}
-      MYSQL_HOST: ${MYSQL_HOST}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_PORT: ${MYSQL_PORT}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?MYSQL_ROOT_PASSWORD is not set or empty}
+      MYSQL_ROOT_HOST: ${MYSQL_ROOT_HOST:?MYSQL_ROOT_HOST is not set or empty}
+      MYSQL_HOST: ${MYSQL_HOST:?MYSQL_HOST is not set or empty}
+      MYSQL_USER: ${MYSQL_USER:?MYSQL_USER is not set or empty}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:?MYSQL_PASSWORD is not set or empty}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:?MYSQL_DATABASE is not set or empty}
+      MYSQL_PORT: ${MYSQL_PORT:?MYSQL_PORT is not set or empty}
     env_file:
       - ./.env
     volumes:
@@ -77,13 +77,13 @@ services:
       - "3306:3306"
 
   # Formely PHPMyAdmin
-  adminer:
-    image: adminer
-    restart: always
-    depends_on:
-      - db
-      - php
-    network_mode: host
+  #adminer:
+  #  image: adminer
+  #  restart: always
+  #  depends_on:
+  #    - db
+  #    - php
+  #  network_mode: host
     #environment:
     #  PMA_HOST: mysql
     #  PMA_USER: root
@@ -91,17 +91,40 @@ services:
     #  PMA_ARBITRARY: 1
     #env_file:
     #  - ./.env
-    ports:
-      - "8083:8080"
+  #  ports:
+  #    - "8083:8080"
     #expose:
     #  - 8083
+    
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: bujamarket_phpmyadmin
+    restart: always
+    domainname: localhost
+    depends_on:
+      - db
+    environment:
+      - PMA_HOST=db
+      #- MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:?MYSQL_ROOT_PASSWORD is not set or empty}  
+      #- PMA_USER=${MYSQL_USER:?MYSQL_USER is not set or empty}
+      #- PMA_PASSWORD=${MYSQL_PASSWORD:?MYSQL_PASSWORD is not set or empty}
+      - PMA_ABSOLUTE_URI=https://localhost:8383
+      #- PMA_PORT=${MYSQL_PORT:?MYSQL_PORT is not set or empty}
+      - UPLOAD_LIMIT=${UPLOAD_LIMIT:-10M}
+      - PMA_ARBITRARY=1  
+    env_file:
+      - ./.env
+    ports:
+      - "8080:80"
+    volumes:
+      - ./shared/phpmyadmin/sessions
 
   mercure:
     # In production, you may want to use the managed version of Mercure, https://mercure.rocks
     image: dunglas/mercure
     environment:
       # You should definitely change all these values in production
-      - JWT_KEY=!UnsecureChangeMe!
+      - JWT_KEY=${JWT_KEY}
       - ALLOW_ANONYMOUS=1
       - CORS_ALLOWED_ORIGINS=*
       - PUBLISH_ALLOWED_ORIGINS=http://localhost:1337,https://localhost:1338
@@ -148,13 +171,14 @@ services:
     depends_on:
       - client
       - admin
-      - adminer
+      #- adminer
+      - phpmyadmin
       - api
       - cache-proxy
     ports:
       - "443:443"
       - "444:444"
-      - "8383:8083"
+      - "8383:8383"
       - "8443:8443"
       - "8444:8444"
 
