@@ -46,6 +46,12 @@ services:
       target: api_platform_client_nginx
       args:
         - REACT_APP_API_ENTRYPOINT=${REACT_APP_API_ENTRYPOINT:?REACT_APP_API_ENTRYPOINT is not set or empty}
+        - REACT_APP_STRIPE_PUBLIC_KEY=${REACT_APP_STRIPE_PUBLIC_KEY:?REACT_APP_STRIPE_PUBLIC_KEY is not set or empty}
+        - REACT_APP_NAME=${REACT_APP_NAME:?REACT_APP_NAME is not set or empty}
+        - REACT_APP_DESCRIPTION=${REACT_APP_DESCRIPTION:?REACT_APP_DESCRIPTION is not set or empty}
+        - REACT_APP_OWNER_ADDRESS=${REACT_APP_OWNER_ADDRESS:?REACT_APP_OWNER_ADDRESS is not set or empty}
+        - REACT_APP_OWNER_PHONE_NUMBER=${REACT_APP_OWNER_PHONE_NUMBER:?REACT_APP_OWNER_PHONE_NUMBER is not set or empty}
+        - REACT_APP_OWNER_CONTACT_EMAIL=${REACT_APP_OWNER_CONTACT_EMAIL:?REACT_APP_OWNER_CONTACT_EMAIL is not set or empty}
       cache_from:
         - ${CLIENT_IMAGE:?CLIENT_IMAGE is not set or empty}
     image: ${CLIENT_IMAGE:?CLIENT_IMAGE is not set or empty}

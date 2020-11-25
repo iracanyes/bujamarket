@@ -17,34 +17,36 @@ RUN set -eux; \
 
 COPY . ./
 
+VOLUME /usr/src/client/node_modules
 
 # "development" stage
 # depends on the "common" stage above
-#FROM api_platform_client_common AS api_platform_client_development
+FROM api_platform_client_common AS api_platform_client_development
 
 ENV HTTPS true
-CMD ["yarn", "start"]
+
 
 
 
 # "build" stage
 # depends on the "common" stage above
-FROM api_platform_client_common AS api_platform_client_build
+FROM api_platform_client_development AS api_platform_client_build
 
 ENV NODE_ENV production
-#ENV NODE_OPTIONS=${NODE_OPTIONS}
-#ENV REACT_APP_NAME=${REACT_APP_NAME}
-#ENV REACT_APP_DESCRIPTION=${REACT_APP_DESCRIPTION}
-#ENV REACT_APP_OWNER_ADDRESS=${REACT_APP_OWNER_ADDRESS}
-#ENV REACT_APP_OWNER_PHONE_NUMBER=${REACT_APP_OWNER_PHONE_NUMBER}
-#ENV REACT_APP_OWNER_CONTACT_EMAIL=${REACT_APP_OWNER_CONTACT_EMAIL}
-#ENV REACT_APP_STRIPE_PUBLIC_KEY=${REACT_APP_STRIPE_PUBLIC_KEY}
-#ENV REACT_APP_API_ENTRYPOINT=$REACT_APP_API_ENTRYPOINT
+ENV HTTPS true
+
+ARG REACT_APP_API_ENTRYPOINT
+ARG REACT_APP_STRIPE_PUBLIC_KEY
+ARG REACT_APP_NAME
+ARG REACT_APP_DESCRIPTION
+ARG REACT_APP_OWNER_ADDRESS
+ARG REACT_APP_OWNER_PHONE_NUMBER
+ARG REACT_APP_OWNER_CONTACT_EMAIL
 
 RUN set -eux; \
 	yarn build;
 
-
+CMD ["yarn", "start"]
 #RUN yarn global add serve
 #CMD ["serve","-s","build","-l","80"]
 
