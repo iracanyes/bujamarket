@@ -53,6 +53,7 @@ import LoginPage from "./component/page/LoginPage";
 
 const entrypoint = process.env.REACT_APP_API_ENTRYPOINT;
 
+
 const fetchHeaders = {'Authorization': `Bearer ${localStorage.getItem('token')}`, 'Content-Type': 'application/ld+json' };
 
 const fetchHydra = (url, options = {}) => {
@@ -78,7 +79,7 @@ const apiDocumentationParser = entrypoint => parseHydraDocumentation(entrypoint,
     .then(
         ({ api }) => ({ api }),
         (result) => {
-          
+
           switch (result.status) {
             case 401:
                 // Prevent infinite loop if the token is expired
