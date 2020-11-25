@@ -16,15 +16,11 @@ FROM php:${PHP_VERSION}-fpm-alpine AS bjmkt_php
 RUN apk update
 
 # Setting the timezone : Europe/Brussels
-RUN apk add --no-cache tzdata;
-#	ls /usr/share/zoneinfo; \
-#	cp /usr/share/zoneinfo/Europe/Brussels /etc/localtime
-# timezone
-ENV TZ="Europe/Brussels"
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone; \
-	date; \
-	apk del tzdata;
-
+RUN apk add tzdata; \
+	ls /usr/share/zoneinfo; \
+	cp /usr/share/zoneinfo/Europe/Brussels /etc/localtime
+RUN	echo "Europe/Brussels" > /etc/timezone; \
+	date
 
 # Set the locale for
 #RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y locales
@@ -36,6 +32,7 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone; 
 #ENV LC_ALL fr_BE.UTF-8
 
 # persistent / runtime deps
+
 RUN apk add --no-cache \
 		acl \
 		file \
@@ -98,16 +95,8 @@ RUN set -eux; \
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 RUN ln -s $PHP_INI_DIR/php.ini-production $PHP_INI_DIR/php.ini
+# Configuration de php.ini personnalisé
 COPY docker/php/conf.d/api-platform.ini $PHP_INI_DIR/conf.d/api-platform.ini
-
-RUN set -eux; \
-	{ \
-		echo '[www]'; \
-		echo 'ping.path = /ping'; \
-	} | tee /usr/local/etc/php-fpm.d/docker-healthcheck.conf
-
-# Workaround to allow using PHPUnit 8 with Symfony 4.3
-ENV SYMFONY_PHPUNIT_VERSION=8.3
 
 # https://getcomposer.org/doc/03-cli.md#composer-allow-superuser
 ENV COMPOSER_ALLOW_SUPERUSER=1
@@ -132,12 +121,7 @@ COPY composer.json composer.lock symfony.lock ./
 RUN echo '<?php return [];' > .env.local.php
 RUN set -eux; \
 	composer install --prefer-dist --no-dev --no-autoloader --no-scripts --no-progress --no-suggest; \
-	composer clear-cache;
-
-# do not use .env files in production
-#COPY .env.prod ./.env
-#RUN composer dump-env prod; \
-#	rm .env
+	composer clear-cache
 
 # copy only specifically what we need
 COPY bin bin/
@@ -157,11 +141,6 @@ ENV APP_OWNER_PHONE_NUMBER=${APP_OWNER_PHONE_NUMBER}
 ENV APP_OWNER_CONTACT_EMAIL=${APP_OWNER_CONTACT_EMAIL}
 ENV APP_HOST_URL=${APP_HOST_URL}
 ENV APP_FULLNAME=${APP_FULLNAME}
-
-# do not use .env files in production
-#COPY ./.env.prod ./.env
-#RUN composer dump-env prod; \
-#	rm .env
 
 RUN set -eux; \
 	mkdir -p var/cache var/log; \
@@ -195,9 +174,7 @@ COPY --from=bjmkt_php /srv/api/public public/
 
 # "varnish" stage
 # does not depend on any of the above stages, but placed here to keep everything in one Dockerfile
-#FROM cooptilleuls/varnish:${VARNISH_VERSION}-alpine AS api_platform_varnish
 FROM cooptilleuls/varnish:${VARNISH_VERSION}-alpine AS bjmkt_cache-proxy
 
 COPY docker/varnish/conf/default.vcl /usr/local/etc/varnish/default.vcl
 
-#CMD ["varnishd", "-F", "-f", "/usr/local/etc/varnish/default.vcl", "-p", "http_resp_hdr_len=65536", "-p", "http_resp_size=98304"]

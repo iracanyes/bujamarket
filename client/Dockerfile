@@ -11,10 +11,12 @@ RUN yarn global add @api-platform/client-generator
 
 # Prevent the reinstallation of node modules at every changes in the source code
 COPY package.json yarn.lock ./
-#RUN set -eux; \
+RUN set -eux; \
 #	yarn install
-RUN yarn install
+	yarn install
 
 COPY . ./
 
 CMD ["yarn", "start"]
+
+

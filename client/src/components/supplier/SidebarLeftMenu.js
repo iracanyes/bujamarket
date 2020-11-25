@@ -78,12 +78,10 @@ class SidebarLeftMenu extends Component
                     <FormattedMessage id={"app.button.profile_information"} defaultMessage={"Informations de profil"} description={"Button - Profil informations"} />
                   </NavLink>
                 </DropdownItem>
-                <DropdownItem divider></DropdownItem>
                 <DropdownItem header  className={"text-secondary"}>
                   <FontAwesomeIcon icon={"users-cog"}  className={"mr-2"}/>
                   <FormattedMessage id={"app.button.update_data"} defaultMessage={"Mise à jour des données"} description={"Button - Update data"}/>
                 </DropdownItem>
-                <DropdownItem divider></DropdownItem>
                 <DropdownItem className={"text-secondary"}>
                   <NavLink tag={RRDNavLink} to={{pathname: "/profile/addresses", state: { from : window.location.pathname }}}>
                     <FontAwesomeIcon icon={"house-user"}  className={"mr-2"}/>
@@ -102,7 +100,7 @@ class SidebarLeftMenu extends Component
                     <FormattedMessage id={"app.button.update_password"} defaultMessage={"Modifier le mot de passe"} description={"Button - Update password"}/>
                   </NavLink>
                 </DropdownItem>
-                <DropdownItem divider />
+
                 <DropdownItem  className={"text-secondary"}>
                   <NavLink tag={RRDNavLink} to={{pathname: "/unsubscribe", state: { from : this.props.location.pathname}}}>
                     <FontAwesomeIcon icon={"user-alt-slash"}  className={"mr-2"}/>

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { withRouter, Link } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { list, reset } from '../../actions/favorite/list';
 import { del } from "../../actions/favorite/delete";
@@ -156,7 +156,7 @@ class List extends Component {
   }
 
   render() {
-    const { retrieved, error, loading, deletedItem } = this.props;
+    const { retrieved, error, loading } = this.props;
     const { page, rowsPerPage } = this.state.table;
 
     typeof error === "string" && toastError(error);

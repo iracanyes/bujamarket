@@ -11,25 +11,29 @@ services:
   php:
     build:
       context: ../api
-      target: api_platform_php
+      target: bjmkt_php
       <<: *api-cache-from
     image: ${PHP_IMAGE:?PHP_IMAGE is not set or empty}
-
+    container_name: iracanyes/bjmkt_php
   api:
     build:
       context: ../api
-      target: api_platform_nginx
+      target: bjmkt_nginx
       <<: *api-cache-from
     image: ${NGINX_IMAGE:?NGINX_IMAGE is not set or empty}
+    #container_name: iracanyes/bjmkt_nginx
     depends_on:
       - php
+    env_file:
+      - ../api/.env.prod
 
   cache-proxy:
     build:
       context: ../api
-      target: api_platform_varnish
+      target: bjmkt_cache-proxy
       <<: *api-cache-from
     image: ${VARNISH_IMAGE:?VARNISH_IMAGE is not set or empty}
+    container_name: iracanyes/bjmkt_cache-proxy
     depends_on:
       - api
 
@@ -38,21 +42,29 @@ services:
     # https://facebook.github.io/create-react-app/docs/deployment
     build:
       context: ../client
+      dockerfile: Dockerfile.prod
       target: api_platform_client_nginx
       args:
         - REACT_APP_API_ENTRYPOINT=${REACT_APP_API_ENTRYPOINT:?REACT_APP_API_ENTRYPOINT is not set or empty}
       cache_from:
         - ${CLIENT_IMAGE:?CLIENT_IMAGE is not set or empty}
     image: ${CLIENT_IMAGE:?CLIENT_IMAGE is not set or empty}
+    container_name: iracanyes/bjmkt_client
+    env_file:
+      - ../client/.env
 
   admin:
     # in production, we may want to use a static website hosting service
     # https://facebook.github.io/create-react-app/docs/deployment
     build:
       context: ../admin
+      dockerfile: Dockerfile.prod
       target: api_platform_admin_nginx
       args:
         - REACT_APP_API_ENTRYPOINT=${REACT_APP_API_ENTRYPOINT:?REACT_APP_API_ENTRYPOINT is not set or empty}
       cache_from:
         - ${ADMIN_IMAGE:?ADMIN_IMAGE is not set or empty}
     image: ${ADMIN_IMAGE:?ADMIN_IMAGE is not set or empty}
+    container_name: iracanyes/bjmkt_admin
+    env_file:
+      - ../admin/.env

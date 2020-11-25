@@ -12,10 +12,14 @@ services:
     image: ${CONTAINER_REGISTRY_BASE}/php
     build:
       context: ./api
-      target: api_platform_php
+      target: bjmkt_php
       <<: *cache
     depends_on:
       - db
+    env_file:
+      - ./.env.local 
+    # Error : Untrusted Host 'localhost'
+    #  - ./api/.env.local
     # Comment out these volumes in production
     volumes:
       - ./api:/srv/api:rw,cached
@@ -26,10 +30,13 @@ services:
     image: ${CONTAINER_REGISTRY_BASE}/nginx
     build:
       context: ./api
-      target: api_platform_nginx
+      target: bjmkt_nginx
       <<: *cache
     depends_on:
       - php
+    env_file:
+      - ./.env.local
+      - ./api/.env.local
     # Comment out this volume in production
     volumes:
       - ./api/public:/srv/api/public:ro
@@ -40,8 +47,10 @@ services:
     image: ${CONTAINER_REGISTRY_BASE}/varnish
     build:
       context: ./api
-      target: api_platform_varnish
+      target: bjmkt_cache-proxy
       <<: *cache
+    env_file:
+      - ./.env.local
     depends_on:
       - api
     volumes:
@@ -50,14 +59,14 @@ services:
       - /usr/local/var/varnish:exec
     ports:
       - "8081:80"
-
-
   # MySQL
   db:
     image: mariadb:latest
     restart: always
     # Pour l'image MySQL
     command: --default-authentication-plugin=mysql_native_password
+    env_file:
+      - ./.env.local
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?MYSQL_ROOT_PASSWORD is not set or empty}
       MYSQL_ROOT_HOST: ${MYSQL_ROOT_HOST:?MYSQL_ROOT_HOST is not set or empty}
@@ -66,8 +75,6 @@ services:
       MYSQL_PASSWORD: ${MYSQL_PASSWORD:?MYSQL_PASSWORD is not set or empty}
       MYSQL_DATABASE: ${MYSQL_DATABASE:?MYSQL_DATABASE is not set or empty}
       MYSQL_PORT: ${MYSQL_PORT:?MYSQL_PORT is not set or empty}
-    env_file:
-      - ./.env
     volumes:
       - ./shared/mysql/db/data:/var/lib/mysql/data:rw
       - ./api/docker/db/conf.d/default.conf:/etc/mysql/conf.d/myConf.conf:rw
@@ -75,45 +82,24 @@ services:
     # Attention le port d'accés au container MySQL devra être modifié si une instance sur la machine locale utilise le même port 3306
     ports:
       - "3306:3306"
-
-  # Formely PHPMyAdmin
-  #adminer:
-  #  image: adminer
-  #  restart: always
-  #  depends_on:
-  #    - db
-  #    - php
-  #  network_mode: host
-    #environment:
-    #  PMA_HOST: mysql
-    #  PMA_USER: root
-    #  PMA_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-    #  PMA_ARBITRARY: 1
-    #env_file:
-    #  - ./.env
-  #  ports:
-  #    - "8083:8080"
-    #expose:
-    #  - 8083
     
   phpmyadmin:
     image: phpmyadmin:latest
-    container_name: bujamarket_phpmyadmin
     restart: always
     domainname: localhost
     depends_on:
       - db
+    env_file:
+      - ./.env.local
     environment:
-      - PMA_HOST=db
+      - PMA_HOST=${PMA_HOST:-db}
       #- MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:?MYSQL_ROOT_PASSWORD is not set or empty}  
       #- PMA_USER=${MYSQL_USER:?MYSQL_USER is not set or empty}
       #- PMA_PASSWORD=${MYSQL_PASSWORD:?MYSQL_PASSWORD is not set or empty}
-      - PMA_ABSOLUTE_URI=https://localhost:8383
+      #- PMA_ABSOLUTE_URI=${PMA_ABSOLUTE_URI:PMA_ABSOLUTE_URI is not set or empty}
       #- PMA_PORT=${MYSQL_PORT:?MYSQL_PORT is not set or empty}
       - UPLOAD_LIMIT=${UPLOAD_LIMIT:-10M}
       - PMA_ARBITRARY=1  
-    env_file:
-      - ./.env
     ports:
       - "8080:80"
     volumes:
@@ -122,6 +108,8 @@ services:
   mercure:
     # In production, you may want to use the managed version of Mercure, https://mercure.rocks
     image: dunglas/mercure
+    env_file:
+      - ./.env.local
     environment:
       # You should definitely change all these values in production
       - JWT_KEY=${JWT_KEY}
@@ -141,7 +129,8 @@ services:
       cache_from:
         - ${CONTAINER_REGISTRY_BASE}/client
     env_file:
-      - ./client/.env
+      - ./client/.env.local
+      - ./.env.local
     volumes:
       - ./client:/usr/src/client:rw,cached
       - /usr/src/client/node_modules
@@ -151,11 +140,14 @@ services:
   admin:
     # Use a static website hosting service in production
     # See https://facebook.github.io/create-react-app/docs/deployment
-    image: ${CONTAINER_REGISTRY_BASE}/admin    
+    image: ${CONTAINER_REGISTRY_BASE}/admin
     build:
       context: ./admin
       cache_from:
         - ${CONTAINER_REGISTRY_BASE}/admin
+    env_file:
+      - ./admin/.env.local
+      - ./.env.local
     volumes:
       - ./admin:/usr/src/admin:rw,cached
       - /usr/src/admin/node_modules
@@ -168,10 +160,11 @@ services:
       context: ./h2-proxy
       args:
         cert_pass: ${CERT_PASS}
+    env_file:
+      - ./.env.local
     depends_on:
       - client
       - admin
-      #- adminer
       - phpmyadmin
       - api
       - cache-proxy
@@ -182,5 +175,3 @@ services:
       - "8443:8443"
       - "8444:8444"
 
-volumes:
-  db-data: { driver: local }

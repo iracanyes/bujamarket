@@ -57,7 +57,7 @@ class SupplierGroupTestFixtures extends Fixture implements DependentFixtureInter
         $supplier->setWebsite($this->faker->domainName);
 
         /* Relations */
-        $supplier->setImage($this->getReference(ImageSupplierFixtures::IMAGE_SUPPLIER_REFERENCE));
+        $supplier->setImage($this->getReference(ImageSupplierGroupTestFixtures::IMAGE_SUPPLIER_GROUP_TEST_REFERENCE));
         $supplier->addAddress($this->getReference(AddressSupplierFixtures::ADDRESS_SUPPLIER_REFERENCE));
 
         $manager->persist($supplier);
@@ -102,7 +102,7 @@ class SupplierGroupTestFixtures extends Fixture implements DependentFixtureInter
     public function getDependencies()
     {
         return array(
-            ImageSupplierFixtures::class,
+            ImageSupplierGroupTestFixtures::class,
             AddressSupplierFixtures::class
         );
     }

@@ -78,7 +78,7 @@ class CustomerGroupTestFixtures extends Fixture implements DependentFixtureInter
         $user->setRoles(["ROLE_CUSTOMER","ROLE_MEMBER","ROLE_ALLOWED_TO_SWICTH"]);
         /* Relations */
 
-        $user->setImage($this->getReference(ImageCustomerFixtures::IMAGE_CUSTOMER_REFERENCE));
+        $user->setImage($this->getReference(ImageCustomerGroupTestFixtures::IMAGE_CUSTOMER_GROUP_TEST_REFERENCE));
 
     }
 
@@ -89,7 +89,7 @@ class CustomerGroupTestFixtures extends Fixture implements DependentFixtureInter
     public function getDependencies()
     {
         return array(
-            ImageCustomerFixtures::class
+            ImageCustomerGroupTestFixtures::class
         );
     }
 
