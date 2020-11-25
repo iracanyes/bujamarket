@@ -82,7 +82,7 @@ class AdminGroupTestFixtures extends Fixture implements DependentFixtureInterfac
 
         /* Relations */
 
-        $user->setImage($this->getReference(ImageAdminFixtures::IMAGE_ADMIN_REFERENCE));
+        $user->setImage($this->getReference(ImageAdminGroupTestFixtures::IMAGE_ADMIN_GROUP_TEST_REFERENCE));
 
     }
 
@@ -93,7 +93,7 @@ class AdminGroupTestFixtures extends Fixture implements DependentFixtureInterfac
     public function getDependencies()
     {
         return array(
-            ImageAdminFixtures::class
+            ImageAdminGroupTestFixtures::class
         );
     }
 

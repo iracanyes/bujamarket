@@ -1,0 +1,62 @@
+ARG NODE_VERSION=13
+ARG NGINX_VERSION=1.17
+
+FROM node:${NODE_VERSION}-alpine AS api_platform_client_common
+
+RUN mkdir -p /usr/src/client
+
+WORKDIR /usr/src/client
+
+RUN yarn global add @api-platform/client-generator
+
+# Prevent the reinstallation of node modules at every changes in the source code
+COPY package.json yarn.lock ./
+RUN set -eux; \
+#	yarn install
+	yarn install
+
+COPY . ./
+
+
+# "development" stage
+# depends on the "common" stage above
+#FROM api_platform_client_common AS api_platform_client_development
+
+ENV HTTPS true
+CMD ["yarn", "start"]
+
+
+
+# "build" stage
+# depends on the "common" stage above
+FROM api_platform_client_common AS api_platform_client_build
+
+ENV NODE_ENV production
+#ENV NODE_OPTIONS=${NODE_OPTIONS}
+#ENV REACT_APP_NAME=${REACT_APP_NAME}
+#ENV REACT_APP_DESCRIPTION=${REACT_APP_DESCRIPTION}
+#ENV REACT_APP_OWNER_ADDRESS=${REACT_APP_OWNER_ADDRESS}
+#ENV REACT_APP_OWNER_PHONE_NUMBER=${REACT_APP_OWNER_PHONE_NUMBER}
+#ENV REACT_APP_OWNER_CONTACT_EMAIL=${REACT_APP_OWNER_CONTACT_EMAIL}
+#ENV REACT_APP_STRIPE_PUBLIC_KEY=${REACT_APP_STRIPE_PUBLIC_KEY}
+#ENV REACT_APP_API_ENTRYPOINT=$REACT_APP_API_ENTRYPOINT
+
+RUN set -eux; \
+	yarn build;
+
+
+#RUN yarn global add serve
+#CMD ["serve","-s","build","-l","80"]
+
+
+# "nginx" stage
+# depends on the "build" stage above
+FROM nginx:${NGINX_VERSION}-alpine AS api_platform_client_nginx
+
+COPY docker/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf
+
+WORKDIR /usr/src/client/build
+
+COPY --from=api_platform_client_build /usr/src/client/build ./
+
+

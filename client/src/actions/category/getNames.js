@@ -51,7 +51,14 @@ export function listByName(page = 'categories_names') {
       })
       .catch(e => {
         dispatch(loading(false));
-        dispatch(error(e.message));
+        switch (true){
+          case typeof e.message === "string":
+            dispatch(error(e.message));
+            break;
+          case typeof e['hydra:description'] === "string":
+            dispatch(error(e['hydra:description']));
+            break;
+        }
       });
   };
 }

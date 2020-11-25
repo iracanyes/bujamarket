@@ -180,10 +180,7 @@ export class App extends Component
 
     const user = localStorage.getItem("token") !== null ? JSON.parse(atob(localStorage.getItem("token").split('.')[1])) : null;
 
-    console.log('store', store);
     const state = store.getState();
-    console.log('state', state);
-    console.log('user connected', state.user.authentication.login.token);
     const userConnected = user === null && state.user.authentication.login.token ? JSON.parse(atob(state.user.authentication.login.token.token.split('.')[1])) : null;
 
     return (

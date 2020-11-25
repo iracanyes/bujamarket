@@ -67,7 +67,7 @@ const fetchHydra = (url, options = {}) => {
     return response;
   })
   .catch(e => {
-    console.log('baseFetchHydra -catch', e);
+
   })
 
 
@@ -78,7 +78,7 @@ const apiDocumentationParser = entrypoint => parseHydraDocumentation(entrypoint,
     .then(
         ({ api }) => ({ api }),
         (result) => {
-          console.log("apiDocumentationParser - result", result);
+          
           switch (result.status) {
             case 401:
                 // Prevent infinite loop if the token is expired
