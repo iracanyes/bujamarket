@@ -16,15 +16,16 @@ class Footer extends Component
 
       <footer className="footer">
         <div className="footer-top">
-          <div className="container">
-            <div className="row">
-              <div className="col-sm-4">
+          <div className="col-lg-8 mx-auto">
+            <div className="d-inline-flex">
+              <div className="col-sm-4 p-2 mr-2">
                 <h2>
                   <FormattedMessage
                     id={'app.about'}
                     defaultMessage={"À propos de"}
                     description={"About"}
                   />
+                  &nbsp;
                   {String(process.env.REACT_APP_NAME).replace(/"/g, "")}
                 </h2>
 
@@ -32,7 +33,7 @@ class Footer extends Component
               </div>
               {/* /.col-* */}
 
-              <div className="col-sm-4">
+              <div className="col-sm-4 p-2 mr-2">
                 <h2>Contact Information</h2>
 
                 <p>
@@ -47,7 +48,7 @@ class Footer extends Component
               </div>
               {/* /.col-* */}
 
-              <div className="col-sm-4">
+              <div className="col-sm-4 p-2 mr-2">
                 <h2>Suivez-nous</h2>
 
                 <ul className="social-links nav nav-pills">

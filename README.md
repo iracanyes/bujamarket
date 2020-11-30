@@ -21,8 +21,9 @@ Après on modifie les valeurs !ChangeMe! de ces fichiers.
 Avant la création de l'environnement de développement, il faut s'assurer que les ports réseau qui seront utilisés par les containers sont libres et qu'aucun service n'utilise les ports suivants
 * 443 - Client
 * 444 - Admin
+* 8443 - API
+* 8444 - API - Cache-proxy
 * 3306 - Database MySQL
-* 8443 - Vulcain
 * 1337 - Mercure
 
 Dans le terminal (pour windows le terminal Docker), accéder au répertoire racine du projet et exécutez la commande suivante:  
@@ -30,12 +31,12 @@ Dans le terminal (pour windows le terminal Docker), accéder au répertoire raci
 $ cd bujamarket
 $ docker-compose up -d
 ````
-La création des containers Docker peut générer des erreurs variées.
 Remarque: La commande ci-dessus doit être effectué uniquement à la création du projet
-### Lancer le projet
-On peut maintenant activer notre environnement de développement et commencer à travailler sur le projet.
+### Lancer/Stopper l'application 
+Par la suite, si on veut démarrer ou arrêter le programme, on utilise les commandes suivantes.
 ````shell script
 $ docker-compose start
+$ docker-compose stop
 ````
 On peut remplir la base de donnée avec des données fictives avec la commande suivante qui va exécuter un script shell pour remplir la base de donnée:
 ````shell script

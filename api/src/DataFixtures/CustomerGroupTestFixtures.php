@@ -89,12 +89,12 @@ class CustomerGroupTestFixtures extends Fixture implements DependentFixtureInter
     public function getDependencies()
     {
         return array(
-            ImageCustomerGroupTestFixtures::class
+            ImageCustomerGroupTestFixtures::class,
         );
     }
 
     public static function getGroups(): array
     {
-        return ["system_admin"];
+        return ["related"];
     }
 }

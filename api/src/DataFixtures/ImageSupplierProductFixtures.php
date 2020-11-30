@@ -77,7 +77,7 @@ class ImageSupplierProductFixtures extends Fixture implements FixtureGroupInterf
     */
     public static function getGroups(): array
     {
-        return ["group1","group2","multiple"];
+        return ["group1","group2"];
     }
 
 }

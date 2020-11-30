@@ -103,7 +103,7 @@ class CarouselCategoryProducts extends Component {
                     to={`/products/show/${encodeURIComponent(products[i * 12 + j]['id'])}`}
                   >
                     <div className="card-img-custom">
-                      <img src={products[i * 12 + j]['url']} alt={products[i * 12 + j]["alt"]} className="image img-fluid" style={{ width:"100%"}} />
+                      <img src={products[i * 12 + j]['img-src']} alt={products[i * 12 + j]["alt"]} className="image img-fluid" style={{ width:"100%"}} />
 
                       <CardTitle>
                         <span className="font-weight-bold">

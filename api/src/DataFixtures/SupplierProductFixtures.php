@@ -70,6 +70,6 @@ class SupplierProductFixtures extends Fixture implements DependentFixtureInterfa
 
     public static function getGroups(): array
     {
-        return ["group1","group2","multiple"];
+        return ["group1","group2"];
     }
 }
