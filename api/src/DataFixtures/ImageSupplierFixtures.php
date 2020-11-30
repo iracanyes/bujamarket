@@ -54,7 +54,7 @@ class ImageSupplierFixtures extends Fixture implements FixtureGroupInterface
 
     public static function getGroups(): array
     {
-        return ["system_admin","group2"];
+        return ["system_admin","group2","multiple"];
     }
 
 

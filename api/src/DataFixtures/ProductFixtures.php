@@ -60,7 +60,7 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface, Fixt
 
     public static function getGroups(): array
     {
-        return ["group1","group2","multiple"];
+        return ["group1","group2"];
     }
 
 }

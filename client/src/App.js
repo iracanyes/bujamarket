@@ -206,14 +206,15 @@ export class App extends Component
                 </header>
                 {/* HomepageSlider */}
 
-                { (user === null && userConnected === null) && (
+                { ( userConnected === null && user === null ) && (
 
                   <Route path={'/'} exact={true}>
                     <div id="homepage-slider">
                       <HomepageSlider />
                     </div>
                   </Route>
-                ) }
+                )}
+
                 {/* Main section  */}
                 <main style={{minHeight:"70vh"}}>
                   <aside id="aside-left">
@@ -222,7 +223,7 @@ export class App extends Component
                       strict={false}
                       exact={false}
                     >
-                      { ( (user !== null || userConnected !== null) && user.roles.includes('ROLE_MEMBER') ) && <SidebarLeftMenu /> }
+                      <SidebarLeftMenu />
                     </Route>
                   </aside>
                   <section id="main-content" className="col col-lg-8 mx-2">

@@ -25,18 +25,18 @@ class SidebarLeftMenu extends Component
   render()
   {
     const { connectedUser } = this.props;
-
+    console.log('SidebarLeftMenu  render - connectedUser', connectedUser);
     // const user = connectedUser.token ? JSON.parse(atob(connectedUser.token.split(".")[1])) : null;
 
     const user = localStorage.getItem('token') !== null ? JSON.parse(atob(localStorage.getItem('token').split('.')[1])): null;
-
+    console.log('SidebarLeftMenu  render - user', user);
     return <Fragment>
 
       {
-        (connectedUser && (user && user.roles.includes('ROLE_CUSTOMER'))) && <MenuCustomer/>
+        (Object.keys(connectedUser).length !== 0 && user && user.roles.includes('ROLE_CUSTOMER')) && <MenuCustomer/>
       }
       {
-        user && user.roles.includes('ROLE_SUPPLIER') && <MenuSupplier/>
+        (Object.keys(connectedUser).length !== 0 && user && user.roles.includes('ROLE_SUPPLIER')) && <MenuSupplier/>
       }
     </Fragment>;
   }

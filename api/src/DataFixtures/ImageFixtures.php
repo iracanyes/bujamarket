@@ -70,7 +70,7 @@ class ImageFixtures extends Fixture implements FixtureGroupInterface
 
     public static function getGroups(): array
     {
-        return ["group1","group2"];
+        return ["group1","group2","multiple"];
     }
 
 

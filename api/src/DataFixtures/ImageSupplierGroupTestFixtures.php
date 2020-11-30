@@ -54,7 +54,7 @@ class ImageSupplierGroupTestFixtures extends Fixture implements FixtureGroupInte
 
     public static function getGroups(): array
     {
-        return ["system_admin"];
+        return ["related"];
     }
 
 

@@ -219,7 +219,7 @@ class Shipper
     {
         $this->address = $address;
 
-        if($address->getShipper() !== this)
+        if($address->getShipper() !== $this)
         {
             $address->setShipper($this);
         }

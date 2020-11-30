@@ -65,7 +65,7 @@ class OrderSetFixtures extends Fixture implements DependentFixtureInterface, Fix
 
     public static function getGroups(): array
     {
-        return ["group1","group2","multiple"];
+        return ["group1","group2"];
     }
 
 

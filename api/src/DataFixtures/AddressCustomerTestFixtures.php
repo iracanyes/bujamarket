@@ -10,9 +10,9 @@ use App\Entity\Address;
 use App\DataFixtures\CustomerFixtures;
 use \Faker\Factory;
 
-class AddressSupplierFixtures extends Fixture implements FixtureGroupInterface
+class AddressCustomerTestFixtures extends Fixture implements DependentFixtureInterface, FixtureGroupInterface
 {
-    public const ADDRESS_SUPPLIER_REFERENCE = 'addressSupplier';
+    public const ADDRESS_CUSTOMER_TEST_REFERENCE = "addressCustomerTest";
 
     /**
      * @var \Faker\Generator
@@ -32,7 +32,7 @@ class AddressSupplierFixtures extends Fixture implements FixtureGroupInterface
     {
         $address = new Address();
 
-        $address->setLocationName("siége social");
+        $address->setLocationName("adresse de livraison");
         $address->setStreet($this->faker->streetName);
         $address->setNumber($this->faker->buildingNumber);
         $address->setState($this->faker->city);
@@ -41,29 +41,27 @@ class AddressSupplierFixtures extends Fixture implements FixtureGroupInterface
         $address->setCountry($this->faker->country);
 
         /* Relation */
-        //$address->setUser($this->getReference(SupplierFixtures::SUPPLIER_REFERENCE));
+        $address->setUser($this->getReference(CustomerGroupTestFixtures::CUSTOMER_GROUP_TEST_REFERENCE));
 
         $manager->persist($address);
         $manager->flush();
 
-        $this->setReference(self::ADDRESS_SUPPLIER_REFERENCE, $address);
+        $this->setReference(self::ADDRESS_CUSTOMER_TEST_REFERENCE, $address);
     }
 
     /**
      * Permet de définir un ordre de chargement des fixtures ainsi les dépendances sont chargés avant
      * @return array
      */
-    /*
     public function getDependencies()
     {
         return array(
-            SupplierFixtures::class
+            CustomerGroupTestFixtures::class
         );
     }
-    */
+
     public static function getGroups(): array
     {
-        return ["group2","related"];
+        return ["related"];
     }
-
 }

@@ -68,9 +68,9 @@ class CategoryHandler
         foreach($categories as $category)
         {
             $category['url'] = getenv('API_ENTRYPOINT').'/'.getenv('UPLOAD_CATEGORY_IMAGE_DIRECTORY').'/'.$category['url'];
-
             array_push($myCategories, $category);
         }
+
 
         return $this->jsonResponder->success([
             '@context' => '/contexts/Category',

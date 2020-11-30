@@ -109,7 +109,7 @@ class SupplierGroupTestFixtures extends Fixture implements DependentFixtureInter
 
     public static function getGroups(): array
     {
-        return ["system_admin"];
+        return ["related"];
     }
 
 }

@@ -75,14 +75,17 @@ export function login(email, password, history, locationState) {
         {
           // Redirection vers la page précédent l'identification avec les données
           history.push({ pathname: locationState.state.from, state: { params: locationState.state.params } });
+          //history.go();
         }else{
           if(locationState.state.from && !/login/.test(locationState.state.from) )
           {
             // Redirection page précédente sans données
             history.push({ pathname: locationState.state.from });
+            //history.go();
           }else{
             // Redirection page d'accueil
-            history.push('/');
+            history.push({ pathname:'/'});
+            //history.go();
           }
         }
 

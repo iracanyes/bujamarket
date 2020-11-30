@@ -26,8 +26,6 @@ FROM api_platform_client_common AS api_platform_client_development
 ENV HTTPS true
 
 
-
-
 # "build" stage
 # depends on the "common" stage above
 FROM api_platform_client_development AS api_platform_client_build
@@ -55,7 +53,7 @@ CMD ["yarn", "start"]
 # depends on the "build" stage above
 FROM nginx:${NGINX_VERSION}-alpine AS api_platform_client_nginx
 
-COPY docker/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf
+COPY docker/nginx/conf.d/default.prod.conf /etc/nginx/conf.d/default.conf
 
 WORKDIR /usr/src/client/build
 
