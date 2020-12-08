@@ -3,8 +3,7 @@ import { Route } from 'react-router-dom';
 import { Login, Register, Subscribe, Show, UnlockAccount, UpdatePassword, Profile, UpdateProfile, ProfileAddresses, Unsubscribe } from '../components/user/';
 
 export default [
-  <Route path="/login" component={Login} exact key="login"/>,
-  <Route path="/register" component={Register} exact key="register" />,
+
   <Route path={'/subscribe/:token'} component={Subscribe} exact key="subscribe"  />,
   <Route path={'/unlock_account/:token'} component={UnlockAccount} exact key="unlockAccount" />,
   <Route path={'/profile'} component={Profile} exact key="profile" />,

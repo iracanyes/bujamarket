@@ -6,3 +6,15 @@ authentication_token:
     path: /authentication_token
     methods: ['POST']
     schemes: ['https']
+connect_google:
+    path: /connect_google
+    methods: ['POST']
+    schemes: ['https']
+    controller: App\Action\User\GoogleUserAuthenticationAction
+register_google:
+    path: /register_google
+    methods: 'POST'
+    schemes: ['https']
+    defaults:
+        _api_response: false
+    controller: App\Action\User\GoogleUserRegisterAction

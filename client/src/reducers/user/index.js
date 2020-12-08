@@ -10,10 +10,14 @@ import unlockAccount from "./unlockAccount";
 import updatePassword from "./updatePassword";
 import profile from "./profile";
 import unsubscribe from "./unsubscribe";
+import googleUserAuthentication from "./googleUserAuthentication";
+import googleUserRegistration from "./googleUserRegistration";
 
 export default combineReducers({
   list,
   authentication,
+  googleUserAuthentication,
+  googleUserRegistration,
   registration,
   subscription,
   update,

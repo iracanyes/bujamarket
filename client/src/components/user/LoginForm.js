@@ -4,7 +4,7 @@
  * Description:
  */
 import React, { Fragment } from 'react';
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 //import { Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
 import { login, logout } from "../../actions/user/login";
 import { connect } from "react-redux";
@@ -12,6 +12,13 @@ import { FormattedMessage, injectIntl } from "react-intl";
 import { Field, reduxForm } from "redux-form";
 import { Spinner } from "reactstrap";
 import {toastError} from "../../layout/ToastMessage";
+import GoogleSignInButton from "./GoogleSignInButton";
+import {
+  Button,
+  Paper
+} from '@material-ui/core';
+import GoogleRegisterButton from "./GoogleRegisterButton";
+import BackgroundImage from "../../assets/img/page/login-page.jpg";
 
 class LoginForm extends React.Component {
   constructor(props)
@@ -29,6 +36,15 @@ class LoginForm extends React.Component {
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+
+    //  Set the background style of the main content of this page
+    this.props.setStyle({
+      main: {
+        backgroundImage: 'url('+BackgroundImage+')',
+        backgroundRepeat: 'no-repeat',
+        backgroundSize: '100% 100%'
+      }
+    });
   }
 
   handleChange(e)
@@ -105,7 +121,7 @@ class LoginForm extends React.Component {
     return (
       <Fragment>
 
-        <div id={'form-login'} className="col-md-6 mx-auto col-md-offset-3" style={{height:"70vh"}}>
+        <Paper elevation={3} id={'form-login'} className="col-lg-4 mx-auto my-5 pt-2 pb-5">
           <h1>
             <FormattedMessage  id={"app.page.user.login.title"}
                                defaultMessage="Connexion"
@@ -115,7 +131,7 @@ class LoginForm extends React.Component {
 
           <form
             name="form"
-            className={"col-lg-6 mx-auto px-3"}
+            className={"col-lg-10 mx-auto px-3"}
             onSubmit={this.handleSubmit}
           >
             <Field
@@ -146,23 +162,47 @@ class LoginForm extends React.Component {
 
 
             <div className="form-group">
-              <button className="btn btn-primary login mx-2 my-3">
-                { loading === true && <Spinner color={'info'} className={'mr-2'}/> }
-                <FormattedMessage  id={"app.page.user.login.title"}
-                                   defaultMessage="Connexion"
-                                   description="Page User - login"
-                />
-              </button>
-              <Link to="/register" className="btn btn-outline-primary mx-2 my-3">
-                <FormattedMessage  id={"app.page.user.register.title"}
-                                   defaultMessage="Inscription"
-                                   description="Page User - register"
-                />
+              <div className={'d-flex flex-row  justify-content-center'}>
+                {/*
+                  <button className="btn btn-primary login mx-2 my-3">
+                    { loading === true && <Spinner color={'info'} className={'mr-2'}/> }
+                    <FormattedMessage  id={"app.page.user.login.title"}
+                                       defaultMessage="Connexion"
+                                       description="Page User - login"
+                    />
+                  </button>
+                */}
+                <Button
+                  variant={'contained'}
+                  color={'primary'}
+                  className={'mx-2'}
+                  type={'submit'}
+                >
+                  { loading === true && <Spinner color={'info'} className={'mr-2'}/> }
+                  <FormattedMessage  id={"app.page.user.login.title"}
+                                     defaultMessage="Connexion"
+                                     description="Page User - login"
+                  />
+                </Button>
+                <Link to="/register" className="MuiButtonBase-root MuiButton-root MuiButton-contained mx-2 MuiButton-containedPrimary">
+                  <FormattedMessage  id={"app.page.user.register.title"}
+                                     defaultMessage="Inscription"
+                                     description="Page User - register"
+                  />
 
-              </Link>
+                </Link>
+
+              </div>
+              <hr/>
+              <div className={'d-flex flex-row justify-content-center'}>
+                <GoogleSignInButton/>
+              </div>
+
+
+
             </div>
           </form>
-        </div>
+        </Paper>
       </Fragment>
 
     );
@@ -185,5 +225,5 @@ export default connect(mapStateToProps, mapDispatchToProps)(
     form: 'user',
     enableReinitialize: true,
     keepDirtyOnReinitialize: true
-  })(injectIntl(LoginForm))
+  })(injectIntl(withRouter(LoginForm)))
 );

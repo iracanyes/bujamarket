@@ -33,14 +33,13 @@ class UserTemp implements UserInterface
      * @var string $email Email of this user
      * @ORM\Column(type="string", length=255, unique=true)
      * @Assert\Email()
-     * @Groups({"user_temp:output","user_temp:input"})
+     * @Groups({"user_temp:output","user_temp:input","google_user_temp:output"})
      */
     private $email;
 
     /**
-     * @var string $password Crypted password
-     * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank()
+     * @var string|null $password Crypted password
+     * @ORM\Column(type="string", nullable=true, length=255)
      * @Groups({"user_temp:input"})
      */
     private $password;
@@ -50,7 +49,7 @@ class UserTemp implements UserInterface
      *
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank()
-     * @Groups({"user_temp:output","user_temp:input"})
+     * @Groups({"user_temp:output","user_temp:input","google_user_temp:output"})
      */
     private $firstname;
 
@@ -58,7 +57,7 @@ class UserTemp implements UserInterface
      * @var string $lastname Lastname of the user
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank()
-     * @Groups({"user_temp:output","user_temp:input"})
+     * @Groups({"user_temp:output","user_temp:input","google_user_temp:output"})
      */
     private $lastname;
 
@@ -66,7 +65,7 @@ class UserTemp implements UserInterface
      * @var string $userType Type of usage of this platform
      * @ORM\Column(type="string", length=60)
      * @Assert\NotBlank()
-     * @Groups({"user_temp:output","user_temp:input"})
+     * @Groups({"user_temp:output","user_temp:input","google_user_temp:output"})
      */
     private $userType;
 
@@ -79,14 +78,14 @@ class UserTemp implements UserInterface
     /**
      * @var string $token Token for external communication
      * @ORM\Column(type="string", length=255)
-     *
+     * @Groups({"google_user_temp:output"})
      */
     private $token;
 
     /**
      * @var boolean
      * @ORM\Column(type="boolean")
-     * @Groups({"user_temp:output","user_temp:input"})
+     * @Groups({"user_temp:output","user_temp:input","google_user_temp:output"})
      */
     private $termsAccepted;
 
@@ -96,6 +95,17 @@ class UserTemp implements UserInterface
      * @ORM\Column(type="json")
      */
     private $roles = [];
+
+    /**
+     * @ORM\Column(name="account_type",type="string", length=60)
+     * @Groups({"user_temp:output","user_temp:input"})
+     */
+    private $accountType;
+
+    public function __construct()
+    {
+        $this->accountType = 'bujamarket';
+    }
 
     public function getId(): ?int
     {
@@ -119,7 +129,7 @@ class UserTemp implements UserInterface
         return $this->password;
     }
 
-    public function setPassword(string $password): self
+    public function setPassword(?string $password): self
     {
         $this->password = $password;
 
@@ -221,9 +231,23 @@ class UserTemp implements UserInterface
     /**
      * @param bool $termsAccepted
      */
-    public function setTermsAccepted(bool $termsAccepted): void
+    public function setTermsAccepted(bool $termsAccepted): self
     {
         $this->termsAccepted = $termsAccepted;
+
+        return $this;
+    }
+
+    public function getAccountType(): ?string
+    {
+        return $this->accountType;
+    }
+
+    public function setAccountType(string $accountType): self
+    {
+        $this->accountType = $accountType;
+
+        return $this;
     }
 
 

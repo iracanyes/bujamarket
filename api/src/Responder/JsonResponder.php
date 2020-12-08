@@ -25,7 +25,7 @@ class JsonResponder
      * @param null $format
      * @return mixed
      */
-    public function normalize($entity, array $context, $format = null)
+    public function normalize($entity, array $context = [], $format = null)
     {
         return $this->serializer->normalize($entity, $format, $context);
     }

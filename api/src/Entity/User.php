@@ -54,8 +54,8 @@ class User implements UserInterface
     private $plainPassword;
 
     /**
-     * @var string $password Crypted password
-     * @ORM\Column(type="string", length=255)
+     * @var string|null $password Crypted password
+     * @ORM\Column(type="string", nullable=true, length=255)
      */
     private $password;
 
@@ -198,9 +198,16 @@ class User implements UserInterface
     private $messages;
 
     /**
+     * @var boolean $locked Is account locked?
      * @ORM\Column(type="boolean")
      */
     private $locked;
+
+    /**
+     * @var string $accountType Type of account (Origin of this account)
+     * @ORM\Column(name="account_type", type="string", length=60)
+     */
+    private $accountType;
 
     public function __construct()
     {
@@ -213,6 +220,7 @@ class User implements UserInterface
         $this->banned = false;
         $this->locked = false;
         $this->signinConfirmed = false;
+        $this->accountType = 'bujamarket';
     }
 
     public function getId(): ?int
@@ -276,12 +284,12 @@ class User implements UserInterface
     /**
      * @see UserInterface
      */
-    public function getPassword(): string
+    public function getPassword(): ?string
     {
         return (string) $this->password;
     }
 
-    public function setPassword(string $password): self
+    public function setPassword(?string $password): self
     {
         $this->password = $password;
 
@@ -644,6 +652,18 @@ class User implements UserInterface
     public function isBanned(): bool
     {
         return $this->banned;
+    }
+
+    public function getAccountType(): ?string
+    {
+        return $this->accountType;
+    }
+
+    public function setAccountType(string $accountType): self
+    {
+        $this->accountType = $accountType;
+
+        return $this;
     }
 
 }

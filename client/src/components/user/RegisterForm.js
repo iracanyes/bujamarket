@@ -13,6 +13,16 @@ import { register, reset } from "../../actions/user/register";
 import PropTypes from 'prop-types';
 import {toastError} from "../../layout/ToastMessage";
 import { SpinnerLoading } from "../../layout/Spinner";
+import {
+  Button,
+  Paper,
+  InputLabel,
+  FormHelperText,
+  FormControl,
+  Select
+} from "@material-ui/core";
+import GoogleRegisterButton from "./GoogleRegisterButton";
+import BackgroundImage from "../../assets/img/page/register-page.jpg";
 
 class RegisterForm extends React.Component {
   static propTypes = {
@@ -28,14 +38,24 @@ class RegisterForm extends React.Component {
         firstname: '',
         lastname: '',
         password: '',
-        userType: 'customer',
+        userType: '',
         termsAccepted: false
       },
       submitted: false
     };
 
     this.handleChange = this.handleChange.bind(this);
+    this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+
+    //  Set the background style of the main content of this page
+    this.props.setStyle({
+      main: {
+        backgroundImage: 'url('+BackgroundImage+')',
+        backgroundSize: '100% 100%',
+        backgroundRepeat: 'no-repeat'
+      }
+    });
   }
 
   componentWillUnmount() {
@@ -53,6 +73,17 @@ class RegisterForm extends React.Component {
       }
     });
 
+  }
+
+  handleCheckboxChange(event){
+    const { name, value } = event.target;
+
+    this.setState(state => ({
+      user: {
+        ...state.user,
+        [name]: !state.user.termsAccepted
+      }
+    }));
   }
 
   handleSubmit(e)
@@ -104,39 +135,6 @@ class RegisterForm extends React.Component {
     );
   };
 
-  renderCheckbox = data => {
-    data.input.className = 'form-control';
-
-    const isInvalid = data.meta.touched && !!data.meta.error;
-    if (isInvalid) {
-      data.input.className += ' is-invalid';
-      data.input['aria-invalid'] = true;
-    }
-
-    if (this.props.error && data.meta.touched && !data.meta.error) {
-      data.input.className += ' is-valid';
-    }
-
-    return (
-      <div className={`form-group`}>
-        <label
-          htmlFor={`user_${data.input.name}`}
-          className="form-control-label"
-        >
-          {data.labelText}
-        </label>
-        <input
-          {...data.input}
-          type={data.type}
-          step={data.step}
-          required={data.required}
-          placeholder={data.placeholder}
-          id={`user_${data.input.name}`}
-        />
-        {isInvalid && <div className="invalid-feedback">{data.meta.error}</div>}
-      </div>
-    );
-  };
 
   render() {
     const { intl, errorRegister, loading  } = this.props;
@@ -146,7 +144,7 @@ class RegisterForm extends React.Component {
 
     return (
       <Fragment>
-        <div className={"user-authentication-form my-3"}>
+        <Paper elevation={3} className={"user-authentication-form col-lg-6 mx-auto my-5 pt-2 pb-5"}>
           <h1>
             <FormattedMessage  id={"app.page.user.register.title"}
                                defaultMessage="Inscription"
@@ -157,10 +155,11 @@ class RegisterForm extends React.Component {
           <form
             id="register-form"
             name="register"
-            className={"col-lg-6 mx-auto px-3"}
+            className={"col-lg-10 mx-auto px-3"}
             onSubmit={this.handleSubmit}
           >
-            <Row>
+
+            <Row className={'my-2'}>
               <Col>
                 <Field
                   component={this.renderField}
@@ -192,7 +191,7 @@ class RegisterForm extends React.Component {
                 />
               </Col>
             </Row>
-            <Row>
+            <Row className={'my-2'}>
               <Col>
                 <Field
                   component={this.renderField}
@@ -226,49 +225,52 @@ class RegisterForm extends React.Component {
                 />
               </Col>
             </Row>
-            <Row>
+            <Row className={'my-4'}>
               <Col>
-                <label
-                  htmlFor={'userType'}
-                  className="form-control-label col-2"
-                >
-                  <FormattedMessage  id={"app.user.item.user_type"}
-                                     defaultMessage="Type d'utilisateur"
-                                     description="User item - user type"
+                <FormControl variant={'outlined'}>
+                  <InputLabel
+                    htmlFor={"user_type"}
+                  >
+                    <FormattedMessage  id={"app.user.item.user_type"}
+                                       defaultMessage="Type d'utilisateur"
+                                       description="User item - user type"
 
-                  />&nbsp;:&nbsp;
+                    />
+                  </InputLabel>
+                  <Select
+                    native
+                    labelWidth={100}
+                    value={this.state.user.userType}
+                    onChange={this.handleChange}
+                    label={"Type d'utilisateur"}
+                    required={true}
+                    inputProps = {{
+                      name: 'userType',
+                      id: 'user_type',
+                      className: 'pl-5'
+                    }}
+                  >
+                    <option aria-label="None" value={""}/>
+                    <option value={'customer'}>
+                      { intl.formatMessage({
+                        id: "app.user.item.user_type.client",
+                        description: "User item - user type client",
+                        defaultMessage: "Client"
+                      })}
+                    </option>
+                    <option value="supplier">
+                      { intl.formatMessage({
+                        id: "app.user.item.user_type.supplier",
+                        description: "User item - user type supplier",
+                        defaultMessage: "Fournisseur"
+                      })}
+                    </option>
 
-                </label>
-
-                <Field
-                  component={"select"}
-                  name="userType"
-                  type="select"
-                  className={"form-control col-3"}
-                  placeholder=""
-                  onChange={this.handleChange}
-                  value={this.state.user.userType}
-                >
-                  <option value="customer">
-                    { intl.formatMessage({
-                      id: "app.user.item.user_type.client",
-                      description: "User item - user type client",
-                      defaultMessage: "Client"
-                    })}
-                  </option>
-                  <option value="supplier">
-                    { intl.formatMessage({
-                      id: "app.user.item.user_type.supplier",
-                      description: "User item - user type supplier",
-                      defaultMessage: "Fournisseur"
-                    })}
-
-                  </option>
-                </Field>
+                  </Select>
+                </FormControl>
               </Col>
-
             </Row>
-            <Row>
+            <Row className={'mt-4 mb-3'}>
               <Col>
 
                 <div className={`form-group d-flex mt-2`}>
@@ -279,12 +281,12 @@ class RegisterForm extends React.Component {
                     style={{position: 'absolute', top: '10px'}}
                     required={true}
                     id={`user_termsAccepted`}
-                    onChange={this.handleChange}
+                    onClick={this.handleCheckboxChange}
                     value={true}
                   />
                   <label
                     htmlFor={`user_termsAccepted`}
-                    className="form-control-label col-10 ml-5"
+                    className="form-control-label col-10 ml-5 px-0"
                   >
                     J'accepte les condition d'utilisation de la plateforme. <Link to={'/terms_condition'}>Voir termes et conditions</Link> <br/>
                     J'autorise l'exploitation de mes données personnelles fournis à cette plateforme dans les limites indiquées par les <Link to={'/rgpd'}>Utilisations des données personnelles</Link>
@@ -300,18 +302,35 @@ class RegisterForm extends React.Component {
               </Row>
             )}
 
-            <Row className={'justify-content-center'}>
-              <button type="submit" className="btn btn-success my-3 mx-2">
-                Envoyer
-              </button>
-              <Link to={"/login"} className={"btn btn-outline-danger my-3 mx-2"}>
-                Annuler
-              </Link>
+            <Row className={'d-flex flex-column'}>
+              <div className={'d-flex flex-row justify-content-center'}>
+                <Button
+                  variant={'contained'}
+                  color={'primary'}
+                  type="submit"
+                  className="mx-2"
+                >
+                  Envoyer
+                </Button>
+                <Link  to={"/login"} className={"MuiButtonBase-root MuiButton-root MuiButton-contained mx-2"}>
+                  Annuler
+                </Link>
+              </div>
+              <hr/>
+              <div className={'d-flex flex-row justify-content-center'}>
+                {user.userType !== "" && (
+                  <GoogleRegisterButton
+                    userType={user.userType}
+                    termsAccepted={user.termsAccepted}
+                  />
+                )}
+              </div>
+
             </Row>
 
 
           </form>
-        </div>
+        </Paper>
       </Fragment>
 
     );

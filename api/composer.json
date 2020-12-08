@@ -11,6 +11,8 @@
         "dompdf/dompdf": "^0.8.3",
         "easycorp/easy-log-handler": "^1.0",
         "guzzlehttp/guzzle": "^6.3",
+        "knpuniversity/oauth2-client-bundle": "^2.6",
+        "league/oauth2-google": "^3.0",
         "lexik/jwt-authentication-bundle": "^2.6",
         "nelmio/cors-bundle": "2.0.1",
         "oneup/flysystem-bundle": "^3.4",

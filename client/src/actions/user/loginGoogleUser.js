@@ -3,39 +3,39 @@ import { fetch } from '../../utils/dataAccess';
 
 
 export function notify(notification){
-  return { type: 'USER_LOGIN_NOTIFICATION', notification};
+  return { type: 'GOOGLE_USER_LOGIN_NOTIFICATION', notification};
 }
 
 export function error(error) {
-  return { type: 'USER_LOGIN_ERROR', error };
+  return { type: 'GOOGLE_USER_LOGIN_ERROR', error };
 }
 
 export function request(user) {
-  return { type: 'USER_LOGIN_REQUEST', user };
+  return { type: 'GOOGLE_USER_LOGIN_REQUEST', user };
 }
 
 export function loading(loading) {
-  return { type: 'USER_LOGIN_LOADING', loading };
+  return { type: 'GOOGLE_USER_LOGIN_LOADING', loading };
 }
 
 export function success(user) {
-  return { type: 'USER_LOGIN_SUCCESS', user };
+  return { type: 'GOOGLE_USER_LOGIN_SUCCESS', user };
 }
 
 export function logout(user = null) {
   /* Supprimer les infos de l'utilisateur du localStorage */
   localStorage.removeItem('token');
 
-  return { type: 'USER_LOGOUT_SUCCESS', user};
+  return { type: 'GOOGLE_USER_LOGOUT_SUCCESS', user};
 }
 
 /*
 * En passant l'objet this.props.history du composant
 * vers son action creator permet de transmettre le changement d'URL au connected-react-router
 **/
-export function login(email, password, history, locationState) {
+export function loginGoogleUser(userProfile, history, locationState) {
   return dispatch => {
-    dispatch(request({ email }));
+    dispatch(request({ userProfile }));
     dispatch(loading(true));
 
     const headers = new Headers({
@@ -45,10 +45,10 @@ export function login(email, password, history, locationState) {
     const requestOptions = {
       method: 'POST',
       headers: headers,
-      body: JSON.stringify({email, password})
+      body: JSON.stringify(userProfile)
     };
 
-    return fetch('authentication_token', requestOptions  )
+    return fetch('connect_google', requestOptions  )
       .then(response => {
         dispatch(loading(false));
 
@@ -68,7 +68,7 @@ export function login(email, password, history, locationState) {
         dispatch(success(retrieved));
 
         const user = JSON.parse(atob(retrieved["token"].split(".")[1]));
-        dispatch(notify(`Bienvenue ${ user.name }`));
+        dispatch(notify(`Bienvenue ${ userProfile.name }`));
 
         //
         if(locationState.state && locationState.state.params && locationState.state.from)

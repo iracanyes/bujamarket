@@ -126,14 +126,18 @@ class MemberHandler
         $data = json_decode($data);
 
         $user = new UserTemp();
-        $user->setFirstname($data->firstname);
-        $user->setLastname($data->lastname);
-        $user->setEmail($data->email);
-        $user->setUserType($data->userType);
-        $user->setDateRegistration(new \DateTime());
-        $user->setTermsAccepted($data->termsAccepted);
+        $user->setFirstname($data->firstname)
+            ->setLastname($data->lastname)
+            ->setEmail($data->email)
+            ->setUserType($data->userType)
+            ->setDateRegistration(new \DateTime())
+            ->setTermsAccepted($data->termsAccepted);
 
         /* Encodage du mot de passe */
+        if(empty($data->password)){
+            throw new CreateMemberException("User's password not set!");
+        }
+
         $user->setPassword($this->encoder->encodePassword($user, $data->password));
 
         // Création du token de sécurité
@@ -147,7 +151,7 @@ class MemberHandler
                 ->findOneBy(['email' => $data->email]);
 
             if($member){
-                throw new CreateMemberException("Username already used!");
+                throw new CreateMemberException("Username already exist!");
             }
 
             if($newMember)
@@ -443,6 +447,8 @@ class MemberHandler
      */
     public function createMember(): User
     {
+        dump("MemberHandler createMember - this->request", $this->request);
+        dump("MemberHandler createMember - \$this->request->request->get('userType')", $this->request->request->get('userType'));
 
         switch($this->request->request->get('userType'))
         {
@@ -459,7 +465,6 @@ class MemberHandler
 
         $user->setFirstname($this->request->request->get('firstname'));
         $user->setLastname($this->request->request->get('lastname'));
-        $user->setEmail($this->request->request->get('email'));
         $user->setDateRegistration(new \DateTimeImmutable());
         $user->setLanguage($this->request->request->get('language'));
         $user->setCurrency($this->request->request->get('currency'));
@@ -475,7 +480,9 @@ class MemberHandler
             if($userTemp !== null)
             {
                 /* Transfert du mot de passe enregistré à l'inscription */
-                $user->setPassword($userTemp->getPassword());
+                $user->setEmail($userTemp->getEmail())
+                    ->setPassword($userTemp->getPassword())
+                    ->setAccountType($userTemp->getAccountType());
 
                 /* Création des rôles de sécurité pour l'utilisateur */
                 $this->setUserRoles($user);

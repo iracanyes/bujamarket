@@ -62,7 +62,17 @@ App\Entity\User:
                 id: '\d+'
             schemes: ['https']
             security: "is_granted('ROLE_ADMIN') and is_granted('IS_AUTHENTICATED_FULLY')"
-            controller: App\Action\User\AuthorizePublishingAction                          
+            controller: App\Action\User\AuthorizePublishingAction
+        connect_google:
+            path: '/connect_google'
+            method: 'POST' 
+            schemes: [ 'https' ]
+            controller: App\Action\User\GoogleUserAuthenticationAction
+        register_google:
+            path: '/register_google'
+            method: 'POST'
+            schemes: [ 'https' ]
+            controller: App\Action\User\GoogleUserRegisterAction
     itemOperations:
         get:
             method: 'GET'

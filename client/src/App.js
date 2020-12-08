@@ -111,6 +111,9 @@ import SearchResults from "./components/search/SearchResults";
 import SidebarLeftMenu from "./layout/SidebarLeftMenu";
 import HomepageSlider from "./page/HomepageSlider";
 import Footer from "./layout/Footer";
+import LoginForm from "./components/user/LoginForm";
+import {Register} from "./components/user";
+import RegisterForm from "./components/user/RegisterForm";
 
 /* chargement des données locales */
 addLocaleData();
@@ -162,10 +165,16 @@ export class App extends Component
   {
     super(props);
     this.state = {
-      results: []
+      results: [],
+      style: {
+        main: {
+          BackgroundImage: null
+        }
+      }
     };
 
     this.search = this.search.bind(this);
+    this.setStyle = this.setStyle.bind(this);
   }
 
   /* Permet de transmettre les résultats de recherche du composant MainMenuSearchForm vers le composant d'affichage des résultats SearchResults. HOC - High Order Component */
@@ -174,10 +183,22 @@ export class App extends Component
     this.setState({results: results});
   }
 
+  setStyle(style)
+  {
+    this.setState(state => ({
+      ...state,
+      style: style
+    }));
+  }
+
   render()
   {
     const { results } = this.state;
 
+    /**
+     * User's token
+     * @type {any|null}
+     */
     const user = localStorage.getItem("token") !== null ? JSON.parse(atob(localStorage.getItem("token").split('.')[1])) : null;
 
     const state = store.getState();
@@ -216,7 +237,7 @@ export class App extends Component
                 )}
 
                 {/* Main section  */}
-                <main style={{minHeight:"70vh"}}>
+                <main style={{minHeight:"70vh", ...this.state.style.main }}>
                   <aside id="aside-left">
                     <Route
                       path={'/'}
@@ -246,8 +267,29 @@ export class App extends Component
 
                     <div>
                       <Switch>
-                        <Route path="/dev" component={Welcome} strict={true} exact={true}/>
+                        {/* Annulation du style définit par les composants enfants
+                        <Route
+                          path={"/"}
+                          render={() => this.setStyle({ main: {}})}
+                        />
+                        */}
+                        {process.env.APP_ENV === 'development' && (
+                          <Route path="/dev" component={Welcome} strict={true} exact={true}/>
+                        )}
                         <Route path="/" component={Homepage} strict={true} exact={true} />
+                        <Route
+                          path="/login"
+                          setStyle={this.setStyle}
+                          exact={true}
+                          strict={true}
+                          render={() => <LoginForm setStyle={this.setStyle} />}
+                        />
+                        <Route
+                          path="/register"
+                          exact={true}
+                          strict={true}
+                          render={() => <RegisterForm setStyle={this.setStyle} />}
+                        />,
                         {/* Add your routes here */}
                         { addressRoutes }
                         { adminRoutes }

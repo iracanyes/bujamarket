@@ -37,11 +37,19 @@ security:
             guard:
                 authenticators:
                     - lexik_jwt_authentication.jwt_token_authenticator
-                provider: app_user_provider
-            
+                provider: app_user_provider            
             logout:
                 path: app_logout
                 target: /
+        google:
+            anonymous: ~
+            logout:
+                path: app_logout
+                target: /
+            guard:
+                authenticators:
+                    - App\Security\GoogleAuthenticator
+                provider: app_user_provider
                 
 
     # Easy way to control access for large sections of your site
@@ -75,4 +83,4 @@ security:
         ROLE_CUSTOMER: ROLE_MEMBER
         ROLE_SUPPLIER: ROLE_MEMBER
         ROLE_ADMIN: [ ROLE_SUPPPLIER, ROLE_CUSTOMER, ROLE_ALLOWED_TO_SWITCH ]
-        ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
+        ROLE_SYSTEM_ADMIN: [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]

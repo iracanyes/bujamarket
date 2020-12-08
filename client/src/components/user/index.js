@@ -10,5 +10,21 @@ import Profile from "./Profile";
 import UpdateProfile from "./UpdateProfile";
 import ProfileAddresses from "./ProfileAddresses";
 import Unsubscribe from "./Unsubscribe";
+import GoogleSignInButton from "./GoogleSignInButton";
+import GoogleRegisterButton from "./GoogleRegisterButton";
 
-export { Register, Login, Subscribe, Update, Show, UnlockAccount, UpdatePassword, Profile, UpdateProfile, ProfileAddresses, Unsubscribe };
+export {
+  Register,
+  Login,
+  GoogleSignInButton,
+  GoogleRegisterButton,
+  Subscribe,
+  Update,
+  Show,
+  UnlockAccount,
+  UpdatePassword,
+  Profile,
+  UpdateProfile,
+  ProfileAddresses,
+  Unsubscribe
+};
