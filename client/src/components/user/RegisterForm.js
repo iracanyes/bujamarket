@@ -76,7 +76,7 @@ class RegisterForm extends React.Component {
   }
 
   handleCheckboxChange(event){
-    const { name, value } = event.target;
+    const { name } = event.target;
 
     this.setState(state => ({
       user: {
@@ -267,6 +267,13 @@ class RegisterForm extends React.Component {
                     </option>
 
                   </Select>
+                  <FormHelperText>
+                    <FormattedMessage
+                      id={'app.form.required_input_for_all_accounts'}
+                      defaultMessage={'Champ obligatoire pour tous les comptes'}
+                      description={'Form - Required input'}
+                    />
+                  </FormHelperText>
                 </FormControl>
               </Col>
             </Row>

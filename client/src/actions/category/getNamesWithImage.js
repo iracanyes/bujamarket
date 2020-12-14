@@ -58,6 +58,9 @@ export function getNamesWithImage(page = 'category_names_with_image') {
           case typeof e['hydra:description'] === "string":
             dispatch(error(e['hydra:description']));
             break;
+          default:
+            dispatch(error(e));
+            break;
         }
       });
   };

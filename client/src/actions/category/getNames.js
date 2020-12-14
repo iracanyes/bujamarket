@@ -58,6 +58,9 @@ export function listByName(page = 'categories_names') {
           case typeof e['hydra:description'] === "string":
             dispatch(error(e['hydra:description']));
             break;
+          default:
+            dispatch(error(e));
+            break;
         }
       });
   };

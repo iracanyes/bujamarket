@@ -28,23 +28,26 @@ export function del(item, history, location) {
       })
       .catch(e => {
         dispatch(loading(false));
-        if(e.code === 401)
-        {
-          dispatch(error("Authentification nécessaire avant de poursuivre!"));
-          history.push({pathname: '../../login', state: { from : location.pathname }});
+
+        switch (true){
+          case e.code === 401:
+            dispatch(error("Authentification nécessaire avant de poursuivre!"));
+            history.push({pathname: '../../login', state: { from : location.pathname }});
+            break;
+          case typeof e['hydra:description'] === "string" && /Not found/.test(e['hydra:description']):
+            dispatch(success(item));
+            break;
+          case typeof e['hydra:description'] === "string":
+            dispatch(error(e['hydra:description']));
+            break;
+          case typeof e.message === "string":
+            dispatch(error(e.message));
+            break;
+          default:
+            dispatch(error(e));
+            break;
         }
 
-        if(typeof e === 'string')
-        {
-          dispatch(error(e));
-        }else{
-          if(e['hydra:description'])
-          {
-            dispatch(error(e['hydra:title']));
-          }else{
-            dispatch(error(e.message));
-          }
-        }
         dispatch(error(null));
       });
   };

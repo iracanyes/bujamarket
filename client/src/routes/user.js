@@ -1,9 +1,8 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
-import { Login, Register, Subscribe, Show, UnlockAccount, UpdatePassword, Profile, UpdateProfile, ProfileAddresses, Unsubscribe } from '../components/user/';
+import { Subscribe, Show, UnlockAccount, UpdatePassword, Profile, UpdateProfile, ProfileAddresses, Unsubscribe } from '../components/user/';
 
 export default [
-
   <Route path={'/subscribe/:token'} component={Subscribe} exact key="subscribe"  />,
   <Route path={'/unlock_account/:token'} component={UnlockAccount} exact key="unlockAccount" />,
   <Route path={'/profile'} component={Profile} exact key="profile" />,

@@ -91,23 +91,26 @@ export function update(item, values, history, location) {
           dispatch(updateError(e.errors._error['hydra:description']));
         }
 
-        if(e.code === 401)
-        {
-          dispatch(updateError("Authentification nécessaire avant de poursuivre!"));
-          history.push({pathname: '../../login', state: { from : location.pathname }});
+        switch (true){
+          case e.code === 401:
+            dispatch(updateError("Authentification nécessaire avant de poursuivre!"));
+            history.push({pathname: '../../login', state: { from : location.pathname }});
+            break;
+          case typeof e['hydra:description'] === "string" && /Not found/.test(e['hydra:description']):
+            dispatch(updateError(e['hydra:description']));
+            break;
+          case typeof e['hydra:description'] === "string":
+            dispatch(updateError(e['hydra:description']));
+            break;
+          case typeof e.message === "string":
+            dispatch(updateError(e.message));
+            break;
+          default:
+            dispatch(updateError(e));
+            break;
+
         }
 
-        if(typeof e === 'string')
-        {
-          dispatch(updateError(e));
-        }else{
-          if(e['hydra:description'])
-          {
-            dispatch(updateError(e['hydra:title']));
-          }else{
-            dispatch(updateError(e.message));
-          }
-        }
         dispatch(updateError(null));
       });
   };

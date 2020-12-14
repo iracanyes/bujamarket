@@ -17,7 +17,6 @@ import {
   Button,
   Paper
 } from '@material-ui/core';
-import GoogleRegisterButton from "./GoogleRegisterButton";
 import BackgroundImage from "../../assets/img/page/login-page.jpg";
 
 class LoginForm extends React.Component {
@@ -45,6 +44,10 @@ class LoginForm extends React.Component {
         backgroundSize: '100% 100%'
       }
     });
+  }
+
+  componentWillUnmount() {
+    this.props.setStyle({});
   }
 
   handleChange(e)

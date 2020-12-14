@@ -1,4 +1,6 @@
 {
+  "app.form.confirm_deletion": "Confirmer la suppression",
+  "app.form.required_input_for_all_accounts": "Champ obligatoire pour tout type de compte",
   "app.about": "À propos",
   "app.actions": "Actions",
   "app.add_bank_account": "Ajouter une carte bancaire",

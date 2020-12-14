@@ -12,7 +12,7 @@ use App\Validator\Constraints as MyAssert;
 
 /**
  * @ApiResource(attributes={
- *     "normalization_context"={"groups"={"order_set:output","order_detail:output"}}
+ *     "normalization_context"={"groups"={"address:output","profile:output","order_set:output","order_detail:output"}}
  * })
  * @ORM\Table(name="bjmkt_address")
  * @ORM\Entity(repositoryClass="App\Repository\AddressRepository")
@@ -23,7 +23,7 @@ class Address
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"profile:output","order_set:output","order_detail:output"})
+     * @Groups({"address:output","profile:output","order_set:output","order_detail:output"})
      */
     private $id;
 
@@ -32,7 +32,7 @@ class Address
      *
      * @ORM\Column(type="string", length=255)
      * @Assert\Choice({"Head office","Delivery address","Shipping address","Deposit address","Billing address"})
-     * @Groups({"supplier:output","profile:output","order_set:output","order_detail:output"})
+     * @Groups({"address:output","supplier:output","profile:output","order_set:output","order_detail:output"})
      */
     private $locationName;
 
@@ -40,7 +40,7 @@ class Address
      * @var string $street Street name
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank()
-     * @Groups({"supplier:output","profile:output","order_set:output","order_detail:output"})
+     * @Groups({"address:output","supplier:output","profile:output","order_set:output","order_detail:output"})
      */
     private $street;
 
@@ -48,7 +48,7 @@ class Address
      * @var string $number Address's number
      * @ORM\Column(type="string", length=50)
      * @Assert\NotBlank()
-     * @Groups({"supplier:output","profile:output","order_set:output","order_detail:output"})
+     * @Groups({"address:output","supplier:output","profile:output","order_set:output","order_detail:output"})
      */
     private $number;
 
@@ -57,7 +57,7 @@ class Address
      *
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank()
-     * @Groups({"supplier:output","profile:output","order_set:output","order_detail:output"})
+     * @Groups({"address:output","supplier:output","profile:output","order_set:output","order_detail:output"})
      */
     private $state;
 
@@ -65,7 +65,7 @@ class Address
      * @var string $town Address's Town
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank()
-     * @Groups({"supplier:output","profile:output","order_set:output","order_detail:output"})
+     * @Groups({"address:output","supplier:output","profile:output","order_set:output","order_detail:output"})
      */
     private $town;
 
@@ -73,7 +73,7 @@ class Address
      * @var string $zipCode Zip code
      * @ORM\Column(type="string", length=50)
      * @Assert\NotBlank()
-     * @Groups({"supplier:output","profile:output","order_set:output","order_detail:output"})
+     * @Groups({"address:output","supplier:output","profile:output","order_set:output","order_detail:output"})
      */
     private $zipCode;
 
@@ -82,7 +82,7 @@ class Address
      * @ORM\Column(type="string", length=255)
      * @MyAssert\ISOCountry()
      *
-     * @Groups({"supplier:output","profile:output","order_set:output","order_detail:output"})
+     * @Groups({"address:output","supplier:output","profile:output","order_set:output","order_detail:output"})
      */
     private $country;
 

@@ -112,7 +112,6 @@ import SidebarLeftMenu from "./layout/SidebarLeftMenu";
 import HomepageSlider from "./page/HomepageSlider";
 import Footer from "./layout/Footer";
 import LoginForm from "./components/user/LoginForm";
-import {Register} from "./components/user";
 import RegisterForm from "./components/user/RegisterForm";
 
 /* chargement des données locales */
@@ -267,13 +266,8 @@ export class App extends Component
 
                     <div>
                       <Switch>
-                        {/* Annulation du style définit par les composants enfants
-                        <Route
-                          path={"/"}
-                          render={() => this.setStyle({ main: {}})}
-                        />
-                        */}
-                        {process.env.APP_ENV === 'development' && (
+
+                        {process.env.REACT_APP_ENV === 'development' && (
                           <Route path="/dev" component={Welcome} strict={true} exact={true}/>
                         )}
                         <Route path="/" component={Homepage} strict={true} exact={true} />

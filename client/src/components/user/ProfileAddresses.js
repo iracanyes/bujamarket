@@ -1,9 +1,10 @@
 import React, { Fragment, Component } from 'react';
+import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
 import { withRouter } from "react-router-dom";
 import {
-  Button,
+
   Card,
   CardBody,
   CardTitle,
@@ -14,27 +15,41 @@ import {
   ModalBody,
   ModalFooter
 } from 'reactstrap';
+import {
+  Button,
+  Paper
+} from "@material-ui/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { getProfileAddresses } from "../../actions/address/profileAddresses";
+import { getProfileAddresses, reset } from "../../actions/address/profileAddresses";
 import { UpdateForm } from  "../address";
 import { del } from "../../actions/address/delete";
 import {toastSuccess} from "../../layout/ToastMessage";
 
 class ProfileAddresses extends  Component{
+  static propTypes = {
+    getProfileAddresses: PropTypes.func.isRequired,
+    retrieved: PropTypes.object,
+    loading: PropTypes.bool.isRequired,
+    reset: PropTypes.func.isRequired,
+    eventSource: PropTypes.instanceOf(EventSource),
+    deleteLoading: PropTypes.bool.isRequired,
+    deleteError: PropTypes.string,
+    deleted: PropTypes.object,
+    delete: PropTypes.func.isRequired,
+
+  };
   constructor(props) {
     super(props);
 
     this.state = {
       isOpen: false,
       modal: false,
-      updatedAddress: false,
       deletedAddress: false,
-      addressToUpdate: {},
-      addressCreated: {},
-      addressToDelete: {}
+      addressToUpdate: null,
+      addressToDelete: null
     };
 
-    this.addNewAddress = this.addNewAddress.bind(this);
+    this.closeForm = this.closeForm.bind(this);
     this.updatedAddress = this.updatedAddress.bind(this);
     this.confirmDelete = this.confirmDelete.bind(this);
   }
@@ -42,6 +57,10 @@ class ProfileAddresses extends  Component{
   componentDidMount() {
     if(!this.props.user)
       this.props.getProfileAddresses(this.props.history, this.props.location)
+  }
+
+  componentWillUnmount() {
+    this.props.reset(this.props.eventSource);
   }
 
   confirmDelete(address)
@@ -54,11 +73,11 @@ class ProfileAddresses extends  Component{
 
   }
 
-  addNewAddress(address)
+  closeForm()
   {
     this.setState( state => ({
       ...state,
-      newAddress: address
+      isOpen: false
     }));
   }
 
@@ -66,16 +85,17 @@ class ProfileAddresses extends  Component{
   {
     this.setState( state => ({
       ...state,
-      addressToUpdate: {},
-      updatedAddress: true
+      addressToUpdate: null,
+      isOpen: false
     }));
   }
 
   showUpdateForm(address){
-    this.setState({
+    this.setState( state => ({
+      ...state,
       isOpen: true,
       addressToUpdate: address
-    });
+    }));
   }
 
   delete(item)
@@ -85,7 +105,8 @@ class ProfileAddresses extends  Component{
     this.setState(state => ({
       ...state,
       modal: !state.modal,
-      deletedAddress: true
+      deletedAddress: true,
+      addressToDelete: item
     }));
 
     toastSuccess(intl.formatMessage({
@@ -98,20 +119,34 @@ class ProfileAddresses extends  Component{
 
   updateTable(retrieved)
   {
-    const { deletedAddress, addressToDelete } = this.state;
+    const { addressToDelete, addressToUpdate } = this.state;
+    const { updated: addressUpdated, deleted } = this.props;
 
-    const addresses = deletedAddress
-      ? retrieved.filter(address => address.street !== addressToDelete.street && address.number !== addressToDelete.number )
+    console.log('ProfileAddresses updateTable - addressToUpdate', addressToUpdate);
+    console.log('ProfileAddresses updateTable - addressUpdated', addressUpdated);
+
+    /* Mise à jour du produit */
+    if(addressUpdated && addressUpdated.id){
+      const index = retrieved.findIndex(address => address.id === addressUpdated.id);
+      retrieved[index] = addressUpdated;
+    }
+
+    // Suppression de l'adresse supprimé
+    return (addressToDelete && deleted)
+      ? retrieved.filter(address => address.id !== deleted.id )
       : retrieved;
-
-    return addresses;
   }
 
   render(){
 
     const retrieved = this.props.retrieved && this.props.retrieved['hydra:member'];
-
-    const { isOpen, modal, addressToUpdate, addressToDelete } = this.state;
+    
+    const {
+      isOpen,
+      modal,
+      addressToUpdate,
+      addressToDelete,
+    } = this.state;
 
     const addresses = this.updateTable(retrieved);
 
@@ -123,8 +158,8 @@ class ProfileAddresses extends  Component{
             <h2>
               <FormattedMessage id={"app.button.your_addresses"}/>
             </h2>
-            <Button onClick={() => this.showUpdateForm({})} className={'btn'}>
-              <FontAwesomeIcon icon={["far", "edit"]} />
+            <Button variant={'contained'} onClick={() => this.showUpdateForm({})} className={'btn'}>
+              <FontAwesomeIcon icon={["far", "edit"]} className={'mr-2'}/>
               <FormattedMessage id={"app.address.add"} defaultMessage={"Ajouter une adresse"} />
             </Button>
           </div>
@@ -179,51 +214,83 @@ class ProfileAddresses extends  Component{
                       <FontAwesomeIcon icon={'trash-alt'} />
                     </Button>
                     <Modal isOpen={modal} toggle={() => this.confirmDelete(item)} className={'modal-delete'}>
-                      <ModalHeader toggle={() => this.confirmDelete(item)}>Confirmer la suppression</ModalHeader>
+                      <ModalHeader toggle={() => this.confirmDelete(item)}>
+                        <FormattedMessage
+                          id={'app.form.confirm_deletion'}
+                          defaultMessage={'Confirmer la suppression'}
+                          description={'Form - Confirm deletion'}
+                        />
+                      </ModalHeader>
                       <ModalBody>
-                        <Card>
-                          <CardTitle>
-                            <h2 className={'text-center'}>{ addressToDelete.locationName }</h2>
-                          </CardTitle>
-                          <CardBody>
-                            <p>
-                              <FormattedMessage id={'app.address.item.street'} />
-                              &nbsp;:&nbsp;
-                              { addressToDelete.street }
-                            </p>
-                            <p>
-                              <FormattedMessage id={'app.address.item.number'} />
-                              &nbsp;:&nbsp;
-                              { addressToDelete.number }
-                            </p>
-                            <p>
-                              <FormattedMessage id={'app.address.item.town'} />
-                              &nbsp;:&nbsp;
-                              { addressToDelete.town }
-                            </p>
-                            <p>
-                              <FormattedMessage id={'app.address.item.state'} />
-                              &nbsp;:&nbsp;
-                              { addressToDelete.state }
-                            </p>
-                            <p>
-                              <FormattedMessage id={'app.address.item.zip_code'} />
-                              &nbsp;:&nbsp;
-                              { addressToDelete.zipCode }
-                            </p>
-                            <p>
-                              <FormattedMessage id={'app.address.item.country'} />
-                              &nbsp;:&nbsp;
-                              { addressToDelete.country }
-                            </p>
-                          </CardBody>
-                        </Card>
+                        {addressToDelete && (
+                          <Paper elevation={3}>
+                            <Card>
+                              <CardTitle className={'mt-2'}>
+                                <h2 className={'text-center'}>
+                                  { addressToDelete.locationName }
+                                </h2>
+                              </CardTitle>
+                              <CardBody>
+                                <p>
+                                  <FormattedMessage id={'app.address.item.street'} />
+                                  &nbsp;:&nbsp;
+                                  <strong className={'ml-2'}>
+                                    { addressToDelete.street }
+                                  </strong>
+                                </p>
+                                <p>
+                                  <FormattedMessage id={'app.address.item.number'} />
+                                  &nbsp;:&nbsp;
+                                  <strong className={'ml-2'}>
+                                    { addressToDelete.number }
+                                  </strong>
+
+                                </p>
+                                <p>
+                                  <FormattedMessage id={'app.address.item.town'} />
+                                  &nbsp;:&nbsp;
+                                  <strong className={'ml-2'}>
+                                    { addressToDelete.town }
+                                  </strong>
+
+                                </p>
+                                <p>
+                                  <FormattedMessage id={'app.address.item.state'} />
+                                  &nbsp;:&nbsp;
+                                  <strong className={'ml-2'}>
+                                    { addressToDelete.state }
+                                  </strong>
+
+                                </p>
+                                <p>
+                                  <FormattedMessage id={'app.address.item.zip_code'} />
+                                  &nbsp;:&nbsp;
+                                  <strong className={'ml-2'}>
+                                    { addressToDelete.zipCode }
+                                  </strong>
+
+                                </p>
+                                <p>
+                                  <FormattedMessage id={'app.address.item.country'} />
+                                  &nbsp;:&nbsp;
+                                  <strong className={'ml-2'}>
+                                    { addressToDelete.country }
+                                  </strong>
+
+                                </p>
+                              </CardBody>
+                            </Card>
+                          </Paper>
+                        )}
+
                       </ModalBody>
-                      <ModalFooter>
-                        <Button color="primary" onClick={() => this.delete(addressToDelete)}>
+                      <ModalFooter className={'justify-content-center'}>
+                        <Button variant={'contained'} className={'bg-light mx-2'} onClick={() => this.delete(addressToDelete)}>
+                          <FontAwesomeIcon icon={'check-circle'} className={'text-success mr-2'}/>
                           <FormattedMessage id={'app.button.validate'}/>
                         </Button>{' '}
-                        <Button color="secondary" onClick={ () => this.confirmDelete({}) }>
+                        <Button variant={'contained'} className={'bg-light mx-2'} onClick={ () => this.confirmDelete({}) }>
+                          <FontAwesomeIcon icon={'minus-circle'} className={'text-danger mr-2'}/>
                           <FormattedMessage id={'app.button.cancel'}/>
                         </Button>
                       </ModalFooter>
@@ -231,72 +298,74 @@ class ProfileAddresses extends  Component{
                   </td>
                 </tr>
               ))}
-              { this.state.addressCreated.locationName && (
-                <tr key={this.state.addressCreated.id}>
-                  <th scope="row">{ this.state.addressCreated.id + 1 }</th>
+              { this.props.created && this.props.created.locationName && (
+                <tr key={this.props.created.id}>
+                  <th scope="row">{ this.props.created.id + 1 }</th>
                   <td>
-                    { this.state.addressCreated.locationName }
+                    { this.props.created.locationName }
                   </td>
                   <td>
-                    { this.state.addressCreated.street + " " + this.state.addressCreated.number }
+                    { this.props.created.street + " " + this.props.created.number }
                   </td>
-                  <td>{ this.state.addressCreated.zipCode }</td>
-                  <td>{ this.state.addressCreated.town }</td>
-                  <td>{ this.state.addressCreated.state }</td>
-                  <td>{ this.state.addressCreated.country }</td>
+                  <td>{ this.props.created.zipCode }</td>
+                  <td>{ this.props.created.town }</td>
+                  <td>{ this.props.created.state }</td>
+                  <td>{ this.props.created.country }</td>
                   <td className={"d-flex flex-row"}>
-                    <Button onClick={() => this.showUpdateForm(this.state.addressCreated)} className={"text-primary"}>
+                    <Button onClick={() => this.showUpdateForm(this.props.created)} className={"text-primary"}>
                       <FontAwesomeIcon icon={'edit'}/>
                     </Button>
-                    <Button onClick={this.delete(this.state.addressCreated.id)} className={"text-danger"}>
+                    <Button onClick={() =>this.delete(this.props.created)} className={"text-danger"}>
                       <FontAwesomeIcon icon={'trash-alt'} />
                     </Button>
-                    <Modal isOpen={modal} toggle={() => this.confirmDelete(this.state.addressCreated)} className={'modal-delete'}>
+                    <Modal isOpen={modal} toggle={() => this.confirmDelete(this.props.created)} className={'modal-delete'}>
                       <ModalHeader toggle={this.confirmDelete}>Confirmer la suppression</ModalHeader>
                       <ModalBody>
                         <Card>
                           <CardTitle>
-                            <h2 className={'text-center'}>{ this.state.addressCreated.locationName }</h2>
+                            <h2 className={'text-center'}>{ this.props.created.locationName }</h2>
                           </CardTitle>
                           <CardBody>
                             <p>
                               <FormattedMessage id={'app.address.item.street'} />
                               &nbsp;:&nbsp;
-                              { this.state.addressCreated.street }
+                              { this.props.created.street }
                             </p>
                             <p>
                               <FormattedMessage id={'app.address.item.number'} />
                               &nbsp;:&nbsp;
-                              { this.state.addressCreated.number }
+                              { this.props.created.number }
                             </p>
                             <p>
                               <FormattedMessage id={'app.address.item.town'} />
                               &nbsp;:&nbsp;
-                              { this.state.addressCreated.town }
+                              { this.props.created.town }
                             </p>
                             <p>
                               <FormattedMessage id={'app.address.item.state'} />
                               &nbsp;:&nbsp;
-                              { this.state.addressCreated.state }
+                              { this.props.created.state }
                             </p>
                             <p>
                               <FormattedMessage id={'app.address.item.zip_code'} />
                               &nbsp;:&nbsp;
-                              { this.state.addressCreated.zipCode }
+                              { this.props.created.zipCode }
                             </p>
                             <p>
                               <FormattedMessage id={'app.address.item.country'} />
                               &nbsp;:&nbsp;
-                              { this.state.addressCreated.country }
+                              { this.props.created.country }
                             </p>
                           </CardBody>
                         </Card>
                       </ModalBody>
                       <ModalFooter>
-                        <Button color="primary" onClick={() => this.delete(this.state.addressCreated)}>
+                        <Button variant={'contained'} className={'bg-light '} onClick={() => this.delete(this.props.created)}>
+                          <FontAwesomeIcon icon={'check-circle'} className={'text-success mr-2'}/>
                           <FormattedMessage id={'app.button.validate'}/>
                         </Button>{' '}
-                        <Button color="secondary" onClick={ () => this.confirmDelete({}) }>
+                        <Button variant={'contained'} className={'bg-light'} onClick={ () => this.confirmDelete({}) }>
+                          <FontAwesomeIcon icon={'minus-circle'} className={'text-danger mr-2'}/>
                           <FormattedMessage id={'app.button.cancel'}/>
                         </Button>
                       </ModalFooter>
@@ -308,7 +377,13 @@ class ProfileAddresses extends  Component{
             </Table>
           )}
           <div id="update-address-container">
-            {isOpen && <UpdateForm address={addressToUpdate} addNewAddress={this.addNewAddress}/>}
+            {console.log('ProfileAddresses render - state.isOpen', isOpen)}
+            { isOpen && (
+              <UpdateForm
+                address={addressToUpdate.id ? addressToUpdate : undefined}
+                closeForm={this.closeForm}
+              />
+            )}
           </div>
         </Container>
 
@@ -318,13 +393,32 @@ class ProfileAddresses extends  Component{
 }
 
 const mapStateToProps = state => {
-  const { retrieved, loading, error } = state.address.profileAddresses;
-  return { retrieved, loading, error };
+  const { retrieved, loading, error, eventSource } = state.address.profileAddresses;
+  const { created, loading: createLoading, error: createError } = state.address.create;
+  const { updated, loading: updateLoading, error: updateError } = state.address.update;
+  const { deleted, error: deleteError, loading: deleteLoading  } = state.address.del;
+
+  return {
+    retrieved,
+    loading,
+    error,
+    eventSource,
+    created,
+    createLoading,
+    createError,
+    updated,
+    updateLoading,
+    updateError,
+    deleted,
+    deleteLoading,
+    deleteError
+  };
 };
 
 const mapDispatchToProps = dispatch => ({
   getProfileAddresses: (history, location) => dispatch(getProfileAddresses(history, location)),
-  delete: (item) => dispatch(del(item))
+  delete: (item, history, location) => dispatch(del(item, history, location)),
+  reset: (eventSource) => dispatch(reset(eventSource))
 });
 
 export default connect( mapStateToProps, mapDispatchToProps )(withRouter(injectIntl(ProfileAddresses)));

@@ -66,8 +66,6 @@ export function loginGoogleUser(userProfile, history, locationState) {
       })
       .then(retrieved => {
         dispatch(success(retrieved));
-
-        const user = JSON.parse(atob(retrieved["token"].split(".")[1]));
         dispatch(notify(`Bienvenue ${ userProfile.name }`));
 
         //

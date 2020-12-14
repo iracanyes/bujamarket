@@ -1,8 +1,8 @@
 import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import { GoogleLogin, GoogleLogout } from "react-google-login";
-import { loginGoogleUser, reset } from "../../actions/user/loginGoogleUser";
+import { GoogleLogin} from "react-google-login";
+import { loginGoogleUser} from "../../actions/user/loginGoogleUser";
 import {toastError} from "../../layout/ToastMessage";
 
 class GoogleSignInButton extends Component{
@@ -16,8 +16,6 @@ class GoogleSignInButton extends Component{
 
     this.login = this.login.bind(this);
     this.handleLoginFailure = this.handleLoginFailure.bind(this);
-    this.logout = this.logout.bind(this);
-    this.handleLogoutFailure = this.handleLogoutFailure.bind(this);
   }
 
   login(response){
@@ -28,27 +26,16 @@ class GoogleSignInButton extends Component{
         accessToken: response.accessToken
       }));
     }
-    console.log('[Login] response: ', response);
-    this.props.loginGoogleUser(response, history, location);
-  }
 
-  logout(response){
-    this.setState(state => ({
-      isLogged: false,
-      accessToken: null
-    }));
+    this.props.loginGoogleUser(response, history, location);
   }
 
   handleLoginFailure(response){
     console.log('[Login] failure - response: ', response);
   }
 
-  handleLogoutFailure(response){
-    console.log('[Logout - failure] response: ', response);
-  }
-
   render() {
-    const { retrieved, error, loading  } = this.props;
+    const { error  } = this.props;
 
     typeof error === 'string' && toastError(error);
 
@@ -67,11 +54,11 @@ class GoogleSignInButton extends Component{
 }
 
 const mapStateToProps = state => {
-  const { retrieved, error, loading } = state.user.loginGoogleUser;
-  return { retrieved, error, loading };
+  const { error, loading } = state.user.googleUserAuthentication;
+  return { error, loading };
 };
 const mapDispatchToProps = (dispatch) => ({
   loginGoogleUser: (userProfile, history, location) => dispatch(loginGoogleUser(userProfile, history, location))
 });
 
-export default connect(null, mapDispatchToProps)(withRouter(GoogleSignInButton));
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(GoogleSignInButton));

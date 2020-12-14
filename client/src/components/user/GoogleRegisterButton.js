@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import { GoogleLogin, GoogleLogout } from "react-google-login";
+import { GoogleLogin } from "react-google-login";
 import { registerGoogleUser, reset } from "../../actions/user/registerGoogleUser";
 import {toastError} from "../../layout/ToastMessage";
 
@@ -15,9 +15,6 @@ class GoogleRegisterButton extends Component{
     };
 
     this.register = this.register.bind(this);
-    this.handleLoginFailure = this.handleLoginFailure.bind(this);
-    this.logout = this.logout.bind(this);
-    this.handleLogoutFailure = this.handleLogoutFailure.bind(this);
   }
 
   register(response){
@@ -34,28 +31,13 @@ class GoogleRegisterButton extends Component{
         accessToken: response.accessToken
       }));
     }
-    console.log('[Login] response: ', response);
+
 
     this.props.registerGoogleUser(data, history, location);
   }
 
-  logout(response){
-    this.setState(state => ({
-      isLogged: false,
-      accessToken: null
-    }));
-  }
-
-  handleLoginFailure(response){
-    console.log('[Login] failure - response: ', response);
-  }
-
-  handleLogoutFailure(response){
-    console.log('[Logout - failure] response: ', response);
-  }
-
   render() {
-    const { retrieved, error, loading, termsAccepted  } = this.props;
+    const { error, termsAccepted  } = this.props;
 
     typeof error === 'string' && toastError(error);
 
@@ -75,11 +57,12 @@ class GoogleRegisterButton extends Component{
 }
 
 const mapStateToProps = state => {
-  const { retrieved, error, loading } = state.user.registerGoogleUser;
+  const { retrieved, error, loading } = state.user.googleUserRegistration;
   return { retrieved, error, loading };
 };
 const mapDispatchToProps = (dispatch) => ({
-  registerGoogleUser: (userProfile, history, location) => dispatch(registerGoogleUser(userProfile, history, location))
+  registerGoogleUser: (userProfile, history, location) => dispatch(registerGoogleUser(userProfile, history, location)),
+  reset: () => dispatch(reset())
 });
 
-export default connect(null, mapDispatchToProps)(withRouter(GoogleRegisterButton));
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(GoogleRegisterButton));
