@@ -1,6 +1,12 @@
 /**
  * Description: Sidebar Left
  */
+div.drawer-left{
+  width: 240px;
+  .drawer-left-header{
+    width: 240px;
+  }
+}
 aside#aside-left{
   -ms-flex: 0 0 16.666667%;
   flex: 0 0 16.666667%;

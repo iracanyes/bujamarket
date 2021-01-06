@@ -127,6 +127,7 @@ export function login(email, password, history, locationState) {
 export function reset() {
   return dispatch => {
     dispatch(loading(false));
+    dispatch(notify(null));
     dispatch(error(null));
   };
 }

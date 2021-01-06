@@ -17,6 +17,13 @@ App\Entity\Supplier:
             #options:
             #    my_option: 'my_option_value'
             status: 200 # customize the HTTP status code to send
+        searchSuppliers:
+            method: 'GET'
+            path: 'search_suppliers'
+            defaults:
+                __api_receive: false
+            schemes: ['https']
+            controller: App\Action\Supplier\SearchSuppliersAction
         post:
             method: 'POST'
             path: '/supplier/create'

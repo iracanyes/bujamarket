@@ -140,7 +140,7 @@ class ProfileAddresses extends  Component{
   render(){
 
     const retrieved = this.props.retrieved && this.props.retrieved['hydra:member'];
-    
+
     const {
       isOpen,
       modal,

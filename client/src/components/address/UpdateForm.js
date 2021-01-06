@@ -22,6 +22,7 @@ import {
 
 class UpdateForm extends Component {
   static propTypes = {
+    address: PropTypes.object,
     create: PropTypes.func.isRequired,
     created: PropTypes.object,
     resetCreate: PropTypes.func.isRequired,
@@ -120,7 +121,9 @@ class UpdateForm extends Component {
     const address = this.props.updated ? this.props.updated : this.props.address;
 
     // Show errors
-    this.props.updateError && toastError(this.props.updateError);
+    updateError && toastError(updateError);
+    createError && toastError(createError);
+
 
     return (
       <div>

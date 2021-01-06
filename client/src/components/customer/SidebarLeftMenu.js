@@ -54,17 +54,18 @@ class SidebarLeftMenu extends Component
     return <Fragment>
       { user !== null  && (
         <Navbar dark color={"dark"} className={"bg-dark navbar-left"}>
+          {/*- Menu - Avatar -*/}
+          { retrievedImage && (
+            <Button outline className={'py-3'}>
+              <picture className={'d-flex mx-auto'}>
+                { loading && <SpinnerLoading message={"Chargement de l'image de profil"} />}
+                { retrievedImage && <CardImg src={ retrievedImage } alt={user.name} className={'img-thumbnail rounded-circle'} />}
+              </picture>
+              <div>{user.name}</div>
+            </Button>
+          )}
           {/*-- Menu - Profil --*/}
           <UncontrolledButtonDropdown>
-            { retrievedImage && (
-              <Button outline className={'py-3'}>
-                <picture className={'d-flex mx-auto'}>
-                  { loading && <SpinnerLoading message={"Chargement de l'image de profil"} />}
-                  { retrievedImage && <CardImg src={ retrievedImage } alt={user.name} className={'img-thumbnail rounded-circle'} />}
-                </picture>
-                <div>{user.name}</div>
-              </Button>
-            )}
             {/*-- Menu - profile --*/}
             <DropdownToggle outline className={'text-primary'} >
               <FontAwesomeIcon icon={"home"} className={"mr-2"}/>
@@ -86,7 +87,7 @@ class SidebarLeftMenu extends Component
               <DropdownItem>
                 <NavLink tag={RRDNavLink} to={{pathname: "/profile/addresses", state: { from : window.location.pathname }}}>
                   <FontAwesomeIcon icon={"house-user"}  className={"mr-2"}/>
-                  <FormattedMessage id={"app.button.your_addresses"} defaultMessage={"Vos adresses"} description={"Button - Update data"}/>
+                  <FormattedMessage id={"app.button.your_addresses"} defaultMessage={"Vos adresses"} description={"Button - Update addresses"}/>
                 </NavLink>
               </DropdownItem>
               <DropdownItem>

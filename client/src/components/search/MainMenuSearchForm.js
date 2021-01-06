@@ -49,7 +49,6 @@ class MainMenuSearchForm extends Component
     this.handleSearchValueChange = this.handleSearchValueChange.bind(this);
     this.handleSearchTypeChange = this.handleSearchTypeChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleToggleAdvancedSearchButton = this.handleToggleAdvancedSearchButton.bind(this);
     this.showSearchResults = this.showSearchResults.bind(this);
   }
 
@@ -86,15 +85,13 @@ class MainMenuSearchForm extends Component
 
     if(this.state.searchType === "products")
     {
-
       this.props.searchProduct(this.state.searchParams);
-
     }
     else{
-      // Données de localisation au sein de l'application
+      // route actuelle
       let prevRoute = this.props.location.search ? this.props.location.pathname + this.props.location.search :  this.props.location.pathname;
 
-
+      // Recherche de fournisseurs
       this.props.searchSupplier(this.state.searchParams, this.props.history, {from : prevRoute, params: this.state} );
 
     }
@@ -108,19 +105,7 @@ class MainMenuSearchForm extends Component
 
   }
 
-  handleToggleAdvancedSearchButton()
-  {
-    let element = document.getElementById("search-results-component");
 
-    if(element.style.display === "none" || element.style.display === "")
-    {
-      element.style.display = "block";
-    }else
-    {
-      element.style.display = "none";
-    }
-
-  }
 
   showSearchResults()
   {
@@ -139,7 +124,7 @@ class MainMenuSearchForm extends Component
 
     return (
       <Fragment>
-        <Form inline className="col-lg-12 px-0" onSubmit={this.handleSubmit}>
+        <Form inline className="col-lg-6 px-0" onSubmit={this.handleSubmit}>
           <FormGroup className={'mr-0'}>
             <Input type="select"
                    name="searchType"

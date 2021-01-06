@@ -15,15 +15,9 @@ import {
   connectRouter,
   routerMiddleware
 } from 'connected-react-router';
-
-
 /* Stylesheets */
 import 'bootstrap/dist/css/bootstrap.css';
 import './assets/scss/index.scss';
-import {
-  Navbar,
-  NavbarBrand,
-} from 'reactstrap';
 
 /* @fortawesome/react-fontawesome */
 import './config/FontAwesome';
@@ -101,6 +95,9 @@ import pageRoutes from './routes/page';
 /* Internationalisation : FormatJS/React-Intl */
 import { IntlProvider} from "react-intl";
 import { addLocaleData, messages, language } from "./config/internationalization.js";
+/* MuiThemeProvider -  */
+import { ThemeProvider, CssBaseline } from "@material-ui/core";
+import { theme } from "./config/theme";
 
 /* Layout */
 import Welcome from './Welcome';
@@ -108,11 +105,12 @@ import Homepage from './page/Homepage';
 import MainMenuSearchForm from "./components/search/MainMenuSearchForm";
 import MainMenu from "./layout/MainMenu";
 import SearchResults from "./components/search/SearchResults";
-import SidebarLeftMenu from "./layout/SidebarLeftMenu";
+import DrawerLeftMenu from "./layout/DrawerLeftMenu";
 import HomepageSlider from "./page/HomepageSlider";
 import Footer from "./layout/Footer";
 import LoginForm from "./components/user/LoginForm";
 import RegisterForm from "./components/user/RegisterForm";
+import MyAppBar from "./layout/MyAppBar";
 
 /* chargement des données locales */
 addLocaleData();
@@ -194,6 +192,8 @@ export class App extends Component
   {
     const { results } = this.state;
 
+    console.log('App render - results', results);
+
     /**
      * User's token
      * @type {any|null}
@@ -206,128 +206,120 @@ export class App extends Component
     return (
       <Provider store={store}>
         <IntlProvider locale={language} messages={messages[language]}>
-          <ConnectedRouter history={history}>
-            <Router history={history}>
-              <div  style={{minHeight: "100vh"}}>
-                <header>
-                  <Navbar color={"bg-primary"} dark expand={"lg"}   id="navbar-primary" className="navbar navbar-expand-lg navbar-dark bg-primary">
-                    {/* Navbar brand*/}
-                    <NavbarBrand href="/" className="col-lg-2">Buja Market</NavbarBrand>
+          <ThemeProvider theme={theme}>
+            <CssBaseline/>
+            <ConnectedRouter history={history}>
+              <Router history={history}>
+                <div  style={{minHeight: "100vh"}}>
+                  <header>
+                    <MyAppBar onSearch={this.search} />
+                  </header>
+                  {/* HomepageSlider */}
 
-
-                    <div className="main-menu-search-form col-lg-5">
-                      <MainMenuSearchForm onSearch={this.search}/>
-                    </div>
-
-
-                    <MainMenu/>
-
-                  </Navbar>
-                </header>
-                {/* HomepageSlider */}
-
-                { ( userConnected === null && user === null ) && (
-
-                  <Route path={'/'} exact={true}>
-                    <div id="homepage-slider">
-                      <HomepageSlider />
-                    </div>
-                  </Route>
-                )}
-
-                {/* Main section  */}
-                <main style={{minHeight:"70vh", ...this.state.style.main }}>
-                  <aside id="aside-left">
-                    <Route
-                      path={'/'}
-                      strict={false}
-                      exact={false}
-                    >
-                      <SidebarLeftMenu />
+                  { ( userConnected === null && user === null && results.length === 0 ) && (
+                    <Route path={'/'} exact={true}>
+                      <div id="homepage-slider">
+                        <HomepageSlider />
+                      </div>
                     </Route>
-                  </aside>
-                  <section id="main-content" className="col col-lg-8 mx-2">
-                    <ToastContainer
-                      limit={5}
-                      position="top-right"
-                      type={"default"}
-                      autoClose={10000}
-                      hideProgressBar={false}
-                      newestOnTop={true}
-                      rtl={false}
-                      closeOnClick
-                      pauseOnFocusLoss
-                      draggable
-                      pauseOnHover
-                    />
-                    <div id="search-results-component" className={'col-lg-9 mx-auto'}>
-                      {results && (<SearchResults results={ results }/>)}
-                    </div>
+                  )}
 
-                    <div>
-                      <Switch>
-
-                        {process.env.REACT_APP_ENV === 'development' && (
-                          <Route path="/dev" component={Welcome} strict={true} exact={true}/>
-                        )}
-                        <Route path="/" component={Homepage} strict={true} exact={true} />
+                  {/* Main section  */}
+                  <main style={{minHeight:"70vh", ...this.state.style.main }}>
+                    <aside id="aside-left">
+                      {/*
                         <Route
-                          path="/login"
-                          setStyle={this.setStyle}
-                          exact={true}
-                          strict={true}
-                          render={() => <LoginForm setStyle={this.setStyle} />}
-                        />
-                        <Route
-                          path="/register"
-                          exact={true}
-                          strict={true}
-                          render={() => <RegisterForm setStyle={this.setStyle} />}
-                        />,
-                        {/* Add your routes here */}
-                        { addressRoutes }
-                        { adminRoutes }
-                        { bankAccountRoutes }
-                        { billRoutes }
-                        { billCustomerRoutes }
-                        { billRefundRoutes }
-                        { billSupplierRoutes }
-                        { categoryRoutes }
-                        { commentRoutes }
-                        { customerRoutes }
-                        { deliveryDetailRoutes }
-                        { deliverySetRoutes }
-                        { favoriteRoutes }
-                        { forumRoutes }
-                        { imageRoutes }
-                        { messageRoutes }
-                        { orderDetailRoutes }
-                        { orderReturnedRoutes }
-                        { paymentRoutes }
-                        { orderSetRoutes }
-                        { productRoutes }
-                        { shipperRoutes }
-                        { shoppingCartRoutes }
-                        { supplierRoutes }
-                        { supplierProductRoutes }
-                        { userRoutes }
-                        { withdrawalRoutes }
-                        { pageRoutes }
+                          path={'/'}
+                          strict={false}
+                          exact={false}
+                        >
+                          <DrawerLeftMenu />
+                        </Route>
+                      */}
+                    </aside>
+                    <section id="main-content" className="col col-lg-8 mx-2">
+                      <ToastContainer
+                        limit={5}
+                        position="top-right"
+                        type={"default"}
+                        autoClose={10000}
+                        hideProgressBar={false}
+                        newestOnTop={true}
+                        rtl={false}
+                        closeOnClick
+                        pauseOnFocusLoss
+                        draggable
+                        pauseOnHover
+                      />
+                      <div id="search-results-component" className={'mx-auto'}>
+                        {results && (<SearchResults results={ results }/>)}
+                      </div>
 
-                      </Switch>
-                    </div>
-                  </section>
-                  <aside>
+                      <div>
+                        <Switch>
 
-                  </aside>
-                </main>
-                <footer className={"pt-5 pb-3 bg-primary"}>
-                  <Footer />
-                </footer>
-              </div>
+                          {process.env.REACT_APP_ENV === 'development' && (
+                            <Route path="/dev" component={Welcome} strict={true} exact={true}/>
+                          )}
+                          <Route path="/" component={Homepage} strict={true} exact={true} />
+                          <Route
+                            path="/login"
+                            setStyle={this.setStyle}
+                            exact={true}
+                            strict={true}
+                            render={() => <LoginForm setStyle={this.setStyle} />}
+                          />
+                          <Route
+                            path="/register"
+                            exact={true}
+                            strict={true}
+                            render={() => <RegisterForm setStyle={this.setStyle} />}
+                          />,
+                          {/* Add your routes here */}
+                          { addressRoutes }
+                          { adminRoutes }
+                          { bankAccountRoutes }
+                          { billRoutes }
+                          { billCustomerRoutes }
+                          { billRefundRoutes }
+                          { billSupplierRoutes }
+                          { categoryRoutes }
+                          { commentRoutes }
+                          { customerRoutes }
+                          { deliveryDetailRoutes }
+                          { deliverySetRoutes }
+                          { favoriteRoutes }
+                          { forumRoutes }
+                          { imageRoutes }
+                          { messageRoutes }
+                          { orderDetailRoutes }
+                          { orderReturnedRoutes }
+                          { paymentRoutes }
+                          { orderSetRoutes }
+                          { productRoutes }
+                          { shipperRoutes }
+                          { shoppingCartRoutes }
+                          { supplierRoutes }
+                          { supplierProductRoutes }
+                          { userRoutes }
+                          { withdrawalRoutes }
+                          { pageRoutes }
 
-            </Router>
-          </ConnectedRouter>
+                        </Switch>
+                      </div>
+                    </section>
+                    <aside>
+
+                    </aside>
+                  </main>
+                  <footer className={"pt-5 pb-3 bg-primary"}>
+                    <Footer />
+                  </footer>
+                </div>
+
+              </Router>
+            </ConnectedRouter>
+          </ThemeProvider>
         </IntlProvider>
       </Provider>
     );

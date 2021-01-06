@@ -4,14 +4,34 @@
 import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { Card, CardImg, CardText, CardTitle, Col, Row } from "reactstrap";
+import { injectIntl } from "react-intl";
+import { CardImg, CardText, CardTitle, Col, Row } from "reactstrap";
 import { Link } from "react-router-dom";
 import { FormattedMessage } from "react-intl";
 import {
-  Button,
   Spinner
 } from 'reactstrap';
+import {
+  Button,
+  Card,
+  CardHeader,
+  CardMedia,
+  CardContent,
+  CardActions,
+  Avatar,
+  IconButton,
+  Typography,
+  Paper
+} from "@material-ui/core";
+import {
+  MdMoreVert,
+  MdClose
+} from "react-icons/md";
+import _ from "lodash";
 import SuppliersImage from "../image/SuppliersImage";
+import AwesomeSlider from "react-awesome-slider";
+import AwesomeSliderStyles from "react-awesome-slider/src/styled/scale-out-animation/scale-out-animation.scss";
+import BackgroundImageItem from '../../assets/img/parallax-gris.jpg';
 
 class SearchResults extends  Component{
   static propTypes = {
@@ -28,137 +48,235 @@ class SearchResults extends  Component{
   constructor(props)
   {
     super(props);
-    this.state = { results: this.props.results };
-
+    this.state = {
+      results: this.props.results,
+      isOpen: true
+    };
     this.showResultsProducts = this.showResultsProducts.bind(this);
     this.showResultsSuppliers = this.showResultsSuppliers.bind(this);
+    this.showResults = this.showResults.bind(this);
+    this.close = this.close.bind(this);
   }
 
   componentDidMount() {
-
-    this.setState({products: this.state.retrievedProducts, suppliers: this.state.retrievedSuppliers});
+    this.setState(state => ({
+      ...state,
+      products: this.props.retrievedProducts,
+      suppliers: this.props.retrievedSuppliers
+    }));
   }
 
-
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if((this.props.retrievedProducts && prevProps.retrievedProducts !== this.props.retrievedProducts) || (this.props.retrievedSuppliers && prevProps.retrievedSuppliers !== this.props.retrievedSuppliers)){
+      this.setState(state => ({
+        ...state,
+        isOpen: true
+      }));
+    }
+  }
 
   showResultsProducts()
   {
-
+    const { intl, retrievedProducts } = this.props;
     let items = [];
     let rows = [];
-    let resultsPer4 = [];
 
     // Récupération des données
-    const products = this.props.retrievedProducts && this.props.retrievedProducts.products;
+    const products = retrievedProducts && retrievedProducts.products;
 
     // key index pour les items
     let index = 0;
 
-    if(this.props.loadingProducts)
+    if(!products || products.length === 0)
     {
-      items.push(<Spinner id={'search-spinner-loading'} type={"grow"} color={'primary'} className={'mx-auto m-5'} key={index++}></Spinner>);
-    }else{
 
-
-      if(!products || products.length === 0)
-      {
-        resultsPer4.push(
-          <Col key={"products0"} xs={"12"} sm="6" md="4" lg="3">
-            <Card body>
-
-              <CardImg top width="100%" src="https://picsum.photos/2000/3000" alt={"Aucun produit trouvé"} />
-              <CardTitle>Aucun produit trouvé</CardTitle>
-              <CardText>
+      let resultsPer8 = [];
+      resultsPer8.push(
+        <Col key={"products0"} xs={"12"} sm="6" md="4" lg="3">
+          <Card>
+            <CardHeader
+              avatar={
+                <Avatar aria-label={'recipe'}>
+                  S
+                </Avatar>
+              }
+              action={
+                <IconButton aria-label="settings">
+                  <MdMoreVert />
+                </IconButton>
+              }
+              title={intl.formatMessage({
+                id: "app.search.product_notfound",
+                defaultMessage: "Aucun produit trouvé"
+              })}
+            />
+            <CardMedia
+              //className={classes.media}
+              image="https://picsum.photos/2000/3000"
+              title="Aucun produit trouvé"
+            />
+            <CardContent>
+              <Typography variant={'body'} color={'textSecondary'} component={'p'}>
                 <FormattedMessage  id={"app.search.product_notfound"}
                                    defaultMessage="Aucun produit trouvé"
                                    description="Products item - product not found"
                 /> &nbsp;: &nbsp;
                 0.00 &euro;
-              </CardText>
+              </Typography>
+
+            </CardContent>
+            <CardActions disableSpacing>
               <Link
                 to={`../../products}`}
-                className={"btn btn-outline-primary"}
+                className={"MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"}
               >
                 Voir la liste des produits
               </Link>
-            </Card>
-          </Col>
-        );
+            </CardActions>
+          </Card>
+        </Col>
+      );
 
-        rows.push(
-          <Row key={"row0"}>
-            {resultsPer4}
+      rows.push(
+        <div id="search-results-items"
+             //className={"col-12"}
+             key={index++}
+             data-src={BackgroundImageItem}
+        >
+          <Row>
+            {resultsPer8}
           </Row>
-        );
+        </div>
+
+      );
 
 
-
-        items.push(
-          <div id="search-results-items"
-               className={"list-card-by-4"}
-               key={index++}
-          >
-            {rows}
-          </div>
-        );
+    }else{
 
 
-      }else{
+      for(let i = 0; i < Math.ceil(products.length / 8 ); i++)
+      {
 
-
-        for(let i = 0; i < Math.ceil(products.length / 12 ); i++)
+        let resultsPer8 = [];
+        for(let j = 0; j < 8; j++)
         {
-
-          for(let j = 0; j < 12; j++)
+          if(products[i * 8 + j])
           {
-
-            if(products[i * 12 + j])
-            {
-
-              resultsPer4.push(
-                <Col key={"products" + (i * 12 + j)} xs={"12"} sm="6" md="4" lg="3">
-                  <Card body>
-
-                    <CardImg top width="100%" src={products[i * 12 + j]['img-src']} alt={products[i * 12 + j].alt} />
-                    <CardTitle>{products[i * 12 + j]["title"]}</CardTitle>
-                    <CardText>
+            resultsPer8.push(
+              <Col key={"products" + (i * 8 + j)} xs={"12"} sm="6" md="4" lg="3" className={'mb-3'}>
+                <Card>
+                  <CardHeader
+                    avatar={
+                      <Avatar aria-label={'recipe'}>
+                        S
+                      </Avatar>
+                    }
+                    action={
+                      <IconButton aria-label="settings">
+                        <MdMoreVert />
+                      </IconButton>
+                    }
+                    title={_.truncate(products[i * 8 + j]["title"], {length: 40, omission: '...'})}
+                  />
+                  <CardMedia
+                    //className={classes.media}
+                    image={products[i * 8 + j]['img-src']}
+                    title={products[i * 8 + j]["title"]}
+                  />
+                  <CardContent>
+                    <Typography variant={'body2'} color={'textSecondary'} component={'p'}>
                       <FormattedMessage  id={"app.product.item.price_from"}
                                          defaultMessage="À partir de"
                                          description="Products item - price from"
                       /> &nbsp;: &nbsp;
-                      {products[i * 10 + j]["minimumPrice"].toFixed(2)} &euro;
-                    </CardText>
+                      {products[i * 8 + j]["minimumPrice"].toFixed(2)} &euro;
+                    </Typography>
+                  </CardContent>
+                  <CardActions disableSpacing>
                     <Link
-                      to={`../../supplier_product/show/${encodeURIComponent(products[i * 12 + j]['id'])}`}
-                      className={"btn btn-outline-primary"}
+                      to={`../../supplier_product/show/${encodeURIComponent(products[i * 8 + j]['id'])}`}
+                      className={"MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"}
                     >
-                      Voir le détail
+                      <FormattedMessage
+                        id={'app.page.customer.list.button.see_more'}
+                        defaultMessage={'Voir le détail'}
+                      />
                     </Link>
+                  </CardActions>
+                </Card>
+              </Col>
+            );
+          }
+
+          if(i * 8 + j === products.length - 1){
+            for(let k=0; k < products.length % 8; k++){
+              resultsPer8.push(
+                <Col key={"products" + (i * 8 + j + k)} xs={"12"} sm="6" md="4" lg="3">
+                  <Card>
+                    <CardHeader
+                      avatar={
+                        <Avatar aria-label={'recipe'}>
+                          S
+                        </Avatar>
+                      }
+                      action={
+                        <IconButton aria-label="settings">
+                          <MdMoreVert />
+                        </IconButton>
+                      }
+                      title={intl.formatMessage({
+                        id: "app.search.product_notfound",
+                        defaultMessage: "Aucun produit trouvé"
+                      })}
+                    />
+                    <CardMedia
+                      //className={classes.media}
+                      image="https://picsum.photos/2000/3000"
+                      title="Aucun produit trouvé"
+                    />
+                    <CardContent>
+                      <Typography variant={'body2'} color={'textSecondary'} component={'p'}>
+                        <FormattedMessage  id={"app.search.product_notfound"}
+                                           defaultMessage="Aucun produit trouvé"
+                                           description="Products item - product not found"
+                        /> &nbsp;: &nbsp;
+                        0.00 &euro;
+                      </Typography>
+
+                    </CardContent>
+                    <CardActions disableSpacing>
+                      <Link
+                        to={`../../products}`}
+                        className={"MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"}
+                      >
+                        Voir la liste des produits
+                      </Link>
+                    </CardActions>
                   </Card>
                 </Col>
               );
             }
-
           }
 
-          rows.push(
-            <Row key={"rows" + (i)}>
-              {resultsPer4}
-            </Row>
-          );
         }
 
-        items.push(
-          <div id="search-results-items" className={"list-card-by-4"} key={index++}>
-            {rows}
+        console.log("showResultsProducts - resultsPer8"+ (i), resultsPer8 );
+
+
+
+        rows.push(
+          <div key={index} data-src={BackgroundImageItem}>
+            <Row key={"rows" + (index++)}>
+              {resultsPer8}
+            </Row>
           </div>
+
         );
       }
-
     }
 
-
-    return items;
+    console.log("showResultsProducts - rows"+ (index), rows );
+    return rows;
 
 
   }
@@ -166,178 +284,220 @@ class SearchResults extends  Component{
 
   showResultsSuppliers()
   {
-    let items = [];
+    const { intl, retrievedSuppliers } = this.props;
     let rows = [];
     let index = 0;
 
-    const suppliers = this.props.retrievedSuppliers && this.props.retrievedSuppliers['hydra:member'];
+    const suppliers = retrievedSuppliers && retrievedSuppliers['hydra:member'];
 
-    if(this.props.loadingSuppliers)
+    console.log("showResultsSuppliers - suppliers.length", suppliers.length);
+    if(!suppliers || suppliers.length === 0)
     {
-      items.push(<Spinner id={'search-spinner-loading'} type={"grow"} color={'primary'} className={'mx-auto m-5'} key={index++}></Spinner>);
-    }else{
-      if(!suppliers || suppliers.length === 0)
-      {
-        items.push(
-          <div id="search-results-items"
-               className={"list-card-by-4"}
-          >
-            <Row key={"row0"}>
-              <Col key={"products0"} xs={"12"} sm="6" md="4" lg="3">
-                <Card body>
 
-                  <CardImg top width="100%" src="https://picsum.photos/2000/3000" alt={"Aucun fournisseur trouvé"} />
-                  <CardTitle>Aucun fournisseur trouvé</CardTitle>
-                  <CardText>
-                    <FormattedMessage  id={"app.search.supplier_notfound"}
-                                       defaultMessage="Aucun fournisseur trouvé"
-                                       description="Supplier search - suppliers not found"
-                    /> &nbsp;: &nbsp;
-                    0.00 &euro;
-                  </CardText>
-                  <Link
-                    to={`../../products}`}
-                    className={"btn btn-outline-primary"}
-                  >
-                    Voir la liste des fournisseurs
-                  </Link>
-                </Card>
-              </Col>
-            </Row>
-          </div>
-        );
-      }else{
-        for(let i = 0; i < Math.ceil(suppliers.length / 12 ); i++)
+      let resultsPer8 = [];
+      resultsPer8.push(
+        <Col key={"products0"} xs={"12"} sm="6" md="4" lg="3">
+          <Card>
+            <CardHeader
+              avatar={
+                <Avatar aria-label={'recipe'}>
+                  S
+                </Avatar>
+              }
+              action={
+                <IconButton aria-label="settings">
+                  <MdMoreVert />
+                </IconButton>
+              }
+              title={intl.formatMessage({
+                id: "app.search.supplier_notfound",
+                defaultMessage: "Aucun fournisseur trouvé"
+              })}
+            />
+            <CardMedia
+              //className={classes.media}
+              image="https://picsum.photos/2000/3000"
+              title="Aucun produit trouvé"
+            />
+            <CardContent>
+              <Typography variant={'body2'} color={'textSecondary'} component={'p'}>
+                <FormattedMessage  id={"app.search.supplier_notfound"}
+                                   defaultMessage="Aucun fournisseur trouvé"
+                                   description="Products item - product not found"
+                />
+              </Typography>
+
+            </CardContent>
+            <CardActions disableSpacing>
+              <Link
+                to={`../../suppliers}`}
+                className={"MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"}
+              >
+                Voir la liste des produits
+              </Link>
+            </CardActions>
+          </Card>
+        </Col>
+      );
+
+      rows.push(
+        <div key={index++} data-src={BackgroundImageItem}>
+          <Row key={"rows0"}>
+            {resultsPer8}
+          </Row>
+        </div>
+
+      );
+    }else{
+      for(let i = 0; i < Math.ceil(suppliers.length / 8 ); i++)
+      {
+        let resultsPer8 = [];
+        for(let j = 0; j < 8; j++)
         {
 
-          let resultsPer4 = [];
-
-          for(let j = 0; j < 12; j++)
+          if(suppliers[i * 8 + j])
           {
+            resultsPer8.push(
+              <Col key={"supplier" + (i * 8 + j)} xs={"12"} sm="6" md="4" lg="3">
+                <Card>
+                  <CardHeader
+                    avatar={
+                      <Avatar aria-label={'recipe'}>
+                        S
+                      </Avatar>
+                    }
+                    action={
+                      <IconButton aria-label="settings">
+                        <MdMoreVert />
+                      </IconButton>
+                    }
+                    title={_.truncate(suppliers[i * 8 + j]["brandName"], {length: 40, omission: '...'})}
+                    subheader={_.truncate(suppliers[i * 8 + j]["socialReason"], {length: 40, omission: '...'})}
+                  />
+                  <SuppliersImage index={i * 8 + j} supplier={suppliers[i * 8 + j]}/>
+                  <CardContent>
+                    <Typography variant={'body2'} color={'textSecondary'} component={'p'}>
+                      <FormattedMessage  id={"app.supplier.item.contact_phone_number"}
+                                         defaultMessage="Numéro de téléphone"
+                                         description="Products item - price from"
+                      /> &nbsp;: &nbsp;
+                      {suppliers[i * 8 + j]["contactPhoneNumber"]}
+                    </Typography>
+                    <Typography variant={'body2'} color={'textSecondary'} component={'p'}>
+                      <FormattedMessage  id={"app.supplier.item.contact_phone_number"}
+                                         defaultMessage="Website"
+                                         description="Products item - price from"
+                      /> &nbsp;: &nbsp;
 
-
-            if(suppliers[i * 12 + j])
-            {
-
-              resultsPer4.push(
-                <Col key={"supplier" + (i * 10 + j)} xs={"12"} sm="6" md="4" lg="3">
-                  <Card body>
-                    <SuppliersImage index={i * 12 + j} supplier={suppliers[i * 12 + j]}/>
-                    {/*<CardImg top width="100%" src={suppliers[i * 12 + j]['img-src']} alt={suppliers.image.alt} />*/}
-                    <CardTitle>{suppliers[i * 12 + j]["socialReason"]}</CardTitle>
-                    <CardText>{suppliers[i * 12 + j]["contactPhoneNumber"]}</CardText>
-                    <Link to={`../../suppliers/show/${encodeURIComponent(suppliers[i * 12 + j]['id'])}`}>
-                      Voir le détail
+                      {suppliers[i * 8 + j]["website"]}
+                    </Typography>
+                  </CardContent>
+                  <CardActions disableSpacing>
+                    <Link
+                      to={`../../suppliers/show/${encodeURIComponent(suppliers[i * 8 + j]['id'])}`}
+                      className={"MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"}
+                    >
+                      <FormattedMessage
+                        id={'app.page.customer.list.button.see_more'}
+                        defaultMessage={'Voir le détail'}
+                      />
                     </Link>
-                  </Card>
-                </Col>
-              );
-            }
-
+                  </CardActions>
+                </Card>
+              </Col>
+            );
           }
 
-          rows.push(
-            <Row key={"rows" + (i * 10)}>
-              {resultsPer4}
-            </Row>
-          );
         }
 
-        items.push(
-          <div id="search-results-items" key={index++}>
-            {rows}
+        rows.push(
+          <div key={index++} data-src={BackgroundImageItem}>
+            <Row key={"rows" + i}>
+              {resultsPer8}
+            </Row>
           </div>
+
         );
       }
     }
 
-    return items;
+    return rows;
 
 
   }
 
-
-  pagination() {
-    const view = this.props.results && this.props.results;
-    if (!view) return;
-
-    const {
-      'hydra:first': first,
-      'hydra:previous': previous,
-      'hydra:next': next,
-      'hydra:last': last
-    } = view;
-
-    return (
-      <nav aria-label="Page navigation">
-        <Link
-          to="."
-          className={`btn btn-primary${previous ? '' : ' disabled'}`}
-        >
-          <span aria-hidden="true">&lArr;</span> First
-        </Link>
-        <Link
-          to={
-            !previous || previous === first ? '.' : encodeURIComponent(previous)
-          }
-          className={`btn btn-primary${previous ? '' : ' disabled'}`}
-        >
-          <span aria-hidden="true">&larr;</span> Previous
-        </Link>
-        <Link
-          to={next ? encodeURIComponent(next) : '#'}
-          className={`btn btn-primary${next ? '' : ' disabled'}`}
-        >
-          Next <span aria-hidden="true">&rarr;</span>
-        </Link>
-        <Link
-          to={last ? encodeURIComponent(last) : '#'}
-          className={`btn btn-primary${next ? '' : ' disabled'}`}
-        >
-          Last <span aria-hidden="true">&rArr;</span>
-        </Link>
-      </nav>
-    );
-  }
-
-  renderLinks = (type, items) => {
-    if (Array.isArray(items)) {
-      return items.map((item, i) => (
-        <div key={i}>{this.renderLinks(type, item)}</div>
-      ));
+  showResults(){
+    const { results,retrievedProducts,retrievedSuppliers } = this.props;
+    let slides = [];
+    if(results.searchType ==="products" && retrievedProducts){
+      slides = this.showResultsProducts()
     }
+    if(results.searchType === "suppliers" && retrievedSuppliers){
+      slides = this.showResultsSuppliers()
+    }
+    return slides;
+  }
 
-    return (
-      <Link to={`../${type}/show/${encodeURIComponent(items)}`}>{items}</Link>
-    );
-  };
 
-  close(e)
+  close()
   {
-    let element = document.getElementById("search-results-component");
-    element.style.display = 'none';
+    this.setState(state => ({
+      ...state,
+      isOpen: false
+    }));
   }
 
   render()
   {
-    const { results } = this.props;
+    const { intl, results, retrievedProducts, retrievedSuppliers } = this.props;
+    const { isOpen } = this.state;
+
+    console.log("SearchResults render - results.searchType", results.searchType);
+    console.log("SearchResults render - retrievedSuppliers", retrievedSuppliers);
+    console.log("SearchResults render - showResultsSuppliers", (results.searchType === "suppliers" && retrievedSuppliers) && this.showResultsSuppliers());
+
 
     return (<Fragment>
-      <div id="search-results-header">
-        <Button outline color={'secondary'} className={'float-right mr-3'} onClick={this.close}>Fermer</Button>
-        <h4>Recherche avancée</h4>
-      </div>
+      {isOpen && (
+        <Paper elevation={3} className={'p-3'}>
+          <div id="search-results-header">
+            <Button variant={'contained'} color={'secondary'} className={'float-right mr-3'} onClick={this.close}>
+              <MdClose className={'mr-2'}/>
+              <FormattedMessage
+                id={"app.close"}
+                defaultMessage={"Fermer"}
+                description={"App - close"}
+              />
+            </Button>
+            <h4>Recherche avancée</h4>
+          </div>
+          <div id="search-results">
+            {((results.searchType ==="products" && retrievedProducts) || (results.searchType === "suppliers" && retrievedSuppliers)) && (
+              <AwesomeSlider
+                animation={'scaleOutAnimation'}
+                cssModule={AwesomeSliderStyles}
+              >
+                {this.showResults()}
+              </AwesomeSlider>
+            )}
 
 
-      <div id="search-results">
+            <div className={'d-flex flex-column'}>
+              {/*this.pagination()*/}
+              <Button variant={'contained'} color={'secondary'} className={'mx-auto'} onClick={this.close}>
+                <MdClose className={'mr-2'}/>
+                <FormattedMessage
+                  id={"app.close"}
+                  defaultMessage={"Fermer"}
+                  description={"App - close"}
+                />
+              </Button>
+            </div>
 
-        {results.searchType ==="products" && this.props.retrievedProducts ? this.showResultsProducts() : ""}
+          </div>
+        </Paper>
+      )}
 
-        {results.searchType === "suppliers" && this.props.retrievedSuppliers ? this.showResultsSuppliers() : ""}
-
-
-        {this.pagination()}
-      </div>
 
     </Fragment>);
   }
@@ -372,4 +532,4 @@ const mapStateToProps = state => {
 
 
 
-export default connect(mapStateToProps)(SearchResults);
+export default connect(mapStateToProps)(injectIntl(SearchResults));

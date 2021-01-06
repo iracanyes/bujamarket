@@ -4,6 +4,7 @@
 namespace App\Domain;
 
 use App\Entity\Supplier;
+use App\Exception\Supplier\SupplierNotFoundException;
 use App\Exception\User\MemberNotFoundException;
 use App\Exception\User\UserNotAllowedToTakeSuchAction;
 use App\Responder\StreamedResponder;
@@ -53,5 +54,24 @@ class SupplierHandler
 
         }
 
+    }
+
+    public function searchSuppliers(){
+        $options = [
+            "id" => $this->request->query->get('id') ?? null,
+            "brandName" => $this->request->query->get('brandName') ?? null,
+            "socialReason" => $this->request->query->get('socialReason') ?? null,
+        ];
+
+        try{
+            $suppliers = $this->em->getRepository(Supplier::class)
+                ->searchSuppliers($options);
+        }catch (\Exception $e){
+            throw new SupplierNotFoundException($e->getMessage());
+        }
+
+        dump($suppliers);
+
+        return $suppliers;
     }
 }

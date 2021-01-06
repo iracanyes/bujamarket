@@ -5,7 +5,7 @@
  */
 import React, { Fragment } from 'react';
 import { Link, withRouter } from "react-router-dom";
-//import { Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
+
 import { login, logout } from "../../actions/user/login";
 import { connect } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
@@ -15,9 +15,24 @@ import {toastError} from "../../layout/ToastMessage";
 import GoogleSignInButton from "./GoogleSignInButton";
 import {
   Button,
-  Paper
+  Paper,
+  Typography,
 } from '@material-ui/core';
+import { withStyles } from "@material-ui/core/styles";
 import BackgroundImage from "../../assets/img/page/login-page.jpg";
+import { orange } from "@material-ui/core/colors";
+
+const styles= theme =>  ({
+  title: {
+    fontFamily: 'Raleway',
+    textAlign: 'center',
+    paddingBottom: theme.spacing(1),
+    paddingTop: theme.spacing(1),
+    color: orange[500],
+    letterSpacing: '-0.025rem',
+    fontWeight: '700'
+  }
+});
 
 class LoginForm extends React.Component {
   constructor(props)
@@ -116,7 +131,7 @@ class LoginForm extends React.Component {
   };
 
   render() {
-    const { loading, intl, errorLogin } = this.props;
+    const { loading, intl, errorLogin, classes } = this.props;
     const { email } = this.state;
 
     typeof errorLogin === 'string' && toastError(errorLogin);
@@ -125,12 +140,12 @@ class LoginForm extends React.Component {
       <Fragment>
 
         <Paper elevation={3} id={'form-login'} className="col-lg-4 mx-auto my-5 pt-2 pb-5">
-          <h1>
+          <Typography variant={'h4'} color={'primary'} className={classes.title}>
             <FormattedMessage  id={"app.page.user.login.title"}
                                defaultMessage="Connexion"
                                description="Page User - Login title"
             />
-          </h1>
+          </Typography>
 
           <form
             name="form"
@@ -228,5 +243,5 @@ export default connect(mapStateToProps, mapDispatchToProps)(
     form: 'user',
     enableReinitialize: true,
     keepDirtyOnReinitialize: true
-  })(injectIntl(withRouter(LoginForm)))
+  })(injectIntl(withRouter(withStyles(styles)(LoginForm))))
 );

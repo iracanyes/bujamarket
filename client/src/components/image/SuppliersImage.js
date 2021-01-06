@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { getSupplierImage, reset } from "../../actions/image/supplier";
 import {SpinnerLoading} from "../../layout/Spinner";
 import {CardImg} from "reactstrap";
+import { CardMedia } from "@material-ui/core";
 
 class SupplierImage extends Component
 {
@@ -21,7 +22,7 @@ class SupplierImage extends Component
     if(this.props.loading || !suppliersImage[index])
       return <SpinnerLoading message={'Chargement image fournisseur'}/>
     else
-      return (<CardImg  top width="100%" src={suppliersImage[index]} alt={supplier.image.alt} title={supplier.image.title}/>)
+      return (<CardMedia  image={suppliersImage[index]} alt={supplier.socialReason} title={supplier.socialReason}/>)
   }
 }
 const suppliersImage = [];

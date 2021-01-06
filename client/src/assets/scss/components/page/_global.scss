@@ -11,7 +11,7 @@ body, html{
 }
 
 body{
-  font-family: "Nunito", "Carter One","Kanit","Dosis", "Lato", Arial,sans-serif;
+  font-family: 'Raleway','Roboto','Helvetica', Arial, sans-serif !important;
   box-sizing: border-box;
   //background-image: url("../img/background-cement-concrete.jpg");
   /* Attention : URL relatif à la page index.scss qui importe ce fichier */
@@ -37,46 +37,6 @@ div.welcome{
   z-index: 10000;
 }
 
-/*********** Owl Carousel *********/
-.section-owl-carousel {
-  position: relative;
-  .container-fluid {
-    padding: 60px;
-    position: relative;
-    max-width: 1230px;
-
-    div.owl-carousel{
-      //z-index: 10 !important;
-    }
-  }
-  .thumbnail {
-    margin: 0 15px;
-  }
-  .customNavigation {
-    transform: translateY(-50%);
-    top: calc(50% - 37px);
-    position: absolute;
-    width: 100%;
-    left: 0;
-  }
-  .customNavigation>span {
-    transform: translateY(-50%);
-    top: 50%;
-    position: absolute;
-  }
-  .pager-left {
-    left: calc(0% + 15px);
-  }
-  .pager-right {
-    right: calc(0% + 15px);
-  }
-  .next, .prev {
-    font-size: 28px;
-    color: #ccc;
-  }
-}
-/*********** End - Owl Carousel *********/
-
 /*--- Material-UI ---*/
 .MuiButton-root{
   text-transform: unset !important;
@@ -91,8 +51,7 @@ main {
   display: flex;
   overflow: hidden;
   width: 100%;
-  margin-right: auto;
-  margin-left: auto;
+  margin: 3rem auto 0 auto;
 
   /************** ASIDE **********************/
 

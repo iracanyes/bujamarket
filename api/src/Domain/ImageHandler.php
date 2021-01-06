@@ -260,6 +260,7 @@ class ImageHandler
      */
     public function getSupplierImage(): StreamedResponse
     {
+        //
         $id = $this->request->attributes->get('id');
         $uploadHandler = $this->uploadHandler;
         $user = $this->security->getUser();

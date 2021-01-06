@@ -34,6 +34,35 @@ class SupplierRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
+    public function searchSuppliers(array $options = [])
+    {
+        $qb = $this->createQueryBuilder('s')
+            ->select('s.id','s.brandName','s.socialReason', 's.contactPhoneNumber', 's.website')
+            ->leftJoin('s.image', 'i')
+            ->addSelect('i.url')
+            ->groupBy('s.id');
+
+        if($options['id'] !== null)
+        {
+            $qb->andWhere('s.id = :id')
+                ->setParameter('id', $options['id']);
+        }
+
+        if($options['brandName'] !== null)
+        {
+            $qb->andWhere('s.brandName LIKE :brandName')
+                ->setParameter('brandName', '%'.$options['brandName'].'%');
+        }
+
+        if($options['socialReason'] !== null)
+        {
+            $qb->andWhere('s.socialReason LIKE :socialReason')
+                ->setParameter('socialReason', $options['socialReason']);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
     // /**
     //  * @return Supplier[] Returns an array of Supplier objects
     //  */

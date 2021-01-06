@@ -77,6 +77,7 @@ export function register(values, history) {
 export function reset() {
   return dispatch => {
     dispatch(loading(false));
+    dispatch(notify(null));
     dispatch(error(null));
   };
 }

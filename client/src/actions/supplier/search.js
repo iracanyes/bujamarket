@@ -25,7 +25,7 @@ export function search(searchParams= {}, history, locationState) {
     dispatch(loading(true));
     dispatch(error(''));
 
-    let page = 'suppliers?';
+    let page = 'search_suppliers?';
 
     if(searchParams.default)
       page = page + 'brandName='+ searchParams.default
@@ -71,19 +71,29 @@ export function search(searchParams= {}, history, locationState) {
       })
       .catch(e => {
         dispatch(loading(false));
-        dispatch(error(e.message));
 
+        switch(true){
+          case e.code === 401:
+            dispatch(logout());
+            dispatch(error("Connexion nécessaire! Recherche des fournisseurs accessible aux membres uniquement"))
+
+            let element = document.getElementById("search-results-component");
+            element.style.display = "none";
+
+            history.push({pathname: 'login', state: locationState });
+            break;
+          case typeof e['hydra:description'] === "string":
+            dispatch(error(e['hydra:description']));
+            break;
+          case typeof e.message === "string":
+            dispatch(error(e.message));
+            break;
+          default:
+            break;
+        }
         if(/Unauthorized/.test(e))
         {
-          dispatch(logout());
 
-          sessionStorage.removeItem('flash-message-error');
-          sessionStorage.setItem('flash-message-error',  "Connexion nécessaire! Recherche des fournisseurs accessible aux membres uniquement");
-
-          let element = document.getElementById("search-results-component");
-          element.style.display = "none";
-
-          history.push({pathname: 'login', state: locationState });
         }
       });
   };

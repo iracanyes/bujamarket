@@ -1,61 +1,55 @@
  /* Product & Supplier search component */
 div#search-results-component{
-    display: none;
+  display: none;
+  /* Header du composant d'affichage des résultats de recherche produits/fournisseurs */
+  div#search-results-header{
+    margin: 10px auto;
+    text-align: center;
+    h4{
+      display: inline-block;
+      padding: 1rem;
+      border-bottom: 2px solid #007BFF;
+    }
+  }
+  /* Body du composant d'affichage des résultats de recherche produits/fournisseurs */
+  div#search-results{
+    div.MuiCard-root
+    {
+      div.MuiCardMedia-root{
+        height: 0;
+        padding: 30%;
+      }
 
-    /* Header du composant d'affichage des résultats de recherche produits/fournisseurs */
-    div#search-results-header{
-        margin: 10px auto;
-        text-align: center;
-
-        h4{
-            display: inline-block;
-            border-bottom: 2px solid #007BFF;
+      div.MuiCardHeader-root{
+        div.MuiCardHeader-content{
+          font-size: 0.7rem;
+          font-weight: bold;
         }
+      }
+
+
 
     }
-    /* Body du composant d'affichage des résultats de recherche produits/fournisseurs */
-    div#search-results{
-        div.card
-        {
-            margin: 0.5rem 0.2rem;
 
-            img.card-img-top{
-                height: 12rem;
-            }
-
-            div.card-title{
-                margin: 0.70rem auto;
-                font-weight: bold;
-            }
-
-            & > a{
-
-            }
-
-        }
-
-        div#search-results-items{
-            div.card
-            {
-                margin: 0.5rem 0.2rem;
-
-                img.card-img-top{
-                    height: 12rem;
-                }
-
-                div.card-title{
-                    margin: 0.70rem auto;
-                    font-weight: bold;
-                }
-
-                & > a{
-
-                }
-
-            }
-        }
-
+    nav{
+      width: unset;
     }
+    /* React Awesome Slider - Scale out animation css */
+    .aws-sld {
+      &--exit {
+        &.aws-sld--moveRight, &.aws-sld--moveLeft {
+          animation: scaleOut var(--slider-transition-duration) both
+          var(--transition-bezier);
+        }
+      }
+    }
+    @keyframes scaleOut {
+      to {
+        transform: scale(0.85);
+      }
+    }
+    /* End React Awesome Slider - Scale out animation css */
+  }
 
 }
 
