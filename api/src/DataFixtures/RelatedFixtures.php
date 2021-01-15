@@ -472,7 +472,7 @@ class RelatedFixtures extends Fixture implements FixtureGroupInterface, Dependen
     {
         $user->setEmail($this->faker->unique()->email);
 
-        dump(getenv('FIXTURE_CUSTOMER_PASSWORD'));
+
 
         $user->setPassword($this->encoder->encodePassword($user, getenv('FIXTURE_CUSTOMER_PASSWORD')));
         $user->setFirstname($this->faker->firstName);

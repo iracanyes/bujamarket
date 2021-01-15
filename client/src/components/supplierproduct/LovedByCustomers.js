@@ -22,7 +22,7 @@ class LovedByCustomers extends Component{
     return (
       <Fragment>
         {loading && (<SpinnerLoading message={"Chargement des produits préférés des clients"} />)}
-        <Box>
+        <Box id={'lovedByCustomers'}>
           {retrieved && (
             <SupplierProductGridList data={retrieved['hydra:member']}/>
           )}

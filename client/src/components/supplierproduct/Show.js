@@ -16,7 +16,22 @@ import {SpinnerLoading} from "../../layout/Spinner";
 import AwesomeSlider from "react-awesome-slider";
 import CoreStyles from "react-awesome-slider/src/core/styles.scss";
 import AwesomeSliderStyles from "react-awesome-slider/src/styled/cube-animation/cube-animation.scss";
-import {IconButton} from "@material-ui/core";
+import {
+  Button,
+  IconButton
+} from "@material-ui/core";
+import { withStyles } from "@material-ui/core";
+
+const styles = theme => ({
+  buttonWrapper: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '25rem'
+  },
+  buttonAddShoppingCart: {},
+  buttonAddFavorite: {}
+});
 
 class Show extends Component {
   static propTypes = {
@@ -44,14 +59,12 @@ class Show extends Component {
   }
 
   render() {
-    const { error } = this.props;
+    const { error, classes } = this.props;
 
-    if (this.props.deleted) return <Redirect to=".." />;
+    if (this.props.deleted) return <Redirect to="../.." />;
 
     const item = this.props.retrieved && this.props.retrieved;
-
     const comments = this.props.retrievedComments && this.props.retrievedComments['hydra:member'] ;
-
     const user = localStorage.getItem('token')  ? JSON.parse(atob(localStorage.getItem('token').split('.')[1])) : null;
 
 
@@ -111,12 +124,12 @@ class Show extends Component {
                              </p>
                            </div>
                           { user && !user.roles.includes('ROLE_SUPPLIER') && (
-                            <div>
-                              <div className="detail-banner-btn bookmark">
+                            <div className={classes.buttonWrapper}>
+                              <div className={classes.buttonAddShoppingCart}>
                                 <ButtonAddToShoppingCart2 product={item}/>
                               </div>
 
-                              <div className="detail-banner-btn heart">
+                              <div className={classes.buttonAddFavorite}>
                                 <ButtonAddToFavorite2 supplierProductId={item.id}/>
                               </div>
                             </div>
@@ -349,16 +362,7 @@ class Show extends Component {
     );
   };
 }
-/*
-const mapStateToProps = state => ({
-  retrieved: state.supplierproduct.show.retrieved,
-  error: state.supplierproduct.show.error,
-  loading: state.supplierproduct.show.loading,
-  deleted: state.supplierproduct.show.deleted,
-  eventSource: state.supplierproduct.show.eventSource,
-});
 
- */
 const mapStateToProps = state => {
   const {retrieved, error, loading, deleted, eventSource} = state.supplierproduct.show;
   const {
@@ -391,4 +395,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Show);
+)(withStyles(styles)(Show));

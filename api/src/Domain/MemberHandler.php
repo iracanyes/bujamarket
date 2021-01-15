@@ -447,8 +447,6 @@ class MemberHandler
      */
     public function createMember(): User
     {
-        dump("MemberHandler createMember - this->request", $this->request);
-        dump("MemberHandler createMember - \$this->request->request->get('userType')", $this->request->request->get('userType'));
 
         switch($this->request->request->get('userType'))
         {
@@ -629,7 +627,7 @@ class MemberHandler
             if(!$customer instanceof Customer){
                 throw new MemberNotFoundException("Error while retrieving the member");
             }
-            dump($customer);
+
             return $customer;
 
         }catch(\Exception $exception){

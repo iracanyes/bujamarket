@@ -48,11 +48,13 @@ export const theme = createMuiTheme((theme) => ({
     }
   },
   overrides: {
+    /*
     MuiCssBaseline: {
       '@global': {
         '@font-face': [nunito],
       }
     },
+     */
     typography: {
       fontFamily: [
         'Raleway',

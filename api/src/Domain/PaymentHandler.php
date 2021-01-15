@@ -131,7 +131,7 @@ class PaymentHandler
         }
 
         $session = $this->stripeHandler->createCheckoutSession($customer, $orderSet, $line_items);
-
+        $this->logger->error('Stripe Checkout Session - create', ['context' => $session]);
 
         try{
             /* Association de la session Stripe Checkout avec la commande */
@@ -232,7 +232,7 @@ class PaymentHandler
 
         /* Ajout de l'ID du paiement Stripe  */
         $payment->setPaymentIntent($session->payment_intent);
-        dump($session);
+
         try{
             // Mise à jour de l'ID Customer si celui-ci n'existe pas déjà
             if(strpos($session->customer, 0, 3) === 'cs_'){

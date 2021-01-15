@@ -1,26 +1,67 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+
 import PropTypes from 'prop-types';
 import { getNamesWithImage, reset } from '../../actions/category/getNamesWithImage';
 import { success } from '../../actions/category/delete';
 import { injectIntl } from "react-intl";
-import 'bootstrap/dist/css/bootstrap.css';
-import { toast } from "react-toastify";
-import { ToastError } from "../../layout/ToastMessage";
+import {toastError} from "../../layout/ToastMessage";
 
 /* Carousel */
 import {
   Col,
   Row,
-  Card,
   CardTitle,
 } from "reactstrap";
+import {
+  Paper,
+  Card,
+  CardHeader,
+  CardMedia, Grid,
+
+} from "@material-ui/core";
+import { withStyles } from "@material-ui/core/styles";
 import {SpinnerLoading} from "../../layout/Spinner";
 import AwesomeSlider from "react-awesome-slider";
 import AwesomeSliderStyles from "react-awesome-slider/src/styled/fold-out-animation/fold-out-animation.scss";
 import BackgroundImageItems from '../../assets/img/abstract-art-black-and-white.jpg';
 import BackgroundImageItem from '../../assets/img/parallax-gris.jpg';
+import { grey } from "@material-ui/core/colors";
+
+const styles = theme =>  ({
+  root: {
+    flexGrow: 1,
+    zIndex: 1,
+    paddingLeft: '7.5rem',
+    paddingRight: '7.5rem'
+  },
+  gridContainer: {
+
+  },
+  gridItem: {
+    //margin: theme.spacing(1)
+  },
+  cardLink: {
+    "&:hover": {
+      textDecoration: 'unset'
+    }
+  },
+  cardHeader: {
+    "& .MuiCardHeader-title": {
+      fontSize: '1rem',
+      fontFamily: 'Montserrat',
+      color: grey[700],
+      "&:hover": {
+        textDecoration: 'unset'
+      }
+
+    }
+  },
+  cardMedia: {
+    height: '7.5rem'
+  }
+});
 
 class CarouselCategories extends Component {
   static propTypes = {
@@ -93,7 +134,7 @@ class CarouselCategories extends Component {
   showCategories()
   {
 
-    const { intl } = this.props;
+    const { intl, classes } = this.props;
 
     const categories = this.props.retrieved && this.props.retrieved["hydra:member"];
 
@@ -112,52 +153,76 @@ class CarouselCategories extends Component {
         {
           // Ajout de tous les catégories de produit
           resultsPer12.push(
-            <Col key={"categories" + (i * 12 + j)} xs={"12"} sm="6" md="4" lg="3">
-              <Card body className={" text-white bg-dark"}>
-                <Link to={"/products"}>
-                  <div className="card-img-custom">
-                    <img src={BackgroundImageItems} alt={""} className="image img-fluid" style={{ width:"100%"}} />
-                    <CardTitle className={"image-bottom-left-title"}>
-                      <span className="font-weight-bold">
-                        {intl.formatMessage({
-                          id: "app.page.category.all_category.title",
-                          description: "category item - all category ",
-                          defaultMessage: "Toutes les catégories"
-                        })}
-                      </span>
-                    </CardTitle>
-                  </div>
-                </Link>
-              </Card>
-            </Col>
+            <Grid item
+              key={"categories" + (i * 12 + j)}
+              xs={12}
+              sm={6}
+              md={4}
+              lg={3}
+              className={classes.gridItem}
+            >
+              <Paper elevation={3}>
+                <Card>
+                  <Link
+                    to={'/products'}
+                    className={classes.cardLink}
+                  >
+                    <CardHeader
+                      title={intl.formatMessage({
+                        id: "app.page.category.all_category.title",
+                        description: "category item - all category ",
+                        defaultMessage: "Toutes les catégories"
+                      })}
+                      subheader={''}
+                      className={classes.cardHeader}
+                    />
+                    <CardMedia
+                      image={BackgroundImageItems}
+                      title={intl.formatMessage({
+                        id: "app.page.category.all_category.title",
+                        description: "category item - all category ",
+                        defaultMessage: "Toutes les catégories"
+                      })}
+                      className={classes.cardMedia}
+                    />
+                  </Link>
+
+                </Card>
+              </Paper>
+            </Grid>
           );
 
           // Ajout de la première catégorie de produit
           resultsPer12.push(
-            <Col key={"category" + (i * 12 + j)} xs={"12"} sm="6" md="4" lg="3">
-              <Card body className={" text-white bg-dark"}>
-                <Link
-
-                  to={`categories/show/${encodeURIComponent(categories[i * 12 + j]['id'])}`}
-                >
-                  <div className="card-img-custom">
-                    <img src={categories[i * 12 + j]['url']} alt={categories[i * 12 + j]["name"]} className="image img-fluid" style={{ width:"100%"}} />
-
-                    <CardTitle className={"image-bottom-left-title"}>
-
-                      <span className="font-weight-bold">
-                        {categories[i * 12 + j]["name"]}
-                      </span>
-
-                    </CardTitle>
-                  </div>
-                </Link>
-
-
-
-
-              </Card>
-            </Col>
+            <Grid
+              item
+              key={"category" + (i * 12 + j)}
+              xs={12}
+              sm={6}
+              md={4}
+              lg={3}
+              className={classes.gridItem}
+            >
+              <Paper elevation={3}>
+                <Card>
+                  <Link
+                    to={`categories/show/${encodeURIComponent(categories[i * 12 + j]['id'])}`}
+                    className={classes.cardLink}
+                  >
+                    <CardHeader
+                      title={categories[i * 12 + j]["name"]}
+                      subheader={''}
+                      className={classes.cardHeader}
+                    />
+                    <CardMedia
+                      image={categories[i * 12 + j]['url']}
+                      title={categories[i * 12 + j]["name"]}
+                      className={classes.cardMedia}
+                    />
+                  </Link>
+                </Card>
+              </Paper>
+            </Grid>
           );
 
         }
@@ -166,24 +231,36 @@ class CarouselCategories extends Component {
         {
 
           resultsPer12.push(
-            <Col key={"categories" + (i * 12 + j)} xs={"12"} sm="6" md="4" lg="3">
-              <Card body className={" text-white bg-dark"}>
-                <Link
+            <Grid
+              item
+              xs={12}
+              sm={6}
+              md={4}
+              lg={3}
+              key={"category" + (i * 12 + j)}
+              className={classes.gridItem}
+            >
+              <Paper elevation={3}>
+                <Card>
+                  <Link
+                    to={`categories/show/${encodeURIComponent(categories[i * 12 + j]['id'])}`}
+                    className={classes.cardLink}
+                  >
+                    <CardHeader
+                      title={categories[i * 12 + j]["name"]}
+                      subheader={''}
+                      className={classes.cardHeader}
+                    />
+                    <CardMedia
+                      image={categories[i * 12 + j]['url']}
+                      title={categories[i * 12 + j]["name"]}
+                      className={classes.cardMedia}
+                    />
+                  </Link>
 
-                  to={`categories/show/${encodeURIComponent(categories[i * 12 + j]['id'])}`}
-                >
-                  <div className="card-img-custom">
-                    <img src={categories[i * 12 + j]['url']} alt={categories[i * 12 + j]["name"]} className="image img-fluid" style={{ width:"100%"}} />
-
-                    <CardTitle className={"image-bottom-left-title"}>
-                      <span className="font-weight-bold">
-                        {categories[i * 12 + j]["name"]}
-                      </span>
-                    </CardTitle>
-                  </div>
-                </Link>
-              </Card>
-            </Col>
+                </Card>
+              </Paper>
+            </Grid>
           );
         }
 
@@ -193,14 +270,16 @@ class CarouselCategories extends Component {
         <div
           data-src={BackgroundImageItem}
           key={i}
-          className={'col-10'}
+          className={classes.root}
         >
-          <Row
+          <Grid
+            container
+            spacing={3}
             key={"category_rows" + (i)}
-            className={'justify-content-center'}
+            className={classes.gridContainer}
           >
             {resultsPer12}
-          </Row>
+          </Grid>
         </div>
       );
     }
@@ -210,12 +289,13 @@ class CarouselCategories extends Component {
   }
 
   render() {
-
-    this.props.error && toast(<ToastError message={this.props.error} />);
+    const { error, loading } = this.props;
+    /* Affichage des erreurs */
+    error && toastError(error);
 
     return <Fragment>
         <div className={"list-categories"}>
-          {this.props.loading &&
+          {loading &&
             <SpinnerLoading message={"Chargement des catégories de produit"} />
           }
 
@@ -255,4 +335,4 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(CarouselCategories));
+export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(CarouselCategories)));

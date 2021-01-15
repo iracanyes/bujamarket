@@ -9,20 +9,19 @@ import { CardImg, CardText, CardTitle, Col, Row } from "reactstrap";
 import { Link } from "react-router-dom";
 import { FormattedMessage } from "react-intl";
 import {
-  Spinner
-} from 'reactstrap';
-import {
   Button,
   Card,
   CardHeader,
   CardMedia,
   CardContent,
   CardActions,
+  Grid,
   Avatar,
   IconButton,
   Typography,
-  Paper
+  Paper, Tooltip, Fab
 } from "@material-ui/core";
+import { withStyles } from "@material-ui/core/styles";
 import {
   MdMoreVert,
   MdClose
@@ -32,6 +31,52 @@ import SuppliersImage from "../image/SuppliersImage";
 import AwesomeSlider from "react-awesome-slider";
 import AwesomeSliderStyles from "react-awesome-slider/src/styled/scale-out-animation/scale-out-animation.scss";
 import BackgroundImageItem from '../../assets/img/parallax-gris.jpg';
+
+
+const styles = theme => ({
+  root: {
+    display: 'flex',
+  },
+  paper: {
+    width: '100%'
+  },
+  gridRoot: {
+    display: 'flex',
+    flexGrow: 1,
+    zIndex: 1,
+    paddingRight: '7.5rem',
+    paddingLeft: '7.5rem'
+  },
+  cardHeader:{
+    padding: '0.5rem',
+    "& .MuiCardHeader-avatar": {
+      marginLeft: '0rem',
+      marginRight: '0.5rem'
+    },
+    "& .MuiCardHeader-title": {
+      fontFamily: 'Montserrat',
+      fontSize: '0.7rem',
+      fontWeight: 700
+    }
+  },
+  cardHeaderSupplier: {
+    "& .MuiCardHeader-title": {
+      fontFamily: 'Montserrat',
+      fontSize: '0.7rem',
+    }
+  },
+  cardMedia: {
+    height: '7.5rem'
+  },
+  buttonWrapperBottom:{
+    display: 'flex',
+    flexDirection: 'column'
+  },
+  buttonBottom:{
+    marginLeft: 'auto',
+    marginRight: 'auto'
+  }
+});
 
 class SearchResults extends  Component{
   static propTypes = {
@@ -77,7 +122,7 @@ class SearchResults extends  Component{
 
   showResultsProducts()
   {
-    const { intl, retrievedProducts } = this.props;
+    const { intl, classes, retrievedProducts } = this.props;
     let items = [];
     let rows = [];
 
@@ -92,7 +137,15 @@ class SearchResults extends  Component{
 
       let resultsPer8 = [];
       resultsPer8.push(
-        <Col key={"products0"} xs={"12"} sm="6" md="4" lg="3">
+        <Grid
+          item
+          xs={12}
+          sm={6}
+          md={4}
+          lg={3}
+          key={"products0"}
+          className={classes.gridItem}
+        >
           <Card>
             <CardHeader
               avatar={
@@ -109,9 +162,10 @@ class SearchResults extends  Component{
                 id: "app.search.product_notfound",
                 defaultMessage: "Aucun produit trouvé"
               })}
+              className={classes.cardHeader}
             />
             <CardMedia
-              //className={classes.media}
+              className={classes.cardMedia}
               image="https://picsum.photos/2000/3000"
               title="Aucun produit trouvé"
             />
@@ -130,22 +184,31 @@ class SearchResults extends  Component{
                 to={`../../products}`}
                 className={"MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"}
               >
-                Voir la liste des produits
+                <FormattedMessage
+                  id={'app.see_all_products'}
+                  defaultMessage={'Voir la liste des produits'}
+                  description={'App - See all products'}
+                />
               </Link>
             </CardActions>
           </Card>
-        </Col>
+        </Grid>
       );
 
       rows.push(
-        <div id="search-results-items"
-             //className={"col-12"}
-             key={index++}
-             data-src={BackgroundImageItem}
+        <div
+          id="search-results-items"
+          key={index++}
+          data-src={BackgroundImageItem}
+          className={classes.gridRoot}
         >
-          <Row>
+          <Grid
+            container
+            spacing={3}
+            className={classes.gridContainer}
+          >
             {resultsPer8}
-          </Row>
+          </Grid>
         </div>
 
       );
@@ -163,55 +226,80 @@ class SearchResults extends  Component{
           if(products[i * 8 + j])
           {
             resultsPer8.push(
-              <Col key={"products" + (i * 8 + j)} xs={"12"} sm="6" md="4" lg="3" className={'mb-3'}>
-                <Card>
-                  <CardHeader
-                    avatar={
-                      <Avatar aria-label={'recipe'}>
-                        S
-                      </Avatar>
-                    }
-                    action={
-                      <IconButton aria-label="settings">
-                        <MdMoreVert />
-                      </IconButton>
-                    }
-                    title={_.truncate(products[i * 8 + j]["title"], {length: 40, omission: '...'})}
-                  />
-                  <CardMedia
-                    //className={classes.media}
-                    image={products[i * 8 + j]['img-src']}
-                    title={products[i * 8 + j]["title"]}
-                  />
-                  <CardContent>
-                    <Typography variant={'body2'} color={'textSecondary'} component={'p'}>
-                      <FormattedMessage  id={"app.product.item.price_from"}
-                                         defaultMessage="À partir de"
-                                         description="Products item - price from"
-                      /> &nbsp;: &nbsp;
-                      {products[i * 8 + j]["minimumPrice"].toFixed(2)} &euro;
-                    </Typography>
-                  </CardContent>
-                  <CardActions disableSpacing>
-                    <Link
-                      to={`../../supplier_product/show/${encodeURIComponent(products[i * 8 + j]['id'])}`}
-                      className={"MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"}
-                    >
-                      <FormattedMessage
-                        id={'app.page.customer.list.button.see_more'}
-                        defaultMessage={'Voir le détail'}
-                      />
-                    </Link>
-                  </CardActions>
-                </Card>
-              </Col>
+              <Grid
+                item
+                xs={12}
+                sm={6}
+                md={4}
+                lg={3}
+                key={"products" + (i * 8 + j)}
+                className={classes.gridItem}
+              >
+                <Paper elevation={3}>
+                  <Card>
+                    <CardHeader
+                      avatar={
+                        <Avatar aria-label={'recipe'}>
+                          S
+                        </Avatar>
+                      }
+                      action={
+                        <IconButton aria-label="settings">
+                          <MdMoreVert />
+                        </IconButton>
+                      }
+                      title={
+                        <Tooltip
+                          title={products[i * 8 + j]["title"]}
+                        >
+                            <span>{_.truncate(products[i * 8 + j]["title"], {length: 30, omission: '...'})}</span>
+                        </Tooltip>
+                      }
+                      className={classes.cardHeader}
+                    />
+                    <CardMedia
+                      //className={classes.media}
+                      image={products[i * 8 + j]['img-src']}
+                      title={products[i * 8 + j]["title"]}
+                    />
+                    <CardContent>
+                      <Typography variant={'body2'} color={'textSecondary'} component={'p'}>
+                        <FormattedMessage  id={"app.product.item.price_from"}
+                                           defaultMessage="À partir de"
+                                           description="Products item - price from"
+                        /> &nbsp;: &nbsp;
+                        {products[i * 8 + j]["minimumPrice"].toFixed(2)} &euro;
+                      </Typography>
+                    </CardContent>
+                    <CardActions disableSpacing>
+                      <Link
+                        to={`../../supplier_product/show/${encodeURIComponent(products[i * 8 + j]['id'])}`}
+                        className={"MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"}
+                      >
+                        <FormattedMessage
+                          id={'app.page.customer.list.button.see_more'}
+                          defaultMessage={'Voir le détail'}
+                        />
+                      </Link>
+                    </CardActions>
+                  </Card>
+                </Paper>
+              </Grid>
             );
           }
 
           if(i * 8 + j === products.length - 1){
             for(let k=0; k < products.length % 8; k++){
               resultsPer8.push(
-                <Col key={"products" + (i * 8 + j + k)} xs={"12"} sm="6" md="4" lg="3">
+                <Grid
+                  item
+                  xs={12}
+                  sm={6}
+                  md={4}
+                  lg={3}
+                  key={"products" + (i * 8 + j + k)}
+                  className={classes.gridItem}
+                >
                   <Card>
                     <CardHeader
                       avatar={
@@ -228,6 +316,7 @@ class SearchResults extends  Component{
                         id: "app.search.product_notfound",
                         defaultMessage: "Aucun produit trouvé"
                       })}
+                      className={classes.cardHeader}
                     />
                     <CardMedia
                       //className={classes.media}
@@ -253,7 +342,7 @@ class SearchResults extends  Component{
                       </Link>
                     </CardActions>
                   </Card>
-                </Col>
+                </Grid>
               );
             }
           }
@@ -265,10 +354,15 @@ class SearchResults extends  Component{
 
 
         rows.push(
-          <div key={index} data-src={BackgroundImageItem}>
-            <Row key={"rows" + (index++)}>
+          <div className={classes.gridRoot} key={index} data-src={BackgroundImageItem}>
+            <Grid
+              container
+              spacing={2}
+              key={"rows" + (index++)}
+              className={classes.gridContainer}
+            >
               {resultsPer8}
-            </Row>
+            </Grid>
           </div>
 
         );
@@ -284,7 +378,7 @@ class SearchResults extends  Component{
 
   showResultsSuppliers()
   {
-    const { intl, retrievedSuppliers } = this.props;
+    const { intl, retrievedSuppliers, classes } = this.props;
     let rows = [];
     let index = 0;
 
@@ -296,7 +390,16 @@ class SearchResults extends  Component{
 
       let resultsPer8 = [];
       resultsPer8.push(
-        <Col key={"products0"} xs={"12"} sm="6" md="4" lg="3">
+        <Grid
+          item
+          xs={12}
+          sm={6}
+          md={4}
+          lg={3}
+          key={"products0"}
+          className={classes.gridItem}
+        >
+
           <Card>
             <CardHeader
               avatar={
@@ -313,9 +416,10 @@ class SearchResults extends  Component{
                 id: "app.search.supplier_notfound",
                 defaultMessage: "Aucun fournisseur trouvé"
               })}
+              className={classes.cardHeader}
             />
             <CardMedia
-              //className={classes.media}
+              className={classes.cardMedia}
               image="https://picsum.photos/2000/3000"
               title="Aucun produit trouvé"
             />
@@ -337,14 +441,14 @@ class SearchResults extends  Component{
               </Link>
             </CardActions>
           </Card>
-        </Col>
+        </Grid>
       );
 
       rows.push(
-        <div key={index++} data-src={BackgroundImageItem}>
-          <Row key={"rows0"}>
+        <div className={classes.gridRoot} key={index++} data-src={BackgroundImageItem}>
+          <Grid container className={classes.gridContainer} key={"rows0"}>
             {resultsPer8}
-          </Row>
+          </Grid>
         </div>
 
       );
@@ -358,7 +462,15 @@ class SearchResults extends  Component{
           if(suppliers[i * 8 + j])
           {
             resultsPer8.push(
-              <Col key={"supplier" + (i * 8 + j)} xs={"12"} sm="6" md="4" lg="3">
+              <Grid
+                item
+                xs={12}
+                sm={6}
+                md={4}
+                lg={3}
+                key={"supplier" + (i * 8 + j)}
+                className={classes.gridItem}
+              >
                 <Card>
                   <CardHeader
                     avatar={
@@ -371,8 +483,22 @@ class SearchResults extends  Component{
                         <MdMoreVert />
                       </IconButton>
                     }
-                    title={_.truncate(suppliers[i * 8 + j]["brandName"], {length: 40, omission: '...'})}
-                    subheader={_.truncate(suppliers[i * 8 + j]["socialReason"], {length: 40, omission: '...'})}
+                    title={
+                      <Tooltip title={suppliers[i * 8 + j]["brandName"]}>
+                        <span>
+                          {_.truncate(suppliers[i * 8 + j]["brandName"], {length: 35, omission: '...'})}
+                        </span>
+                      </Tooltip>
+                    }
+                    subheader={
+                      <Tooltip title={suppliers[i * 8 + j]["socialReason"]}>
+                        <span>
+                          {_.truncate(suppliers[i * 8 + j]["socialReason"], {length: 35, omission: '...'})}
+                        </span>
+                      </Tooltip>
+
+                    }
+                    className={classes.cardHeaderSupplier}
                   />
                   <SuppliersImage index={i * 8 + j} supplier={suppliers[i * 8 + j]}/>
                   <CardContent>
@@ -404,7 +530,7 @@ class SearchResults extends  Component{
                     </Link>
                   </CardActions>
                 </Card>
-              </Col>
+              </Grid>
             );
           }
 
@@ -412,9 +538,9 @@ class SearchResults extends  Component{
 
         rows.push(
           <div key={index++} data-src={BackgroundImageItem}>
-            <Row key={"rows" + i}>
+            <Grid container spacing={1} key={"rows" + i}>
               {resultsPer8}
-            </Row>
+            </Grid>
           </div>
 
         );
@@ -449,7 +575,7 @@ class SearchResults extends  Component{
 
   render()
   {
-    const { intl, results, retrievedProducts, retrievedSuppliers } = this.props;
+    const { intl, classes, results, retrievedProducts, retrievedSuppliers } = this.props;
     const { isOpen } = this.state;
 
     console.log("SearchResults render - results.searchType", results.searchType);
@@ -459,9 +585,12 @@ class SearchResults extends  Component{
 
     return (<Fragment>
       {isOpen && (
-        <Paper elevation={3} className={'p-3'}>
+        <Paper elevation={3} className={classes.paper}>
           <div id="search-results-header">
-            <Button variant={'contained'} color={'secondary'} className={'float-right mr-3'} onClick={this.close}>
+            <Button
+              variant={'contained'}
+              color={'secondary'}
+              className={'float-right'} onClick={this.close}>
               <MdClose className={'mr-2'}/>
               <FormattedMessage
                 id={"app.close"}
@@ -482,9 +611,8 @@ class SearchResults extends  Component{
             )}
 
 
-            <div className={'d-flex flex-column'}>
-              {/*this.pagination()*/}
-              <Button variant={'contained'} color={'secondary'} className={'mx-auto'} onClick={this.close}>
+            <div className={classes.buttonWrapperBottom}>
+              <Button variant={'contained'} color={'secondary'} className={classes.buttonCloseBottom} onClick={this.close}>
                 <MdClose className={'mr-2'}/>
                 <FormattedMessage
                   id={"app.close"}
@@ -532,4 +660,4 @@ const mapStateToProps = state => {
 
 
 
-export default connect(mapStateToProps)(injectIntl(SearchResults));
+export default connect(mapStateToProps)(injectIntl(withStyles(styles)(SearchResults)));

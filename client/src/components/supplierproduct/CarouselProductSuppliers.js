@@ -14,14 +14,43 @@ import ButtonAddToShoppingCart from "./ButtonAddToShoppingCart";
 import {
   Col,
   Row,
-  Card,
   CardBody,
   CardTitle
 } from "reactstrap";
+import {
+  Grid,
+  Paper,
+  Card,
+  CardHeader,
+  CardMedia,
+  CardContent,
+  Typography
+} from "@material-ui/core";
+import { withStyles } from "@material-ui/core/styles";
 import {SpinnerLoading} from "../../layout/Spinner";
 import {toastError, toastSuccess} from "../../layout/ToastMessage";
 import AwesomeSlider from "react-awesome-slider";
 import AwesomeSliderStyles from "react-awesome-slider/src/styled/scale-out-animation/scale-out-animation.scss";
+import {grey} from "@material-ui/core/colors";
+
+const styles = theme => ({
+  root: {},
+  cardLink: {
+    "&:hover": {
+      textDecoration: 'unset'
+    }
+  },
+  cardHeader: {
+    "& .MuiCardHeader-title": {
+      fontSize: '1rem',
+      fontFamily: 'Montserrat',
+      color: grey[700],
+    }
+  },
+  cardMedia: {
+    height: '7.5rem'
+  }
+});
 
 class CarouselProductSuppliers extends Component {
   static propTypes = {
@@ -65,7 +94,8 @@ class CarouselProductSuppliers extends Component {
 
   showProductSuppliers()
   {
-    const productSuppliers = this.props.retrieved && this.props.retrieved['hydra:member'];
+    const { retrieved, classes } = this.props;
+    const productSuppliers = retrieved && retrieved['hydra:member'];
 
     let rows = [];
 
@@ -83,10 +113,35 @@ class CarouselProductSuppliers extends Component {
           {
 
             resultsPer12.push(
-              <Col key={"productSuppliers" + (i * 12 + j)} xs={"12"} sm="6" md="3" className={'slider-item'}>
+              <Grid
+                item
+                xs={12} sm={6} md={3}
+                key={"productSuppliers" + (i * 12 + j)}
+                className={classes.gridItem}
+              >
+                <Paper elevation={3}>
+                  <Card>
+                    <Link
+                      to={`/product/show/${encodeURIComponent(productSuppliers[i * 12 + j]['id'])}`}
+                      className={classes.cardLink}
+                    >
+                      <CardHeader
+                        title={productSuppliers[i * 12 + j]["title"]}
+                        subheader={
+                          <div>
+                            <Typography variant={'h6'}>
+                              Offre de : {productSuppliers[i * 12 + j].supplier.brandName}
+                            </Typography>
+                          </div>
+                        }
+                        className={classes.cardHeader}
+                      />
+                    </Link>
+                  </Card>
+                </Paper>
                 <Card className={"slider-card"}>
                   <Link
-                    to={`/product/show/${encodeURIComponent(productSuppliers[i * 12 + j]['id'])}`}
+                    to={'#'}
                   >
                     <div className="card-img-custom">
                       <img src={productSuppliers[i * 12 + j]["images"][0]["url"]} alt={productSuppliers[i * 12 + j]["images"][0]["alt"]} className="image img-fluid" style={{ width:"100%"}} />
@@ -123,7 +178,7 @@ class CarouselProductSuppliers extends Component {
                     </Row>
                   </CardBody>
                 </Card>
-              </Col>
+              </Grid>
             );
           }
 
@@ -134,11 +189,13 @@ class CarouselProductSuppliers extends Component {
             key={i}
             className={'slider-page'}
           >
-            <Row
+            <Grid
+              container
+              spacing={2}
               key={"rows" + (i)}
             >
               {resultsPer12}
-            </Row>
+            </Grid>
           </div>
         );
       }
@@ -248,19 +305,6 @@ class CarouselProductSuppliers extends Component {
     </Fragment>;
   }
 
-  pagination() {
-    const view = this.props.retrieved['hydra:view'];
-    if (!view) return;
-
-    const {'hydra:first': first, 'hydra:previous': previous,'hydra:next': next, 'hydra:last': last} = view;
-
-    return <nav aria-label="Page navigation">
-        <Link to='.' className={`btn btn-primary${previous ? '' : ' disabled'}`}><span aria-hidden="true">&lArr;</span> First</Link>
-        <Link to={!previous || previous === first ? '.' : encodeURIComponent(previous)} className={`btn btn-primary${previous ? '' : ' disabled'}`}><span aria-hidden="true">&larr;</span> Previous</Link>
-        <Link to={next ? encodeURIComponent(next) : '#'} className={`btn btn-primary${next ? '' : ' disabled'}`}>Next <span aria-hidden="true">&rarr;</span></Link>
-        <Link to={last ? encodeURIComponent(last) : '#'} className={`btn btn-primary${next ? '' : ' disabled'}`}>Last <span aria-hidden="true">&rArr;</span></Link>
-    </nav>;
-  }
 }
 
 const mapStateToProps = state => ({
@@ -277,4 +321,4 @@ const mapDispatchToProps = dispatch => ({
   reset: eventSource => dispatch(reset(eventSource))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(injectIntl(CarouselProductSuppliers)));
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(injectIntl(withStyles(styles)(CarouselProductSuppliers))));

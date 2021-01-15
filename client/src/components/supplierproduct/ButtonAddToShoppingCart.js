@@ -5,12 +5,47 @@
  */
 /* eslint react/no-multi-comp: 0, react/prop-types: 0 */
 
-import React from 'react';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, Label, Form, FormGroup } from 'reactstrap';
+import React, { Fragment } from 'react';
+import PropTypes from "prop-types";
+import {Input, Label, Form, FormGroup} from 'reactstrap';
+import {
+  Button,
+  Modal,
+  Paper,
+  Card,
+  CardHeader,
+  CardContent
+} from "@material-ui/core";
 import { FormattedMessage } from "react-intl";
 import { Link, withRouter } from 'react-router-dom';
+import {MdAddShoppingCart, TiShoppingCart} from "react-icons/all";
+import { withStyles } from "@material-ui/core/styles";
+
+const styles = theme => ({
+  buttonGroup: {
+    display: 'flex',
+    flexDirection: 'row',
+    flexGrow: 1,
+    justifyContent: 'center',
+    paddingTop: theme.spacing(2)
+  },
+  buttonAddShoppingCart: {
+    marginRight: theme.spacing(2)
+  },
+  buttonLink: {
+    color: 'white',
+    "&:hover": {
+      color: 'white',
+      textDecoration: 'none'
+    }
+  }
+});
 
 class ButtonAddToShoppingCart extends React.Component {
+  static propTypes = {
+    classes: PropTypes.object.isRequired
+  };
+
   constructor(props) {
     super(props);
     this.state = {
@@ -39,25 +74,21 @@ class ButtonAddToShoppingCart extends React.Component {
 
   orderNow()
   {
-
     // Redirection vers le panier de commande pour validation
     this.props.history.push('/shopping_cart');
   }
 
   toggle() {
-    this.setState(prevState => ({
-      modal: !prevState.modal
+    this.setState(state => ({
+      modal: !state.modal
     }));
-
     this.addToShoppingCart();
-
   }
 
   addToShoppingCart()
   {
     /* Ajout au  panier de commande dans LocalStorage  */
     let shopping_cart = localStorage.getItem("shopping_cart") !== null ? JSON.parse(localStorage.getItem("shopping_cart")) : [];
-
 
     /* Si le panier de commande existe */
     if( shopping_cart.length > 0 )
@@ -149,93 +180,124 @@ class ButtonAddToShoppingCart extends React.Component {
   }
 
   render() {
+    const { classes } = this.props;
     let shopping_cart = localStorage.getItem("shopping_cart") ? JSON.parse(localStorage.getItem("shopping_cart")) : [];
 
     let sum = 0;
     shopping_cart.forEach( item => sum += parseFloat(item.price) * item.quantity );
 
     return (
-      <div>
-        <Form inline id={"add-shopping-cart"} onSubmit={(e) => e.preventDefault()}>
-          <FormGroup className={'w-100'}>
-            <Label for="quantity" className={"mr-2"}>
-              <FormattedMessage  id={"app.form.quantity"}
-                                 defaultMessage="Quantité"
-                                 description=" Shopping cart - quantity"
-              />
-            </Label>
-            <Input type="number" min={1} name="quantity" id="quantity" className={"w-100"} onChange={this.changeQuantity} value={this.state.quantity} />
+      <Fragment>
+        <div className={classes.root}>
+          <Form
+            inline
+            id={"add-shopping-cart"}
+            className={classes.form}
+            onSubmit={(e) => e.preventDefault()}>
+            <FormGroup className={'w-100'}>
+              <Label for="quantity" className={"mr-2"}>
+                <FormattedMessage  id={"app.form.quantity"}
+                                   defaultMessage="Quantité"
+                                   description=" Shopping cart - quantity"
+                />
+              </Label>
+              <Input type="number" min={1} name="quantity" id="quantity" className={"w-100"} onChange={this.changeQuantity} value={this.state.quantity} />
+            </FormGroup>
 
-          </FormGroup>
+            <div className={classes.buttonGroup}>
+              <Button
+                variant={'contained'}
+                color="primary"
+                startIcon={<MdAddShoppingCart/>}
+                className={classes.buttonAddShoppingCart}
+                onClick={this.toggle}
+              >
+                <FormattedMessage
+                  id={"app.button.add_shopping_cart"}
+                  defaultMessage="Ajouter au panier"
+                  description=" Button - Order now"
+                />
+              </Button>
+              <Button
+                variant={'contained'}
+                color={'primary'}
+                startIcon={<TiShoppingCart />}
+              >
+                <Link
+                  to={'/shopping_cart'}
+                  onClick={this.addToShoppingCart}
+                  className={classes.buttonLink}
+                >
+                  <FormattedMessage
+                    id={"app.button.order_now"}
+                    defaultMessage="Commande immédiate"
+                    description=" Button - Order now"
+                  />
+                </Link>
+              </Button>
 
-          <div className="form-actions w-100">
-            <Button outline color="success" size={'sm'} className={"w-100 my-2"} onClick={this.toggle}>
-              <FormattedMessage
-                id={"app.button.add_shopping_cart"}
-                defaultMessage="Ajouter au panier"
-                description=" Button - Order now"
-              />
-            </Button>
-            <Link to={'/shopping_cart'} className={"btn-sm btn-outline-danger w-100"} onClick={this.addToShoppingCart}>
-              <FormattedMessage  id={"app.button.order_now"}
-                                 defaultMessage="Commande immédiate"
-                                 description=" Button - Order now"
-              />
-            </Link>
-          </div>
+            </div>
 
-        </Form>
-        <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className} >
-          <ModalHeader toggle={this.toggle}>Panier de commande</ModalHeader>
-          <ModalBody>
-            <h4 className="d-flex justify-content-between align-items-center mb-3">
-              <span className="text-muted">Vos choix</span>
-              <span className="badge badge-secondary badge-pill">
-                {shopping_cart.length}
-              </span>
-            </h4>
-            <ul className="list-group mb-3">
-              {shopping_cart.map( (item, index) => (
-                <li key={index} className="list-group-item d-flex justify-content-between lh-condensed">
-                  <div className={'col-9'}>
-                    <h6 className="my-0">{item.title}</h6>
-                    <small className="text-muted">{item.description}</small>
-                  </div>
-                  <div>
-                    <p>
-                      <span className="text-muted">
-                        { parseFloat(item.price).toFixed(2) + ' €'}
-                      </span>
-                    </p>
-                    <p>
-                      {'Quantité: '+ item.quantity}
-                    </p>
-                    <Button outline color={'danger'} onClick={() => this.deleteProduct(item.id)}>
-                      <FormattedMessage  id={"app.button.delete"}
-                                         defaultMessage="Supprimer"
-                                         description="Button - delete"
-                      />
-                    </Button>
-                  </div>
+          </Form>
+          <Modal
+            open={this.state.modal}
+            onClose={this.toggle}
+            className={this.props.className}
+          >
+            <Paper elevation={3}>
+              <Card>
+                <CardHeader toggle={this.toggle}>Panier de commande</CardHeader>
+                <CardContent>
+                  <h4 className="d-flex justify-content-between align-items-center mb-3">
+                    <span className="text-muted">Vos choix</span>
+                    <span className="badge badge-secondary badge-pill">
+                  {shopping_cart.length}
+                </span>
+                  </h4>
+                  <ul className="list-group mb-3">
+                    {shopping_cart.map( (item, index) => (
+                      <li key={index} className="list-group-item d-flex justify-content-between lh-condensed">
+                        <div className={'col-9'}>
+                          <h6 className="my-0">{item.title}</h6>
+                          <small className="text-muted">{item.description}</small>
+                        </div>
+                        <div>
+                          <p>
+                        <span className="text-muted">
+                          { parseFloat(item.price).toFixed(2) + ' €'}
+                        </span>
+                          </p>
+                          <p>
+                            {'Quantité: '+ item.quantity}
+                          </p>
+                          <Button outline color={'danger'} onClick={() => this.deleteProduct(item.id)}>
+                            <FormattedMessage  id={"app.button.delete"}
+                                               defaultMessage="Supprimer"
+                                               description="Button - delete"
+                            />
+                          </Button>
+                        </div>
+                      </li>
+                    ))}
 
-                </li>
-              ))}
-
-              <li className="list-group-item d-flex justify-content-between">
-                <span>Total HT (EUR)</span>
-                <strong>{parseFloat(sum).toFixed(2) + ' €'}</strong>
-              </li>
-            </ul>
-          </ModalBody>
-          <ModalFooter>
-            <Button color="primary" onClick={this.orderNow}>Commander</Button>{' '}
-            <Button color="secondary"  onClick={this.cancel}>Annuler</Button>
-          </ModalFooter>
-        </Modal>
-      </div>
+                    <li className="list-group-item d-flex justify-content-between">
+                      <span>Total HT (EUR)</span>
+                      <strong>{parseFloat(sum).toFixed(2) + ' €'}</strong>
+                    </li>
+                  </ul>
+                </CardContent>
+                <div>
+                  <Button color="primary" onClick={this.orderNow}>Commander</Button>{' '}
+                  <Button color="secondary"  onClick={this.cancel}>Annuler</Button>
+                </div>
+              </Card>
+            </Paper>
+          </Modal>
+        </div>
+      </Fragment>
     );
   }
 }
 
-export default withRouter(ButtonAddToShoppingCart);
+export default withRouter( withStyles(styles)(ButtonAddToShoppingCart));
 

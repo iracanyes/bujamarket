@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\SupplierProduct;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 
 /**
  * @method SupplierProduct|null find($id, $lockMode = null, $lockVersion = null)
@@ -58,8 +59,8 @@ class SupplierProductRepository extends ServiceEntityRepository
 
     public function getBestRatedSuppliersProduct()
     {
-        return $this->createQueryBuilder('sp')
-            ->leftJoin('sp.product', 'p')
+        $qb = $this->createQueryBuilder('sp')
+            ->leftJoin('sp.product', 'p', 'p.id = sp.product_id')
             ->addSelect('p')
             ->leftJoin('sp.images', 'i','sp.id = i.supplier_product_id')
             ->addSelect('i')
@@ -67,8 +68,9 @@ class SupplierProductRepository extends ServiceEntityRepository
             ->addSelect('s')
             ->orderBy('sp.rating','DESC')
             ->setMaxResults(30)
-            ->getQuery()
-            ->getResult();
+            ->getQuery();
+
+        return new Paginator($qb, $fetchJoinCollection = true);
     }
 
     public function getOneSupplierProduct(int $id, string $email)

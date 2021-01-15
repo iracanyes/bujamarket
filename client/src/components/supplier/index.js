@@ -3,5 +3,5 @@ import List from './List';
 import Update from './Update';
 import Show from './Show';
 import Search from "./Search";
-import SidebarLeftMenu from "./SidebarLeftMenu";
-export { Create, List, Update, Show, Search, SidebarLeftMenu };
+import MenuSupplier from "./MenuSupplier";
+export { Create, List, Update, Show, Search, MenuSupplier };

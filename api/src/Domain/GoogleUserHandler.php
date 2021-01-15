@@ -79,34 +79,29 @@ class GoogleUserHandler
         $dataArray = json_decode($this->request->getContent(), true);
 
 
-        dump("GoogleUserHandler authentication - data", $data);
-        dump("GoogleUserHandler authentication - dataArray",$dataArray);
-
         $client = $this->clientRegistry
             ->getClient('google');
 
 
         $provider = $client->getOAuth2Provider();
-        dump("GoogleUserHandler authentication - provider", $provider);
+
 
 
         try{
             // Conversion des données de requête en token
             $token = new AccessToken($dataArray['xc']);
-            dump("GoogleUserHandler authentication - token",$token);
+
 
             // Récupération de l'utilisateur via son token
             /**
              * @var GoogleUser
              */
             $googleUser = $client->fetchUserFromToken($token);
-            dump("GoogleUserHandler authentication - googleUser",$googleUser);
+
 
             // Utilisateur existe en DB
             $user = $this->em->getRepository(User::class)
                 ->findOneBy(['email' => $googleUser->getEmail()]);
-
-            dump("GoogleUserHandler authentication - user",$user);
 
             if(!$user){
                 throw new GoogleAuthenticationException("User not registered!");
@@ -164,7 +159,6 @@ class GoogleUserHandler
             throw new GoogleAuthenticationException($e->getMessage());
         }
 
-        dump("GoogleUserHandler register - \$user", $user);
 
         return $this->jsonResponder->oneResult($user, 200, ['groups' => 'google_user_temp:output']);
 

@@ -70,7 +70,7 @@ class SupplierHandler
             throw new SupplierNotFoundException($e->getMessage());
         }
 
-        dump($suppliers);
+
 
         return $suppliers;
     }

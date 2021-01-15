@@ -3,6 +3,7 @@
  */
 import React, {Component, Fragment} from 'react';
 import { connect } from "react-redux";
+import PropTypes from "prop-types";
 import CarouselCategories from '../components/category/CarouselCategories';
 import { reset } from "../actions/user/register";
 import { reset as resetConnectedUser } from "../actions/user/login";
@@ -14,28 +15,22 @@ import {LovedByCustomers} from "../components/supplierproduct";
 
 class Homepage extends Component
 {
-  constructor(props) {
-    super(props);
-    this.welcome = this.welcome.bind(this);
+  static propTypes = {
+    registerNotification: PropTypes.string,
+    loginNotification: PropTypes.string
+  };
+  componentDidMount() {
+    const { registerNotification, loginNotification } = this.props;
+    typeof registerNotification === "string" && toastWelcome(registerNotification);
+    typeof (loginNotification) === "string" && toastWelcome(loginNotification);
   }
+
   componentWillUnmount() {
     this.props.reset();
     this.props.resetConnectedUser();
   }
 
-  welcome(){
-    const { registerNotification, loginNotification } = this.props;
-    const user = localStorage.getItem('token') ? JSON.parse(atob(localStorage.getItem('token').split('.')[1])) :  null;
-
-
-    (user !== null && typeof registerNotification === "string" ) && toastWelcome(registerNotification);
-    (user !== null && typeof loginNotification === "string") && toastWelcome(loginNotification);
-  }
-
   render(){
-    const { registerNotification, loginNotification } = this.props;
-
-    (registerNotification || loginNotification ) && this.welcome();
 
     return <Fragment>
       <section>

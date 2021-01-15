@@ -7,7 +7,7 @@ import { connect } from "react-redux";
 import PropTypes from 'prop-types';
 import {Typography, withStyles, withTheme} from "@material-ui/core";
 import { MenuCustomer } from "../components/customer";
-import { SidebarLeftMenu as MenuSupplier } from "../components/supplier";
+import { MenuSupplier } from "../components/supplier";
 import {Drawer, IconButton} from "@material-ui/core";
 import {MdMenu} from "react-icons/md";
 import {
@@ -110,16 +110,16 @@ class DrawerLeftMenu extends Component
   };
 
   showMenu = (connectedUser, user) => {
-    let menu = [];
+    let menu = null;
     switch (true){
       case (Object.keys(connectedUser).length !== 0 && user && user.roles.includes('ROLE_CUSTOMER')):
-        menu.push(<Fragment><MenuCustomer/></Fragment>);
+        menu = <MenuCustomer/>;
         break;
       case (Object.keys(connectedUser).length !== 0 && user && user.roles.includes('ROLE_SUPPLIER')):
-        menu.push(<MenuSupplier/>);
+        menu = <MenuSupplier/>;
         break;
       default:
-        menu.push(<div/>);
+        menu = <div/>;
         break;
     }
 

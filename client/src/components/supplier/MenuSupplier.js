@@ -21,7 +21,15 @@ import {
   FaUserAltSlash,
   FaSignOutAlt,
   FaShoppingCart,
-  FaShip, FaComments, RiChatPrivateLine, BiChevronDown, BiChevronRight, FaCommentDollar, FaCommentsDollar
+  FaShip,
+  FaComments,
+  RiChatPrivateLine,
+  BiChevronDown,
+  BiChevronRight,
+  FaCommentDollar,
+  FaCommentsDollar,
+  FaProductHunt,
+  IoCreate, ImBoxAdd, FaBoxes
 } from "react-icons/all";
 import {
   Avatar,
@@ -94,15 +102,11 @@ const styles = theme => ({
   circularProgressRoot: {
     display: 'inline-flex',
     alignItems: 'center',
-    paddingLeft: 0.25,
-    paddingTop: 0,
-    paddingBottom: 0
+    paddingLeft: 0.25
   },
   circularProgressWrapper: {
     margin: theme.spacing(1),
     position: 'relative',
-    display: 'flex',
-    alignItems: 'center'
   },
   buttonWrapper: {
     display: 'flex',
@@ -136,7 +140,7 @@ const styles = theme => ({
   },
 });
 
-class MenuCustomer extends Component
+class MenuSupplier extends Component
 {
   constructor(props) {
     super(props);
@@ -171,7 +175,7 @@ class MenuCustomer extends Component
     const { open } = this.state;
     const { classes, retrievedImage, loading } = this.props;
 
-    const user = localStorage.getItem('token') !== null ? JSON.parse(atob(localStorage.getItem('token').split(".")[1])) : null;
+    const connectedUser = localStorage.getItem('token') !== null ? JSON.parse(atob(localStorage.getItem('token').split(".")[1])) : null;
 
     const buttonClassname = clsx({
       [classes.buttonAvatar]: retrievedImage,
@@ -189,9 +193,9 @@ class MenuCustomer extends Component
                 id={'nested-list-subheader'}
               >
                 <FormattedMessage
-                  id={'app.menu.customer'}
-                  defaultMessage={'Menu Client'}
-                  description={'Menu - Customers'}
+                  id={'app.menu.supplier'}
+                  defaultMessage={'Menu Fournisseur'}
+                  description={'Menu - Suppliers'}
                 />
               </Typography>
             </ListSubheader>
@@ -205,16 +209,14 @@ class MenuCustomer extends Component
           >
             <div className={classes.buttonWrapper}>
               <ListItemAvatar className={classes.circularProgressWrapper}>
-                <div>
-                  <Fab
-                    aria-label={'profile'}
-                    className={buttonClassname}
-                  >
-                    {/*retrievedImage ? <Avatar alt={user.name} src={retrievedImage} /> : <BsCloudDownload/>*/}
-                    {(retrievedImage && user) ? <Avatar alt={user.name} src={retrievedImage} /> : <BsCloudDownload/>}
-                  </Fab>
-                  {loading && <CircularProgress size={56} color={'secondary'} className={classes.fabProgress}/>}
-                </div>
+                <Fab
+                  aria-label={'profile'}
+                  className={buttonClassname}
+                >
+                  {/*retrievedImage ? <Avatar alt={user.name} src={retrievedImage} /> : <BsCloudDownload/>*/}
+                  {(retrievedImage && connectedUser) ? <Avatar alt={connectedUser.name} src={retrievedImage} /> : <BsCloudDownload/>}
+                </Fab>
+                {loading && <CircularProgress size={56} color={'secondary'} className={classes.fabProgress}/>}
               </ListItemAvatar>
               <ListItemText className={classes.menuItemText}>
                 <Typography variant={"h6"} className={classes.itemTextTypography}>
@@ -294,16 +296,52 @@ class MenuCustomer extends Component
                   </ListItemText>
                 </NavLink>
               </ListItem>
+              <ListItem button onClick={() => this.props.logout()}>
+                <ListItemIcon className={classes.menuIcon}>
+                  <FaSignOutAlt/>
+                </ListItemIcon>
+                <ListItemText className={classes.menuSubItemText}>
+                  <FormattedMessage id={"app.button.logout"} defaultMessage={"Déconnexion"} description={"Button - Logout"} />
+                </ListItemText>
+              </ListItem>
+            </List>
+          </Collapse>
+          <ListItem button onClick={() => this.toggleOpen('2')}>
+            <ListItemIcon className={classes.menuIcon}>
+              <FaProductHunt/>
+            </ListItemIcon>
+            <ListItemText className={classes.menuItemText}>
+              <FormattedMessage id={"app.button.products"} defaultMessage={"Produits"} description={"App - Products"} />
+            </ListItemText>
+            <IconButton>
+              {this.state.open === '2' ? <BiChevronDown/> : <BiChevronRight/>}
+            </IconButton>
+          </ListItem>
+          <Collapse in={open === "2"} timeout={'auto'} unmountOnExit className={classes.menuCollapse}>
+            <List component={'div'} disablePadding>
               <ListItem button>
                 <NavLink
-                  to={{pathname: "/logout", state: { from : window.location.pathname }}}
+                  to={{pathname: "/supplier_product/create", state: { from : window.location.pathname }}}
                   className={classes.menuLink}
                 >
                   <ListItemIcon className={classes.menuIcon}>
-                    <FaSignOutAlt/>
+                    <ImBoxAdd/>
                   </ListItemIcon>
                   <ListItemText className={classes.menuSubItemText}>
-                    <FormattedMessage id={"app.button.logout"} defaultMessage={"Déconnexion"} description={"Button - Logout"} />
+                    <FormattedMessage id={"app.page.supplier_product.title.add_product"} defaultMessage={"Ajouter un produit"} description={"Button -  Add product"} />
+                  </ListItemText>
+                </NavLink>
+              </ListItem>
+              <ListItem button>
+                <NavLink
+                  to={{pathname: "/my_products", state: { from : window.location.pathname }}}
+                  className={classes.menuLink}
+                >
+                  <ListItemIcon className={classes.menuIcon}>
+                    <FaBoxes/>
+                  </ListItemIcon>
+                  <ListItemText className={classes.menuSubItemText}>
+                    <FormattedMessage id={"app.your_products"} defaultMessage={"Vos produits"} description={"Button - Your products"} />
                   </ListItemText>
                 </NavLink>
               </ListItem>
@@ -348,7 +386,7 @@ class MenuCustomer extends Component
               </ListItemText>
             </NavLink>
           </ListItem>
-          <ListItem button onClick={() => this.toggleOpen('2')}>
+          <ListItem button onClick={() => this.toggleOpen('3')}>
             <ListItemIcon className={classes.menuIcon}>
               <FaComments/>
             </ListItemIcon>
@@ -356,10 +394,10 @@ class MenuCustomer extends Component
               <FormattedMessage id={"app.chat"} defaultMessage={"Chat"} description={"App - Chat"} />
             </ListItemText>
             <IconButton>
-              {this.state.open === '2' ? <BiChevronDown/> : <BiChevronRight/>}
+              {this.state.open === '3' ? <BiChevronDown/> : <BiChevronRight/>}
             </IconButton>
           </ListItem>
-          <Collapse in={open === "2"} timeout={'auto'} unmountOnExit className={classes.menuCollapse}>
+          <Collapse in={open === "3"} timeout={'auto'} unmountOnExit className={classes.menuCollapse}>
             <List component={'div'} disablePadding>
               <ListItem button>
                 <NavLink
@@ -376,14 +414,14 @@ class MenuCustomer extends Component
               </ListItem>
               <ListItem button>
                 <NavLink
-                  to={{pathname: "/chat/suppliers", state: { from : window.location.pathname }}}
+                  to={{pathname: "/chat/customers", state: { from : window.location.pathname }}}
                   className={classes.menuLink}
                 >
                   <ListItemIcon className={classes.menuIcon}>
                     <BiBuildingHouse/>
                   </ListItemIcon>
                   <ListItemText className={classes.menuSubItemText}>
-                    <FormattedMessage id={"app.chat.supplier"} defaultMessage={"Chat fournisseur"} description={"Button - customers' chat"} />
+                    <FormattedMessage id={"app.chat.customer"} defaultMessage={"Chat client"} description={"Button - customers' chat"} />
                   </ListItemText>
                 </NavLink>
               </ListItem>
@@ -407,4 +445,4 @@ const mapDispatchToProps = dispatch => ({
   reset: eventSource => dispatch(reset(eventSource))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(withRouter(withStyles(styles, {withTheme: true})(MenuCustomer))));
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(withRouter(withStyles(styles, {withTheme: true})(MenuSupplier))));

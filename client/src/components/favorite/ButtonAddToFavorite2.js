@@ -12,6 +12,9 @@ import { del, reset as resetDelete } from '../../actions/favorite/delete';
 import { create, reset } from '../../actions/favorite/create';
 import { retrieveIds, reset as resetList } from '../../actions/favorite/list';
 import {toastSuccess} from "../../layout/ToastMessage";
+import { Button } from "@material-ui/core";
+import {FormattedMessage} from "react-intl";
+import {GiBrokenHeartZone, RiHeartAddFill} from "react-icons/all";
 
 
 export class ButtonAddToFavorite2 extends React.Component
@@ -19,7 +22,6 @@ export class ButtonAddToFavorite2 extends React.Component
   constructor(props)
   {
     super(props);
-
     this.state = {
       tooltipOpen: false,
       added: false
@@ -91,33 +93,42 @@ export class ButtonAddToFavorite2 extends React.Component
       }
     }
 
+    console.log('ButtonAddToFavorite2 - deleted', deleted);
+    console.log('ButtonAddToFavorite2 - item.length', item.length);
+    console.log('ButtonAddToFavorite2 - created', created);
+
     return (
       <div>
-        {deleted !== null
+        {deleted === null && (item.length === 0 && created === null)
           ? (
-            <div onClick={() => this.addToFavorite()}>
-              <FontAwesomeIcon icon="heart" className="menu-top-l1" style={{color: 'white'}} />
-              <span className="ml-1">Ajouter aux favoris</span>
-            </div>
+            <Button
+              color={'primary'}
+              variant={'contained'}
+              startIcon={<RiHeartAddFill/>}
+              onClick={() => this.addToFavorite()}
+            >
+              <FormattedMessage
+                id={"app.button.add_favorite"}
+                defaultMessage={'Ajouter aux favoris'}
+                description={'Button - Add to favorite'}
+              />
+            </Button>
           )
-          : (item.length > 0 || created !== null)
-            ? (
-              <div onClick={() => this.deleteFavorite()}>
-                <FontAwesomeIcon icon="heart" className="menu-top-l1" style={{color: 'red'}} />
-                <span className="ml-1">Déjà dans vos favoris</span>
-              </div>
-
-            )
-            :(
-              <div onClick={() => this.addToFavorite()}>
-                <FontAwesomeIcon icon="heart" className="menu-top-l1" style={{color: 'white'}} />
-                <span className="ml-1">Ajouter aux favoris</span>
-              </div>
-            )
-
+          : (
+            <Button
+              color={'secondary'}
+              variant={'contained'}
+              startIcon={<GiBrokenHeartZone />}
+              onClick={() => this.deleteFavorite()}
+            >
+              <FormattedMessage
+                id={"app.button.delete_favorite"}
+                defaultMessage={'Retirer des favoris'}
+                description={"Button - Delete from favorite"}
+              />
+            </Button>
+          )
         }
-
-
       </div>
     );
   }

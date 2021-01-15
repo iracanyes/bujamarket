@@ -28,7 +28,7 @@ export function create(values, history, location, stripe) {
       })
       .then(retrieved => {
         dispatch(success(retrieved));
-
+        console.log('payment/create - retrieved', retrieved);
         /* En cas de réussite  de la requête, on redirige le client vers la page Checkout à son identification de session  */
         stripe
           .redirectToCheckout({

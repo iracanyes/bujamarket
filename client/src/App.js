@@ -96,7 +96,7 @@ import pageRoutes from './routes/page';
 import { IntlProvider} from "react-intl";
 import { addLocaleData, messages, language } from "./config/internationalization.js";
 /* MuiThemeProvider -  */
-import { ThemeProvider, CssBaseline } from "@material-ui/core";
+import {ThemeProvider, CssBaseline, Toolbar} from "@material-ui/core";
 import { theme } from "./config/theme";
 
 /* Layout */
@@ -214,6 +214,7 @@ export class App extends Component
                   <header>
                     <MyAppBar onSearch={this.search} />
                   </header>
+                  <Toolbar/>
                   {/* HomepageSlider */}
 
                   { ( userConnected === null && user === null && results.length === 0 ) && (

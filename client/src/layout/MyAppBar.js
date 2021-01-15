@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import {
   AppBar,
@@ -8,7 +8,7 @@ import {
   MenuItem,
   Toolbar,
   IconButton,
-  Typography
+  Typography, Tooltip
 } from "@material-ui/core";
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import { withStyles } from '@material-ui/core/styles';
@@ -33,6 +33,9 @@ import { withRouter, Link } from "react-router-dom";
 import { connect } from "react-redux";
 import MainMenuSearchForm from "../components/search/MainMenuSearchForm";
 import DrawerLeftMenu from "./DrawerLeftMenu";
+import { list, reset } from "../actions/favorite/list";
+import {logout} from "../actions/user/login";
+import {GiCrownedHeart, TiShoppingCart} from "react-icons/all";
 
 const styles = theme => ({
   root: {
@@ -106,6 +109,13 @@ const styles = theme => ({
       display: 'none',
     },
   },
+  menuLink: {
+    color: "white",
+    "&:hover":{
+      color: "white",
+      textDecoration: 'none'
+    }
+  }
 });
 
 class MyAppBar extends React.Component {
@@ -146,9 +156,11 @@ class MyAppBar extends React.Component {
 
   render() {
     const { anchorEl, mobileMoreAnchorEl } = this.state;
-    const { classes } = this.props;
+    const { classes, intl } = this.props;
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+    const connectedUser = localStorage.getItem('token') !== null ? JSON.parse(atob(localStorage.getItem('token').split(".")[1])) : null;
+    const nbShoppingCart = localStorage.getItem('shopping_cart') !== null ? JSON.parse(localStorage.getItem('shopping_cart')).length : 0;
 
     const renderMenu = (
       <Menu
@@ -160,52 +172,61 @@ class MyAppBar extends React.Component {
         open={isMenuOpen}
         onClose={this.handleMenuClose}
       >
-        <MenuItem onClick={this.handleMenuClose}>
-          <Link to={'login'}>
-            <AiOutlineLogin className={'mx-auto'}/>
-            <FormattedMessage
-              id={'app.page.user.login.title'}
-              defaultMessage={'Connexion'}
-            />
+        {!connectedUser && (
+          <div className={'d-flex flex-row'}>
+            <MenuItem onClick={this.handleMenuClose}>
+              <Link to={'../../login'}>
+                <AiOutlineLogin className={'mx-auto'}/>
+                <FormattedMessage
+                  id={'app.page.user.login.title'}
+                  defaultMessage={'Connexion'}
+                />
 
-          </Link>
-        </MenuItem>
-        <MenuItem onClick={this.handleMenuClose}>
-          <Link to={'register'}>
-            <RiUserFollowFill className={'mx-auto'}/>
-            <FormattedMessage
-              id={'app.page.user.register.title'}
-              defaultMessage={'Inscription'}
-            />
-          </Link>
-        </MenuItem>
-        <MenuItem onClick={this.handleMenuClose}>
-          <Link to={'my_account'}>
-            <RiUserSearchFill className={'mx-auto'}/>
-            <FormattedMessage
-              id={"app.my_account"}
-              defaultMessage={"Mon compte"}
-            />
-          </Link>
-        </MenuItem>
-        <MenuItem onClick={this.handleMenuClose}>
-          <Link to={'profile'}>
-            <RiUserSettingsFill className={'mx-auto'}/>
-            <FormattedMessage
-              id={"app.button.profile"}
-              defaultMessage={"Profil"}
-            />
-          </Link>
-        </MenuItem>
-        <MenuItem onClick={this.handleMenuClose}>
-          <Link to={'logout'}>
-            <RiLogoutCircleRLine className={'mx-auto'}/>
-            <FormattedMessage
-              id={"app.button.logout"}
-              defaultMessage={"Déconnexion"}
-            />
-          </Link>
-        </MenuItem>
+              </Link>
+            </MenuItem>
+            <MenuItem onClick={this.handleMenuClose}>
+              <Link to={'../../register'}>
+                <RiUserFollowFill className={'mx-auto'}/>
+                <FormattedMessage
+                  id={'app.page.user.register.title'}
+                  defaultMessage={'Inscription'}
+                />
+              </Link>
+            </MenuItem>
+          </div>
+        )}
+        {connectedUser &&  (
+          <div className={'d-flex flex-row'}>
+            <MenuItem onClick={this.handleMenuClose}>
+              <Link to={'../../my_account'}>
+                <RiUserSearchFill className={'mx-auto'}/>
+                <FormattedMessage
+                  id={"app.my_account"}
+                  defaultMessage={"Mon compte"}
+                />
+              </Link>
+            </MenuItem>
+            <MenuItem onClick={this.handleMenuClose}>
+              <Link to={'../../profile'}>
+                <RiUserSettingsFill className={'mx-auto'}/>
+                <FormattedMessage
+                  id={"app.button.profile"}
+                  defaultMessage={"Profil"}
+                />
+              </Link>
+            </MenuItem>
+            <MenuItem onClick={this.handleMenuClose}>
+              <div onClick={() => this.props.logout()}>
+                <RiLogoutCircleRLine className={'mx-auto'}/>
+                <FormattedMessage
+                  id={"app.button.logout"}
+                  defaultMessage={"Déconnexion"}
+                />
+              </div>
+            </MenuItem>
+          </div>
+        )}
+
       </Menu>
     );
 
@@ -217,6 +238,18 @@ class MyAppBar extends React.Component {
         open={isMobileMenuOpen}
         onClose={this.handleMenuClose}
       >
+        <MenuItem onClick={this.handleMobileMenuClose}>
+          <IconButton color="inherit">
+            <Badge badgeContent={4} color="secondary">
+              <TiShoppingCart />
+            </Badge>
+          </IconButton>
+          <FormattedMessage
+            id={"app.button.shopping_cart"}
+            defaultMessage={"Panier de commande"}
+            description={"App - Shopping cart"}
+          />
+        </MenuItem>
         <MenuItem onClick={this.handleMobileMenuClose}>
           <IconButton color="inherit">
             <Badge badgeContent={4} color="secondary">
@@ -252,42 +285,85 @@ class MyAppBar extends React.Component {
               </Typography>
             </Link>
             <DrawerLeftMenu />
-            {/*
-              <div className={classes.search}>
-                <div className={classes.searchIcon}>
-                  <MdSearch />
-                </div>
-                <InputBase
-                  placeholder="Search…"
-                  classes={{
-                    root: classes.inputRoot,
-                    input: classes.inputInput,
-                  }}
-                />
-              </div>
-            */}
             <div className={classes.grow} />
             <MainMenuSearchForm onSearch={this.props.onSearch}/>
             <div className={classes.grow} />
             <div className={classes.sectionDesktop}>
-              <IconButton color="inherit">
-                <Badge badgeContent={4} color="secondary">
-                  <MdMailOutline />
-                </Badge>
-              </IconButton>
-              <IconButton color="inherit">
-                <Badge badgeContent={17} color="secondary">
-                  <MdNotifications />
-                </Badge>
-              </IconButton>
-              <IconButton
-                aria-owns={isMenuOpen ? 'material-appbar' : undefined}
-                aria-haspopup="true"
-                onClick={this.handleProfileMenuOpen}
-                color="inherit"
+              <Tooltip title={intl.formatMessage({
+                id: "app.button.shopping_cart",
+                defaultMessage: "Panier de commande",
+                description: 'App - Shopping cart'
+              })}>
+                <Link
+                  to={"../../shopping_cart"}
+                  className={classes.menuLink}
+                >
+                  <IconButton color="inherit">
+                    <Badge badgeContent={nbShoppingCart} color="secondary">
+                      <TiShoppingCart />
+                    </Badge>
+                  </IconButton>
+                </Link>
+              </Tooltip>
+              <Tooltip
+                title={intl.formatMessage({
+                  id: "app.button.favorite",
+                  defaultMessage: "Favoris"
+                })}
               >
-                <MdAccountCircle />
-              </IconButton>
+                <Link
+                  to={"../../favorites"}
+                  className={classes.menuLink}
+                >
+                  <IconButton color="inherit">
+                    <Badge badgeContent={null} color="secondary">
+                      <GiCrownedHeart />
+                    </Badge>
+                  </IconButton>
+                </Link>
+              </Tooltip>
+              <Tooltip
+                title={intl.formatMessage({
+                  id: 'app.messages',
+                  defaultMessage: 'Messages',
+                  description: 'App - Messages'
+                })}
+              >
+                <IconButton color="inherit">
+                  <Badge badgeContent={4} color="secondary">
+                    <MdMailOutline />
+                  </Badge>
+                </IconButton>
+              </Tooltip>
+              <Tooltip
+                title={intl.formatMessage({
+                  id: 'app.notification',
+                  defaultMessage: 'Notification',
+                  description: 'App - Notification'
+                })}
+              >
+                <IconButton color="inherit">
+                  <Badge badgeContent={17} color="secondary">
+                    <MdNotifications />
+                  </Badge>
+                </IconButton>
+              </Tooltip>
+              <Tooltip
+                title={intl.formatMessage({
+                  id: "app.button.profile",
+                  defaultMessage: "Profil"
+                })}
+              >
+                <IconButton
+                  aria-owns={isMenuOpen ? 'material-appbar' : undefined}
+                  aria-haspopup="true"
+                  onClick={this.handleProfileMenuOpen}
+                  color="inherit"
+                >
+                  <MdAccountCircle />
+                </IconButton>
+              </Tooltip>
+
             </div>
             <div className={classes.sectionMobile}>
               <IconButton aria-haspopup="true" onClick={this.handleMobileMenuOpen} color="inherit">
@@ -305,6 +381,22 @@ class MyAppBar extends React.Component {
 
 MyAppBar.propTypes = {
   classes: PropTypes.object.isRequired,
+  list: PropTypes.func.isRequired,
+  reset: PropTypes.func.isRequired,
+  eventSource: PropTypes.instanceOf(EventSource),
+  retrieved: PropTypes.object,
+  logout: PropTypes.func.isRequired
 };
 
-export default injectIntl(withStyles(styles)(MyAppBar));
+const mapStateToProps = state => {
+  const { user } = state.user.authentication;
+  const { retrieved, eventSource } = state.favorite.list;
+  return { user, retrieved, eventSource };
+};
+const mapDispatchToProps = dispatch => ({
+  list: (page,history, location) => dispatch(list(page, history, location)),
+  reset: (eventSource) => dispatch(reset(eventSource)),
+  logout: () => dispatch(logout())
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(withStyles(styles)(MyAppBar)));

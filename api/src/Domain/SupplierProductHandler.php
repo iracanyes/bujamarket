@@ -577,6 +577,9 @@ class SupplierProductHandler
 
     }
 
+    /**
+     * @return mixed
+     */
     public function getBestRatedSuppliersProduct()
     {
 

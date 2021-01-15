@@ -89,6 +89,7 @@ class OrderSetHandler
         $shoppingCartDetails = $this->shoppingCartHandler->getShoppingCartDetails();
 
         /* Pour chaque élément du panier de commande, on crée un détail de commande qui sera ensuite intégré à l'ensemble de la commande */
+        $totalWeight = 0;
         foreach($shoppingCartDetails as $item)
         {
             $orderDetail = new OrderDetail();
@@ -103,20 +104,27 @@ class OrderSetHandler
             /* Nombre de packet dans l'ensemble de commande */
             $orderSet->setNbPackage($orderSet->getNbPackage() + 1);
             /* Calcul du poids total de l'ensemble de commande */
-            $orderSet->setTotalWeight($orderSet->getTotalWeight() + $item->getSupplierProduct()->getProduct()->getWeight());
+            $totalWeight += $item->getSupplierProduct()->getProduct()->getWeight();
+
+            /* Ajout de la relation au élément de commande */
             $orderSet->addOrderDetail($orderDetail);
 
 
 
         }
 
-        /**/
+        /* Calcul du poids total */
+        $orderSet->setTotalWeight($totalWeight);
 
         /* Récupération de l'expéditeur */
         $shipper = $this->shipperHandler->getShipper($data);
+
         /* Création d'un ensemble de livraison */
         $deliverySet = new DeliverySet();
         $deliverySet->setDateCreated(new \DateTime());
+
+
+
         /* Calcul du coût d'expédition  */
         $totalShippingCost = 0;
 
@@ -237,7 +245,7 @@ class OrderSetHandler
                 }
             }
 
-            dump($orders);
+
             return $orders;
 
         }catch (\Exception $exception){

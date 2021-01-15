@@ -14,7 +14,7 @@ import { Spinner } from "reactstrap";
 import {toastError} from "../../layout/ToastMessage";
 import GoogleSignInButton from "./GoogleSignInButton";
 import {
-  Button,
+  Button, CircularProgress,
   Paper,
   Typography,
 } from '@material-ui/core';
@@ -31,6 +31,10 @@ const styles= theme =>  ({
     color: orange[500],
     letterSpacing: '-0.025rem',
     fontWeight: '700'
+  },
+  circularProgress: {
+    color: orange[500],
+    marginRight: theme.spacing(1)
   }
 });
 
@@ -146,7 +150,6 @@ class LoginForm extends React.Component {
                                description="Page User - Login title"
             />
           </Typography>
-
           <form
             name="form"
             className={"col-lg-10 mx-auto px-3"}
@@ -177,26 +180,15 @@ class LoginForm extends React.Component {
               placeholder="*************"
               onChange={this.handleChange}
             />
-
-
             <div className="form-group">
               <div className={'d-flex flex-row  justify-content-center'}>
-                {/*
-                  <button className="btn btn-primary login mx-2 my-3">
-                    { loading === true && <Spinner color={'info'} className={'mr-2'}/> }
-                    <FormattedMessage  id={"app.page.user.login.title"}
-                                       defaultMessage="Connexion"
-                                       description="Page User - login"
-                    />
-                  </button>
-                */}
                 <Button
                   variant={'contained'}
                   color={'primary'}
                   className={'mx-2'}
                   type={'submit'}
                 >
-                  { loading === true && <Spinner color={'info'} className={'mr-2'}/> }
+                  { loading === true && <CircularProgress color={'primary'} size={18} className={classes.circularProgress}/> }
                   <FormattedMessage  id={"app.page.user.login.title"}
                                      defaultMessage="Connexion"
                                      description="Page User - login"
@@ -207,17 +199,12 @@ class LoginForm extends React.Component {
                                      defaultMessage="Inscription"
                                      description="Page User - register"
                   />
-
                 </Link>
-
               </div>
               <hr/>
               <div className={'d-flex flex-row justify-content-center'}>
                 <GoogleSignInButton/>
               </div>
-
-
-
             </div>
           </form>
         </Paper>
