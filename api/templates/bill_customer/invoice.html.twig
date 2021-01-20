@@ -10,17 +10,16 @@
         {% include('assets/bootstrap-4.3.1-dist/css/bootstrap.css') %}
         {% include('assets/index.css') %}
     </style>
-
-
-
 {% endblock %}
 
 {% block body %}
     <div class="container " style="font-size: 0.9rem">
+      {#
       {% dump payment %}
       {% dump orderSet %}
       {% dump payment %}
       {% dump bill %}
+      #}
         <h1 class="text-center">Customer invoice</h1>
         <div style="min-width: 600px">
             <section class="m-0 p-0">
@@ -79,9 +78,9 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% dump lineItems %}
+
                         {% for item in lineItems %}
-                          {% dump item %}
+
                             <tr>
                                 <td class="no">{{ loop.index }}</td>
                                 <td class="text-left">
@@ -141,7 +140,7 @@
             <footer>
             </footer>
         </div>
-        {% dump 'End templating' %}
+
         <div></div>
 
     </div>

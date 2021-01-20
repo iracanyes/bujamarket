@@ -20,7 +20,7 @@ import {
   Spinner
 } from "reactstrap";
 import { retrieveBySupplierId, reset  } from "../../actions/supplierproduct/listBySupplierId";
-import Rating from "../../layout/Rating";
+import Rating from "../../layout/component/Rating";
 import ButtonAddToShoppingCart from "./ButtonAddToShoppingCart";
 import ButtonAddToFavorite from "../favorite/ButtonAddToFavorite";
 

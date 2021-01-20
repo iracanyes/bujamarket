@@ -16,15 +16,15 @@ oneup_flysystem:
                 directory: '%kernel.project_dir%/public/%env(UPLOAD_CATEGORY_IMAGE_DIRECTORY)%'
         private_uploads_image_customer_adapter:
             local:
-                #directory: '%kernel.project_dir%/web/uploads/img/profile/customer'
+                #directory: '%kernel.project_dir%/private/uploads/img/profile/customer'
                 directory: '%kernel.project_dir%/%env(UPLOAD_CUSTOMER_IMAGE_DIRECTORY)%'
         private_uploads_image_supplier_adapter:
             local:
-                #directory: '%kernel.project_dir%/web/uploads/img/profile/supplier'
+                #directory: '%kernel.project_dir%/private/uploads/img/profile/supplier'
                 directory: '%kernel.project_dir%/%env(UPLOAD_SUPPLIER_IMAGE_DIRECTORY)%'
         private_uploads_image_admin_adapter:
             local:
-                #directory: '%kernel.project_dir%/web/uploads/img/profile/admin'
+                #directory: '%kernel.project_dir%/private/uploads/img/profile/admin'
                 directory: '%kernel.project_dir%/%env(UPLOAD_ADMIN_IMAGE_DIRECTORY)%'
         private_downloads_bill_customer_adapter:
             local:

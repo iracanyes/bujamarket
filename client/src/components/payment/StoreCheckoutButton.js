@@ -13,7 +13,7 @@ import {
   Button,
   Spinner
 } from 'reactstrap';
-import {toastError, toastStripePaymentInfo} from "../../layout/ToastMessage";
+import {toastError, toastStripePaymentInfo} from "../../layout/component/ToastMessage";
 import {create} from "../../actions/payment/create";
 
 class CheckoutButton extends React.Component {

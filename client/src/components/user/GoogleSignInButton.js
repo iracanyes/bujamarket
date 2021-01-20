@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { GoogleLogin} from "react-google-login";
 import { loginGoogleUser} from "../../actions/user/loginGoogleUser";
-import {toastError} from "../../layout/ToastMessage";
+import {toastError} from "../../layout/component/ToastMessage";
 import {
   Fab,
   CircularProgress

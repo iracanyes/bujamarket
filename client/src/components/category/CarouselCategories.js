@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { getNamesWithImage, reset } from '../../actions/category/getNamesWithImage';
 import { success } from '../../actions/category/delete';
 import { injectIntl } from "react-intl";
-import {toastError} from "../../layout/ToastMessage";
+import {toastError} from "../../layout/component/ToastMessage";
 
 /* Carousel */
 import {
@@ -22,7 +22,7 @@ import {
 
 } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
-import {SpinnerLoading} from "../../layout/Spinner";
+import {SpinnerLoading} from "../../layout/component/Spinner";
 import AwesomeSlider from "react-awesome-slider";
 import AwesomeSliderStyles from "react-awesome-slider/src/styled/fold-out-animation/fold-out-animation.scss";
 import BackgroundImageItems from '../../assets/img/abstract-art-black-and-white.jpg';

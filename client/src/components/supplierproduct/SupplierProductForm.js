@@ -19,8 +19,8 @@ import { listByName, reset as resetCategories } from "../../actions/category/get
 import { getNames, reset as resetProducts } from '../../actions/product/getNames';
 import PropTypes from 'prop-types';
 import DropzoneWithPreviews from "../image/dropzone/DropzoneWithPreviews";
-import { toastError } from "../../layout/ToastMessage";
-import {SpinnerLoading} from "../../layout/Spinner";
+import { toastError } from "../../layout/component/ToastMessage";
+import {SpinnerLoading} from "../../layout/component/Spinner";
 import * as ISOCountryJson from "../../config/ISOCode/ISO3166-1Alpha2.json";
 import * as _ from 'lodash';
 import AutoCompleteProductNamesInput from "../product/AutoCompleteProductNamesInput";

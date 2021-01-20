@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { getSupplierImage, reset } from "../../actions/image/supplier";
-import {SpinnerLoading} from "../../layout/Spinner";
+import {SpinnerLoading} from "../../layout/component/Spinner";
 
 class SupplierImage extends Component
 {

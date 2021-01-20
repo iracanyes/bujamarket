@@ -5,8 +5,8 @@ import PropTypes from 'prop-types';
 import SupplierProductForm from './SupplierProductForm';
 import { reset, retrieve } from '../../actions/supplierproduct/update';
 import { injectIntl, FormattedMessage } from "react-intl";
-import {toastError} from "../../layout/ToastMessage";
-import {SpinnerLoading} from "../../layout/Spinner";
+import {toastError} from "../../layout/component/ToastMessage";
+import {SpinnerLoading} from "../../layout/component/Spinner";
 import PublicationRules from "./PublicationRules";
 
 

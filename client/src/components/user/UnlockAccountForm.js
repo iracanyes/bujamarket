@@ -13,7 +13,7 @@ import { FormattedMessage, injectIntl } from "react-intl";
 import { Field, reduxForm } from "redux-form";
 import { Spinner } from "reactstrap";
 import {toast} from "react-toastify";
-import {ToastError} from "../../layout/ToastMessage";
+import {ToastError} from "../../layout/component/ToastMessage";
 
 class UnlockAccountForm extends React.Component {
   constructor(props)

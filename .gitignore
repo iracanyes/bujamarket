@@ -20,9 +20,9 @@ docs/iracanyes_tfe_2020_db.rar
 # Fichiers uploadés
 api/public/assets/uploads/img/category/*
 api/public/assets/uploads/img/supplier_product/*
-api/private/uploads/img/profil/admin/*
-api/private/uploads/img/profil/customer/*
-api/private/uploads/img/profil/supplier/*
+api/private/uploads/img/profile/admin/*
+api/private/uploads/img/profile/customer/*
+api/private/uploads/img/profile/supplier/*
 api/private/downloads/bill/*
 # Documentation
 docs/bujamarket.sql

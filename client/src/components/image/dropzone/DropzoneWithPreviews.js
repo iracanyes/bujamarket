@@ -6,7 +6,7 @@ import {
   Col,
   Button
 } from "reactstrap";
-import {toastError, toastSuccess} from "../../../layout/ToastMessage";
+import {toastError, toastSuccess} from "../../../layout/component/ToastMessage";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getProfileImage, reset  } from "../../../actions/image/profile";
 import { del } from "../../../actions/image/delete";

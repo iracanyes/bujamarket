@@ -18,7 +18,7 @@ import {
 } from 'reactstrap';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { logout } from "../../actions/user/login";
-import {SpinnerLoading} from "../../layout/Spinner";
+import {SpinnerLoading} from "../../layout/component/Spinner";
 import { getProfileImage, reset } from "../../actions/image/profile";
 import {MdRateReview} from "react-icons/all";
 

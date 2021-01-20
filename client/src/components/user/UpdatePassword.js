@@ -10,7 +10,7 @@ import PropTypes from "prop-types";
 import { FormattedMessage, injectIntl } from "react-intl";
 import { Field, reduxForm } from "redux-form";
 import { Spinner } from "reactstrap";
-import {toastError} from "../../layout/ToastMessage";
+import {toastError} from "../../layout/component/ToastMessage";
 import { updatePassword } from "../../actions/user/updatePassword";
 
 class UpdatePassword extends React.Component {

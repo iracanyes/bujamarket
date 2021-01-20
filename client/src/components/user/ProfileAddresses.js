@@ -23,7 +23,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getProfileAddresses, reset } from "../../actions/address/profileAddresses";
 import { UpdateForm } from  "../address";
 import { del } from "../../actions/address/delete";
-import {toastSuccess} from "../../layout/ToastMessage";
+import {toastSuccess} from "../../layout/component/ToastMessage";
 
 class ProfileAddresses extends  Component{
   static propTypes = {

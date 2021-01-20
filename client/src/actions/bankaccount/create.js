@@ -1,5 +1,5 @@
 import { fetch } from '../../utils/dataAccess';
-import {toastSuccess} from "../../layout/ToastMessage";
+import {toastSuccess} from "../../layout/component/ToastMessage";
 
 export function error(error) {
   return { type: 'BANKACCOUNT_CREATE_ERROR', error };

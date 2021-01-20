@@ -11,8 +11,8 @@ import { Col, Row } from "reactstrap";
 import { FormattedMessage, injectIntl } from "react-intl";
 import { register, reset } from "../../actions/user/register";
 import PropTypes from 'prop-types';
-import {toastError} from "../../layout/ToastMessage";
-import { SpinnerLoading } from "../../layout/Spinner";
+import {toastError} from "../../layout/component/ToastMessage";
+import { SpinnerLoading } from "../../layout/component/Spinner";
 import {
   Button,
   Paper,

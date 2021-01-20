@@ -11,6 +11,7 @@ services:
   php:
     build:
       context: ../api
+      dockerfile: Dockerfile.prod
       target: bjmkt_php
       <<: *api-cache-from
     image: ${PHP_IMAGE:?PHP_IMAGE is not set or empty}

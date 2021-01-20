@@ -8,9 +8,9 @@ import { Container } from "reactstrap";
 import {
   Paper
 } from "@material-ui/core";
-import {toastError} from "../../layout/ToastMessage";
+import {toastError} from "../../layout/component/ToastMessage";
 import TableSort from "./TableSort";
-import {SpinnerLoading} from "../../layout/Spinner";
+import {SpinnerLoading} from "../../layout/component/Spinner";
 
 class List extends Component {
   static propTypes = {

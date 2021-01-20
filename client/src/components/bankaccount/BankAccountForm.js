@@ -14,7 +14,7 @@ import {
   Spinner,
   FormGroup
 } from "reactstrap";
-import { toastError } from "../../layout/ToastMessage";
+import { toastError } from "../../layout/component/ToastMessage";
 import { ElementsConsumer, IbanElement,  AuBankAccountElement  } from "@stripe/react-stripe-js";
 
 

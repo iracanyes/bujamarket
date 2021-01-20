@@ -1,5 +1,5 @@
 import { fetch } from '../../utils/dataAccess';
-import {toastError} from "../../layout/ToastMessage";
+import {toastError} from "../../layout/component/ToastMessage";
 
 export function error(error) {
   return { type: 'BANKACCOUNT_DELETE_ERROR', error };

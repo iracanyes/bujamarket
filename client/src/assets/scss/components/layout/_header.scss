@@ -9,7 +9,7 @@
 header{
   // title
   a.appbar-title{
-    color: $primary-color;
+    color: white;
   }
   a.appbar-title:hover{
     text-decoration: unset;
@@ -37,7 +37,6 @@ header{
 // Menu left
 div.menu-left-submenu{
   div.MuiPaper-root{
-    background-color: $mui-primary-color;
     left: unset !important;
     right: 20px;
     top: 63px;

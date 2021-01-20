@@ -17,9 +17,9 @@ import { subscribe } from "../../actions/user/subscribe";
 import { retrieve, reset } from "../../actions/usertemp/show";
 import DropzoneWithPreviews from "../image/dropzone/DropzoneWithPreviews";
 import PropTypes from 'prop-types';
-import {toastError} from "../../layout/ToastMessage";
+import {toastError} from "../../layout/component/ToastMessage";
 import * as ISOCodeJson from "../../config/ISOCode/ISO3166-1Alpha2.json";
-import {SpinnerLoading} from "../../layout/Spinner";
+import {SpinnerLoading} from "../../layout/component/Spinner";
 import { Spinner } from 'reactstrap';
 
 class SubscribeForm extends React.Component {

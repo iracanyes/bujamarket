@@ -5,7 +5,7 @@ import {
   normalize,
   mercureSubscribe as subscribe
 } from '../../utils/dataAccess';
-import {toastSuccess, toastError} from "../../layout/ToastMessage";
+import {toastSuccess, toastError} from "../../layout/component/ToastMessage";
 
 export function error(error) {
   return { type: 'USER_UNLOCK_ACCOUNT_ERROR', error };

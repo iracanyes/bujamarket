@@ -15,8 +15,8 @@ import {
 } from "reactstrap";
 import AwesomeSlider from "react-awesome-slider";
 import AwesomeSliderStyles from "react-awesome-slider/src/styled/cube-animation";
-import {SpinnerLoading} from "../../layout/Spinner";
-import { toastError, toastInfo } from "../../layout/ToastMessage";
+import {SpinnerLoading} from "../../layout/component/Spinner";
+import { toastError, toastInfo } from "../../layout/component/ToastMessage";
 
 class CarouselCategoryProducts extends Component {
   static propTypes = {

@@ -4,7 +4,7 @@ import { retrieve, reset } from "../../actions/supplier/show";
 import {FormattedMessage} from "react-intl";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import { getSupplierImage, reset as resetImage } from "../../actions/image/supplier";
-import {toastError} from "../../layout/ToastMessage";
+import {toastError} from "../../layout/component/ToastMessage";
 import SupplierImage from "../image/SupplierImage";
 import {IconButton} from "@material-ui/core";
 

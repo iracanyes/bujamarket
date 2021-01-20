@@ -1,10 +1,10 @@
-import { createMuiTheme } from "@material-ui/core"
+import { createMuiTheme } from "@material-ui/core/styles";
 import { orange, lightBlue } from "@material-ui/core/colors";
 
 export const theme = createMuiTheme((theme) => ({
   palette: {
-    primary: orange,
-    secondary: lightBlue,
+    primary: orange[500],
+    secondary: lightBlue[500],
   },
   typography: {
     //fontFamily: "Nunito, Carter One, Kanit, Dosis, Lato, Arial, sans-serif",
@@ -44,7 +44,7 @@ export const theme = createMuiTheme((theme) => ({
       fontFamily: 'Lato'
     },
     body1: {
-      fontFamily: 'Nunito, Roboto, sans-serif'
+      fontFamily: "Nunito, Roboto, sans-serif !important"
     }
   },
   overrides: {
@@ -74,6 +74,9 @@ export const theme = createMuiTheme((theme) => ({
       h2: {
         fontFamily: 'Nunito'
       },
+      body1: {
+        fontFamily: 'Montserrat'
+      }
     }
   },
 }));

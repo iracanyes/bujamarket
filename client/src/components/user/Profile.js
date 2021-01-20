@@ -4,8 +4,8 @@ import { Link, NavLink as RRDNavLink, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { getProfile , reset } from '../../actions/user/profile';
 import { getProfileImage } from "../../actions/image/profile";
-import { toastError } from "../../layout/ToastMessage";
-import { SpinnerLoading } from "../../layout/Spinner";
+import { toastError } from "../../layout/component/ToastMessage";
+import { SpinnerLoading } from "../../layout/component/Spinner";
 import {
   Row,
   Col,
@@ -15,7 +15,7 @@ import {
   CardImg,
   NavLink,
 } from 'reactstrap';
-import { CountryFlag } from "../../layout/CountryFlag.js";
+import { CountryFlag } from "../../layout/component/CountryFlag.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { FormattedMessage, injectIntl } from "react-intl";
 import ProfileAddressesWidget from "../address/ProfileAddressesWidget";

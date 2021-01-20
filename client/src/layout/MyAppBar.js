@@ -1,14 +1,13 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import {
   AppBar,
   Badge,
-  Drawer,
   Menu,
   MenuItem,
   Toolbar,
   IconButton,
-  Typography, Tooltip
+  Typography, Tooltip, Button
 } from "@material-ui/core";
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import { withStyles } from '@material-ui/core/styles';
@@ -16,7 +15,6 @@ import {
   MdAccountCircle,
   MdMailOutline,
   MdNotifications,
-  MdMenu,
   MdMoreVert
 } from "react-icons/md";
 import {
@@ -29,17 +27,22 @@ import {
   RiLogoutCircleRLine
 } from "react-icons/ri";
 import { injectIntl, FormattedMessage } from "react-intl";
-import { withRouter, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import MainMenuSearchForm from "../components/search/MainMenuSearchForm";
 import DrawerLeftMenu from "./DrawerLeftMenu";
 import { list, reset } from "../actions/favorite/list";
 import {logout} from "../actions/user/login";
 import {GiCrownedHeart, TiShoppingCart} from "react-icons/all";
+import { orange } from "@material-ui/core/colors";
+import {ButtonLink} from "./component/ButtonLink";
 
 const styles = theme => ({
   root: {
     width: '100%',
+  },
+  appBar: {
+    backgroundColor: orange[500]
   },
   grow: {
     flexGrow: 1,
@@ -109,8 +112,26 @@ const styles = theme => ({
       display: 'none',
     },
   },
+  subMenuRight: {
+    "& .MuiMenu-paper": {
+      top: 64,
+      right: 16,
+      backgroundColor: orange[500]
+    },
+    "& .MuiMenu-list": {
+      padding: 0
+    }
+  },
+  subMenuContent: {
+    display: 'flex',
+    flexDirection: 'row',
+    backgroundColor: orange[500],
+  },
   menuLink: {
+    fontFamily: 'Montserrat',
     color: "white",
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(1),
     "&:hover":{
       color: "white",
       textDecoration: 'none'
@@ -168,15 +189,19 @@ class MyAppBar extends React.Component {
         getContentAnchorEl={null}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
         transformOrigin={{ vertical: 'top', horizontal: 'center' }}
-        className={'menu-left-submenu'}
+        className={classes.subMenuRight}
         open={isMenuOpen}
         onClose={this.handleMenuClose}
       >
         {!connectedUser && (
-          <div className={'d-flex flex-row'}>
+          <div className={classes.subMenuContent}>
             <MenuItem onClick={this.handleMenuClose}>
-              <Link to={'../../login'}>
-                <AiOutlineLogin className={'mx-auto'}/>
+              <Link
+                to={'../../login'}
+                component={ButtonLink}
+                className={classes.menuLink}
+                startIcon={<AiOutlineLogin className={'mx-auto'}/>}
+              >
                 <FormattedMessage
                   id={'app.page.user.login.title'}
                   defaultMessage={'Connexion'}
@@ -185,8 +210,13 @@ class MyAppBar extends React.Component {
               </Link>
             </MenuItem>
             <MenuItem onClick={this.handleMenuClose}>
-              <Link to={'../../register'}>
-                <RiUserFollowFill className={'mx-auto'}/>
+              <Link
+                to={'../../register'}
+                component={ButtonLink}
+                className={classes.menuLink}
+                startIcon={<RiUserFollowFill/>}
+              >
+
                 <FormattedMessage
                   id={'app.page.user.register.title'}
                   defaultMessage={'Inscription'}
@@ -196,10 +226,14 @@ class MyAppBar extends React.Component {
           </div>
         )}
         {connectedUser &&  (
-          <div className={'d-flex flex-row'}>
+          <div className={classes.subMenuContent}>
             <MenuItem onClick={this.handleMenuClose}>
-              <Link to={'../../my_account'}>
-                <RiUserSearchFill className={'mx-auto'}/>
+              <Link
+                to={'../../my_account'}
+                component={ButtonLink}
+                className={classes.menuLink}
+                startIcon={<RiUserSearchFill/>}
+              >
                 <FormattedMessage
                   id={"app.my_account"}
                   defaultMessage={"Mon compte"}
@@ -207,8 +241,12 @@ class MyAppBar extends React.Component {
               </Link>
             </MenuItem>
             <MenuItem onClick={this.handleMenuClose}>
-              <Link to={'../../profile'}>
-                <RiUserSettingsFill className={'mx-auto'}/>
+              <Link
+                to={'../../profile'}
+                component={ButtonLink}
+                startIcon={<RiUserSettingsFill/>}
+                className={classes.menuLink}
+              >
                 <FormattedMessage
                   id={"app.button.profile"}
                   defaultMessage={"Profil"}
@@ -216,13 +254,16 @@ class MyAppBar extends React.Component {
               </Link>
             </MenuItem>
             <MenuItem onClick={this.handleMenuClose}>
-              <div onClick={() => this.props.logout()}>
-                <RiLogoutCircleRLine className={'mx-auto'}/>
+              <Button
+                onClick={() => this.props.logout()}
+                startIcon={<RiLogoutCircleRLine/>}
+                className={classes.menuLink}
+              >
                 <FormattedMessage
                   id={"app.button.logout"}
                   defaultMessage={"Déconnexion"}
                 />
-              </div>
+              </Button>
             </MenuItem>
           </div>
         )}
@@ -277,7 +318,7 @@ class MyAppBar extends React.Component {
 
     return (
       <div className={classes.root}>
-        <AppBar position="fixed">
+        <AppBar className={classes.appBar} position="fixed">
           <Toolbar>
             <Link className={'appbar-title'} to={'/'}>
               <Typography className={classes.title} variant="h5" color="inherit" noWrap>

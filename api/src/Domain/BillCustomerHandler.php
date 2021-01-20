@@ -10,6 +10,7 @@ use App\Entity\Customer;
 use App\Entity\OrderSet;
 use App\Entity\Payment;
 use App\Exception\BillCustomer\BillCustomerNotFoundException;
+use App\Exception\DomPdf\DomPdfRenderingException;
 use Doctrine\ORM\EntityManagerInterface;
 use Stripe\Checkout\Session;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -82,7 +83,7 @@ class BillCustomerHandler
 
         $options = new Options();
         $options->setIsRemoteEnabled(true);
-        $options->setTempDir($_SERVER['DOCUMENT_ROOT']."/assets/img");
+        $options->setTempDir($_SERVER['PWD']."/var/dompdf");
 
         $pdf = new Dompdf($options);
 
@@ -104,8 +105,17 @@ class BillCustomerHandler
             $filename = $payment->getReference().'.pdf';
 
 
-        }catch(\Exception $exception){
-            throw new \Exception(sprintf("Unexpected error code (%s) while rendering pdf template : %s", $exception->getCode(), $exception->getMessage()));
+        }catch(\Exception $e){
+            $this->logger->error(
+                "Unexpected error while creating PDF Template",
+                [
+                    'code' => $e->getCode(),
+                    'message' => $e->getMessage(),
+                    'line' => $e->getLine(),
+                    'trace' => $e->getTraceAsString()
+                ]
+            );
+            throw new \Exception(sprintf("Unexpected error code (%s) while rendering pdf template : %s", $e->getCode(), $e->getMessage()));
         }
 
         /* Création du pdf à partir de la page html */
@@ -116,10 +126,28 @@ class BillCustomerHandler
             $pdf->render();
             $pdfBill = $pdf->output();
 
+
+        }catch (\Exception $e){
+            $this->logger->error(
+                `Error while rendering the pdf template:\n
+                    message: ${$e->getMessage()}\n
+                `,
+                ['context' => serialize($e)]
+            );
+            throw new DomPdfRenderingException('Error while rendering the pdf template', );
+        }
+
+        try{
             // Déplacement du pdf créé dans le répertoire privé des factures
             $this->downloadHandler->movePdfToDirectory($filename, $pdfBill);
-        }catch (\Exception $e){
-            $this->logger->error($e->getMessage(), ['context' => $e]);
+        }catch (\Exception $exception){
+            $this->logger->error(
+                `Error while moving the pdf to directory:\n
+                    messge:${$exception->getMessage()}\n
+                `,
+                ['context' => serialize($exception)]
+            );
+            throw new DomPdfRenderingException('Error while moving the pdf template', );
         }
 
         return $filename;

@@ -6,7 +6,7 @@ import {
 } from '../../utils/dataAccess';
 import { success as deleteSuccess } from './delete';
 import {toast} from "react-toastify";
-import {ToastError} from "../../layout/ToastMessage";
+import {ToastError} from "../../layout/component/ToastMessage";
 import React from "react";
 
 export function error(error) {

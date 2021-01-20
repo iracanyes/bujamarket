@@ -6,8 +6,8 @@ import PropTypes from 'prop-types';
 import { retrieveBySupplier, reset } from '../../actions/supplierproduct/listBySupplier';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Container, Button } from "reactstrap";
-import {toastError, toastSuccess} from "../../layout/ToastMessage";
-import {SpinnerLoading} from "../../layout/Spinner";
+import {toastError, toastSuccess} from "../../layout/component/ToastMessage";
+import {SpinnerLoading} from "../../layout/component/Spinner";
 import { del } from "../../actions/supplierproduct/delete";
 import PublicationRules from "./PublicationRules";
 

@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import SupplierProductForm from './SupplierProductForm';
 import { reset } from '../../actions/supplierproduct/create';
-import {SpinnerLoading} from "../../layout/Spinner";
+import {SpinnerLoading} from "../../layout/component/Spinner";
 import { injectIntl} from "react-intl";
 import PublicationRules from "./PublicationRules";
 

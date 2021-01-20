@@ -1,6 +1,6 @@
 import { fetch } from '../../utils/dataAccess';
 import {logout} from "../user/login";
-import {toastSuccess} from "../../layout/ToastMessage";
+import {toastSuccess} from "../../layout/component/ToastMessage";
 
 export function error(error) {
   return { type: 'SHOPPING_CART_CREATE_ERROR', error };

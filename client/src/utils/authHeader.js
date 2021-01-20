@@ -3,7 +3,7 @@
  * Description: Authentication
  * Ajouter l'en-tête Authorization : Bearer $token
  */
-import {toastError} from "../layout/ToastMessage";
+import {toastError} from "../layout/component/ToastMessage";
 
 function authHeader(history, location) {
   const token = localStorage.getItem('token') !== null ? JSON.parse(localStorage.getItem("token")).token : null;

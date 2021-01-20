@@ -99,7 +99,7 @@ class CategoryHandler
 
         try{
             // Déplacement du fichier image de la catégorie dans le répertoire public associé
-            $this->imageHandler->uploadCategoryImage($image, $data["name"], $file);
+            $this->imageHandler->uploadCategoryImage($image, $file, $data["name"]);
             $category->setImage($image);
 
             $this->em->persist($category);

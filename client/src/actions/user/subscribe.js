@@ -1,5 +1,5 @@
 import {extractHubURL, fetch, normalize} from '../../utils/dataAccess';
-import { toastSuccess } from "../../layout/ToastMessage";
+import { toastSuccess } from "../../layout/component/ToastMessage";
 
 export function error(error) {
   return { type: 'USER_SUBSCRIBE_ERROR', error };

@@ -9,15 +9,19 @@ import { reset } from "../actions/user/register";
 import { reset as resetConnectedUser } from "../actions/user/login";
 import UserAuth from "../layout/UserAuth";
 import {FormattedMessage} from "react-intl";
-import {toastWelcome} from "../layout/ToastMessage";
+import {toastWelcome} from "../layout/component/ToastMessage";
 import {LovedByCustomers} from "../components/supplierproduct";
 
 
 class Homepage extends Component
 {
   static propTypes = {
-    registerNotification: PropTypes.string,
-    loginNotification: PropTypes.string
+    registerNotification: PropTypes.oneOfType([PropTypes.object,PropTypes.string]),
+    loginNotification: PropTypes.oneOfType([PropTypes.object,PropTypes.string])
+  };
+  static defaultProps = {
+    registerNotification: null,
+    loginNotification: null
   };
   componentDidMount() {
     const { registerNotification, loginNotification } = this.props;

@@ -15,6 +15,7 @@ import {
   BiChevronRightCircle
 } from "react-icons/bi";
 import {Link} from "react-router-dom";
+import {orange} from "@material-ui/core/colors";
 
 const drawerWidth = 240;
 const styles = theme => ({
@@ -53,13 +54,23 @@ const styles = theme => ({
     // necessary for content to be below app bar
     ...theme.mixins.toolbar,
     justifyContent: 'flex-end',
+    position: 'relative'
   },
   title: {
-    fontFamily: 'Carter One, cursive',
     display: 'none',
+    color: orange[500],
+    position: 'absolute',
+    left: 16,
+    "&:hover": {
+      textDecoration: 'unset',
+      color: orange[700]
+    },
     [theme.breakpoints.up('sm')]: {
       display: 'block',
     },
+  },
+  titleText: {
+    fontFamily: 'Carter One, cursive',
   },
   content: {
     flexGrow: 1,
@@ -154,8 +165,8 @@ class DrawerLeftMenu extends Component
           }}
         >
           <div className={classes.drawerHeader}>
-            <Link className={'appbar-title'} to={'/'}>
-              <Typography className={classes.title} variant="h5" color="inherit" noWrap>
+            <Link  className={classes.title} to={'/'}>
+              <Typography  className={classes.titleText} variant="h5" color="inherit" noWrap>
                 {process.env.REACT_APP_NAME}
               </Typography>
             </Link>

@@ -6,8 +6,8 @@ import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import PaymentMethodForm from './PaymentMethodForm';
 import { create, reset } from '../../actions/bankaccount/create';
-import {SpinnerLoading} from "../../layout/Spinner";
-import {toastError} from "../../layout/ToastMessage";
+import {SpinnerLoading} from "../../layout/component/Spinner";
+import {toastError} from "../../layout/component/ToastMessage";
 import BankAccountForm from "./BankAccountForm";
 import {FormattedMessage} from "react-intl";
 

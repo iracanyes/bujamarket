@@ -77,7 +77,15 @@ class UploadHandler
                 fclose($stream);
 
         }catch(\Exception $e){
-            $this->logger->error($e->getMessage(), ['context' => $e]);
+            $this->logger->error(
+                "Category image can't be persisted!",
+                [
+                    'code' => $e->getCode(),
+                    'message' => $e->getMessage(),
+                    'line' => $e->getLine(),
+                    'trace' => $e->getTraceAsString()
+                ]
+            );
         }
 
     }

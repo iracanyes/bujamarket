@@ -13,7 +13,7 @@ import {
   Spinner,
   FormGroup
 } from "reactstrap";
-import {toastError, toastSuccess} from "../../layout/ToastMessage";
+import {toastError, toastSuccess} from "../../layout/component/ToastMessage";
 import { ElementsConsumer, CardElement } from "@stripe/react-stripe-js";
 
 class AddPaymentMethodForm extends React.Component {

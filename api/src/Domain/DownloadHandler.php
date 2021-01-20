@@ -24,10 +24,16 @@ class DownloadHandler
      */
     private $binaryFileResponder;
 
-    public function __construct(FilesystemInterface $privateBillCustomerFilesystem, BinaryFileResponder $binaryFileResponder)
+    /**
+     * @var LoggerInterface $logger
+     */
+    private $logger;
+
+    public function __construct(FilesystemInterface $privateBillCustomerFilesystem, BinaryFileResponder $binaryFileResponder, LoggerInterface $logger)
     {
         $this->privateBillCustomerFilesystem = $privateBillCustomerFilesystem;
         $this->binaryFileResponder = $binaryFileResponder;
+        $this->logger = $logger;
     }
 
     public function movePdfToDirectory(string $filename, $pdf)
@@ -38,7 +44,15 @@ class DownloadHandler
                 throw new \Exception("Error while moving a bill customer to directory!");
             }
         }catch (\Exception $e){
-
+            $this->logger->error(
+                "Error while writing the pdf to directory",
+                [
+                    'code' => $e->getCode(),
+                    'message' => $e->getMessage(),
+                    'line' => $e->getLine(),
+                    'trace' => $e->getTraceAsString()
+                ]
+            );
         }
     }
 

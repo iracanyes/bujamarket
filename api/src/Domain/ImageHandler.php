@@ -153,7 +153,56 @@ class ImageHandler
         return $user;
     }
 
-    public function uploadCategoryImage(Image $image,string $filename = "", UploadedFile $imageFile)
+    public function uploadSupplierProductImage(Image $image, UploadedFile $imageFile, string $filename = "")
+    {
+        if($imageFile)
+        {
+
+            $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $filename);
+            $newFilename = $safeFilename.uniqid("_", true).'.'.$imageFile->guessExtension();
+
+            try{
+                $image->setUrl($newFilename);
+                $image->setMimeType($imageFile->getMimeType());
+
+
+                /* Déplacement du fichier image dans le répertoire public des images de produits */
+                $imageFile->move(getenv('UPLOAD_SUPPLIER_PRODUCT_IMAGE_DIRECTORY'), $newFilename);
+            }catch (FileException $e){
+                $this->em->rollback();
+                $this->logger->error(
+                    "Supplier product's image can't be moved to directory!",
+                    [
+                        'code' => $e->getCode(),
+                        'message' => $e->getMessage(),
+                        'line' => $e->getLine(),
+                        'trace' => $e->getTraceAsString()
+                    ]
+                );
+                throw new UploadImageException("Error while moving the supplier product's image to directory");
+            }
+
+            try{
+                $this->em->persist($image);
+            }catch (\Exception $e){
+                $this->em->rollback();
+                $this->logger->error(
+                    "Supplier product's image can't be persisted!",
+                    [
+                        'code' => $e->getCode(),
+                        'message' => $e->getMessage(),
+                        'line' => $e->getLine(),
+                        'trace' => $e->getTraceAsString()
+                    ]
+                );
+                throw new ImagePersistException(sprintf("Product's images '%s' can't be persisted!", $image->getTitle()));
+            }
+
+
+        }
+    }
+
+    public function uploadCategoryImage(Image $image, UploadedFile $imageFile, string $filename = "")
     {
 
         if($imageFile && !empty($filename))
@@ -165,15 +214,35 @@ class ImageHandler
                 $image->setUrl($newFilename);
                 $image->setMimeType($imageFile->getMimeType());
                 $imageFile->move(getenv("UPLOAD_CATEGORY_IMAGE_DIRECTORY"), $newFilename);
-            }catch (FileException $exception){
-                return new UploadImageException(sprintf("Code: %d.\nMessage: %s", $exception->getCode(), $exception->getMessage()));
+            }catch (FileException $e){
+                $this->em->rollback();
+                $this->logger->error(
+                    "Category image can't be moved to directory!",
+                    [
+                        'code' => $e->getCode(),
+                        'message' => $e->getMessage(),
+                        'line' => $e->getLine(),
+                        'trace' => $e->getTraceAsString()
+                    ]
+                );
+                throw new UploadImageException("Error while moving the category image");
             }
+
 
 
             try{
                 $this->em->persist($image);
-            }catch (\Exception $exception){
+            }catch (\Exception $e){
                 $this->em->rollback();
+                $this->logger->error(
+                    "Category image can't be persisted!",
+                    [
+                        'code' => $e->getCode(),
+                        'message' => $e->getMessage(),
+                        'line' => $e->getLine(),
+                        'trace' => $e->getTraceAsString()
+                    ]
+                );
                 throw new ImagePersistException(sprintf("Category image can't be persisted!"));
             }
 
@@ -202,8 +271,17 @@ class ImageHandler
             }
 
             $this->em->flush();
-        }catch (\Exception $exception){
-            $this->logger->error("Error while deleting supplier product images'", ['context' => $exception] );
+        }catch (\Exception $e){
+
+            $this->logger->error(
+                "Error while deleting supplier product images'",
+                [
+                    'code' => $e->getCode(),
+                    'message' => $e->getMessage(),
+                    'line' => $e->getLine(),
+                    'trace' => $e->getTraceAsString()
+                ]
+            );
             throw new SupplierProductImagesDeleteException(sprintf("Error while deleting supplier product images'"));
         }
 
@@ -301,6 +379,7 @@ class ImageHandler
     }
 
     /**
+     * Set public URL to supplier product's image
      * @param Image $image
      */
     public function setSupplierProductPublicDirectory(Image $image)
@@ -311,6 +390,11 @@ class ImageHandler
 
     }
 
+    /**
+     * Set public URL to product's image
+     * @param array $product
+     * @return array
+     */
     public function setProductImagePublicDirectory(array $product)
     {
         if(substr($product['url'], 0, 8) !== 'https://'){
@@ -319,6 +403,10 @@ class ImageHandler
         return $product;
     }
 
+    /**
+     * Set public URL to category's image
+     * @param $category
+     */
     public function setCategoryImagePublicDirectory($category)
     {
         if(substr($category->getImage()->getUrl(), 0, 8) !== 'https://'){
@@ -326,7 +414,5 @@ class ImageHandler
         }
     }
 
-    public function setCommentCustomerImagePublicDirectory($comment){
-        $comment['url'] = getenv("API_ENTRYPOINT").'/'.getenv("UPLOAD_CUSTOMER_IMAGE_DIRECTORY").'/'.$comment['url'];
-    }
+
 }

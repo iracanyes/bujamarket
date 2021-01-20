@@ -4,12 +4,12 @@ import { withRouter } from 'react-router-dom';
 import { FormattedMessage, injectIntl } from "react-intl";
 import PropTypes from 'prop-types';
 import { list, reset } from '../../actions/orderdetail/list';
-import { toastError } from "../../layout/ToastMessage";
-import Alert from "../../layout/Alert";
+import { toastError } from "../../layout/component/ToastMessage";
+import Alert from "../../layout/component/Alert";
 import {
   Container,
 } from "reactstrap";
-import { SpinnerLoading } from "../../layout/Spinner";
+import { SpinnerLoading } from "../../layout/component/Spinner";
 import TableSupplierOrders from "./TableSupplierOrders";
 
 class List extends Component {

@@ -5,13 +5,11 @@
  */
 import React, { Fragment } from 'react';
 import { Link, withRouter } from "react-router-dom";
-
 import { login, logout } from "../../actions/user/login";
 import { connect } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
 import { Field, reduxForm } from "redux-form";
-import { Spinner } from "reactstrap";
-import {toastError} from "../../layout/ToastMessage";
+import {toastError} from "../../layout/component/ToastMessage";
 import GoogleSignInButton from "./GoogleSignInButton";
 import {
   Button, CircularProgress,

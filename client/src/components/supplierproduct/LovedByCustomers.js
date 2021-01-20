@@ -6,8 +6,8 @@ import {
   Box,
 } from "@material-ui/core";
 import SupplierProductGridList from "./SupplierProductGridList";
-import {SpinnerLoading} from "../../layout/Spinner";
-import {toastError} from "../../layout/ToastMessage";
+import {SpinnerLoading} from "../../layout/component/Spinner";
+import {toastError} from "../../layout/component/ToastMessage";
 
 class LovedByCustomers extends Component{
 

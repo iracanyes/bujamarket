@@ -13,7 +13,7 @@ import { FormattedMessage, injectIntl } from "react-intl";
 import { update, retrieve, reset } from "../../actions/user/update";
 import DropzoneWithPreviews from "../image/dropzone/DropzoneWithPreviews";
 import PropTypes from 'prop-types';
-import { toastError } from "../../layout/ToastMessage";
+import { toastError } from "../../layout/component/ToastMessage";
 import * as ISOCountryJson from "../../config/ISOCode/ISO3166-1Alpha2.json";
 
 class UpdateProfile extends React.Component {

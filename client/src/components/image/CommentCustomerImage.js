@@ -2,7 +2,7 @@ import React, {Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { getCustomerImage, reset } from "../../actions/image/commentImage";
-import {toastError} from "../../layout/ToastMessage";
+import {toastError} from "../../layout/component/ToastMessage";
 import {withRouter} from "react-router-dom";
 import { Avatar } from "@material-ui/core";
 

@@ -96,16 +96,14 @@ import pageRoutes from './routes/page';
 import { IntlProvider} from "react-intl";
 import { addLocaleData, messages, language } from "./config/internationalization.js";
 /* MuiThemeProvider -  */
-import {ThemeProvider, CssBaseline, Toolbar} from "@material-ui/core";
+import { CssBaseline, Toolbar} from "@material-ui/core";
+import {ThemeProvider } from "@material-ui/core/styles";
 import { theme } from "./config/theme";
 
 /* Layout */
 import Welcome from './Welcome';
 import Homepage from './page/Homepage';
-import MainMenuSearchForm from "./components/search/MainMenuSearchForm";
-import MainMenu from "./layout/MainMenu";
 import SearchResults from "./components/search/SearchResults";
-import DrawerLeftMenu from "./layout/DrawerLeftMenu";
 import HomepageSlider from "./page/HomepageSlider";
 import Footer from "./layout/Footer";
 import LoginForm from "./components/user/LoginForm";

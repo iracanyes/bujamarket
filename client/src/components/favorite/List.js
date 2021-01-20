@@ -20,8 +20,8 @@ import {
   TableRow
 } from "@material-ui/core";
 import ButtonAddToShoppingCart2 from "../shoppingcart/ButtonAddToShoppingCart2";
-import {SpinnerLoading} from "../../layout/Spinner";
-import {toastError, toastInfo} from "../../layout/ToastMessage";
+import {SpinnerLoading} from "../../layout/component/Spinner";
+import {toastError, toastInfo} from "../../layout/component/ToastMessage";
 import { GiBuyCard, RiDeleteBin5Line } from "react-icons/all";
 
 class List extends Component {

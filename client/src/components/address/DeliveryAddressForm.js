@@ -15,8 +15,8 @@ import { injectIntl } from 'react-intl';
 import { list, reset as resetAddresses } from '../../actions/address/list';
 import { list as listShipper, reset as resetShipper } from '../../actions/shipper/list';
 import { create } from '../../actions/orderset/create';
-import {SpinnerLoading} from "../../layout/Spinner";
-import {toastError} from "../../layout/ToastMessage";
+import {SpinnerLoading} from "../../layout/component/Spinner";
+import {toastError} from "../../layout/component/ToastMessage";
 
 class DeliveryAddressForm extends React.Component {
   static propTypes = {

@@ -7,11 +7,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { del, reset as resetDelete } from '../../actions/favorite/delete';
 import { create, reset } from '../../actions/favorite/create';
 import { retrieveIds, reset as resetList } from '../../actions/favorite/list';
-import {toastSuccess} from "../../layout/ToastMessage";
+import {toastSuccess} from "../../layout/component/ToastMessage";
 import { Button } from "@material-ui/core";
 import {FormattedMessage} from "react-intl";
 import {GiBrokenHeartZone, RiHeartAddFill} from "react-icons/all";

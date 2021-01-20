@@ -165,34 +165,10 @@ class SupplierProductHandler
                 $image->setPlace(1);
                 $image->setSize($files['newProduct']['category']['image']->getSize());
 
+                /* Set image's filename and move it to directory */
                 $imageFile = $files['newProduct']['category']['image'];
+                $this->imageHandler->uploadCategoryImage($image, $imageFile, $data["newProduct"]["category"]["name"] );
 
-                if($imageFile)
-                {
-                    $image->setMimeType($imageFile->getMimeType());
-                    $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $data["newProduct"]["category"]["name"]);
-                    $newFilename = $safeFilename.'-'.uniqid("_", true).'.'.$imageFile->guessExtension();
-
-                    try{
-                        $imageFile->move(getenv('UPLOAD_CATEGORY_IMAGE_DIRECTORY'), $newFilename);
-                    }catch (FileException $exception){
-                        throw new UploadImageException(sprintf("Code: %d.\nMessage: %s", $exception->getCode(), $exception->getMessage()));
-                    }
-
-                    $image->setUrl($newFilename);
-
-
-                    try{
-
-                        $this->em->persist($image);
-                    }catch (\Exception $exception){
-                        $this->em->rollback();
-                        $this->logger->error($exception->getMessage(), ['context' => $exception]);
-                        throw new ImagePersistException(sprintf("Category image can't be persisted!"));
-                    }
-
-
-                }
 
                 $category->setImage($image);
 
@@ -218,36 +194,10 @@ class SupplierProductHandler
             $image->setPlace($data['product']['images'][$key]['place'] ?? $key);
             $image->setSize($files['product']['images'][$key]->getSize());
 
+
             $imageFile = $files['product']['images'][$key];
-
-            if($imageFile)
-            {
-
-                $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $user->getBrandName());
-                $newFilename = $safeFilename.uniqid("_", true).'.'.$imageFile->guessExtension();
-
-                try{
-                    $image->setUrl($newFilename);
-                    $image->setMimeType($imageFile->getMimeType());
-
-
-                    /* Déplacement du fichier image dans le répertoire public des images de produits */
-                    $imageFile->move(getenv('UPLOAD_SUPPLIER_PRODUCT_IMAGE_DIRECTORY'), $newFilename);
-                }catch (FileException $exception){
-                    $this->em->rollback();
-                    return new UploadImageException(sprintf("Code: %d.\nMessage: %s", $exception->getCode(), $exception->getMessage()));
-                }
-
-
-            }
-
-            try{
-                $this->em->persist($image);
-            }catch (\Exception $exception){
-                $this->em->rollback();
-                throw new ImagePersistException(sprintf("Product's images '%s' can't be persisted!", $image->getTitle()));
-            }
-
+            // Set new filename and move it to public directory
+            $this->imageHandler->uploadSupplierProductImage($image, $imageFile, $user->getBrandName());
 
             $supplierProduct->addImage($image);
         }

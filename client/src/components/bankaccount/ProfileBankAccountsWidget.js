@@ -9,7 +9,7 @@ import { MdDeleteForever } from "react-icons/all";
 import {
   Button,
 } from '@material-ui/core';
-import {toastSuccess} from "../../layout/ToastMessage";
+import {toastSuccess} from "../../layout/component/ToastMessage";
 
 class ProfileBankAccountsWidget extends  Component{
   constructor(props) {

@@ -14,8 +14,8 @@ import {
   CardText,
 } from "reactstrap";
 import { FormattedMessage } from "react-intl";
-import {SpinnerLoading} from "../../layout/Spinner";
-import {toastError} from "../../layout/ToastMessage";
+import {SpinnerLoading} from "../../layout/component/Spinner";
+import {toastError} from "../../layout/component/ToastMessage";
 
 class Show extends Component {
   static propTypes = {

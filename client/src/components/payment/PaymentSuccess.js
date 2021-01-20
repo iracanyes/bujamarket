@@ -16,8 +16,8 @@ import {
 } from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FormattedMessage } from 'react-intl';
-import { SpinnerLoading } from "../../layout/Spinner";
-import {toastError, toastInfo} from "../../layout/ToastMessage";
+import { SpinnerLoading } from "../../layout/component/Spinner";
+import {toastError, toastInfo} from "../../layout/component/ToastMessage";
 
 class PaymentSuccess extends Component {
   static propTypes = {

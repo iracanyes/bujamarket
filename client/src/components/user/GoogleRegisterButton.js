@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { GoogleLogin } from "react-google-login";
 import { registerGoogleUser, reset } from "../../actions/user/registerGoogleUser";
-import {toastError} from "../../layout/ToastMessage";
+import {toastError} from "../../layout/component/ToastMessage";
 
 class GoogleRegisterButton extends Component{
   constructor(props) {

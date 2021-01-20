@@ -12,7 +12,7 @@ import {
   Col,
   Row
 } from "reactstrap";
-import {toastError} from "../../layout/ToastMessage";
+import {toastError} from "../../layout/component/ToastMessage";
 import * as ISOCountryJson from "../../config/ISOCode/ISO3166-1Alpha2.json";
 import {
   Button,

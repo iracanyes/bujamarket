@@ -1,6 +1,6 @@
 import React from "react";
 import { toast } from "react-toastify";
-import { ToastError } from "../../layout/ToastMessage";
+import { ToastError } from "../../layout/component/ToastMessage";
 import { SubmissionError } from 'redux-form';
 import { fetch } from '../../utils/dataAccess';
 

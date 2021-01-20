@@ -4,7 +4,7 @@ import {
   normalize,
   mercureSubscribe as subscribe
 } from '../../utils/dataAccess';
-import {toastError, toastSuccess} from "../../layout/ToastMessage";
+import {toastError, toastSuccess} from "../../layout/component/ToastMessage";
 
 export function error(error) {
   return { type: 'USER_UPDATE_PASSWORD_ERROR', error };

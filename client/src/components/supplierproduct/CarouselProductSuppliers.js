@@ -5,11 +5,11 @@ import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { injectIntl, FormattedMessage } from "react-intl";
 import 'bootstrap/dist/css/bootstrap.css';
-import Alert from "../../layout/Alert";
+import Alert from "../../layout/component/Alert";
 import ButtonAddToFavorite from '../favorite/ButtonAddToFavorite';
 import { retrieveIds } from '../../actions/favorite/list';
 import { retrieveByProductId, reset  } from "../../actions/supplierproduct/listByProductId";
-import Rating from "../../layout/Rating";
+import Rating from "../../layout/component/Rating";
 import ButtonAddToShoppingCart from "./ButtonAddToShoppingCart";
 import {
   Col,
@@ -27,8 +27,8 @@ import {
   Typography
 } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
-import {SpinnerLoading} from "../../layout/Spinner";
-import {toastError, toastSuccess} from "../../layout/ToastMessage";
+import {SpinnerLoading} from "../../layout/component/Spinner";
+import {toastError, toastSuccess} from "../../layout/component/ToastMessage";
 import AwesomeSlider from "react-awesome-slider";
 import AwesomeSliderStyles from "react-awesome-slider/src/styled/scale-out-animation/scale-out-animation.scss";
 import {grey} from "@material-ui/core/colors";

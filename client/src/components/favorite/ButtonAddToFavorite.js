@@ -1,6 +1,5 @@
 /**
  * Author: iracanyes
- * Date: 21/10/19
  * Description:
  */
 /* eslint react/no-multi-comp: 0, react/prop-types: 0 */
@@ -100,7 +99,6 @@ export class ButtonAddToFavorite extends React.Component
 
 
 }
-
 const mapStateToProps = state => ({
   created: state.favorite.create.created,
   error: state.favorite.del.error,
