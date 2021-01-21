@@ -74,7 +74,7 @@ const styles = theme => ({
     }
   },
   cardContent: {},
-  
+
   buttonDelete:{
     color: 'white',
     backgroundColor: red[400],
@@ -274,7 +274,7 @@ class Show extends React.Component {
                           />
                           <ListItemSecondaryAction>
                             <Typography>
-                              {item.price}
+                              {Math.round(item.price)}
                             </Typography>
                             <Typography>
                               {'x '+item.quantity}
