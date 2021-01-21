@@ -39,7 +39,7 @@ export function create(values, history, location) {
         /* Redirection vers la page de paiement  */
         sessionStorage.removeItem('my_order');
         sessionStorage.setItem('my_order', JSON.stringify(retrieved));
-        history.push({pathname:'validate_order', state: {from: location.pathname ,  params : {orderSet: retrieved}}});
+        history.push({pathname:'shipment_rate', state: {from: location.pathname ,  params : {orderSet: retrieved}}});
       })
       .catch(e => {
         dispatch(loading(false));

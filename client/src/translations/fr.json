@@ -39,6 +39,7 @@
   "app.bank_account.type.iban": "IBAN - International Bank Account Number",
   "app.bank_accounts.used": "Comptes bancaires utilisés",
   "app.bill": "Facture",
+  "app.total_cost": "Coût total",
   "app.bill.invoice_to": "Destinataire",
   "app.billing_details": "Informations de facturation",
   "app.button.about_us": "A propos de nous",

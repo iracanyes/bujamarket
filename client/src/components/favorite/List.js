@@ -119,6 +119,7 @@ class List extends Component {
           'title': item.supplierProduct.product.title,
           'description': item.supplierProduct.product.resume,
           'price': item.supplierProduct.finalPrice,
+          'image': item.supplierProduct.images[0].url,
           'quantity': 1
         });
 
@@ -130,6 +131,7 @@ class List extends Component {
         'title': item.supplierProduct.product.title,
         'description': item.supplierProduct.product.resume,
         'price': item.supplierProduct.finalPrice,
+        'image': item.supplierProduct.images[0].url,
         'quantity': 1
       });
 

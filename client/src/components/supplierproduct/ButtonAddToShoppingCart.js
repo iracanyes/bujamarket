@@ -14,12 +14,13 @@ import {
   Paper,
   Card,
   CardHeader,
-  CardContent
+  CardContent,
+  withStyles
 } from "@material-ui/core";
 import { FormattedMessage } from "react-intl";
 import { Link, withRouter } from 'react-router-dom';
 import {MdAddShoppingCart, TiShoppingCart} from "react-icons/all";
-import { withStyles } from "@material-ui/core/styles";
+import { theme } from "../../config/theme";
 
 const styles = theme => ({
   buttonGroup: {
@@ -87,6 +88,7 @@ class ButtonAddToShoppingCart extends React.Component {
 
   addToShoppingCart()
   {
+    const {product: supplier_product} = this.props;
     /* Ajout au  panier de commande dans LocalStorage  */
     let shopping_cart = localStorage.getItem("shopping_cart") !== null ? JSON.parse(localStorage.getItem("shopping_cart")) : [];
 
@@ -94,7 +96,7 @@ class ButtonAddToShoppingCart extends React.Component {
     if( shopping_cart.length > 0 )
     {
       /* mise à jour de la quantité pour le produit */
-      let index  = shopping_cart.findIndex( value => value.productId === this.props.product.id);
+      let index  = shopping_cart.findIndex( value => value.productId === supplier_product.id);
       /* Si le produit exite, on met à jour la quantité */
       if( index !== -1 )
       {
@@ -102,10 +104,11 @@ class ButtonAddToShoppingCart extends React.Component {
       }else{
         /* Sinon, on ajoute un nouveau produit au panier de commande */
         shopping_cart.push({
-          'productId': this.props.product.id,
-          'title': this.props.product.product.title,
-          'description': this.props.product.product.resume,
-          'price': this.props.product.finalPrice,
+          'productId': supplier_product.id,
+          'title': supplier_product.product.title,
+          'description': supplier_product.product.resume,
+          'price': supplier_product.finalPrice,
+          'image': supplier_product.images[0].url,
           'quantity': this.state.quantity
         });
 
@@ -113,10 +116,11 @@ class ButtonAddToShoppingCart extends React.Component {
     }else{
       /* Si le panier est vide, on ajoute un nouveau produit */
       shopping_cart.push({
-        'productId': this.props.product.id,
-        'title': this.props.product.product.title,
-        'description': this.props.product.product.resume,
-        'price': this.props.product.finalPrice,
+        'productId': supplier_product.id,
+        'title': supplier_product.product.title,
+        'description': supplier_product.product.resume,
+        'price': supplier_product.finalPrice,
+        'image': supplier_product.images[0].url,
         'quantity': this.state.quantity
       });
 

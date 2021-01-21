@@ -5,8 +5,16 @@ import {
   Button,
   Paper,
   Card,
+  CardHeader,
+  CardContent,
   Grid,
-  withStyles
+  List,
+  ListItem,
+  ListItemAvatar,
+  Avatar,
+  ListItemText,
+  Typography,
+  withStyles,
 } from "@material-ui/core";
 import { theme } from "../../config/theme";
 import {Link, withRouter} from "react-router-dom";
@@ -48,6 +56,8 @@ class ShipmentRate extends Component
 {
   render() {
     const { classes } = this.props;
+    const shopping_cart = localStorage.getItem('shopping_cart') ? JSON.parse(localStorage.getItem('shopping_cart')) : [];
+
     return (
       <Fragment>
         <Grid
@@ -142,7 +152,58 @@ class ShipmentRate extends Component
             >
               <Paper elevation={3} className={classes.resumePaper}>
                 <Card>
-
+                  <CardHeader
+                    title={
+                      <FormattedMessage
+                        id={"app.total_cost"}
+                        defaultMessage={"Coût total"}
+                        description={"App - Total cost"}
+                      />
+                    }
+                  />
+                  <CardContent>
+                    <List>
+                      {shopping_cart && shopping_cart.map((item, index) => (
+                        <ListItem key={index}>
+                          <ListItemAvatar>
+                            <Avatar
+                              src={item.image}
+                            />
+                          </ListItemAvatar>
+                          <ListItemText
+                            primary={item.title}
+                          />
+                          <ListItemText>
+                            <Typography>
+                              {item.price}
+                            </Typography>
+                            <Typography>
+                              {'x '+item.quantity}
+                            </Typography>
+                          </ListItemText>
+                        </ListItem>
+                      ))}
+                      <ListItem>
+                        <ListItemAvatar>
+                          <Avatar
+                            src={''}
+                          />
+                        </ListItemAvatar>
+                        <ListItemText
+                          primary={
+                            <FormattedMessage
+                              id={'app.your_shipping_choice'}
+                              defaultMessage={'Transporteur choisie'}
+                              description={'App - Your shipping choice'}
+                            />
+                          }
+                        />
+                        <ListItemText>
+                          Prix
+                        </ListItemText>
+                      </ListItem>
+                    </List>
+                  </CardContent>
                 </Card>
               </Paper>
             </Grid>
