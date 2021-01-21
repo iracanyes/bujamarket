@@ -5,6 +5,9 @@ master.tar.gz
 ###> Custom ###
 # Variables d'environnement
 .env
+.env.development
+.env.production
+.env.prod
 .env.local
 **/.env.local
 # Documentation du développement

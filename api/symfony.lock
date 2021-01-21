@@ -152,6 +152,9 @@
     "fzaninotto/faker": {
         "version": "v1.9.1"
     },
+    "gabrielbull/ups-api": {
+        "version": "1.2.0"
+    },
     "guzzlehttp/guzzle": {
         "version": "6.5.5"
     },

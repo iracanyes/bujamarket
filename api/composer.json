@@ -10,6 +10,7 @@
         "doctrine/annotations": "^1.6",
         "dompdf/dompdf": "^0.8.3",
         "easycorp/easy-log-handler": "^1.0",
+        "gabrielbull/ups-api": "^1.2",
         "guzzlehttp/guzzle": "^6.3",
         "knpuniversity/oauth2-client-bundle": "^2.6",
         "league/oauth2-google": "^3.0",

@@ -279,25 +279,45 @@ class MyAppBar extends React.Component {
         open={isMobileMenuOpen}
         onClose={this.handleMenuClose}
       >
-        <MenuItem onClick={this.handleMobileMenuClose}>
-          <IconButton color="inherit">
-            <Badge badgeContent={4} color="secondary">
-              <TiShoppingCart />
-            </Badge>
-          </IconButton>
-          <FormattedMessage
-            id={"app.button.shopping_cart"}
-            defaultMessage={"Panier de commande"}
-            description={"App - Shopping cart"}
-          />
-        </MenuItem>
+        {connectedUser && connectedUser.roles.includes('ROLE_CUSTOMER') && (
+          <MenuItem onClick={this.handleMobileMenuClose}>
+            <IconButton color="inherit">
+              <Badge badgeContent={4} color="secondary">
+                <TiShoppingCart />
+              </Badge>
+            </IconButton>
+            <FormattedMessage
+              id={"app.button.shopping_cart"}
+              defaultMessage={"Panier de commande"}
+              description={"App - Shopping cart"}
+            />
+          </MenuItem>
+        )}
+        {connectedUser && connectedUser.roles.includes('ROLE_CUSTOMER') && (
+          <MenuItem onClick={this.handleMobileMenuClose}>
+            <IconButton color="inherit">
+              <Badge badgeContent={4} color="secondary">
+                <GiCrownedHeart />
+              </Badge>
+            </IconButton>
+            <FormattedMessage
+              id={"app.button.favorite"}
+              defaultMessage={"Favoris"}
+              description={"App - Favorite"}
+            />
+          </MenuItem>
+        )}
         <MenuItem onClick={this.handleMobileMenuClose}>
           <IconButton color="inherit">
             <Badge badgeContent={4} color="secondary">
               <MdMailOutline />
             </Badge>
           </IconButton>
-          <p>Messages</p>
+          <FormattedMessage
+            id={"app.messages"}
+            defaultMessage={"Messages"}
+            description={"App - Messages"}
+          />
         </MenuItem>
         <MenuItem onClick={this.handleMobileMenuClose}>
           <IconButton color="inherit">
@@ -305,7 +325,11 @@ class MyAppBar extends React.Component {
               <MdNotifications />
             </Badge>
           </IconButton>
-          <p>Notifications</p>
+          <FormattedMessage
+            id={"app.notifications"}
+            defaultMessage={"Notifications"}
+            description={"App - Messages"}
+          />
         </MenuItem>
         <MenuItem onClick={this.handleProfileMenuOpen}>
           <IconButton color="inherit">
@@ -330,39 +354,44 @@ class MyAppBar extends React.Component {
             <MainMenuSearchForm onSearch={this.props.onSearch}/>
             <div className={classes.grow} />
             <div className={classes.sectionDesktop}>
-              <Tooltip title={intl.formatMessage({
-                id: "app.button.shopping_cart",
-                defaultMessage: "Panier de commande",
-                description: 'App - Shopping cart'
-              })}>
-                <Link
-                  to={"../../shopping_cart"}
-                  className={classes.menuLink}
+              {connectedUser && connectedUser.roles.includes('ROLE_CUSTOMER') && (
+                <Tooltip title={intl.formatMessage({
+                  id: "app.button.shopping_cart",
+                  defaultMessage: "Panier de commande",
+                  description: 'App - Shopping cart'
+                })}>
+                  <Link
+                    to={"../../shopping_cart"}
+                    className={classes.menuLink}
+                  >
+                    <IconButton color="inherit">
+                      <Badge badgeContent={nbShoppingCart} color="secondary">
+                        <TiShoppingCart />
+                      </Badge>
+                    </IconButton>
+                  </Link>
+                </Tooltip>
+              )}
+              {connectedUser && connectedUser.roles.includes('ROLE_CUSTOMER') && (
+                <Tooltip
+                  title={intl.formatMessage({
+                    id: "app.button.favorite",
+                    defaultMessage: "Favoris"
+                  })}
                 >
-                  <IconButton color="inherit">
-                    <Badge badgeContent={nbShoppingCart} color="secondary">
-                      <TiShoppingCart />
-                    </Badge>
-                  </IconButton>
-                </Link>
-              </Tooltip>
-              <Tooltip
-                title={intl.formatMessage({
-                  id: "app.button.favorite",
-                  defaultMessage: "Favoris"
-                })}
-              >
-                <Link
-                  to={"../../favorites"}
-                  className={classes.menuLink}
-                >
-                  <IconButton color="inherit">
-                    <Badge badgeContent={null} color="secondary">
-                      <GiCrownedHeart />
-                    </Badge>
-                  </IconButton>
-                </Link>
-              </Tooltip>
+                  <Link
+                    to={"../../favorites"}
+                    className={classes.menuLink}
+                  >
+                    <IconButton color="inherit">
+                      <Badge badgeContent={null} color="secondary">
+                        <GiCrownedHeart />
+                      </Badge>
+                    </IconButton>
+                  </Link>
+                </Tooltip>
+              )}
+
               <Tooltip
                 title={intl.formatMessage({
                   id: 'app.messages',

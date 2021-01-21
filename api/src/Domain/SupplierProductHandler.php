@@ -26,7 +26,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 
 
-class SupplierProductHandler
+final class SupplierProductHandler
 {
     /**
      * @var Security $security
