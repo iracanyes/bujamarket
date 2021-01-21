@@ -104,7 +104,6 @@ class BillCustomerHandler
             /* chemin du fichier pdf */
             $filename = $payment->getReference().'.pdf';
 
-
         }catch(\Exception $e){
             $this->logger->error(
                 "Unexpected error while creating PDF Template",
@@ -116,6 +115,7 @@ class BillCustomerHandler
                 ]
             );
             throw new \Exception(sprintf("Unexpected error code (%s) while rendering pdf template : %s", $e->getCode(), $e->getMessage()));
+
         }
 
         /* Création du pdf à partir de la page html */
@@ -125,7 +125,6 @@ class BillCustomerHandler
             $pdf->setPaper('A4', 'portrait');
             $pdf->render();
             $pdfBill = $pdf->output();
-
 
         }catch (\Exception $e){
             $this->logger->error(

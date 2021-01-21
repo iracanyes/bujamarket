@@ -24,6 +24,7 @@ class DownloadHandler
      */
     private $binaryFileResponder;
 
+
     /**
      * @var LoggerInterface $logger
      */

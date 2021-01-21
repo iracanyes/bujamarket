@@ -14,12 +14,6 @@
 
 {% block body %}
     <div class="container " style="font-size: 0.9rem">
-      {#
-      {% dump payment %}
-      {% dump orderSet %}
-      {% dump payment %}
-      {% dump bill %}
-      #}
         <h1 class="text-center">Customer invoice</h1>
         <div style="min-width: 600px">
             <section class="m-0 p-0">
@@ -78,9 +72,7 @@
                         </tr>
                     </thead>
                     <tbody>
-
                         {% for item in lineItems %}
-
                             <tr>
                                 <td class="no">{{ loop.index }}</td>
                                 <td class="text-left">
@@ -140,7 +132,6 @@
             <footer>
             </footer>
         </div>
-
         <div></div>
 
     </div>

@@ -127,9 +127,9 @@ class PaymentSuccess extends Component {
                 <nav aria-label="breadcrumb" className={"w-100 bg-primary text-white"}>
                   <ol className="breadcrumb clearfix d-none d-md-inline-flex p-0 w-100 mb-0 bg-primary">
                     <li>
-                      <FormattedMessage  id={"app.page.shopping_card.shopping_card_validation"}
+                      <FormattedMessage  id={"app.page.shopping_cart.shopping_cart_validation"}
                                          defaultMessage="Validation du panier de commande"
-                                         description="App - Delivery address"
+                                         description="App - shopping cart validation"
                       />
                       <FontAwesomeIcon icon={'angle-double-right'} className={'mx-2 text-white'} aria-hidden={'true'}/>
                     </li>

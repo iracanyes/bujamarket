@@ -26,6 +26,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 
 
+
 final class SupplierProductHandler
 {
     /**
@@ -169,7 +170,6 @@ final class SupplierProductHandler
                 $imageFile = $files['newProduct']['category']['image'];
                 $this->imageHandler->uploadCategoryImage($image, $imageFile, $data["newProduct"]["category"]["name"] );
 
-
                 $category->setImage($image);
 
                 try{
@@ -194,10 +194,10 @@ final class SupplierProductHandler
             $image->setPlace($data['product']['images'][$key]['place'] ?? $key);
             $image->setSize($files['product']['images'][$key]->getSize());
 
-
             $imageFile = $files['product']['images'][$key];
             // Set new filename and move it to public directory
             $this->imageHandler->uploadSupplierProductImage($image, $imageFile, $user->getBrandName());
+
 
             $supplierProduct->addImage($image);
         }

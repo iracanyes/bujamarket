@@ -1,3 +1,7 @@
+/**
+ * Author: iracanyes
+ * Description: Application Navigation to bar
+ */
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
@@ -7,7 +11,9 @@ import {
   MenuItem,
   Toolbar,
   IconButton,
-  Typography, Tooltip, Button
+  Typography,
+  Tooltip,
+  Button
 } from "@material-ui/core";
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import { withStyles } from '@material-ui/core/styles';
@@ -216,7 +222,6 @@ class MyAppBar extends React.Component {
                 className={classes.menuLink}
                 startIcon={<RiUserFollowFill/>}
               >
-
                 <FormattedMessage
                   id={'app.page.user.register.title'}
                   defaultMessage={'Inscription'}
@@ -391,7 +396,6 @@ class MyAppBar extends React.Component {
                   </Link>
                 </Tooltip>
               )}
-
               <Tooltip
                 title={intl.formatMessage({
                   id: 'app.messages',

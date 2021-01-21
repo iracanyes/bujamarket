@@ -1,6 +1,5 @@
 /**
  * Author: iracanyes
- * Date: 21/02/2020
  * Description: Button - Add to shopping cart
  */
 import React, { Component } from 'react';

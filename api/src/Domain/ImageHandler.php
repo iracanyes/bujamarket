@@ -214,6 +214,7 @@ class ImageHandler
                 $image->setUrl($newFilename);
                 $image->setMimeType($imageFile->getMimeType());
                 $imageFile->move(getenv("UPLOAD_CATEGORY_IMAGE_DIRECTORY"), $newFilename);
+
             }catch (FileException $e){
                 $this->em->rollback();
                 $this->logger->error(
@@ -227,8 +228,6 @@ class ImageHandler
                 );
                 throw new UploadImageException("Error while moving the category image");
             }
-
-
 
             try{
                 $this->em->persist($image);
@@ -271,6 +270,7 @@ class ImageHandler
             }
 
             $this->em->flush();
+
         }catch (\Exception $e){
 
             $this->logger->error(
@@ -351,10 +351,15 @@ class ImageHandler
 
             return $this->streamedResponder->getSupplierImage($supplier, $supplier->getImage());
 
-        }catch (\Exception $exception){
+        }catch (\Exception $e){
             $this->logger->error(
                 sprintf("Error while retrieving Image id=%d", $id),
-                ['context' => $exception]
+                [
+                    'code' => $e->getCode(),
+                    'message' => $e->getMessage(),
+                    'line' => $e->getLine(),
+                    'trace' => $e->getTraceAsString()
+                ]
             );
 
         }
@@ -390,6 +395,7 @@ class ImageHandler
 
     }
 
+
     /**
      * Set public URL to product's image
      * @param array $product
@@ -403,6 +409,7 @@ class ImageHandler
         return $product;
     }
 
+
     /**
      * Set public URL to category's image
      * @param $category
@@ -414,5 +421,8 @@ class ImageHandler
         }
     }
 
+    public function setCommentCustomerImagePublicDirectory($comment){
+        $comment['url'] = getenv("API_ENTRYPOINT").'/'.getenv("UPLOAD_CUSTOMER_IMAGE_DIRECTORY").'/'.$comment['url'];
+    }
 
 }

@@ -226,15 +226,7 @@ export class App extends Component
                   {/* Main section  */}
                   <main style={{minHeight:"70vh", ...this.state.style.main }}>
                     <aside id="aside-left">
-                      {/*
-                        <Route
-                          path={'/'}
-                          strict={false}
-                          exact={false}
-                        >
-                          <DrawerLeftMenu />
-                        </Route>
-                      */}
+
                     </aside>
                     <section id="main-content" className="col col-lg-8 mx-2">
                       <ToastContainer

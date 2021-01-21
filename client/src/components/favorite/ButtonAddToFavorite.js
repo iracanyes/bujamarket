@@ -1,6 +1,6 @@
 /**
  * Author: iracanyes
- * Description:
+ * Description: Button - Add to Favorite
  */
 /* eslint react/no-multi-comp: 0, react/prop-types: 0 */
 import React from 'react';
@@ -99,6 +99,7 @@ export class ButtonAddToFavorite extends React.Component
 
 
 }
+
 const mapStateToProps = state => ({
   created: state.favorite.create.created,
   error: state.favorite.del.error,
