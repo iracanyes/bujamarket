@@ -4,24 +4,24 @@ import {mercureSubscribe} from "./show";
 import authHeader from "../../utils/authHeader";
 
 export function error(error) {
-  return { type: 'ORDERSET_CREATE_ERROR', error };
+  return { type: 'ORDERSET_UPS_RATE_ERROR', error };
 }
 
 export function loading(loading) {
-  return { type: 'ORDERSET_CREATE_LOADING', loading };
+  return { type: 'ORDERSET_UPS_RATE_LOADING', loading };
 }
 
 export function success(created) {
-  return { type: 'ORDERSET_CREATE_SUCCESS', created };
+  return { type: 'ORDERSET_UPS_RATE_SUCCESS', created };
 }
 
-export function create(values, history, location) {
+export function upsRate(address, history, location) {
   return dispatch => {
     dispatch(loading(true));
 
     const headers = authHeader(history, location);
 
-    return fetch('order_set/create', { method: 'POST', headers, body: JSON.stringify(values) })
+    return fetch('order_set/rate/ups', { method: 'POST', headers, body: JSON.stringify(address)})
       .then(response =>
         response
           .json()
@@ -34,19 +34,15 @@ export function create(values, history, location) {
         dispatch(success(retrieved));
 
         if (hubURL) dispatch(mercureSubscribe(hubURL, retrieved['@id']));
-
-
-        /* Redirection vers la page de paiement  */
-        sessionStorage.removeItem('my_order');
-        sessionStorage.setItem('my_order', JSON.stringify(retrieved));
-        history.push({pathname:'validate_order', state: {from: location.pathname ,  params : {orderSet: retrieved}}});
       })
       .catch(e => {
         dispatch(loading(false));
 
         switch (true){
           case e.code === 401:
+            dispatch(logout());
             dispatch(error("Authentification nécessaire avant de poursuivre!"));
+            dispatch(error(null));
             history.push({pathname: '../../login', state: { from : location.pathname }});
             break;
           case /Unauthorized/.test(e):

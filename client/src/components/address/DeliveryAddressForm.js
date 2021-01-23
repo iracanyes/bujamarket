@@ -32,6 +32,7 @@ import {green, orange, red} from "@material-ui/core/colors";
 import {withRouter} from "react-router-dom";
 import {BsCheckCircle} from "react-icons/bs";
 import {IoMdBackspace} from "react-icons/io";
+import countryCode from "../../config/ISOCode/countries-en.json";
 
 const styles = theme => ({
   root: {
@@ -182,7 +183,7 @@ class DeliveryAddressForm extends React.Component {
       // Désactivation du choix parmi les adresses existantes
       document.getElementsByName('existingAddress')[0].setAttribute('disabled', "");
       // Remise à zéro du choix parmi les adresses existantes
-      document.getElementsByName('existingAddress')[0].getElementsByTagName('option')[0].selected = 'selected';
+      document.getElementsByName('existingAddress')[0].getElementsByTagName('option')['-1'].selected = true;
       this.setState(state => ({
         ...state,
         toggleNewAddressForm: !state.toggleNewAddressForm
@@ -232,16 +233,17 @@ class DeliveryAddressForm extends React.Component {
 
 
 
-  handleSubmit()
+  handleSubmit(e)
   {
+    e.preventDefault();
     const {  retrieved } = this.props;
     /* Récupération des données du formulaire */
     const data = new FormData(document.getElementById('delivery-address-form'));
 
-    const existingAddressId = data.get('existingAddress') ? parseInt(data.get('existingAddress')) : 0;
+    const existingAddressId = typeof data.get('existingAddress') === "string" ? parseInt(data.get('existingAddress')) : 0;
 
     const delivery_address = {
-      locationName: data.get('location_name') ? data.get('location_name') : "",
+      locationName: data.get('locationName') ? data.get('locationName') : "",
       street: data.get('street') ? data.get('street') : "",
       number: data.get('streetNumber') ? data.get('streetNumber') : "",
       town: data.get('town') ? data.get('town') : "",
@@ -262,9 +264,9 @@ class DeliveryAddressForm extends React.Component {
       this.props.history.push({pathname: '../shipment_rate', state: {from: this.props.location.pathname}});
       return;
     }
-
-    if(!(delivery_address.street !== "" && delivery_address.town !== "" && delivery_address.state !== "" && delivery_address.zipCode !== "" && delivery_address.country !== "" )){
-      toastError("Choix de l'adresse de livraison incomplète!");
+    console.log('handleSubmit - delivery_address', delivery_address);
+    if(!(delivery_address.locationName !== "" && delivery_address.street !== "" && delivery_address.town !== "" && delivery_address.state !== "" && delivery_address.zipCode !== "" && delivery_address.country !== "" )){
+      toastError("Nouvelle adresse de livraison incomplète!");
       return;
     }
 
@@ -276,9 +278,13 @@ class DeliveryAddressForm extends React.Component {
 
   render() {
     const { intl, loading, loadingCreate, created, errorCreate, classes } = this.props;
-    console.log("history",this.props.history);
+
     // Redirection si l'adresse a été enregisté
-    created && this.props.history.push('../shipment_rate', {from: this.props.location.pathname, state: { address: created }});
+    if(created){
+      sessionStorage.removeItem('delivery_address');
+      sessionStorage.setItem('delivery_address', JSON.stringify(created));
+      this.props.history.push({pathname:'../shipment_rate', from: this.props.location.pathname});
+    }
 
     // affichage des erreurs serveurs
     typeof errorCreate === "string" && toastError(errorCreate);
@@ -417,7 +423,7 @@ class DeliveryAddressForm extends React.Component {
                             &nbsp;:&nbsp;
                             <Field
                               component={"select"}
-                              name="existingAddress"
+                              name="locationName"
                               type="select"
                               className={'form-control'}
                               value={this.state.existingAddress}
@@ -425,7 +431,7 @@ class DeliveryAddressForm extends React.Component {
                             >
                               <option value="" key={"-1"}>--Type d'adresse--</option>
                               {['Adresse de livraison','Adresse de dépôt'].map((item, index) => (
-                                <option value={ item.id } key={index}>
+                                <option value={ item } key={index}>
                                   { item }
                                 </option>
                               ))}
@@ -505,17 +511,35 @@ class DeliveryAddressForm extends React.Component {
                             />
                           </Col>
                           <Col>
+                            <label
+                              htmlFor={'country'}
+                              className="form-control-label"
+                            >
+                              <FormattedMessage  id={"app.form.delivery_address.country"}
+                                                 defaultMessage="Pays"
+                                                 description="Form delivery address - Country"
+
+                              />
+                            </label>
                             <Field
-                              component={this.renderField}
+                              component={"select"}
                               name="country"
-                              type="text"
+                              type="select"
                               placeholder="Belgique"
                               labelText={intl.formatMessage({
                                 id: "app.address.item.country",
                                 defaultMessage: "Pays",
                                 description: "Address item - country"
                               })}
-                            />
+                              className={'form-control'}
+                            >
+                              <option value="" key={'-1'}>--Choisir le pays--</option>
+                              {countryCode && countryCode.map((item, index) => (
+                                <option value={ item.name } key={index}>
+                                  { item.name }
+                                </option>
+                              ))}
+                            </Field>
                           </Col>
                         </Row>
                       </div>

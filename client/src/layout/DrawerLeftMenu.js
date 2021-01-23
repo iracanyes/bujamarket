@@ -140,11 +140,9 @@ class DrawerLeftMenu extends Component
   render()
   {
     const { connectedUser, classes, theme } = this.props;
-    console.log('DrawerLeftMenu  render - connectedUser', connectedUser);
-    console.log('DrawerLeftMenu  render - theme', theme);
 
     const user = localStorage.getItem('token') !== null ? JSON.parse(atob(localStorage.getItem('token').split('.')[1])): null;
-    console.log('DrawerLeftMenu  render - user', user);
+
     return (
       <Fragment>
         <IconButton

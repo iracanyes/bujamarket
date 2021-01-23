@@ -4,5 +4,6 @@ import create from './create';
 import update from './update';
 import del from './delete';
 import show from './show';
+import upsRate from "./upsRate";
 
-export default combineReducers({ list, create, update, del, show });
+export default combineReducers({ list, create, update, del, show, upsRate });

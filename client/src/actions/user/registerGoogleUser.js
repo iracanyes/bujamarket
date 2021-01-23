@@ -51,7 +51,7 @@ export function registerGoogleUser(data, history, locationState) {
 
       })
       .then(retrieved => {
-        console.log('registerGoogleUser Action - retrieved',retrieved);
+
         dispatch(notify(`
         Bienvenue ${ data.response.profileObj.name }!
         Compléter vos informations de profil.

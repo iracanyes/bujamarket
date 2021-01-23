@@ -18,3 +18,8 @@ register_google:
     defaults:
         _api_response: false
     controller: App\Action\User\GoogleUserRegisterAction
+ups_rate:
+    path: /order_set/rate/ups
+    methods: ['POST']
+    schemes: ['https']
+    controller: App\Action\Ups\RateAction

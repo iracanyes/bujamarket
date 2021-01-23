@@ -44,7 +44,7 @@ class ShipperHandler
         {
             try{
                 $shipper = $this->em->getRepository(Shipper::class)
-                    ->find($data->shipper);
+                    ->find((int) $data->shipper);
             }catch (\Exception $exception){
                 throw new EntityNotFoundException("Code : ".$exception->getCode()."\nMessage: ".$exception->getMessage(), 404 );
             }

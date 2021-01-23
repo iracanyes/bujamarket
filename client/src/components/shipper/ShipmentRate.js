@@ -16,12 +16,9 @@ import {
   Typography,
   withStyles, CircularProgress,
 } from "@material-ui/core";
-import { theme } from "../../config/theme";
 import {Link, withRouter} from "react-router-dom";
-import { ButtonLink } from "../../layout/component/ButtonLink";
 import {FormattedMessage} from "react-intl";
 import {green, orange, red} from "@material-ui/core/colors";
-import {SpinnerLoading} from "../../layout/component/Spinner";
 import {Col, Row} from "reactstrap";
 import {Field, reduxForm} from "redux-form";
 import { list, reset } from "../../actions/shipper/list";
@@ -30,6 +27,8 @@ import PropTypes from "prop-types";
 import BreadcrumbsPurchase from "../../layout/BreadcrumbsPurchase";
 import {BsCheckCircle} from "react-icons/bs";
 import {toastError} from "../../layout/component/ToastMessage";
+import {upsRate} from "../../actions/orderset/upsRate";
+import {FaShippingFast} from "react-icons/all";
 
 const styles = theme => ({
   root: {
@@ -133,10 +132,12 @@ class ShipmentRate extends Component
 {
   static propTypes = {
     retrieved: PropTypes.object,
+    retrievedUpsRate: PropTypes.object,
     error: PropTypes.oneOf([PropTypes.string, PropTypes.object]),
     loading: PropTypes.bool.isRequired,
     eventSource: PropTypes.instanceOf(EventSource),
     list: PropTypes.func.isRequired,
+    upsRate: PropTypes.func.isRequired,
     reset: PropTypes.func.isRequired
   };
 
@@ -145,12 +146,27 @@ class ShipmentRate extends Component
     this.state = {
       shippingChoice: 0
     };
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   componentDidMount() {
+    const { list, upsRate, history, location} = this.props;
+    const address = sessionStorage.getItem('delivery_address') !== 'undefined' ? JSON.parse(sessionStorage.getItem('delivery_address')) : null;
+
+
     if(localStorage.getItem('token') !== null){
-      /* Récupération des transporteurs disponibles */
-      this.props.list(this.props.history, this.props.location.pathname);
+      if(address){
+        /* Récupération des transporteurs disponibles */
+        list(history, location.pathname);
+        /* Calcul du coût de transport */
+        upsRate(address, history, location);
+      }else{
+        history.push('../../delivery_address');
+      }
+
+
+
     }else{
       this.props.history.push({
         pathname: 'login',
@@ -170,7 +186,7 @@ class ShipmentRate extends Component
   {
     let value = e.target.value;
 
-    let shipper =  this.props.retrievedShipper && this.props.retrievedShipper['hydra:member'].filter(item => item.id === parseInt(value) )[0];
+    let shipper =  this.props.retrieved && this.props.retrieved['hydra:member'].filter(item => item.id === parseInt(value) )[0];
 
     let shopping_cart = localStorage.getItem("shopping_cart") ? JSON.parse(localStorage.getItem("shopping_cart")) : [];
 
@@ -182,12 +198,27 @@ class ShipmentRate extends Component
     /* Calcul et affichage du coût de transport*/
     let deliveryCost = 0;
 
-    document.getElementById('list-shipper-choice-price').innerHTML = deliveryCost+ '€';
+    document.getElementById('list-shipper-choice-price').innerHTML = (deliveryCost) + '€';
 
     /* Affichage du coût total */
-    document.getElementById('list-total-price').innerHTML = parseFloat(sum + deliveryCost).toFixed(2) + '€';
+    document.getElementById('list-total-price').innerHTML = (parseFloat(sum ) + deliveryCost).toFixed(2) + '€';
 
 
+  }
+
+  handleSubmit(e){
+    e.preventDefault();
+    const {  retrieved, create, history, location } = this.props;
+    /* Récupération des données du formulaire */
+    const data = new FormData(document.getElementById('shipment-form'));
+    const delivery_address = sessionStorage.getItem('delivery_address') != 'undefined' ? JSON.parse(sessionStorage.getItem('delivery_address')) : null;
+
+    const requestData = {
+      shipper: data.get('shipper') ? data.get('shipper') : "",
+      deliveryAddress: delivery_address
+    };
+
+    create(requestData, history, location);
   }
 
   render() {
@@ -195,6 +226,11 @@ class ShipmentRate extends Component
     const shopping_cart = localStorage.getItem('shopping_cart') ? JSON.parse(localStorage.getItem('shopping_cart')) : [];
     const shippingChoice = this.state.shippingChoice;
     const shippingCost = 0;
+
+    let sum = 0;
+    shopping_cart.forEach( item => sum += parseFloat(item.price) * item.quantity );
+    sum += shippingCost;
+
     // Affichage des erreurs
     typeof (error) === 'string' && toastError(error);
     typeof (errorCreate) === 'string' && toastError(errorCreate);
@@ -248,7 +284,7 @@ class ShipmentRate extends Component
                         <CircularProgress size={24}/>
                         <Typography variant={'body1'}>
                           <FormattedMessage
-                            id={'app.loading_addresses'}
+                            id={'app.loading_shippers'}
                             defaultMessage={'Chargement des transporteurs'}
                           />
                         </Typography>
@@ -279,7 +315,7 @@ class ShipmentRate extends Component
                               value={this.state.existingAddress}
                             >
                               <option value="" key={'-1'}>--Choisir parmi nos expéditeurs--</option>
-                              {this.props.retrievedShipper && this.props.retrievedShipper['hydra:member'].map((item, index) => (
+                              {retrieved && retrieved['hydra:member'].map((item, index) => (
                                 <option value={ item.id } key={index}>
                                   { item.socialReason }
                                 </option>
@@ -353,7 +389,7 @@ class ShipmentRate extends Component
                       <ListItem className={classes.listItem}>
                         <ListItemAvatar>
                           <Avatar>
-
+                            <FaShippingFast/>
                           </Avatar>
                         </ListItemAvatar>
                         <ListItemText
@@ -367,11 +403,35 @@ class ShipmentRate extends Component
                                 description={'App - Your shipping choice'}
                               />
                           }
+                          id={'list-shipper-choice-social-reason'}
                           className={classes.listItemText1}
                         />
                         <ListItemText
-                          className={classes.listItemText1}
+                          className={classes.listItemText2}
+                          id={'list-shipper-choice-price'}
                           primary={parseFloat(shippingCost).toFixed(2) + '€'}
+                        />
+                      </ListItem>
+                      <ListItem className={classes.listItem}>
+                        <ListItemAvatar>
+                          <Avatar>
+                            €
+                          </Avatar>
+                        </ListItemAvatar>
+                        <ListItemText
+                          primary={
+                            <FormattedMessage
+                              id={'app.total_cost'}
+                              defaultMessage={'Coût total'}
+                              description={'App - Your shipping choice'}
+                            />
+                          }
+                          className={classes.listItemText1}
+                        />
+                        <ListItemText
+                          className={classes.listItemText2}
+                          id={'list-total-price'}
+                          primary={parseFloat(sum).toFixed(2) + '€'}
                         />
                       </ListItem>
                     </List>
@@ -393,12 +453,14 @@ const mapStateToProps = state => ({
   eventSource: state.shipper.list.eventSource,
   loadingCreate: state.orderset.create.loading,
   errorCreate: state.orderset.create.error,
-  created: state.orderset.create.created
+  created: state.orderset.create.created,
+  retrievedUpsRate: state.orderset.upsRate.retrieved
 });
 
 const mapDispatchToProps = dispatch => ({
   list: (history, location) => dispatch(list(history, location)),
   create: (values, history, location) => dispatch(create(values, history, location)),
+  upsRate: (address, history, location) => dispatch(upsRate(address, history, location)),
   reset: eventSource => dispatch(reset(eventSource))
 });
 

@@ -38,7 +38,22 @@ class UpsRateHandler
 
     public function getRate()
     {
-        $data = $this->request->request->all();
+
+        $data = json_decode($this->request->getContent(), true);
+
+        // Country code check
+        $strJsonFileContents = file_get_contents(__DIR__."/../EuVat/ISO3166-1Alpha2.json");
+        dump($strJsonFileContents);
+        $countryCode = json_decode($strJsonFileContents);
+        dump($countryCode);
+        $countryCodeSelected = null;
+        foreach($countryCode as $countryIsoCode => $country) {
+            if ($data['country'] == $country) {
+                $countryCodeSelected = $countryIsoCode;
+                break;
+            }
+        }
+        dump($countryCodeSelected);
 
         $rate = new Rate(
             getenv('UPS_ACCESS_KEY'),
@@ -52,7 +67,7 @@ class UpsRateHandler
                 ->findBy(['customer' => $customer]);
         }catch (\Exception $e){
             $this->logger->error(
-        "User not authorized!",
+        "UPS Rate - User not authorized or shopping cart doesn't exist!",
                 [
                     "code" => $e->getCode(),
                     "message" => $e->getMessage(),
@@ -62,6 +77,8 @@ class UpsRateHandler
                 ]
             );
         }
+
+
 
         try{
             $shipment = new Shipment();
@@ -78,13 +95,15 @@ class UpsRateHandler
 
             $shipTo = $shipment->getShipTo();
             $shipToAddress = $shipTo->getAddress();
-            $shipToAddress->setPostalCode()
-                ->setCountryCode()
-                ->setCity()
-                ->setStreetName()
-                ->setStreetNumberLow();
+            dump($shipToAddress);
+            $shipToAddress->setPostalCode($data['zipCode'])
+                ->setCountryCode($countryCodeSelected)
+                ->setCity($data['town'])
+                ->setStreetName($data['street'])
+                ->setStreetNumberLow($data['number']);
 
-            foreach($array as $item){
+            dump($shopping_cart);
+            foreach($shopping_cart as $item){
                 $package = new Package();
                 $package->getPackagingType()->setCode(PackagingType::PT_PACKAGE);
 
@@ -94,9 +113,9 @@ class UpsRateHandler
                 $package->getPackageWeight()->setWeight();
 
                 $dimensions = new Dimensions();
-                $dimensions->setHeight()
-                        ->setWidth()
-                        ->setLength();
+                $dimensions->setHeight($item->getProduct()->getHeight())
+                        ->setWidth($item->getProduct()->getHeight())
+                        ->setLength($item->getProduct()->getHeight());
                 $dimensionUnit = new UnitOfMeasurement();
                 $dimensionUnit->setCode(UnitOfMeasurement::UOM_CM);
                 $dimensions->setUnitOfMeasurement($dimensionUnit);
@@ -108,7 +127,7 @@ class UpsRateHandler
             dump($result);
 
 
-
+            return $result;
 
         } catch (\Exception $e){
             $this->logger->error(

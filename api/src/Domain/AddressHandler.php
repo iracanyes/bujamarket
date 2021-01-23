@@ -58,30 +58,11 @@ class AddressHandler
     public function getDeliveryAddress($data)
     {
 
-        /* Si aucune adresse existante n'est séléctionné, on ajoute la nouvel addresse
-         * Sinon on récupère l'adresse existant.
-         */
-        if($data->existingAddress === 0)
-        {
-            $newAddress = new Address();
-
-            $newAddress->setLocationName("Delivery address");
-            $newAddress->setStreet($data->newAddress->street);
-            $newAddress->setNumber($data->newAddress->number);
-            $newAddress->setTown($data->newAddress->town);
-            $newAddress->setState($data->newAddress->state);
-            $newAddress->setZipCode($data->newAddress->zipCode);
-            $newAddress->setCountry($data->newAddress->country);
-
-            $address = $this->addAddress($newAddress);
-        }else{
-            try{
-                $address = $this->em->getRepository(Address::class)
-                    ->find($data->existingAddress);
-            }catch (\Exception $exception){
-                throw new EntityNotFoundException("The address with ID ( ".$data->existingAddress." ) does not exist ");
-            }
-
+        try{
+            $address = $this->em->getRepository(Address::class)
+                ->find((int) $data->deliveryAddress->id);
+        }catch (\Exception $exception){
+            throw new EntityNotFoundException("The address with ID ( ".$data->deliveryAddress->id." ) does not exist ");
         }
 
         return $address;

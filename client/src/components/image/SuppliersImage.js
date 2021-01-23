@@ -16,7 +16,7 @@ class SupplierImage extends Component
 
   render(){
     const { supplier, suppliersImage, index } = this.props;
-    console.log('suppliersImage', suppliersImage);
+
 
     if(this.props.loading || !suppliersImage[index])
       return <SpinnerLoading message={'Chargement image fournisseur'}/>

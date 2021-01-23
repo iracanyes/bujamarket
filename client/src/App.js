@@ -190,7 +190,6 @@ export class App extends Component
   {
     const { results } = this.state;
 
-    console.log('App render - results', results);
 
     /**
      * User's token

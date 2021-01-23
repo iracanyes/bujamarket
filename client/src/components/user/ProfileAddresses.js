@@ -122,8 +122,6 @@ class ProfileAddresses extends  Component{
     const { addressToDelete, addressToUpdate } = this.state;
     const { updated: addressUpdated, deleted } = this.props;
 
-    console.log('ProfileAddresses updateTable - addressToUpdate', addressToUpdate);
-    console.log('ProfileAddresses updateTable - addressUpdated', addressUpdated);
 
     /* Mise à jour du produit */
     if(addressUpdated && addressUpdated.id){
@@ -377,7 +375,7 @@ class ProfileAddresses extends  Component{
             </Table>
           )}
           <div id="update-address-container">
-            {console.log('ProfileAddresses render - state.isOpen', isOpen)}
+
             { isOpen && (
               <UpdateForm
                 address={addressToUpdate.id ? addressToUpdate : undefined}

@@ -349,9 +349,6 @@ class SearchResults extends  Component{
 
         }
 
-        console.log("showResultsProducts - resultsPer8"+ (i), resultsPer8 );
-
-
 
         rows.push(
           <div className={classes.gridRoot} key={index} data-src={BackgroundImageItem}>
@@ -369,7 +366,7 @@ class SearchResults extends  Component{
       }
     }
 
-    console.log("showResultsProducts - rows"+ (index), rows );
+
     return rows;
 
 
@@ -384,7 +381,7 @@ class SearchResults extends  Component{
 
     const suppliers = retrievedSuppliers && retrievedSuppliers['hydra:member'];
 
-    console.log("showResultsSuppliers - suppliers.length", suppliers.length);
+
     if(!suppliers || suppliers.length === 0)
     {
 
@@ -575,12 +572,8 @@ class SearchResults extends  Component{
 
   render()
   {
-    const { intl, classes, results, retrievedProducts, retrievedSuppliers } = this.props;
+    const { classes, results, retrievedProducts, retrievedSuppliers } = this.props;
     const { isOpen } = this.state;
-
-    console.log("SearchResults render - results.searchType", results.searchType);
-    console.log("SearchResults render - retrievedSuppliers", retrievedSuppliers);
-    console.log("SearchResults render - showResultsSuppliers", (results.searchType === "suppliers" && retrievedSuppliers) && this.showResultsSuppliers());
 
 
     return (<Fragment>

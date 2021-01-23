@@ -1,4 +1,5 @@
 import { fetch } from '../../utils/dataAccess';
+import authHeader from "../../utils/authHeader";
 
 export function error(error) {
   return { type: 'ADDRESS_CREATE_ERROR', error };
@@ -17,9 +18,7 @@ export function create(values, history, location) {
     dispatch(loading(true));
 
     /* Ajout du JWT authentication token de l'utilisateur connecté */
-    const token = localStorage.getItem('token') !== null ? JSON.parse(localStorage.getItem('token')) : null;
-    const headers = new Headers({'Content-Type':'application/ld+json'});
-    token && headers.set('Authorization', 'Bearer '+ token.token);
+    const headers = authHeader(history, location);
 
     return fetch('address/create', { method: 'POST', headers, body: JSON.stringify(values) })
       .then(response => {

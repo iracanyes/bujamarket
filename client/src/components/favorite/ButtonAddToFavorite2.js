@@ -75,7 +75,7 @@ export class ButtonAddToFavorite2 extends React.Component
 
     (notification && notification.length > 0 ) && toastSuccess(notification);
 
-    console.log('created', created);
+
     // Création de la liste des favoris à partir des données DB
     if(deleted === null && created === null)
       this.props.retrieved && localStorage.setItem('favorites', JSON.stringify(this.props.retrieved.favorites));
@@ -91,10 +91,6 @@ export class ButtonAddToFavorite2 extends React.Component
         item = favorites.filter( el => el.id === this.props.supplierProductId);
       }
     }
-
-    console.log('ButtonAddToFavorite2 - deleted', deleted);
-    console.log('ButtonAddToFavorite2 - item.length', item.length);
-    console.log('ButtonAddToFavorite2 - created', created);
 
     return (
       <div>
