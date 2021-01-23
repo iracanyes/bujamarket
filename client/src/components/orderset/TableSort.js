@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { withRouter } from 'react-router-dom';
+import {Link, withRouter} from 'react-router-dom';
 import clsx from 'clsx';
 import { lighten, makeStyles } from '@material-ui/core/styles';
 import {
@@ -234,6 +234,7 @@ EnhancedTableToolbar.propTypes = {
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
+    fontFamily: 'Montserrat !important'
   },
   paper: {
     width: '100%',
@@ -269,12 +270,21 @@ const useStyles = makeStyles((theme) => ({
     '& > *': {
       borderBottom: 'unset'
     }
+  },
+  subRowTitleLink:{
+    fontFamily: 'Montserrat',
+    color: 'black',
+    "&:hover":{
+      fontWeight: 600,
+      textDecoration: 'none'
+    }
   }
 }));
 
 function TableSubRow(props){
   const classes = useStyles();
   const [ open, setOpen ] = React.useState(false);
+  const [commented, setCommented ] = React.useState(false);
   return (
     <Fragment>
       <TableRow key={props.index}>
@@ -286,7 +296,12 @@ function TableSubRow(props){
           />
         </TableCell>
         <TableCell>
-          {props.item.supplierProduct.product.title}
+          <Link
+            to={'../../supplier_product/show/' + props.item.supplierProduct.id}
+            className={classes.subRowTitleLink}
+          >
+            {props.item.supplierProduct.product.title}
+          </Link>
         </TableCell>
         <TableCell align={'center'}>
           {!props.row.paymentStatus && (
@@ -374,7 +389,9 @@ function TableSubRow(props){
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
           <Collapse in={open} timeout={'auto'} unmountOnExit>
             <Box margin={1}>
-              {props.item.supplierProduct.id && (<Create supplierProductId={props.item.supplierProduct.id} orderDetailId={props.item.id}/>)}
+              {props.item.supplierProduct.id && (
+                <Create supplierProductId={props.item.supplierProduct.id} orderDetailId={props.item.id} handleCommented={[setCommented, setOpen]}/>
+              )}
             </Box>
           </Collapse>
         </TableCell>

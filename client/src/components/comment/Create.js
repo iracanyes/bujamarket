@@ -4,6 +4,7 @@ import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Form from './Form';
 import { create, reset } from '../../actions/comment/create';
+import {toastError} from "../../layout/component/ToastMessage";
 
 class Create extends Component {
   static propTypes = {
@@ -23,6 +24,14 @@ class Create extends Component {
 
 
   render() {
+    const { handleCommented, created, error } = this.props;
+
+    typeof(error) === "string" && toastError(error);
+
+    if(created){
+      handleCommented.setCommented(true);
+      handleCommented.setOpen(false);
+    }
 
     return (
       <Fragment>

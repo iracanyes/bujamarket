@@ -24,7 +24,6 @@ import {
   ListItem,
   ListItemAvatar,
   Avatar,
-  Breadcrumbs,
   CircularProgress,
   Typography,
   withStyles, ListItemSecondaryAction, Badge
@@ -35,10 +34,12 @@ import {toastError} from "../../layout/component/ToastMessage";
 import {Link} from "react-router-dom";
 import {ButtonLink} from "../../layout/component/ButtonLink";
 import {green, orange, red} from "@material-ui/core/colors";
+import BreadcrumbsPurchase from "../../layout/BreadcrumbsPurchase"
 
 const styles = theme => ({
   root: {
-    paddingTop: theme.spacing(5)
+    paddingTop: theme.spacing(5),
+    paddingBottom: theme.spacing(5),
   },
   breadcrumbs:{
     display: 'flex',
@@ -60,6 +61,8 @@ const styles = theme => ({
     }
   },
   contentWrapper:{
+    display: 'flex',
+    justifyContent: 'center',
     marginTop: theme.spacing(4)
   },
   card:  {},
@@ -74,7 +77,10 @@ const styles = theme => ({
     }
   },
   cardContent: {},
-
+  listItemText: {},
+  listAction: {
+    flexGrow: 1
+  },
   buttonDelete:{
     color: 'white',
     backgroundColor: red[400],
@@ -173,60 +179,63 @@ class Show extends React.Component {
             xs={12}
             className={classes.breadcrumbs}
           >
-            <Breadcrumbs separator={'>>'} aria-label={'breadcrumbs'}>
-              <Link
-                to={'../../shopping_cart'}
-                component={ButtonLink}
-                className={classes.buttonLink}
-              >
-                <FormattedMessage
-                  id={'app.page.shopping_cart.shopping_cart_validation'}
-                  defaultMessage={"Validation du panier de commande"}
-                />
-              </Link>
-              <Link
-                to={'../../delivery_address'}
-                component={ButtonLink}
-                className={classes.buttonLink}
-              >
-                <FormattedMessage
-                  id={"app.address.item.location_name.delivery_address"}
-                  defaultMessage={"Adresse de livraison"}
-                />
-              </Link>
-              <Link
-                to={'../../shipment_rate'}
-                component={ButtonLink}
-                className={classes.buttonLink}
-              >
-                <FormattedMessage
-                  id={"app.shipping"}
-                  defaultMessage={"Transport"}
-                />
-              </Link>
-              <Link
-                to={'../../validate_order'}
-                component={ButtonLink}
-                className={classes.buttonLink}
-                disabled={true}
-              >
-                <FormattedMessage
-                  id={"app.button.payments"}
-                  defaultMessage={"Paiement"}
-                />
-              </Link>
-              <Link
-                to={'../../delivery_address'}
-                component={ButtonLink}
-                disabled={true}
-                className={classes.buttonLink}
-              >
-                <FormattedMessage
-                  id={"app.bill"}
-                  defaultMessage={"Facture"}
-                />
-              </Link>
-            </Breadcrumbs>
+            {/*
+              <Breadcrumbs separator={'>>'} aria-label={'breadcrumbs'}>
+                <Link
+                  to={'../../shopping_cart'}
+                  component={ButtonLink}
+                  className={classes.buttonLink}
+                >
+                  <FormattedMessage
+                    id={'app.page.shopping_cart.shopping_cart_validation'}
+                    defaultMessage={"Validation du panier de commande"}
+                  />
+                </Link>
+                <Link
+                  to={'../../delivery_address'}
+                  component={ButtonLink}
+                  className={classes.buttonLink}
+                >
+                  <FormattedMessage
+                    id={"app.address.item.location_name.delivery_address"}
+                    defaultMessage={"Adresse de livraison"}
+                  />
+                </Link>
+                <Link
+                  to={'../../shipment_rate'}
+                  component={ButtonLink}
+                  className={classes.buttonLink}
+                >
+                  <FormattedMessage
+                    id={"app.shipping"}
+                    defaultMessage={"Transport"}
+                  />
+                </Link>
+                <Link
+                  to={'../../validate_order'}
+                  component={ButtonLink}
+                  className={classes.buttonLink}
+                  disabled={true}
+                >
+                  <FormattedMessage
+                    id={"app.button.payments"}
+                    defaultMessage={"Paiement"}
+                  />
+                </Link>
+                <Link
+                  to={'../../delivery_address'}
+                  component={ButtonLink}
+                  disabled={true}
+                  className={classes.buttonLink}
+                >
+                  <FormattedMessage
+                    id={"app.bill"}
+                    defaultMessage={"Facture"}
+                  />
+                </Link>
+              </Breadcrumbs>
+            */}
+            <BreadcrumbsPurchase etape={1} />
           </Grid>
           <Grid
             item
@@ -272,9 +281,11 @@ class Show extends React.Component {
                             secondary={item.description}
                             className={classes.ListItemText}
                           />
-                          <ListItemSecondaryAction>
+                          <ListItemSecondaryAction
+                            className={classes.listAction}
+                          >
                             <Typography>
-                              {Math.round(item.price)}
+                              {parseFloat(item.price).toFixed(2) + "€"}
                             </Typography>
                             <Typography>
                               {'x '+item.quantity}
@@ -326,64 +337,6 @@ class Show extends React.Component {
           </Grid>
 
         </Grid>
-        <div className={"col-9 mx-auto"}>
-          <div className={"order-md-4 my-4"}>
-            <h4 className="d-flex justify-content-between align-items-center mb-3 pl-1">
-              <span className="text-muted">Vos choix</span>
-              <span className="badge badge-secondary badge-pill">{shopping_cart.length}</span>
-            </h4>
-            <ListGroup>
-              {shopping_cart.map((item, index) => (
-                <ListGroupItem className={'d-flex'} key={index}>
-                  <div className="col-9">
-                    <ListGroupItemHeading>{item.title}</ListGroupItemHeading>
-                    <ListGroupItemText>
-                      {item.description}
-                    </ListGroupItemText>
-                  </div>
-                  <div>
-                    <p>
-                      <span className="text-muted">{ parseFloat(item.price).toFixed(2)  + ' €'}</span>
-                    </p>
-                    <p>
-                      <FormattedMessage  id={"app.form.quantity"}
-                                         defaultMessage="Quantité"
-                                         description="Form - quantity"
-                      />
-                      &nbsp;:&nbsp;
-                      {item.quantity}
-                    </p>
-                    <Button outline color={'danger'} onClick={() => this.deleteProduct(item.id)}>
-                      <FormattedMessage  id={"app.button.delete"}
-                                         defaultMessage="Supprimer"
-                                         description="Button - delete"
-                      />
-                    </Button>
-                  </div>
-                </ListGroupItem>
-              ))}
-            </ListGroup>
-            <div className="col-4 d-flex mx-auto mt-3">
-              {shopping_cart.length > 0 && (
-                <Button color={"success"} className={'mr-3 border-success'} onClick={this.onSubmit}>
-                  {loadingCreate && <Spinner color={'info'} className={'spinner mr-2'}/>}
-                  <FormattedMessage  id={"app.button.validate"}
-                                     defaultMessage="Valider"
-                                     description="Button - validate"
-                  />
-                </Button>
-              )}
-
-              <Button outline color={"danger border-danger"} onClick={() => this.props.history.goBack()}>
-                <FormattedMessage  id={"app.button.return"}
-                                   defaultMessage="Retour"
-                                   description="Button - return"
-                />
-              </Button>
-            </div>
-
-          </div>
-        </div>
       </Fragment>
 
 

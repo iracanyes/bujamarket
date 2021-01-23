@@ -21,6 +21,7 @@ master.tar.gz
 shared
 docs/iracanyes_tfe_2020_db.rar
 #les fichiers de développement
+**/*.*.bk
 **/*.*.save
 *.*.save
 *.save

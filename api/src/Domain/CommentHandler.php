@@ -8,6 +8,7 @@ use App\Entity\Comment;
 use App\Entity\Customer;
 use App\Entity\OrderDetail;
 use App\Entity\SupplierProduct;
+use App\Exception\Comment\CreateCommentException;
 use App\Exception\OrderDetail\OrderDetailNotFoundException;
 use App\Exception\SupplierProduct\SupplierProductNotFoundException;
 use App\Exception\User\MemberNotFoundException;
@@ -86,6 +87,10 @@ class CommentHandler
                 throw new OrderDetailNotFoundException("The order corresponding to this comment is not found!");
             }
 
+            if($orderDetail->getComment() !== null){
+                throw new CreateCommentException('You already commented this purchase!');
+            }
+
 
             $customer->addComment($comment);
             $supplierProduct->addComment($comment);
@@ -103,7 +108,7 @@ class CommentHandler
             $this->logger->error($e->getMessage(), ['context' => $e]);
             return $this->jsonResponder->error([
                 "@context" => '/contexts/'.$this->jsonResponder->getClassShortName($comment),
-                "hydra:description" => "An error occured while persisting the new comment"
+                "hydra:description" => $e->getMessage()
             ]);
         }
 

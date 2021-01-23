@@ -108,12 +108,13 @@ class UploadHandler
                     break;
             }
 
+            dump($resource);
+
             if($resource === false)
                 throw new \Exception(sprintf('Error opening stream for "%s"', $filename));
 
         }catch (\Exception $e){
             $this->logger->error($e->getMessage(), ['context' => $e]);
-            $this->logger->error($e->getMessage(), ['exception' => $e]);
         }
 
         return $resource;

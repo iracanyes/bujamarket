@@ -111,6 +111,11 @@ services:
     env_file:
       - ./.env
     environment:
+      # Nouvelle mise à jour
+      #- PWA_UPSTREAM: pwa:3000
+      #- SERVER_NAME=${MERCURE_SERVER_NAME:-localhost, mercure:80}
+      - MERCURE_PUBLISHER_JWT_KEY=${MERCURE_PUBLISHER_JWT_KEY:?MERCURE_PUBLISHER_JWT_KEY is not set or empty}
+      - MERCURE_SUBSCRIBER_JWT_KEY=${MERCURE_SUBSCRIBER_JWT_KEY:?MERCURE_SUBSCRIBER_JWT_KEY is not set or empty}
       # You should definitely change all these values in production
       - JWT_KEY=${JWT_KEY}
       - ALLOW_ANONYMOUS=1
