@@ -4,20 +4,54 @@ import { list, reset } from '../../actions/product/list';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { injectIntl } from "react-intl";
-import 'bootstrap/dist/css/bootstrap.css';
 /* Carousel */
 import {
-  Col,
-  Row,
-  Card,
   CardFooter,
-  CardTitle,
 } from "reactstrap";
+import {
+  Grid,
+  Paper,
+  Card,
+  CardHeader,
+  CardMedia,
+  CardContent,
+  withStyles, Avatar
+} from "@material-ui/core";
 import AwesomeSlider from "react-awesome-slider";
 import AwesomeSliderStyles from "react-awesome-slider/src/styled/cube-animation";
 import {SpinnerLoading} from "../../layout/component/Spinner";
 import { toastError, toastInfo } from "../../layout/component/ToastMessage";
+import {grey} from "@material-ui/core/colors";
+import BackgroundImageItem from "../../assets/img/parallax-gris.jpg";
+import _ from "lodash";
 
+const styles = theme => ({
+  root: {
+    flexGrow: 1,
+    zIndex: 1,
+    paddingLeft: '7.5rem',
+    paddingRight: '7.5rem'
+  },
+  cardLink: {
+    "&:hover": {
+      textDecoration: 'unset'
+    }
+  },
+  cardHeader: {
+    "& .MuiCardHeader-title": {
+      fontSize: '0.8rem',
+      fontFamily: 'Montserrat',
+      color: grey[700],
+      "&:hover": {
+        textDecoration: 'unset'
+      }
+
+    }
+  },
+  cardMedia: {
+    height: '7.5rem'
+  }
+});
 class CarouselCategoryProducts extends Component {
   static propTypes = {
     products: PropTypes.array,
@@ -79,7 +113,7 @@ class CarouselCategoryProducts extends Component {
   showProducts()
   {
 
-    //const { intl } = this.props;
+    const { classes } = this.props;
 
     const products = this.props.retrieved && this.props.retrieved.products;
 
@@ -97,29 +131,39 @@ class CarouselCategoryProducts extends Component {
           if(j >= 0 && products[i * 12 + j])
           {
             resultsPer12.push(
-              <Col key={"products" + (i * 12 + j)} xs={"12"} sm="6" md="3" className={'slider-item'}>
-                <Card className={"slider-card"}>
-                  <Link
-                    to={`/products/show/${encodeURIComponent(products[i * 12 + j]['id'])}`}
-                  >
-                    <div className="card-img-custom">
-                      <img src={products[i * 12 + j]['img-src']} alt={products[i * 12 + j]["alt"]} className="image img-fluid" style={{ width:"100%"}} />
+              <Grid
+                item
+                key={"products" + (i * 12 + j)}
+                xs={12}
+                sm={6}
+                md={3}
+                className={classes.gridItem}>
+                <Paper elevation={3}>
+                  <Card className={"slider-card"}>
+                    <Link
+                      to={`/products/show/${encodeURIComponent(products[i * 12 + j]['id'])}`}
+                      className={classes.cardLink}
+                    >
+                      <CardHeader
+                        avatar={
+                          <Avatar>
+                            P
+                          </Avatar>
+                        }
+                        title={_.truncate(products[i * 12 + j]["title"], 24)}
+                        subheader={'À partir de :' + (products[i*12+j]["minimumPrice"].toFixed(2)) +'€'}
+                        className={classes.cardHeader}
+                      />
+                      <CardMedia
+                        image={products[i * 12 + j]['img-src']}
+                        title={products[i * 12 + j]["title"]}
+                        className={classes.cardMedia}
+                      />
+                    </Link>
+                  </Card>
+                </Paper>
 
-                      <CardTitle>
-                        <span className="font-weight-bold">
-                          {products[i * 12 + j]["title"]}
-                        </span>
-                      </CardTitle>
-                    </div>
-                  </Link>
-
-                  <CardFooter>
-                    <p>
-                      À partir de : {products[i*12+j]["minimumPrice"].toFixed(2)} &euro;
-                    </p>
-                  </CardFooter>
-                </Card>
-              </Col>
+              </Grid>
             );
           }
 
@@ -127,14 +171,18 @@ class CarouselCategoryProducts extends Component {
 
         rows.push(
           <div
-            className={'col-10 slider-page'}
+            data-src={BackgroundImageItem}
+            className={classes.root}
             key={i}
           >
-            <Row
+            <Grid
+              container
+              spacing={3}
+              className={classes.gridContainer}
               key={"rows" + (i)}
             >
               {resultsPer12}
-            </Row>
+            </Grid>
           </div>
         );
       }
@@ -143,40 +191,50 @@ class CarouselCategoryProducts extends Component {
       rows.push(
         <div
           key={0}
-          className={'slider-page'}
+          data-src={BackgroundImageItem}
+          className={classes.root}
         >
-          <Row
+          <Grid
+            container
+            spacing={3}
+            className={classes.gridContainer}
             key={"rows0"}
           >
-            <Col key={"products0"} sm="6" md="3" className={'slider-item'}>
-              <Card className={"slider-card"}>
-                <Link
-                  to={`/products/show/${encodeURIComponent(products[0]['id'])}`}
-                >
-                  <div className="card-img-custom">
-                    <img src={products[0]['img-src']} alt={products[0]["alt"]} className="image img-fluid" style={{ width:"100%"}} />
-                    <CardTitle>
-                        <span className="font-weight-bold">
-                          {/* Permet d'injecter la traduction d'une valeur reçu par une entité
-                            intl.formatMessage({
-                              id: "app.category.item"+products[0]["id"]+".name",
-                              description: "category item - name for item "+products[0]["id"],
-                              defaultMessage: products[0]["name"]
-                            })
-                          */}
-                          {products[0]["title"].replace(/(([^\s]+\s\s*){8})(.*)/,"$1…")}
-                        </span>
-                    </CardTitle>
-                  </div>
-                </Link>
-                <CardFooter>
-                  <p>
-                    À partir de : {products[0]["minimumPrice"].toFixed(2)} &euro;
-                  </p>
-                </CardFooter>
-              </Card>
-            </Col>
-          </Row>
+            <Grid
+              item
+              key={"products0"}
+              xs={12}
+              sm={6}
+              md={3}
+              className={classes.gridItem}
+            >
+              <Paper elevation={3}>
+                <Card>
+                  <Link
+                    to={`/products/show/${encodeURIComponent(products[0]['id'])}`}
+                    className={classes.cardLink}
+                  >
+                    <CardHeader
+                      title={products[0]["title"].replace(/(([^\s]+\s\s*){8})(.*)/,"$1…")}
+                      subheader={`À partir de : ${products[0]["minimumPrice"].toFixed(2)} &euro;`}
+                      className={classes.cardHeader}
+                    />
+                    <CardMedia
+                      image={products[0]['img-src']}
+                      title={products[0]["title"].replace(/(([^\s]+\s\s*){8})(.*)/,"$1…")}
+                      className={classes.cardMedia}
+                    />
+                  </Link>
+                  <CardFooter>
+                    <p>
+
+                    </p>
+                  </CardFooter>
+                </Card>
+              </Paper>
+
+            </Grid>
+          </Grid>
         </div>
       );
     }
@@ -239,4 +297,4 @@ const mapDispatchToProps = dispatch => ({
 });
 
 
-export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(CarouselCategoryProducts));
+export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(CarouselCategoryProducts)));

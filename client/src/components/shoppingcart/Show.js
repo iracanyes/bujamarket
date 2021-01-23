@@ -179,62 +179,6 @@ class Show extends React.Component {
             xs={12}
             className={classes.breadcrumbs}
           >
-            {/*
-              <Breadcrumbs separator={'>>'} aria-label={'breadcrumbs'}>
-                <Link
-                  to={'../../shopping_cart'}
-                  component={ButtonLink}
-                  className={classes.buttonLink}
-                >
-                  <FormattedMessage
-                    id={'app.page.shopping_cart.shopping_cart_validation'}
-                    defaultMessage={"Validation du panier de commande"}
-                  />
-                </Link>
-                <Link
-                  to={'../../delivery_address'}
-                  component={ButtonLink}
-                  className={classes.buttonLink}
-                >
-                  <FormattedMessage
-                    id={"app.address.item.location_name.delivery_address"}
-                    defaultMessage={"Adresse de livraison"}
-                  />
-                </Link>
-                <Link
-                  to={'../../shipment_rate'}
-                  component={ButtonLink}
-                  className={classes.buttonLink}
-                >
-                  <FormattedMessage
-                    id={"app.shipping"}
-                    defaultMessage={"Transport"}
-                  />
-                </Link>
-                <Link
-                  to={'../../validate_order'}
-                  component={ButtonLink}
-                  className={classes.buttonLink}
-                  disabled={true}
-                >
-                  <FormattedMessage
-                    id={"app.button.payments"}
-                    defaultMessage={"Paiement"}
-                  />
-                </Link>
-                <Link
-                  to={'../../delivery_address'}
-                  component={ButtonLink}
-                  disabled={true}
-                  className={classes.buttonLink}
-                >
-                  <FormattedMessage
-                    id={"app.bill"}
-                    defaultMessage={"Facture"}
-                  />
-                </Link>
-              </Breadcrumbs>
-            */}
             <BreadcrumbsPurchase etape={1} />
           </Grid>
           <Grid

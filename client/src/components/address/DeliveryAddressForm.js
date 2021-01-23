@@ -264,7 +264,7 @@ class DeliveryAddressForm extends React.Component {
       this.props.history.push({pathname: '../shipment_rate', state: {from: this.props.location.pathname}});
       return;
     }
-    console.log('handleSubmit - delivery_address', delivery_address);
+
     if(!(delivery_address.locationName !== "" && delivery_address.street !== "" && delivery_address.town !== "" && delivery_address.state !== "" && delivery_address.zipCode !== "" && delivery_address.country !== "" )){
       toastError("Nouvelle adresse de livraison incomplète!");
       return;

@@ -1,7 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-
 import PropTypes from 'prop-types';
 import { getNamesWithImage, reset } from '../../actions/category/getNamesWithImage';
 import { success } from '../../actions/category/delete';
@@ -80,8 +79,6 @@ class CarouselCategories extends Component {
     this.next = this.next.bind(this);
     this.previous = this.previous.bind(this);
     this.goToIndex = this.goToIndex.bind(this);
-    this.onExiting = this.onExiting.bind(this);
-    this.onExited = this.onExited.bind(this);
     this.showCategories = this.showCategories.bind(this);
 
   }
@@ -97,24 +94,12 @@ class CarouselCategories extends Component {
   }
 
 
-
-  onExiting()
-  {
-    this.animating = true;
-  }
-
-  onExited()
-  {
-    this.animating = false;
-  }
-
   next()
   {
     if(this.animating) return;
 
     const nextIndex = this.state.activeIndex === (Math.ceil(this.props.retrieved['hydra:member'].length / 12) - 1) ? 0 : this.state.activeIndex + 1;
     this.setState({activeIndex: nextIndex});
-
   }
 
   previous()
