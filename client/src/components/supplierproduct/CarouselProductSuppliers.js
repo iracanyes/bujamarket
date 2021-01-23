@@ -24,17 +24,24 @@ import {
   CardHeader,
   CardMedia,
   CardContent,
-  Typography
+  Typography, CardActions
 } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import {SpinnerLoading} from "../../layout/component/Spinner";
 import {toastError, toastSuccess} from "../../layout/component/ToastMessage";
 import AwesomeSlider from "react-awesome-slider";
 import AwesomeSliderStyles from "react-awesome-slider/src/styled/scale-out-animation/scale-out-animation.scss";
-import {grey} from "@material-ui/core/colors";
+import {grey, orange} from "@material-ui/core/colors";
+import _ from "lodash";
+import BackgroundImageItem from "../../assets/img/parallax-gris.jpg";
 
 const styles = theme => ({
-  root: {},
+  root: {
+    flexGrow: 1,
+    zIndex: 1,
+    paddingLeft: '7.5rem',
+    paddingRight: '7.5rem'
+  },
   cardLink: {
     "&:hover": {
       textDecoration: 'unset'
@@ -42,10 +49,13 @@ const styles = theme => ({
   },
   cardHeader: {
     "& .MuiCardHeader-title": {
-      fontSize: '1rem',
+      fontSize: '0.8rem',
       fontFamily: 'Montserrat',
       color: grey[700],
     }
+  },
+  cardContent: {
+    paddingBottom: 0
   },
   cardMedia: {
     height: '7.5rem'
@@ -115,7 +125,9 @@ class CarouselProductSuppliers extends Component {
             resultsPer12.push(
               <Grid
                 item
-                xs={12} sm={6} md={3}
+                xs={12}
+                sm={6}
+                md={3}
                 key={"productSuppliers" + (i * 12 + j)}
                 className={classes.gridItem}
               >
@@ -126,58 +138,47 @@ class CarouselProductSuppliers extends Component {
                       className={classes.cardLink}
                     >
                       <CardHeader
-                        title={productSuppliers[i * 12 + j]["title"]}
-                        subheader={
-                          <div>
-                            <Typography variant={'h6'}>
-                              Offre de : {productSuppliers[i * 12 + j].supplier.brandName}
-                            </Typography>
-                          </div>
-                        }
+                        title={_.truncate(productSuppliers[i * 12 + j]['product']["title"], 24)}
+                        subheader={`Offre de : ${productSuppliers[i * 12 + j].supplier.brandName}`}
                         className={classes.cardHeader}
                       />
+                      <CardMedia
+                        image={productSuppliers[i * 12 + j]["images"][0]["url"]}
+                        title={_.truncate(productSuppliers[i * 12 + j]["title"], 24)}
+                        className={classes.cardMedia}
+                      />
                     </Link>
+                    <CardContent className={classes.cardContent}>
+                      <Row>
+                        <Col>
+                          <Rating rating={productSuppliers[i * 12 + j]["rating"]} />
+                        </Col>
+                        <Col className={'text-right'}>
+                          {
+                            localStorage.getItem('token')
+                              ? <ButtonAddToFavorite supplierProductId={productSuppliers[i * 12 + j].id}/>
+                              : ""
+                          }
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col>
+                          <p>
+                            <span className="font-weight-bold">Offre de : </span><Link to={'../../suppliers/show/' + productSuppliers[i * 12 + j].supplier.id }><strong>{productSuppliers[i * 12 + j].supplier.brandName }</strong></Link>
+                          </p>
+                          <p className={'text-right'}>
+                            {productSuppliers[i * 12 + j]["finalPrice"].toFixed(2)} &euro;
+                          </p>
+
+                        </Col>
+                      </Row>
+                    </CardContent>
+                    <CardActions>
+                      <ButtonAddToShoppingCart buttonLabel={"Ajouter au panier"} product={productSuppliers[i * 12 + j]} toggle={this.toggle}/>
+                    </CardActions>
+
                   </Card>
                 </Paper>
-                <Card className={"slider-card"}>
-                  <Link
-                    to={'#'}
-                  >
-                    <div className="card-img-custom">
-                      <img src={productSuppliers[i * 12 + j]["images"][0]["url"]} alt={productSuppliers[i * 12 + j]["images"][0]["alt"]} className="image img-fluid" style={{ width:"100%"}} />
-                      <CardTitle>
-                        <span className="font-weight-bold">
-                          {productSuppliers[i * 12 + j]["title"]}
-                        </span>
-                      </CardTitle>
-                    </div>
-                  </Link>
-                  <CardBody>
-                    <Row>
-                      <Col>
-                        <Rating rating={productSuppliers[i * 12 + j]["rating"]} />
-                      </Col>
-                      <Col className={'text-right'}>
-                        {
-                          localStorage.getItem('token')
-                            ? <ButtonAddToFavorite supplierProductId={productSuppliers[i * 12 + j].id}/>
-                            : ""
-                        }
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col>
-                        <p>
-                          <span className="font-weight-bold">Offre de : </span><Link to={'../../suppliers/show/' + productSuppliers[i * 12 + j].supplier.id }><strong>{productSuppliers[i * 12 + j].supplier.brandName }</strong></Link>
-                        </p>
-                        <p className={'text-right'}>
-                          {productSuppliers[i * 12 + j]["finalPrice"].toFixed(2)} &euro;
-                        </p>
-                        <ButtonAddToShoppingCart buttonLabel={"Ajouter au panier"} product={productSuppliers[i * 12 + j]} toggle={this.toggle}/>
-                      </Col>
-                    </Row>
-                  </CardBody>
-                </Card>
               </Grid>
             );
           }
@@ -186,13 +187,15 @@ class CarouselProductSuppliers extends Component {
 
         rows.push(
           <div
+            data-src={BackgroundImageItem}
             key={i}
-            className={'slider-page'}
+            className={classes.root}
           >
             <Grid
               container
               spacing={2}
               key={"rows" + (i)}
+              className={classes.gridContainer}
             >
               {resultsPer12}
             </Grid>
@@ -205,49 +208,60 @@ class CarouselProductSuppliers extends Component {
       rows.push(
         <div
           key={0}
-          className={'slider-page'}
+          data-src={BackgroundImageItem}
+          className={classes.root}
         >
-          <Row
+          <Grid
+            container
+            spacing={3}
+            className={classes.gridContainer}
             key={"rows0"}
           >
-            <Col key={"productSuppliers0"} xs={"12"} sm="6" md="4" className={'slider-item'}>
-              <Card className={"slider-card"}>
-                <Link
-                  to={`/supplier_product/show/${encodeURIComponent(productSuppliers[0]['id'])}`}
-                >
-                  <div className="card-img-custom">
-                    <img src={productSuppliers[0]["images"][0]["url"]} alt={productSuppliers[0]["images"][0]["alt"]} className="image img-fluid" style={{ width:"100%"}} />
-                    <CardTitle>
-                        <span className="font-weight-bold">
-                          {productSuppliers[0]["product"]["title"].replace(/(([^\s]+\s\s*){8})(.*)/,"$1…")}
-                        </span>
-                    </CardTitle>
-                  </div>
-                </Link>
-                <CardBody>
-                  <Row>
-                    <Col>
-                      <Rating rating={productSuppliers[0]["rating"]} />
-                    </Col>
-                    <Col className={'text-right'}>
-                      <ButtonAddToFavorite supplierProductId={productSuppliers[0].id}/>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col>
-                      <p>
-                        Offre de : <Link to={'../../suppliers/show/' + productSuppliers[0].supplier.id }><strong>{productSuppliers[0].supplier.brandName }</strong></Link>
-                      </p>
-                      <p className={'text-right'}>
-                        {productSuppliers[0]["finalPrice"].toFixed(2)} &euro;
-                      </p>
-                      <ButtonAddToShoppingCart buttonLabel={"Ajouter au panier"} product={productSuppliers[0]} toggle={this.toggle}/>
-                    </Col>
-                  </Row>
-                </CardBody>
-              </Card>
-            </Col>
-          </Row>
+            <Grid
+              item
+              xs={12} sm={6} md={4}
+              key={"productSuppliers0"}
+              className={classes.gridItem}
+            >
+              <Paper elevation={3}>
+                <Card className={"slider-card"}>
+                  <Link
+                    to={`/supplier_product/show/${encodeURIComponent(productSuppliers[0]['id'])}`}
+                  >
+                    <CardHeader
+                      title={_.truncate(productSuppliers[0]["product"]["title"], 24)}
+                      subheader={` Offre de : ${productSuppliers[0].supplier.brandName }`}
+                      className={classes.cardHeader}
+                    />
+                    <CardMedia
+                      image={productSuppliers[0]["images"][0]["url"]}
+                      title={_.truncate(productSuppliers[0]["product"]["title"], 24)}
+                      className={classes.cardMedia}
+                    />
+                  </Link>
+                  <CardContent className={classes.cardContent}>
+                    <Row>
+                      <Col>
+                        <Rating rating={productSuppliers[0]["rating"]} />
+                      </Col>
+                      <Col className={'text-right'}>
+                        <ButtonAddToFavorite supplierProductId={productSuppliers[0].id}/>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col>
+                        <p className={'text-right'}>
+                          {productSuppliers[0]["finalPrice"].toFixed(2)} &euro;
+                        </p>
+                        <ButtonAddToShoppingCart buttonLabel={"Ajouter au panier"} product={productSuppliers[0]} toggle={this.toggle}/>
+                      </Col>
+                    </Row>
+                  </CardContent>
+                </Card>
+              </Paper>
+
+            </Grid>
+          </Grid>
         </div>
       );
     }

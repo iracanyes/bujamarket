@@ -48,7 +48,7 @@ const styles = theme =>  ({
   },
   cardHeader: {
     "& .MuiCardHeader-title": {
-      fontSize: '1rem',
+      fontSize: '0.8rem',
       fontFamily: 'Montserrat',
       color: grey[700],
       "&:hover": {
