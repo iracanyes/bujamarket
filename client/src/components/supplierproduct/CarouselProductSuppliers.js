@@ -15,7 +15,7 @@ import {
   Col,
   Row,
   CardBody,
-  CardTitle
+  CardTitle, FormGroup, Label, Input, Form
 } from "reactstrap";
 import {
   Grid,
@@ -24,7 +24,7 @@ import {
   CardHeader,
   CardMedia,
   CardContent,
-  Typography, CardActions
+  Typography, CardActions, IconButton, Tooltip, TextField
 } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import {SpinnerLoading} from "../../layout/component/Spinner";
@@ -34,8 +34,12 @@ import AwesomeSliderStyles from "react-awesome-slider/src/styled/scale-out-anima
 import {grey, orange} from "@material-ui/core/colors";
 import _ from "lodash";
 import BackgroundImageItem from "../../assets/img/parallax-gris.jpg";
+import {MdAddShoppingCart, TiShoppingCart} from "react-icons/all";
 
 const styles = theme => ({
+  awesomeSlider: {
+    height: '70rem'
+  },
   root: {
     flexGrow: 1,
     zIndex: 1,
@@ -43,22 +47,49 @@ const styles = theme => ({
     paddingRight: '7.5rem'
   },
   cardLink: {
+    color: 'black',
     "&:hover": {
+      color: orange[500],
       textDecoration: 'unset'
     }
   },
   cardHeader: {
     "& .MuiCardHeader-title": {
-      fontSize: '0.8rem',
+      fontSize: '0.85rem',
+      fontWeight: 500,
       fontFamily: 'Montserrat',
       color: grey[700],
+    },
+    "& .MuiCardHeader-action":{
+      fontSize: '1.2rem',
+      alignSelf: 'center'
     }
+  },
+  cardHeaderSubheader:{
+    fontFamily: 'Montserrat',
+    fontSize: '0.8rem'
   },
   cardContent: {
     paddingBottom: 0
   },
   cardMedia: {
     height: '7.5rem'
+  },
+  cardContentWrapper:{
+    justifyContent: 'space-between',
+  },
+  formQuantity: {
+    marginTop: theme.spacing(2)
+  },
+  inputQuantity: {
+    "& .MuiOutlinedLabel-root": {
+      fontFamily: 'Montserrat'
+    },
+    "& .MuiOutlinedInput-input":{
+      padding: '12px 14px',
+      width: '100%',
+      fontFamily: 'Montserrat'
+    }
   }
 });
 
@@ -80,8 +111,12 @@ class CarouselProductSuppliers extends Component {
     super(props);
     this.state = {
       activeIndex: 0,
-      toggle: false
+      toggle: false,
+      quantity: 1
     };
+
+    this.addToShoppingCart = this.addToShoppingCart.bind(this);
+    this.buyNow = this.buyNow.bind(this);
     this.showProductSuppliers = this.showProductSuppliers.bind(this);
     this.toggle = this.toggle.bind(this);
   }
@@ -104,7 +139,7 @@ class CarouselProductSuppliers extends Component {
 
   showProductSuppliers()
   {
-    const { retrieved, classes } = this.props;
+    const { retrieved, classes, intl } = this.props;
     const productSuppliers = retrieved && retrieved['hydra:member'];
 
     let rows = [];
@@ -113,12 +148,9 @@ class CarouselProductSuppliers extends Component {
     {
       for(let i = 0; i < Math.ceil(productSuppliers.length / 12 ); i++)
       {
-
         let resultsPer12 = [];
-
         for(let j = 0; j < 12 && productSuppliers[j]; j++)
         {
-
           if(j > 0 && productSuppliers[i * 12 + j])
           {
 
@@ -133,15 +165,36 @@ class CarouselProductSuppliers extends Component {
               >
                 <Paper elevation={3}>
                   <Card>
+                    <CardHeader
+                      title={
+                        <Link
+                          to={`/product/show/${encodeURIComponent(productSuppliers[i * 12 + j]['id'])}`}
+                          className={classes.cardLink}
+                        >
+                          {_.truncate(productSuppliers[i * 12 + j]['product']["title"], 24)}
+                        </Link>
+                      }
+                      subheader={
+                        <span className={classes.cardHeaderSubheader}>Offre de :
+                            <Link
+                              to={'../../suppliers/show/' + productSuppliers[i * 12 + j].supplier.id }
+                              className={classes.cardLink}
+                            >
+                              <strong>{productSuppliers[i * 12 + j].supplier.brandName }</strong>
+                            </Link>
+                          </span>
+                      }
+                      action={
+                        localStorage.getItem('token')
+                          ? <ButtonAddToFavorite supplierProductId={productSuppliers[i * 12 + j].id}/>
+                          : ""
+                      }
+                      className={classes.cardHeader}
+                    />
                     <Link
                       to={`/product/show/${encodeURIComponent(productSuppliers[i * 12 + j]['id'])}`}
                       className={classes.cardLink}
                     >
-                      <CardHeader
-                        title={_.truncate(productSuppliers[i * 12 + j]['product']["title"], 24)}
-                        subheader={`Offre de : ${productSuppliers[i * 12 + j].supplier.brandName}`}
-                        className={classes.cardHeader}
-                      />
                       <CardMedia
                         image={productSuppliers[i * 12 + j]["images"][0]["url"]}
                         title={_.truncate(productSuppliers[i * 12 + j]["title"], 24)}
@@ -149,32 +202,83 @@ class CarouselProductSuppliers extends Component {
                       />
                     </Link>
                     <CardContent className={classes.cardContent}>
-                      <Row>
-                        <Col>
+                      <Grid
+                        container
+                        direction={"row"}
+                        className={classes.cardContentWrapper}
+                      >
+                        <Grid>
                           <Rating rating={productSuppliers[i * 12 + j]["rating"]} />
-                        </Col>
-                        <Col className={'text-right'}>
-                          {
-                            localStorage.getItem('token')
-                              ? <ButtonAddToFavorite supplierProductId={productSuppliers[i * 12 + j].id}/>
-                              : ""
-                          }
-                        </Col>
-                      </Row>
-                      <Row>
-                        <Col>
-                          <p>
-                            <span className="font-weight-bold">Offre de : </span><Link to={'../../suppliers/show/' + productSuppliers[i * 12 + j].supplier.id }><strong>{productSuppliers[i * 12 + j].supplier.brandName }</strong></Link>
-                          </p>
-                          <p className={'text-right'}>
-                            {productSuppliers[i * 12 + j]["finalPrice"].toFixed(2)} &euro;
-                          </p>
-
-                        </Col>
-                      </Row>
+                        </Grid>
+                        <Grid className={'text-right'}>
+                          {productSuppliers[i * 12 + j]["finalPrice"].toFixed(2)} &euro;
+                        </Grid>
+                      </Grid>
+                      <Form
+                        inline
+                        id={"add-shopping-cart"}
+                        className={classes.formQuantity}
+                        onSubmit={(e) => e.preventDefault()}
+                      >
+                        <TextField
+                          id={'quantity'}
+                          name={'quantity'}
+                          type={'number'}
+                          label={intl.formatMessage({
+                            id: "app.form.quantity",
+                            defaultMessage: "Quantité"
+                          })}
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
+                          inputProps={{
+                            min: 1
+                          }}
+                          variant={'outlined'}
+                          onChange={this.changeQuantity}
+                          defaultValue={this.state.quantity}
+                          className={classes.inputQuantity}
+                        />
+                      </Form>
                     </CardContent>
                     <CardActions>
-                      <ButtonAddToShoppingCart buttonLabel={"Ajouter au panier"} product={productSuppliers[i * 12 + j]} toggle={this.toggle}/>
+                      <Tooltip
+                        title={
+                          <FormattedMessage
+                            id={"app.button.add_shopping_cart"}
+                            defaultMessage={"Ajouter au panier"}
+                          />
+                        }
+                      >
+                        <IconButton
+                          aria-label={'Add to shopping cart'}
+                          className={classes.iconButtonAddShoppingCard}
+                          onClick={() => this.addToShoppingCart(productSuppliers[i * 12 + j])}
+                        >
+                          <MdAddShoppingCart/>
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip
+                        title={
+                          <FormattedMessage
+                            id={"app.button.order_now"}
+                            defaultMessage={"Commande immédiat"}
+                          />
+                        }
+                      >
+                        <IconButton
+                          aria-label={'Buy now'}
+                          className={classes.iconButtonAddShoppingCard}
+                          onClick={() => this.buyNow(productSuppliers[i * 12 + j])}
+                        >
+                          <TiShoppingCart/>
+                        </IconButton>
+                      </Tooltip>
+
+                      {/*
+                        <ButtonAddToShoppingCart buttonLabel={"Ajouter au panier"} product={productSuppliers[i * 12 + j]} toggle={this.toggle}/>
+                      */}
+
                     </CardActions>
 
                   </Card>
@@ -278,9 +382,63 @@ class CarouselProductSuppliers extends Component {
     }));
   }
 
+  addToShoppingCart(supplier_product){
+    const {retrieved} = this.props;
+
+    /* Ajout au  panier de commande dans LocalStorage  */
+    let shopping_cart = localStorage.getItem("shopping_cart") !== null ? JSON.parse(localStorage.getItem("shopping_cart")) : [];
+    /* Si le panier de commande existe */
+    if( shopping_cart.length > 0 )
+    {
+      /* mise à jour de la quantité pour le produit */
+      let index  = shopping_cart.findIndex( value => value.id === supplier_product.id);
+      console.log('addToShoppingCart - supplier_product.id', supplier_product.id);
+      console.log('addToShoppingCart - index', index);
+      console.log('addToShoppingCart - retrieved["hydra:member"]', retrieved["hydra:member"]);
+      /* Si le produit exite, on met à jour la quantité */
+      if( index !== -1 )
+      {
+        shopping_cart[index].quantity = this.state.quantity;
+      }else{
+        /* Sinon, on ajoute un nouveau produit au panier de commande */
+        shopping_cart.push({
+          'productId': supplier_product.id,
+          'title': supplier_product.product.title,
+          'description': supplier_product.product.resume,
+          'price': supplier_product.finalPrice,
+          'image': supplier_product.images[0].url,
+          'quantity': this.state.quantity
+        });
+
+      }
+    }else{
+      /* Si le panier est vide, on ajoute un nouveau produit */
+      shopping_cart.push({
+        'productId': supplier_product.id,
+        'title': supplier_product.product.title,
+        'description': supplier_product.product.resume,
+        'price': supplier_product.finalPrice,
+        'image': supplier_product.images[0].url,
+        'quantity': this.state.quantity
+      });
+
+    }
+
+    /* Enregistrement du panier de commande */
+    localStorage.removeItem('shopping_cart');
+    localStorage.setItem('shopping_cart', JSON.stringify(shopping_cart));
+
+    toastSuccess('Produit ajouté au panier');
+  }
+
+  buyNow(supplier_product){
+    this.addToShoppingCart(supplier_product);
+    this.props.history.push('../../shopping_cart');
+  }
+
 
   render() {
-    const { retrieved, loading, error, deletedItem } = this.props;
+    const { retrieved, loading, error, deletedItem, classes } = this.props;
 
     const items = retrieved  !== null && retrieved["hydra:member"].length > 0 ? this.showProductSuppliers() : {};
 
@@ -299,12 +457,13 @@ class CarouselProductSuppliers extends Component {
                   id={'slider-product-suppliers'}
                   animation={'scaleOutAnimation'}
                   cssModule={AwesomeSliderStyles}
+                  className={classes.awesomeSlider}
                 >
                   {this.props.retrieved && items}
                 </AwesomeSlider>
               )
               : (
-                <Alert severity={'error'}>
+                <Alert severity={'info'}>
                   <FormattedMessage
                     id={'app.supplier_product.not_available'}
                     defaultMessage={"Aucun fournisseur de la plateforme ne propose ce produit pour l'instant"}

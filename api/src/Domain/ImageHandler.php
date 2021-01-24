@@ -317,7 +317,7 @@ class ImageHandler
         $response =  new StreamedResponse(function () use ($image,$user, $uploadHandler) {
             $outputStream = fopen('php://output', 'wb');
             $fileStream = $uploadHandler->readStreamProfileImage($user, $image->getUrl());
-            dump($fileStream);
+
             stream_copy_to_stream($fileStream, $outputStream);
         });
 
