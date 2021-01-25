@@ -5,14 +5,6 @@
 import React,{ Fragment } from 'react';
 import { connect } from 'react-redux';
 import {
-  ListGroup,
-  ListGroupItem,
-  ListGroupItemHeading,
-  ListGroupItemText,
-  Spinner
-} from 'reactstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
   Button,
   Paper,
   Card,
@@ -35,6 +27,8 @@ import {Link} from "react-router-dom";
 import {ButtonLink} from "../../layout/component/ButtonLink";
 import {green, orange, red} from "@material-ui/core/colors";
 import BreadcrumbsPurchase from "../../layout/BreadcrumbsPurchase"
+import {BsCheckCircle} from "react-icons/bs";
+import {IoMdBackspace} from "react-icons/io";
 
 const styles = theme => ({
   root: {
@@ -77,7 +71,17 @@ const styles = theme => ({
     }
   },
   cardContent: {},
-  listItemText: {},
+  listItemContent: {
+    display: 'flex',
+    flexDirection: 'row'
+  },
+  listItemText: {
+    fontFamily: 'Montserrat'
+  },
+  listItemNumber: {
+    fontFamily: 'Montserrat',
+    textAlign: 'right'
+  },
   listAction: {
     flexGrow: 1
   },
@@ -196,7 +200,6 @@ class Show extends React.Component {
                 <Card
                   className={classes.card}
                 >
-
                     <CardHeader
                       title={
                         <Badge badgeContent={shopping_cart.length} className={classes.badge}>
@@ -209,8 +212,6 @@ class Show extends React.Component {
                       }
                       className={classes.cardHeader}
                     />
-
-
                   <CardContent>
                     <List>
                       {shopping_cart && shopping_cart.map((item, index) => (
@@ -221,29 +222,40 @@ class Show extends React.Component {
                             />
                           </ListItemAvatar>
                           <ListItemText
-                            primary={item.title}
-                            secondary={item.description}
-                            className={classes.ListItemText}
+                            primary={
+                              <Fragment>
+                                <Typography className={classes.listItemText}>
+                                  {item.title}
+                                </Typography>
+                                <Typography className={classes.listItemText}>
+                                  {item.description}
+                                </Typography>
+                              </Fragment>
+                            }
+                            secondary={
+                              <Fragment>
+                                <div className={classes.listAction}>
+                                  <Typography className={classes.listItemNumber}>
+                                    {parseFloat(item.price).toFixed(2) + "€"}
+                                  </Typography>
+                                  <Typography className={classes.listItemNumber}>
+                                    {'x '+item.quantity}
+                                  </Typography>
+                                  <Button
+                                    variant={'contained'}
+                                    className={classes.buttonDelete}
+                                  >
+                                    <FormattedMessage
+                                      id={"app.button.delete"}
+                                      defaultMessage={"Supprimer"}
+                                    />
+                                  </Button>
+                                </div>
+
+                              </Fragment>
+                            }
+                            className={classes.listItemContent}
                           />
-                          <ListItemSecondaryAction
-                            className={classes.listAction}
-                          >
-                            <Typography>
-                              {parseFloat(item.price).toFixed(2) + "€"}
-                            </Typography>
-                            <Typography>
-                              {'x '+item.quantity}
-                            </Typography>
-                            <Button
-                              variant={'contained'}
-                              className={classes.buttonDelete}
-                            >
-                              <FormattedMessage
-                                id={"app.button.delete"}
-                                defaultMessage={"Supprimer"}
-                              />
-                            </Button>
-                          </ListItemSecondaryAction>
                         </ListItem>
                       ))}
                     </List>
@@ -257,6 +269,7 @@ class Show extends React.Component {
                       className={classes.buttonValidate}
                       onClick={() => this.onSubmit()}
                     >
+                      { loadingCreate ? (<CircularProgress size={16} color={'primary'} className={'spinner mr-2'} />) : <BsCheckCircle className={'mr-2'}/>}
                       <FormattedMessage
                         id={"app.button.validate"}
                         defaultMessage={"Valider"}
@@ -268,6 +281,7 @@ class Show extends React.Component {
                       className={classes.buttonCancel}
                       to={'..'}
                     >
+                      <IoMdBackspace className={"mr-2"}/>
                       <FormattedMessage
                         id={"app.button.cancel"}
                         defaultMessage={"Annuler"}

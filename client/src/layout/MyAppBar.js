@@ -183,7 +183,7 @@ class MyAppBar extends React.Component {
 
   render() {
     const { anchorEl, mobileMoreAnchorEl } = this.state;
-    const { classes, intl } = this.props;
+    const { classes, intl, user } = this.props;
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
     const connectedUser = localStorage.getItem('token') !== null ? JSON.parse(atob(localStorage.getItem('token').split(".")[1])) : null;
@@ -377,7 +377,7 @@ class MyAppBar extends React.Component {
                   </Link>
                 </Tooltip>
               )}
-              {connectedUser && connectedUser.roles.includes('ROLE_CUSTOMER') && (
+              {(user || connectedUser && connectedUser.roles.includes('ROLE_CUSTOMER')) && (
                 <Tooltip
                   title={intl.formatMessage({
                     id: "app.button.favorite",

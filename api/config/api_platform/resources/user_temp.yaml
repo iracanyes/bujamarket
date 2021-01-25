@@ -26,6 +26,7 @@ App\Entity\UserTemp:
             requirements:
                 _format: 'json\jsonld\html'
             defaults:
+                _api_receive: false
                 _format: 'json'
             schemes: ['https']
             security: "is_granted('IS_AUTHENTICATED_ANONYMOUSLY')"

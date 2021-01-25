@@ -20,6 +20,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Exception\UserNotFoundException;
 use mysql_xdevapi\Exception;
 use Psr\Log\LoggerInterface;
 use App\Responder\JsonResponder;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -110,10 +111,10 @@ class MemberHandler
 
     /**
      * Create a temporary member
-     * @return User
+     * @return UserTemp|JsonResponse
      * @throws \Exception
      */
-    public function create(): UserTemp
+    public function create()
     {
 
         /* Récupération des données de la requête */
@@ -161,7 +162,12 @@ class MemberHandler
 
         }catch (\Exception $e){
             $this->logger->error($e->getMessage(), ['context' => $e]);
-            throw new CreateMemberException($e->getMessage());
+            return $this->jsonResponder->error([
+                "@context" => "/contexts/error",
+                "@type" => "hydra:error",
+                "hydra:title" => "An error occured",
+                "hydra:description" => "User already exist!"
+            ],404);
         }
 
         /* Persistence de l'entité en DB */
@@ -170,7 +176,12 @@ class MemberHandler
             $this->em->flush();
         }catch(\Exception $e){
             $this->logger->error("Error while persisting the new member", ['context' => $e]);
-            throw new CreateMemberException("Error while persisting the new member!");
+            return $this->jsonResponder->error([
+                "@context" => "/contexts/error",
+                "@type" => "hydra:error",
+                "hydra:title" => "An error occured",
+                "hydra:description" => "Error while persisting the new member"
+            ],404);
         }
 
 

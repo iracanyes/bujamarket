@@ -46,6 +46,7 @@ export function create(values, history, locationState) {
         switch(true){
           case e.code === 401:
             dispatch(logout());
+            history.push({pathname:'login', state: locationState });
             break;
           case /Unauthorized/.test(e.message):
             dispatch(logout());

@@ -14,8 +14,28 @@ import { FormattedMessage } from 'react-intl';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import StoreCheckoutButton from "../payment/StoreCheckoutButton";
+import BreadcrumbsPurchase from "../../layout/BreadcrumbsPurchase";
+import {withStyles} from "@material-ui/core/styles";
+import {Grid} from "@material-ui/core";
 
 const stripePromise = loadStripe(`${process.env.REACT_APP_STRIPE_PUBLIC_KEY}`);
+
+const styles = theme => ({
+  root: {
+    paddingTop: theme.spacing(5),
+    paddingBottom: theme.spacing(5),
+  },
+  breadcrumbs:{
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    backgroundColor: theme.palette.primary.main,
+    "& nav": {
+      fontFamily: 'Carter One !important',
+      color: 'white'
+    }
+  },
+});
 
 class ValidateOrder extends Component {
   static propTypes = {
@@ -53,6 +73,7 @@ class ValidateOrder extends Component {
   }
 
   render() {
+    const { classes } = this.props;
     let item = {};
 
     /* Index de la liste de commande */
@@ -72,56 +93,18 @@ class ValidateOrder extends Component {
 
 
     return (
-      <div className={"col-8 mx-auto"}>
-        <div>
-          <div className="col-12 px-0">
-            <nav className="navbar navbar-expand-md navbar-dark bg-primary mb-5 no-content w-100">
-              {/* Breadcrumb */}
-              <div className="col-12 mr-auto">
-                <nav aria-label="breadcrumb" className={"w-100 bg-primary text-white"}>
-                  <ol className="breadcrumb clearfix d-none d-md-inline-flex p-0 w-100 mb-0 bg-primary">
-                    <li className="">
-                      <FormattedMessage  id={"app.page.shopping_cart.shopping_cart_validation"}
-                                         defaultMessage="Validation du panier de commande"
-                                         description="App - Delivery address"
-                      />
-                      <FontAwesomeIcon icon={'angle-double-right'} className={'mx-2 text-white'} aria-hidden={'true'}/>
-                    </li>
-                    <li className="">
-                      <span className="text-white">
-                        <FormattedMessage  id={"app.delivery_address"}
-                                           defaultMessage="Adresse de livraison"
-                                           description="App - Delivery address"
-                        />
-                      </span>
-                      <FontAwesomeIcon icon={'angle-double-right'} className={'mx-2 text-white'} aria-hidden={'true'}/>
-                    </li>
-                    <li className="">
-                      <span className="text-white" >
-                        <b>
-                          <FormattedMessage  id={"app.payment"}
-                                             defaultMessage="Paiement"
-                                             description="App - Payment"
-                          />
-                        </b>
-                      </span>
-                      <FontAwesomeIcon icon={'angle-double-right'} className={'mx-2 text-white'} aria-hidden={'true'}/>
-
-                    </li>
-                    <li className="breadcrumb-item">
-                      <span>
-                        <FormattedMessage  id={"app.bill"}
-                                           defaultMessage="Facture"
-                                           description="App - bill"
-                        />
-                      </span>
-                    </li>
-                  </ol>
-                </nav>
-              </div>
-            </nav>
-          </div>
-        </div>
+      <Grid
+        container
+        spacing={2}
+        className={classes.root}
+      >
+        <Grid
+          item
+          xs={12}
+          className={classes.breadcrumbs}
+        >
+          <BreadcrumbsPurchase etape={5}/>
+        </Grid>
 
         {item.id && (
           <div className={"order-md-4 my-4"}>
@@ -130,7 +113,7 @@ class ValidateOrder extends Component {
               <span className="badge badge-secondary badge-pill">{item && item.orderDetails.length}</span>
             </h4>
             <ListGroup>
-              {item && item.orderDetails.map((item, index) => (
+              {item && item.orderDetails.map((item) => (
                 <ListGroupItem className={'d-flex'} key={orderSetKey++}>
                   <div className="col-9">
                     <ListGroupItemHeading>{item.supplierProduct.product.title}</ListGroupItemHeading>
@@ -210,7 +193,7 @@ class ValidateOrder extends Component {
           </div>
         )}
 
-      </div>
+      </Grid>
 
     );
   }
@@ -233,4 +216,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(ValidateOrder);
+)(withStyles(styles)(ValidateOrder));

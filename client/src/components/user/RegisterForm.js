@@ -4,7 +4,7 @@
  * Description:
  */
 import React,{ Fragment } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
 import { Col, Row } from "reactstrap";
@@ -360,5 +360,5 @@ export default connect(mapStateToProps, mapDispatchToProps)(
     form: 'register',
     enableReinitialize: true,
     keepDirtyOnReinitialize: true
-  })(injectIntl(RegisterForm))
-)
+  })(withRouter(injectIntl(RegisterForm)))
+);

@@ -380,7 +380,7 @@ class ShipmentRate extends Component
                             className={classes.listItemText1}
                           />
                           <ListItemText
-                            primary={item.price}
+                            primary={parseFloat(item.price).toFixed(2)+'€'}
                             secondary={'x ' + item.quantity}
                             className={classes.listItemText2}
                           />
